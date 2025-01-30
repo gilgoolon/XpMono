@@ -33,6 +33,7 @@ enum class ErrorCode : uint8_t
 	FAILED_PROCESS_GET_MODULES,
 	FAILED_PROCESS_GET_MAIN_MODULE,
 	FAILED_GET_MODULE_FILENAME,
+	FAILED_EVENT_OPEN,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);

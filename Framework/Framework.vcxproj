@@ -25,6 +25,7 @@
     <ClCompile Include="Processes\Thread.cpp" />
     <ClCompile Include="Processes\UnopenedProcess.cpp" />
     <ClCompile Include="Synchronization\CriticalSection.cpp" />
+    <ClCompile Include="Synchronization\Event.cpp" />
     <ClCompile Include="Synchronization\IWaitable.cpp" />
     <ClCompile Include="Utils\Strings.cpp" />
     <ClCompile Include="Utils\Time.cpp" />
@@ -47,6 +48,7 @@
     <ClInclude Include="Include\Processes\Thread.hpp" />
     <ClInclude Include="Include\Processes\UnopenedProcess.hpp" />
     <ClInclude Include="Include\Synchronization\CriticalSection.hpp" />
+    <ClInclude Include="Include\Synchronization\Event.hpp" />
     <ClInclude Include="Include\Trace.hpp" />
     <ClInclude Include="Include\Utils\Buffer.hpp" />
     <ClInclude Include="Include\Utils\Formatting.hpp" />
