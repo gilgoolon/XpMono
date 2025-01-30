@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CommandLineArguments.cpp" />
+    <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="Errno.cpp" />
+    <ClCompile Include="ErrorCode.cpp" />
+    <ClCompile Include="Exception.cpp" />
+    <ClCompile Include="Processes\DynamicLibrary.cpp" />
+    <ClCompile Include="Processes\Process.cpp" />
+    <ClCompile Include="Processes\ProcessEnumerator.cpp" />
+    <ClCompile Include="Processes\RemoteMemory.cpp" />
+    <ClCompile Include="Processes\ScopedHandle.cpp" />
+    <ClCompile Include="Processes\ScopedLocalHeapAllocation.cpp" />
+    <ClCompile Include="Processes\Thread.cpp" />
+    <ClCompile Include="Processes\UnopenedProcess.cpp" />
+    <ClCompile Include="Synchronization\CriticalSection.cpp" />
+    <ClCompile Include="Utils\Strings.cpp" />
+    <ClCompile Include="Utils\Time.cpp" />
+    <ClCompile Include="WinApi.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Filesystem\File.hpp" />
+    <ClInclude Include="Include\CommandLineArguments.hpp" />
+    <ClInclude Include="Include\Debug.hpp" />
+    <ClInclude Include="Include\Errno.hpp" />
+    <ClInclude Include="Include\ErrorCode.hpp" />
+    <ClInclude Include="Include\Exception.hpp" />
+    <ClInclude Include="Include\Filesystem\File.hpp" />
+    <ClInclude Include="Include\Processes\DynamicLibrary.hpp" />
+    <ClInclude Include="Include\Processes\IRunner.hpp" />
+    <ClInclude Include="Include\Processes\Process.hpp" />
+    <ClInclude Include="Include\Processes\ProcessEnumerator.hpp" />
+    <ClInclude Include="Include\Processes\RemoteMemory.hpp" />
+    <ClInclude Include="Include\Processes\ScopedHandle.hpp" />
+    <ClInclude Include="Include\Processes\ScopedLocalHeapAllocation.hpp" />
+    <ClInclude Include="Include\Processes\Thread.hpp" />
+    <ClInclude Include="Include\Processes\UnopenedProcess.hpp" />
+    <ClInclude Include="Include\Synchronization\CriticalSection.hpp" />
+    <ClInclude Include="Include\Trace.hpp" />
+    <ClInclude Include="Include\Utils\Buffer.hpp" />
+    <ClInclude Include="Include\Utils\Formatting.hpp" />
+    <ClInclude Include="Include\Utils\Strings.hpp" />
+    <ClInclude Include="Include\Utils\Time.hpp" />
+    <ClInclude Include="Include\WaitStatus.hpp" />
+    <ClInclude Include="Include\WinApi.hpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{5b5c1f35-e8a8-44e2-9133-38047262f449}</ProjectGuid>
+    <RootNamespace>Framework</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(SolutionDir)..\.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>Include/</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>Include/</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
