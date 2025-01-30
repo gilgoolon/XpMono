@@ -1,8 +1,6 @@
 #include "Processes/Process.hpp"
 
 #include "Exception.hpp"
-#include "Trace.hpp"
-#include "WinApi.hpp"
 #include "Processes/DynamicLibrary.hpp"
 #include "Utils/Strings.hpp"
 
@@ -20,6 +18,11 @@ Process::Process(const uint32_t pid):
 Process::Process(const std::wstring& command_line):
 	m_handle(create_process(command_line))
 {
+}
+
+HANDLE Process::handle() const
+{
+	return m_handle.get();
 }
 
 HANDLE Process::open_process(const uint32_t pid)
@@ -124,18 +127,18 @@ std::wstring Process::get_path() const
 
 bool Process::is_running() const
 {
-	const WinApi::WaitStatus result = WinApi::wait(m_handle.get(), Time::INSTANT);
+	const WaitStatus result = wait(Time::INSTANT);
 	switch (result)
 	{
-	case WinApi::WaitStatus::FINISHED:
+	case WaitStatus::FINISHED:
 		[[fallthrough]];
-	case WinApi::WaitStatus::OBJECT_CLOSED:
+	case WaitStatus::OBJECT_CLOSED:
 		return true;
 
-	case WinApi::WaitStatus::TIMEOUT:
+	case WaitStatus::TIMEOUT:
 		return false;
 
-	case WinApi::WaitStatus::FAILED:
+	case WaitStatus::FAILED:
 		[[fallthrough]];
 	default:
 		throw WinApiException(ErrorCode::FAILED_WAIT);

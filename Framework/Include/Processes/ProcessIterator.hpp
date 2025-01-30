@@ -2,15 +2,15 @@
 #include "ScopedHandle.hpp"
 #include "UnopenedProcess.hpp"
 
-class ProcessEnumerator final
+class ProcessIterator final
 {
 public:
-	explicit ProcessEnumerator();
-	~ProcessEnumerator() = default;
-	ProcessEnumerator(const ProcessEnumerator&) = delete;
-	ProcessEnumerator& operator=(const ProcessEnumerator&) = delete;
-	ProcessEnumerator(ProcessEnumerator&&) = delete;
-	ProcessEnumerator& operator=(ProcessEnumerator&&) = delete;
+	explicit ProcessIterator();
+	~ProcessIterator() = default;
+	ProcessIterator(const ProcessIterator&) = delete;
+	ProcessIterator& operator=(const ProcessIterator&) = delete;
+	ProcessIterator(ProcessIterator&&) = delete;
+	ProcessIterator& operator=(ProcessIterator&&) = delete;
 
 	[[nodiscard]] static std::vector<UnopenedProcess::Ptr> get_all();
 

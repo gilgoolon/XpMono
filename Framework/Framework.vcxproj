@@ -18,7 +18,7 @@
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="Processes\DynamicLibrary.cpp" />
     <ClCompile Include="Processes\Process.cpp" />
-    <ClCompile Include="Processes\ProcessEnumerator.cpp" />
+    <ClCompile Include="Processes\ProcessIterator.cpp" />
     <ClCompile Include="Processes\RemoteMemory.cpp" />
     <ClCompile Include="Processes\ScopedHandle.cpp" />
     <ClCompile Include="Processes\ScopedLocalHeapAllocation.cpp" />
@@ -40,7 +40,7 @@
     <ClInclude Include="Include\Processes\DynamicLibrary.hpp" />
     <ClInclude Include="Include\Processes\IRunner.hpp" />
     <ClInclude Include="Include\Processes\Process.hpp" />
-    <ClInclude Include="Include\Processes\ProcessEnumerator.hpp" />
+    <ClInclude Include="Include\Processes\ProcessIterator.hpp" />
     <ClInclude Include="Include\Processes\RemoteMemory.hpp" />
     <ClInclude Include="Include\Processes\ScopedHandle.hpp" />
     <ClInclude Include="Include\Processes\ScopedLocalHeapAllocation.hpp" />

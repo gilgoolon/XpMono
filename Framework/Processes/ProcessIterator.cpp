@@ -1,19 +1,19 @@
-﻿#include "Processes/ProcessEnumerator.hpp"
+﻿#include "Processes/ProcessIterator.hpp"
 
 #include "Exception.hpp"
 
 #include <tlhelp32.h>
 
-ProcessEnumerator::ProcessEnumerator():
+ProcessIterator::ProcessIterator():
 	m_snapshot_handle(create_processes_snapshot()),
 	m_next_result(nullptr)
 {
 	retrieve_first();
 }
 
-std::vector<UnopenedProcess::Ptr> ProcessEnumerator::get_all()
+std::vector<UnopenedProcess::Ptr> ProcessIterator::get_all()
 {
-	ProcessEnumerator enumerator;
+	ProcessIterator enumerator;
 	std::vector<UnopenedProcess::Ptr> result;
 	while (enumerator.has_next())
 	{
@@ -22,7 +22,7 @@ std::vector<UnopenedProcess::Ptr> ProcessEnumerator::get_all()
 	return result;
 }
 
-HANDLE ProcessEnumerator::create_processes_snapshot()
+HANDLE ProcessIterator::create_processes_snapshot()
 {
 	static constexpr DWORD SNAPSHOT_ONLY_PROCESSES = TH32CS_SNAPPROCESS;
 	static constexpr DWORD PID_IGNORED = 0;
@@ -34,7 +34,7 @@ HANDLE ProcessEnumerator::create_processes_snapshot()
 	return result;
 }
 
-void ProcessEnumerator::retrieve_first() const
+void ProcessIterator::retrieve_first() const
 {
 	PROCESSENTRY32W result{};
 	result.dwSize = sizeof(result);
@@ -45,7 +45,7 @@ void ProcessEnumerator::retrieve_first() const
 	m_next_result = std::make_unique<UnopenedProcess>(result.th32ProcessID);
 }
 
-void ProcessEnumerator::retrieve_next() const
+void ProcessIterator::retrieve_next() const
 {
 	PROCESSENTRY32W result{};
 	result.dwSize = sizeof(result);
@@ -56,7 +56,7 @@ void ProcessEnumerator::retrieve_next() const
 	m_next_result = std::make_unique<UnopenedProcess>(result.th32ProcessID);
 }
 
-UnopenedProcess::Ptr ProcessEnumerator::next()
+UnopenedProcess::Ptr ProcessIterator::next()
 {
 	if (!has_next())
 	{
@@ -67,7 +67,7 @@ UnopenedProcess::Ptr ProcessEnumerator::next()
 	return std::move(result);
 }
 
-bool ProcessEnumerator::has_next() const
+bool ProcessIterator::has_next() const
 {
 	if (m_next_result != nullptr)
 	{

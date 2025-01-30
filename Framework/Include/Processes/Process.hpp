@@ -3,6 +3,7 @@
 #include "Utils/Buffer.hpp"
 
 #include "ScopedHandle.hpp"
+#include "Synchronization/IWaitable.hpp"
 #include "Utils/Time.hpp"
 
 #include <memory>
@@ -10,20 +11,22 @@
 #include <vector>
 #include <winternl.h>
 
-class Process final : public std::enable_shared_from_this<Process>
+class Process final : public std::enable_shared_from_this<Process>, public IWaitable
 {
 public:
 	using Ptr = std::unique_ptr<Process>;
 
 	explicit Process(uint32_t pid);
 	explicit Process(const std::wstring& command_line);
-	~Process() = default;
+	~Process() override = default;
 	Process(const Process&) = delete;
 	Process& operator=(const Process&) = delete;
 	Process(Process&&) = delete;
 	Process& operator=(Process&&) = delete;
 
 private:
+	[[nodiscard]] HANDLE handle() const override;
+
 	[[nodiscard]] static HANDLE open_process(uint32_t pid);
 
 	[[nodiscard]] static HANDLE create_process(const std::wstring& command_line);
