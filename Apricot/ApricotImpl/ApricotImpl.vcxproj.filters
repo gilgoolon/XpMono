@@ -23,7 +23,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Include\ApricotLibraryImpl.cpp">
+    <ClCompile Include="ApricotLibraryImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
