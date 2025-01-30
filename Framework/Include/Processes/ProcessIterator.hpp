@@ -18,7 +18,6 @@ private:
 	[[nodiscard]] static HANDLE create_processes_snapshot();
 	void retrieve_first() const;
 	void retrieve_next() const;
-	[[nodiscard]] bool is_skippable_process(const UnopenedProcess& process) const;
 
 public:
 	[[nodiscard]] UnopenedProcess::Ptr next();
