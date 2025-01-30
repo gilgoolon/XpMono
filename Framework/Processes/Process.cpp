@@ -259,7 +259,7 @@ static std::wstring get_module_path(const HANDLE process, const HMODULE loaded_m
 	static constexpr DWORD FAILED = 0;
 	if (result == FAILED)
 	{
-		throw WinApiException(ErrorCode::FAILED_GET_MODULE_FILENAME);
+		throw WinApiException(ErrorCode::FAILED_PROCESS_GET_MODULE_FILENAME);
 	}
 	path.resize(result);
 	return path;

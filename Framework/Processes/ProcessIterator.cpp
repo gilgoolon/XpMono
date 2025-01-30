@@ -29,7 +29,7 @@ HANDLE ProcessIterator::create_processes_snapshot()
 	const HANDLE result = CreateToolhelp32Snapshot(SNAPSHOT_ONLY_PROCESSES, PID_IGNORED);
 	if (result == INVALID_HANDLE_VALUE)
 	{
-		throw WinApiException(ErrorCode::FAILED_ENUMERATE_PROCESSES);
+		throw WinApiException(ErrorCode::FAILED_PROCESS_ITERATOR_CREATE);
 	}
 	return result;
 }
@@ -40,20 +40,28 @@ void ProcessIterator::retrieve_first() const
 	result.dwSize = sizeof(result);
 	if (Process32FirstW(m_snapshot_handle.get(), &result) == FALSE)
 	{
-		throw WinApiException(ErrorCode::FAILED_ENUMERATE_PROCESSES);
+		throw WinApiException(ErrorCode::FAILED_PROCESS_ITERATOR_NEXT);
 	}
 	m_next_result = std::make_unique<UnopenedProcess>(result.th32ProcessID);
 }
 
 void ProcessIterator::retrieve_next() const
 {
-	PROCESSENTRY32W result{};
-	result.dwSize = sizeof(result);
-	if (Process32NextW(m_snapshot_handle.get(), &result) == FALSE)
+	PROCESSENTRY32W entry{};
+	entry.dwSize = sizeof(entry);
+	const BOOL result = Process32NextW(m_snapshot_handle.get(), &entry);
+	if (result == FALSE && GetLastError() != ERROR_NO_MORE_FILES)
 	{
-		throw WinApiException(ErrorCode::FAILED_ENUMERATE_PROCESSES);
+		throw WinApiException(ErrorCode::FAILED_PROCESS_ITERATOR_NEXT);
 	}
-	m_next_result = std::make_unique<UnopenedProcess>(result.th32ProcessID);
+	if (result == FALSE)
+	{
+		m_next_result = nullptr;
+	}
+	else
+	{
+		m_next_result = std::make_unique<UnopenedProcess>(entry.th32ProcessID);
+	}
 }
 
 UnopenedProcess::Ptr ProcessIterator::next()
@@ -73,17 +81,6 @@ bool ProcessIterator::has_next() const
 	{
 		return true;
 	}
-	try
-	{
-		retrieve_next();
-	}
-	catch (const WinApiException& ex)
-	{
-		if (ex == ErrorCode::FAILED_ENUMERATE_PROCESSES && ex.error() == ERROR_NO_MORE_FILES)
-		{
-			return false;
-		}
-		throw;
-	}
-	return true;
+	retrieve_next();
+	return m_next_result != nullptr;
 }

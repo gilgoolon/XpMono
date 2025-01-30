@@ -35,7 +35,7 @@ HANDLE Event::create_event(const std::wstring& name, Type type)
 	const HANDLE result = CreateEventW(DEFAULT_SECURITY, static_cast<BOOL>(type), INITIALLY_UNSET, name.c_str());
 	if (result == nullptr)
 	{
-		throw WinApiException(ErrorCode::FAILED_EVENT_OPEN);
+		throw WinApiException(ErrorCode::FAILED_EVENT_CREATE);
 	}
 	return result;
 }
