@@ -25,9 +25,9 @@
     <ClCompile Include="Processes\Thread.cpp" />
     <ClCompile Include="Processes\UnopenedProcess.cpp" />
     <ClCompile Include="Synchronization\CriticalSection.cpp" />
+    <ClCompile Include="Synchronization\IWaitable.cpp" />
     <ClCompile Include="Utils\Strings.cpp" />
     <ClCompile Include="Utils\Time.cpp" />
-    <ClCompile Include="WinApi.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Filesystem\File.hpp" />
@@ -52,8 +52,7 @@
     <ClInclude Include="Include\Utils\Formatting.hpp" />
     <ClInclude Include="Include\Utils\Strings.hpp" />
     <ClInclude Include="Include\Utils\Time.hpp" />
-    <ClInclude Include="Include\WaitStatus.hpp" />
-    <ClInclude Include="Include\WinApi.hpp" />
+    <ClInclude Include="Include\Synchronization\IWaitable.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
