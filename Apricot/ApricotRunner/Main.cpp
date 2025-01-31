@@ -45,11 +45,18 @@ int WINAPI wWinMain([[maybe_unused]] HINSTANCE hInstance,
 	return EXIT_SUCCESS;
 }
 
+using EmptyFunction = void(*)();
+
 static void main_logic()
 {
 	const Buffer dll_data = File(
 		LR"(C:\Users\alper\OneDrive\Documents\XpMono\Apricot\Debug\SimpleDll.dll)",
 		File::Mode::READ
 	).read();
-	ApricotLibrary library(dll_data);
+	const ApricotLibrary library(dll_data);
+
+	static constexpr uint16_t BY_ORDINAL = 1;
+	static constexpr std::string_view BY_NAME = "exported_function_by_name";
+	library.call<EmptyFunction>(BY_ORDINAL);
+	library.call<EmptyFunction>(std::string{BY_NAME});
 }
