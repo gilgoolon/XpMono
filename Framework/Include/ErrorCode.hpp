@@ -54,6 +54,10 @@ enum class ErrorCode : uint8_t
 	// Process Iterator
 	FAILED_PROCESS_ITERATOR_CREATE,
 	FAILED_PROCESS_ITERATOR_NEXT,
+
+	// Apricot
+	FAILED_APRICOT_LOAD,
+	FAILED_APRICOT_GET,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);

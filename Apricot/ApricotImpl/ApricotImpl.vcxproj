@@ -11,56 +11,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CommandLineArguments.cpp" />
-    <ClCompile Include="Debug.cpp" />
-    <ClCompile Include="Errno.cpp" />
-    <ClCompile Include="ErrorCode.cpp" />
-    <ClCompile Include="Exception.cpp" />
-    <ClCompile Include="Filesystem\File.cpp" />
-    <ClCompile Include="Processes\DynamicLibrary.cpp" />
-    <ClCompile Include="Processes\Process.cpp" />
-    <ClCompile Include="Processes\ProcessIterator.cpp" />
-    <ClCompile Include="Processes\RemoteMemory.cpp" />
-    <ClCompile Include="Processes\ScopedHandle.cpp" />
-    <ClCompile Include="Processes\ScopedLocalHeapAllocation.cpp" />
-    <ClCompile Include="Processes\Thread.cpp" />
-    <ClCompile Include="Processes\UnopenedProcess.cpp" />
-    <ClCompile Include="Synchronization\CriticalSection.cpp" />
-    <ClCompile Include="Synchronization\Event.cpp" />
-    <ClCompile Include="Synchronization\IWaitable.cpp" />
-    <ClCompile Include="Utils\Strings.cpp" />
-    <ClCompile Include="Utils\Time.cpp" />
+    <ClInclude Include="Include\ApricotCode.hpp" />
+    <ClInclude Include="Include\ApricotLibraryCImpl.hpp" />
+    <ClInclude Include="Include\ApricotLibraryImpl.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\CommandLineArguments.hpp" />
-    <ClInclude Include="Include\Debug.hpp" />
-    <ClInclude Include="Include\Errno.hpp" />
-    <ClInclude Include="Include\ErrorCode.hpp" />
-    <ClInclude Include="Include\Exception.hpp" />
-    <ClInclude Include="Include\Filesystem\File.hpp" />
-    <ClInclude Include="Include\Processes\DynamicLibrary.hpp" />
-    <ClInclude Include="Include\Processes\IRunner.hpp" />
-    <ClInclude Include="Include\Processes\Process.hpp" />
-    <ClInclude Include="Include\Processes\ProcessIterator.hpp" />
-    <ClInclude Include="Include\Processes\RemoteMemory.hpp" />
-    <ClInclude Include="Include\Processes\ScopedHandle.hpp" />
-    <ClInclude Include="Include\Processes\ScopedLocalHeapAllocation.hpp" />
-    <ClInclude Include="Include\Processes\Thread.hpp" />
-    <ClInclude Include="Include\Processes\UnopenedProcess.hpp" />
-    <ClInclude Include="Include\Synchronization\CriticalSection.hpp" />
-    <ClInclude Include="Include\Synchronization\Event.hpp" />
-    <ClInclude Include="Include\Trace.hpp" />
-    <ClInclude Include="Include\Utils\Buffer.hpp" />
-    <ClInclude Include="Include\Utils\Formatting.hpp" />
-    <ClInclude Include="Include\Utils\Strings.hpp" />
-    <ClInclude Include="Include\Utils\Time.hpp" />
-    <ClInclude Include="Include\Synchronization\IWaitable.hpp" />
+    <ClCompile Include="ApricotLibraryImpl.cpp" />
+    <ClCompile Include="ApricotLibraryCImpl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ShellcodeFramework\ShellcodeFramework.vcxproj">
+      <Project>{c6d5dfb2-079f-4f52-9665-c1a99f7f0d48}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{5b5c1f35-e8a8-44e2-9133-38047262f449}</ProjectGuid>
-    <RootNamespace>Framework</RootNamespace>
+    <ProjectGuid>{c5df661b-9926-4c3f-be5f-e843ec7f91f0}</ProjectGuid>
+    <RootNamespace>ApricotImpl</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -94,29 +62,46 @@
   <PropertyGroup Label="UserMacros" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>Include/</AdditionalIncludeDirectories>
+      <SupportJustMyCode>false</SupportJustMyCode>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>Include/;$(SolutionDir)../ShellcodeFramework/Include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <AdditionalDependencies>$(OutDir)ShellcodeFramework.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>Include/</AdditionalIncludeDirectories>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>Include/;$(SolutionDir)../ShellcodeFramework/Include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <AdditionalDependencies>$(OutDir)ShellcodeFramework.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
