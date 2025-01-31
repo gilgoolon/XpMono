@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Framework", "..\Framework\F
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ApricotImpl", "ApricotImpl\ApricotImpl.vcxproj", "{C5DF661B-9926-4C3F-BE5F-E843EC7F91F0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShellcodeFramework", "..\ShellcodeFramework\ShellcodeFramework.vcxproj", "{C6D5DFB2-079F-4F52-9665-C1A99F7F0D48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -27,6 +29,10 @@ Global
 		{C5DF661B-9926-4C3F-BE5F-E843EC7F91F0}.Debug|x86.Build.0 = Debug|Win32
 		{C5DF661B-9926-4C3F-BE5F-E843EC7F91F0}.Release|x86.ActiveCfg = Release|Win32
 		{C5DF661B-9926-4C3F-BE5F-E843EC7F91F0}.Release|x86.Build.0 = Release|Win32
+		{C6D5DFB2-079F-4F52-9665-C1A99F7F0D48}.Debug|x86.ActiveCfg = Debug|Win32
+		{C6D5DFB2-079F-4F52-9665-C1A99F7F0D48}.Debug|x86.Build.0 = Debug|Win32
+		{C6D5DFB2-079F-4F52-9665-C1A99F7F0D48}.Release|x86.ActiveCfg = Release|Win32
+		{C6D5DFB2-079F-4F52-9665-C1A99F7F0D48}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
