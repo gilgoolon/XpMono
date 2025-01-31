@@ -16,7 +16,6 @@
     <ClInclude Include="Include\HeapMemory.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Array.cpp" />
     <ClCompile Include="HeapMemory.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
