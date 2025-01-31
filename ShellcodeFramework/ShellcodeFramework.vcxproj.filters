@@ -33,7 +33,7 @@
     <ClInclude Include="Include\Pe\ImportedModulesIterator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Pe\ImportedFunctionIterator.hpp">
+    <ClInclude Include="Include\Pe\ImportedFunctionsIterator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,7 +53,7 @@
     <ClCompile Include="Pe\ImportedModulesIterator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Pe\ImportedFunctionIterator.cpp">
+    <ClCompile Include="Pe\ImportedFunctionsIterator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

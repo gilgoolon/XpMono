@@ -2,6 +2,8 @@
 
 #include "HeapMemory.hpp"
 #include "Trace.hpp"
+#include "Pe/ImportedFunctionsIterator.hpp"
+#include "Pe/ImportedModulesIterator.hpp"
 #include "Pe/Pe.hpp"
 #include "Pe/SectionIterator.hpp"
 
@@ -50,7 +52,12 @@ ApricotLibraryImpl::ApricotLibraryImpl(const uint8_t* unloaded_module,
 		return;
 	}
 
-	if (!finalize_sections(unloaded_module))
+	if (!load_dependencies())
+	{
+		result = ApricotCode::FAILED_LOAD_DEPENDENCIES;
+	}
+
+	if (!finalize_sections())
 	{
 		result = ApricotCode::FAILED_PE_FINALIZE_SECTIONS;
 		return;
@@ -117,9 +124,9 @@ bool ApricotLibraryImpl::finalize_section_entry(const Pe::SectionIterator::Entry
 	);
 }
 
-bool ApricotLibraryImpl::finalize_sections(const void* module)
+bool ApricotLibraryImpl::finalize_sections()
 {
-	Pe::SectionIterator section_iterator(module, m_is_initialized);
+	Pe::SectionIterator section_iterator(m_memory.get(), m_is_initialized);
 	if (!m_is_initialized)
 	{
 		return false;
@@ -156,6 +163,95 @@ bool ApricotLibraryImpl::call_entry_point(DWORD reason, BOOL& return_value)
 		return false;
 	}
 	return true;
+}
+
+bool ApricotLibraryImpl::load_module(const IMAGE_IMPORT_DESCRIPTOR* module)
+{
+	auto name = static_cast<const char*>(m_memory.get()) + module->Name;
+	const HMODULE loaded_module = LoadLibraryA(name);
+	if (loaded_module == nullptr)
+	{
+		return false;
+	}
+	bool result = false;
+	ImportedFunctionsIterator imported_functions(m_memory.get(), module, result);
+	if (!result)
+	{
+		return false;
+	}
+	while (imported_functions.has_next())
+	{
+		const IMAGE_THUNK_DATA32* imported_function = imported_functions.next();
+		LPCSTR function_identifier = reinterpret_cast<const IMAGE_IMPORT_BY_NAME*>(static_cast<const uint8_t*>(m_memory.
+				get()) +
+			imported_function->u1.AddressOfData)->Name;
+		if (IMAGE_SNAP_BY_ORDINAL32(imported_function->u1.Function))
+		{
+			function_identifier = MAKEINTRESOURCEA(imported_function->u1.Ordinal);
+		}
+		void* const resolved_address = GetProcAddress(loaded_module, function_identifier);
+		if (resolved_address == nullptr)
+		{
+			return false;
+		}
+		const_cast<IMAGE_THUNK_DATA32*>(imported_function)->u1.Function = reinterpret_cast<DWORD>(resolved_address);
+	}
+	return true;
+}
+
+bool ApricotLibraryImpl::load_dependencies()
+{
+	Pe::ImportedModulesIterator iterator(m_memory.get(), m_is_initialized);
+	if (!m_is_initialized)
+	{
+		return false;
+	}
+	for (uint32_t loaded_modules = 0; iterator.has_next(); loaded_modules++)
+	{
+		const IMAGE_IMPORT_DESCRIPTOR* const imported_module = iterator.next();
+		if (!load_module(imported_module))
+		{
+			unload_dependencies(loaded_modules + 1);
+			return m_is_initialized = false;
+		}
+	}
+	return m_is_initialized = true;
+}
+
+void ApricotLibraryImpl::unload_dependency(const IMAGE_IMPORT_DESCRIPTOR* module)
+{
+	auto name = static_cast<const char*>(m_memory.get()) + module->Name;
+	const HMODULE h_module = GetModuleHandleA(name);
+	if (h_module == nullptr)
+	{
+		TRACE(L"failed to get module handle");
+		return;
+	}
+	if (FreeLibrary(h_module) == FALSE)
+	{
+		TRACE(L"failed to free library");
+	}
+}
+
+void ApricotLibraryImpl::unload_dependencies(const uint32_t loaded_modules)
+{
+	bool result = false;
+	Pe::ImportedModulesIterator iterator(m_memory.get(), result);
+	if (!result)
+	{
+		TRACE(L"failed to parse IAT on unload");
+	}
+	for (uint32_t i = 0; i < loaded_modules && iterator.has_next(); ++i)
+	{
+		const IMAGE_IMPORT_DESCRIPTOR* const imported_module = iterator.next();
+		unload_dependency(imported_module);
+	}
+}
+
+void ApricotLibraryImpl::unload_dependencies()
+{
+	static constexpr uint32_t UNLOAD_ALL = 0xFFFFFFFF;
+	return unload_dependencies(UNLOAD_ALL);
 }
 
 ApricotCode ApricotLibraryImpl::get_proc_address(const uint16_t ordinal, void** const result) const

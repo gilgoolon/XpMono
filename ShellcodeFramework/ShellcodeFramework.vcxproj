@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\Pe\ImportedFunctionIterator.hpp" />
+    <ClInclude Include="Include\Pe\ImportedFunctionsIterator.hpp" />
     <ClInclude Include="Include\Pe\Pe.hpp" />
     <ClInclude Include="Include\Pe\SectionIterator.hpp" />
     <ClInclude Include="Include\Std.hpp" />
@@ -21,7 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HeapMemory.cpp" />
-    <ClCompile Include="Pe\ImportedFunctionIterator.cpp" />
+    <ClCompile Include="Pe\ImportedFunctionsIterator.cpp" />
     <ClCompile Include="Pe\ImportedModulesIterator.cpp" />
     <ClCompile Include="Std.cpp" />
     <ClCompile Include="Pe\SectionIterator.cpp" />
