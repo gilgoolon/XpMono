@@ -1,0 +1,4 @@
+LIBRARY SimpleDll.dll
+EXPORTS
+	exported_function_by_ordinal1 @1 NONAME
+	exported_function_by_name @2

@@ -55,6 +55,7 @@ ApricotLibraryImpl::ApricotLibraryImpl(const uint8_t* unloaded_module,
 	if (!load_dependencies())
 	{
 		result = ApricotCode::FAILED_LOAD_DEPENDENCIES;
+		return;
 	}
 
 	if (!finalize_sections())
@@ -144,7 +145,7 @@ bool ApricotLibraryImpl::finalize_sections()
 	return true;
 }
 
-bool ApricotLibraryImpl::call_entry_point(DWORD reason, BOOL& return_value)
+bool ApricotLibraryImpl::call_entry_point(const DWORD reason, BOOL& return_value)
 {
 	const IMAGE_OPTIONAL_HEADER32* const optional_header = Pe::get_optional_header(m_memory.get());
 	if (optional_header == nullptr)
