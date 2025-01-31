@@ -1,7 +1,9 @@
 ﻿#include "ApricotLibraryImpl.hpp"
 
 #include "HeapMemory.hpp"
+#include "Strings.hpp"
 #include "Trace.hpp"
+#include "Pe/ExportedFunctionsIterator.hpp"
 #include "Pe/ImportedFunctionsIterator.hpp"
 #include "Pe/ImportedModulesIterator.hpp"
 #include "Pe/Pe.hpp"
@@ -255,9 +257,54 @@ void ApricotLibraryImpl::unload_dependencies()
 	return unload_dependencies(UNLOAD_ALL);
 }
 
-ApricotCode ApricotLibraryImpl::get_proc_address(const uint16_t ordinal, void** const result) const
+ApricotCode ApricotLibraryImpl::get_proc_address(const uint16_t ordinal, void*& result) const
 {
-	UNREFERENCED_PARAMETER(ordinal);
-	UNREFERENCED_PARAMETER(result);
-	return ApricotCode::SUCCESS;
+	bool parse_result = false;
+	ExportedFunctionsIterator exported_functions(m_memory.get(), parse_result);
+	if (!parse_result)
+	{
+		return ApricotCode::FAILED_PE_PARSE_EAT;
+	}
+	ExportedFunctionsIterator::Entry function{};
+	while (exported_functions.has_next())
+	{
+		if (!exported_functions.next(function))
+		{
+			return ApricotCode::FAILED_PE_PARSE_EAT;
+		}
+		if (function.ordinal == ordinal)
+		{
+			result = function.address;
+			return ApricotCode::SUCCESS;
+		}
+	}
+	return ApricotCode::FAILED_ORDINAL_NOT_FOUND;
+}
+
+ApricotCode ApricotLibraryImpl::get_proc_address(const char* name, void*& result) const
+{
+	bool parse_result = false;
+	ExportedFunctionsIterator exported_functions(m_memory.get(), parse_result);
+	if (!parse_result)
+	{
+		return ApricotCode::FAILED_PE_PARSE_EAT;
+	}
+	ExportedFunctionsIterator::Entry function{};
+	while (exported_functions.has_next())
+	{
+		if (!exported_functions.next(function))
+		{
+			return ApricotCode::FAILED_PE_PARSE_EAT;
+		}
+		if (function.name == nullptr)
+		{
+			continue;
+		}
+		if (Strings::equals(name, function.name))
+		{
+			result = function.address;
+			return ApricotCode::SUCCESS;
+		}
+	}
+	return ApricotCode::FAILED_NAME_NOT_FOUND;
 }

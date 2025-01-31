@@ -32,7 +32,8 @@ private:
 	void unload_dependencies();
 
 public:
-	[[nodiscard]] ApricotCode get_proc_address(uint16_t ordinal, __out void** result) const;
+	[[nodiscard]] ApricotCode get_proc_address(uint16_t ordinal, void*& result) const;
+	[[nodiscard]] ApricotCode get_proc_address(const char* name, void*& result) const;
 
 private:
 	bool m_is_initialized;

@@ -30,7 +30,18 @@ ApricotLibrary::~ApricotLibrary()
 void* ApricotLibrary::get_exported_procedure(const uint16_t ordinal) const
 {
 	void* result = nullptr;
-	const ApricotCode code = APRICOT_LIBRARY__get_proc_address(m_library.get(), ordinal, &result);
+	const ApricotCode code = APRICOT_LIBRARY__get_proc_address(m_library.get(), ordinal, result);
+	if (code != ApricotCode::SUCCESS)
+	{
+		throw ApricotException(ErrorCode::FAILED_APRICOT_GET, code);
+	}
+	return result;
+}
+
+void* ApricotLibrary::get_exported_procedure(const std::string& name) const
+{
+	void* result = nullptr;
+	const ApricotCode code = APRICOT_LIBRARY__get_proc_address(m_library.get(), name.c_str(), result);
 	if (code != ApricotCode::SUCCESS)
 	{
 		throw ApricotException(ErrorCode::FAILED_APRICOT_GET, code);

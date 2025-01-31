@@ -11,16 +11,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Pe\ExportedFunctionsIterator.hpp" />
     <ClInclude Include="Include\Pe\ImportedFunctionsIterator.hpp" />
     <ClInclude Include="Include\Pe\Pe.hpp" />
     <ClInclude Include="Include\Pe\SectionIterator.hpp" />
     <ClInclude Include="Include\Std.hpp" />
+    <ClInclude Include="Include\Strings.hpp" />
     <ClInclude Include="Include\Trace.hpp" />
     <ClInclude Include="Include\HeapMemory.hpp" />
     <ClInclude Include="Include\Pe\ImportedModulesIterator.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HeapMemory.cpp" />
+    <ClCompile Include="Pe\ExportedFunctionsIterator.cpp" />
+    <ClCompile Include="Include\Strings.cpp" />
     <ClCompile Include="Pe\ImportedFunctionsIterator.cpp" />
     <ClCompile Include="Pe\ImportedModulesIterator.cpp" />
     <ClCompile Include="Std.cpp" />

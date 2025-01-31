@@ -12,7 +12,12 @@ ApricotCode APRICOT_LIBRARY__create(ApricotLibraryContext* ctx, const uint8_t* b
 
 ApricotCode APRICOT_LIBRARY__get_proc_address(const ApricotLibraryContext* ctx,
                                               const uint16_t ordinal,
-                                              void** const result)
+                                              void*& result)
+{
+	return ctx->impl->get_proc_address(ordinal, result);
+}
+
+ApricotCode APRICOT_LIBRARY__get_proc_address(const ApricotLibraryContext* ctx, const char* ordinal, void*& result)
 {
 	return ctx->impl->get_proc_address(ordinal, result);
 }
