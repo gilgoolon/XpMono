@@ -11,6 +11,7 @@ public:
 	{
 		READ_WRITE = PAGE_READWRITE,
 		READ_EXECUTE = PAGE_EXECUTE_READ,
+		READ = PAGE_READONLY,
 	};
 
 	explicit HeapMemory(uint32_t size, Permissions permissions, bool& result);
