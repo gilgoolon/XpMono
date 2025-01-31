@@ -32,7 +32,7 @@ private:
 	const uint32_t* m_functions;
 	uint32_t m_num_names;
 	const uint32_t* m_names;
-	const uint32_t* m_name_ordinals;
+	const uint16_t* m_name_ordinals;
 	uint32_t m_base;
 	mutable uint32_t m_current_index;
 };

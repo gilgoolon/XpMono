@@ -28,7 +28,7 @@ ExportedFunctionsIterator::ExportedFunctionsIterator(const void* module, bool& r
 		AddressOfFunctions);
 	m_num_names = export_directory->NumberOfNames;
 	m_names = reinterpret_cast<const uint32_t*>(static_cast<const uint8_t*>(module) + export_directory->AddressOfNames);
-	m_name_ordinals = reinterpret_cast<const uint32_t*>(static_cast<const uint8_t*>(module) + export_directory->
+	m_name_ordinals = reinterpret_cast<const uint16_t*>(static_cast<const uint8_t*>(module) + export_directory->
 		AddressOfNameOrdinals);
 	m_base = export_directory->Base;
 	result = true;
@@ -38,7 +38,7 @@ const char* ExportedFunctionsIterator::get_function_name(const uint16_t ordinal)
 {
 	for (uint32_t i = 0; i < m_num_names; ++i)
 	{
-		if (m_name_ordinals[i] == ordinal)
+		if (m_name_ordinals[i] == ordinal - m_base)
 		{
 			return static_cast<const char*>(m_module) + m_names[i];
 		}
@@ -61,7 +61,7 @@ bool ExportedFunctionsIterator::next(Entry& result)
 	{
 		return false;
 	}
-	const uint16_t ordinal = static_cast<uint16_t>(m_base + m_current_index);
+	const auto ordinal = static_cast<uint16_t>(m_base + m_current_index);
 	const char* const name = get_function_name(ordinal);
 	result = {m_functions[m_current_index], ordinal, name};
 	++m_current_index;

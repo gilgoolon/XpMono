@@ -10,5 +10,5 @@ bool Strings::equals(const char* str1, const char* str2)
 			return false;
 		}
 	}
-	return false;
+	return *str1 == TERMINATOR && *str2 == TERMINATOR;
 }

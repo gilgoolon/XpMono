@@ -17,9 +17,9 @@ ApricotCode APRICOT_LIBRARY__get_proc_address(const ApricotLibraryContext* ctx,
 	return ctx->impl->get_proc_address(ordinal, result);
 }
 
-ApricotCode APRICOT_LIBRARY__get_proc_address(const ApricotLibraryContext* ctx, const char* ordinal, void*& result)
+ApricotCode APRICOT_LIBRARY__get_proc_address(const ApricotLibraryContext* ctx, const char* name, void*& result)
 {
-	return ctx->impl->get_proc_address(ordinal, result);
+	return ctx->impl->get_proc_address(name, result);
 }
 
 void APRICOT_LIBRARY__destroy(ApricotLibraryContext* const ctx)
