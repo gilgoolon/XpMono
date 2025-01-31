@@ -41,17 +41,19 @@ ApricotLibraryImpl::ApricotLibraryImpl(const uint8_t* unloaded_module,
 		result = ApricotCode::FAILED_MEM_ALLOC;
 		return;
 	}
-	Pe::SectionIterator section_iterator(unloaded_module, m_is_initialized);
-	if (!m_is_initialized)
+
+	if (!map_sections())
 	{
-		result = ApricotCode::FAILED_PE_PARSE_SECTIONS;
+		result = ApricotCode::FAILED_PE_MAP_SECTIONS;
 		return;
 	}
-	while (section_iterator.has_next())
+
+	if (!finalize_sections())
 	{
-		const Pe::SectionIterator::Entry entry = section_iterator.next();
-		map_section_entry(entry);
+		result = ApricotCode::FAILED_PE_FINALIZE_SECTIONS;
+		return;
 	}
+
 	m_is_initialized = true;
 	result = ApricotCode::SUCCESS;
 }
@@ -68,6 +70,21 @@ void ApricotLibraryImpl::map_section_entry(const Pe::SectionIterator::Entry& ent
 	Shellcode::HeapMemory::memcpy(static_cast<uint8_t*>(m_memory.get()) + entry.rva, entry.raw_data, entry.raw_size);
 }
 
+bool ApricotLibraryImpl::map_sections()
+{
+	Pe::SectionIterator section_iterator(m_memory.get(), m_is_initialized);
+	if (!m_is_initialized)
+	{
+		return false;
+	}
+	while (section_iterator.has_next())
+	{
+		const Pe::SectionIterator::Entry entry = section_iterator.next();
+		map_section_entry(entry);
+	}
+	return true;
+}
+
 bool ApricotLibraryImpl::finalize_section_entry(const Pe::SectionIterator::Entry& entry,
                                                 const uint32_t section_alignment)
 {
@@ -77,6 +94,47 @@ bool ApricotLibraryImpl::finalize_section_entry(const Pe::SectionIterator::Entry
 		size,
 		entry.permissions
 	);
+}
+
+bool ApricotLibraryImpl::finalize_sections()
+{
+	Pe::SectionIterator section_iterator(m_memory.get(), m_is_initialized);
+	if (!m_is_initialized)
+	{
+		return false;
+	}
+	const IMAGE_OPTIONAL_HEADER32* optional_header = Pe::get_optional_header(m_memory.get());
+	const uint32_t section_alignment = optional_header->SectionAlignment;
+	while (section_iterator.has_next())
+	{
+		const Pe::SectionIterator::Entry entry = section_iterator.next();
+		if (!finalize_section_entry(entry, section_alignment))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+bool ApricotLibraryImpl::call_entry_point(DWORD reason, BOOL& return_value)
+{
+	const IMAGE_OPTIONAL_HEADER32* const optional_header = Pe::get_optional_header(m_memory.get());
+	if (optional_header == nullptr)
+	{
+		return false;
+	}
+	auto entry_point = reinterpret_cast<DllEntryPoint>(static_cast<uint8_t*>(m_memory.get()) + optional_header->
+		AddressOfEntryPoint);
+	__try
+	{
+		static constexpr DWORD ENTRY_POINT_RESERVED = 0;
+		return_value = entry_point(static_cast<HMODULE>(m_memory.get()), reason, ENTRY_POINT_RESERVED);
+	}
+	__except (EXCEPTION_EXECUTE_HANDLER)
+	{
+		return false;
+	}
+	return true;
 }
 
 ApricotCode ApricotLibraryImpl::get_proc_address(const uint16_t ordinal, void** const result) const
