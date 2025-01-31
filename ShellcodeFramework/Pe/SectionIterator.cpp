@@ -1,4 +1,4 @@
-﻿#include "SectionIterator.hpp"
+﻿#include "Pe/SectionIterator.hpp"
 
 Pe::SectionIterator::SectionIterator(const void* module, bool& result):
 	m_module(module),

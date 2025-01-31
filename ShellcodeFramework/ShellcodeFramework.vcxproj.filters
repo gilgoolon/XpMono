@@ -21,10 +21,10 @@
     <ClInclude Include="Include\Trace.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Pe.hpp">
+    <ClInclude Include="Include\Pe\Pe.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\SectionIterator.hpp">
+    <ClInclude Include="Include\Pe\SectionIterator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Std.hpp">
@@ -35,10 +35,10 @@
     <ClCompile Include="HeapMemory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Pe.cpp">
+    <ClCompile Include="Pe\Pe.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SectionIterator.cpp">
+    <ClCompile Include="Pe\SectionIterator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Std.cpp">

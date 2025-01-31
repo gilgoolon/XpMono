@@ -1,6 +1,7 @@
 ﻿#include "ApricotLibraryCImpl.hpp"
 
 #include "ApricotLibraryImpl.hpp"
+#include "Std.hpp"
 
 ApricotCode APRICOT_LIBRARY__create(ApricotLibraryContext* ctx, const uint8_t* buffer, const uint32_t size)
 {

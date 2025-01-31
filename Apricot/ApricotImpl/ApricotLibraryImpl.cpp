@@ -1,9 +1,9 @@
 ﻿#include "ApricotLibraryImpl.hpp"
 
 #include "HeapMemory.hpp"
-#include "Pe.hpp"
-#include "SectionIterator.hpp"
 #include "Trace.hpp"
+#include "Pe/Pe.hpp"
+#include "Pe/SectionIterator.hpp"
 
 #include <Windows.h>
 

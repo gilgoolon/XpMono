@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "ApricotCode.hpp"
 #include "HeapMemory.hpp"
-#include "SectionIterator.hpp"
+#include "Pe/SectionIterator.hpp"
 
 #include <cstdint>
 
