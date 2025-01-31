@@ -2,7 +2,7 @@
 
 #include "Pe/Pe.hpp"
 
-ExportedFunctionsIterator::ExportedFunctionsIterator(const void* module, bool& result):
+Pe::ExportedFunctionsIterator::ExportedFunctionsIterator(const void* module, bool& result):
 	m_module(module),
 	m_num_functions(0),
 	m_functions(nullptr),
@@ -12,7 +12,7 @@ ExportedFunctionsIterator::ExportedFunctionsIterator(const void* module, bool& r
 	m_base(0),
 	m_current_index(0)
 {
-	const IMAGE_DATA_DIRECTORY* const export_data_directory = Pe::get_data_directory(
+	const IMAGE_DATA_DIRECTORY* const export_data_directory = get_data_directory(
 		module,
 		IMAGE_DIRECTORY_ENTRY_EXPORT
 	);
@@ -34,7 +34,7 @@ ExportedFunctionsIterator::ExportedFunctionsIterator(const void* module, bool& r
 	result = true;
 }
 
-const char* ExportedFunctionsIterator::get_function_name(const uint16_t ordinal) const
+const char* Pe::ExportedFunctionsIterator::get_function_name(const uint16_t ordinal) const
 {
 	for (uint32_t i = 0; i < m_num_names; ++i)
 	{
@@ -46,7 +46,7 @@ const char* ExportedFunctionsIterator::get_function_name(const uint16_t ordinal)
 	return nullptr;
 }
 
-bool ExportedFunctionsIterator::has_next() const
+bool Pe::ExportedFunctionsIterator::has_next() const
 {
 	while (m_current_index < m_num_functions && m_functions[m_current_index] == 0)
 	{
@@ -55,7 +55,7 @@ bool ExportedFunctionsIterator::has_next() const
 	return m_current_index < m_num_functions;
 }
 
-bool ExportedFunctionsIterator::next(Entry& result)
+bool Pe::ExportedFunctionsIterator::next(Entry& result)
 {
 	if (!has_next())
 	{

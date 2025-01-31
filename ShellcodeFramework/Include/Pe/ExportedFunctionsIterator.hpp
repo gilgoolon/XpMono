@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <cstdint>
 
+namespace Pe
+{
 class ExportedFunctionsIterator final
 {
 public:
@@ -36,3 +38,4 @@ private:
 	uint32_t m_base;
 	mutable uint32_t m_current_index;
 };
+}

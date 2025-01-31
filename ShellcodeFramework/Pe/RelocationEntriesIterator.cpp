@@ -1,18 +1,18 @@
 ﻿#include "Pe/RelocationEntriesIterator.hpp"
 
-RelocationEntriesIterator::RelocationEntriesIterator(const RelocationBlocksIterator::Entry& block):
+Pe::RelocationEntriesIterator::RelocationEntriesIterator(const RelocationBlocksIterator::Entry& block):
 	m_current_entry(block.start_of_block),
 	m_calls_left(block.items),
 	m_block_rva(block.virtual_address)
 {
 }
 
-bool RelocationEntriesIterator::has_next() const
+bool Pe::RelocationEntriesIterator::has_next() const
 {
 	return m_calls_left > 0;
 }
 
-RelocationEntriesIterator::Entry RelocationEntriesIterator::next()
+Pe::RelocationEntriesIterator::Entry Pe::RelocationEntriesIterator::next()
 {
 	--m_calls_left;
 	static constexpr uint32_t OFFSET_MASK = 0x0fff;

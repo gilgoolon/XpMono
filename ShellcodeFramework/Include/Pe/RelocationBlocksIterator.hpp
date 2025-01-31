@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+namespace Pe
+{
 class RelocationBlocksIterator final
 {
 public:
@@ -30,3 +32,4 @@ private:
 	uint32_t m_current_offset;
 	uint32_t m_size;
 };
+}

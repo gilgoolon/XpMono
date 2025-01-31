@@ -149,7 +149,7 @@ bool ApricotLibraryImpl::finalize_sections()
 bool ApricotLibraryImpl::perform_relocations()
 {
 	bool result = false;
-	RelocationBlocksIterator relocations(m_memory.get(), result);
+	Pe::RelocationBlocksIterator relocations(m_memory.get(), result);
 	if (!result)
 	{
 		return false;
@@ -162,16 +162,16 @@ bool ApricotLibraryImpl::perform_relocations()
 	const uint32_t relocation_delta = reinterpret_cast<uint32_t>(m_memory.get()) - optional_header->ImageBase;
 	while (relocations.has_next())
 	{
-		const RelocationBlocksIterator::Entry relocation_block = relocations.next();
-		RelocationEntriesIterator entries(relocation_block);
+		const Pe::RelocationBlocksIterator::Entry relocation_block = relocations.next();
+		Pe::RelocationEntriesIterator entries(relocation_block);
 		while (entries.has_next())
 		{
-			const RelocationEntriesIterator::Entry entry = entries.next();
-			if (entry.type == RelocationEntriesIterator::Type::REL_ABSOLUTE)
+			const Pe::RelocationEntriesIterator::Entry entry = entries.next();
+			if (entry.type == Pe::RelocationEntriesIterator::Type::REL_ABSOLUTE)
 			{
 				continue;
 			}
-			if (entry.type != RelocationEntriesIterator::Type::REL_HIGHLOW)
+			if (entry.type != Pe::RelocationEntriesIterator::Type::REL_HIGHLOW)
 			{
 				return false;
 			}
@@ -211,7 +211,7 @@ bool ApricotLibraryImpl::load_module(const IMAGE_IMPORT_DESCRIPTOR* module)
 		return false;
 	}
 	bool result = false;
-	ImportedFunctionsIterator imported_functions(m_memory.get(), module, result);
+	Pe::ImportedFunctionsIterator imported_functions(m_memory.get(), module, result);
 	if (!result)
 	{
 		return false;
@@ -294,12 +294,12 @@ void ApricotLibraryImpl::unload_dependencies()
 ApricotCode ApricotLibraryImpl::get_proc_address(const uint16_t ordinal, void*& result) const
 {
 	bool parse_result = false;
-	ExportedFunctionsIterator exported_functions(m_memory.get(), parse_result);
+	Pe::ExportedFunctionsIterator exported_functions(m_memory.get(), parse_result);
 	if (!parse_result)
 	{
 		return ApricotCode::FAILED_PE_PARSE_EAT;
 	}
-	ExportedFunctionsIterator::Entry function{};
+	Pe::ExportedFunctionsIterator::Entry function{};
 	while (exported_functions.has_next())
 	{
 		if (!exported_functions.next(function))
@@ -318,12 +318,12 @@ ApricotCode ApricotLibraryImpl::get_proc_address(const uint16_t ordinal, void*& 
 ApricotCode ApricotLibraryImpl::get_proc_address(const char* name, void*& result) const
 {
 	bool parse_result = false;
-	ExportedFunctionsIterator exported_functions(m_memory.get(), parse_result);
+	Pe::ExportedFunctionsIterator exported_functions(m_memory.get(), parse_result);
 	if (!parse_result)
 	{
 		return ApricotCode::FAILED_PE_PARSE_EAT;
 	}
-	ExportedFunctionsIterator::Entry function{};
+	Pe::ExportedFunctionsIterator::Entry function{};
 	while (exported_functions.has_next())
 	{
 		if (!exported_functions.next(function))

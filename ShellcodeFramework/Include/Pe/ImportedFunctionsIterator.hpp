@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <Windows.h>
 
+namespace Pe
+{
 class ImportedFunctionsIterator final
 {
 public:
@@ -20,3 +22,4 @@ private:
 	const IMAGE_THUNK_DATA32* m_next_thunk;
 	const void* m_module;
 };
+}

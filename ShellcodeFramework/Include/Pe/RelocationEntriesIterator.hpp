@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "RelocationBlocksIterator.hpp"
 
+namespace Pe
+{
 class RelocationEntriesIterator final
 {
 public:
@@ -32,3 +34,4 @@ private:
 	uint32_t m_calls_left;
 	const void* m_block_rva;
 };
+}

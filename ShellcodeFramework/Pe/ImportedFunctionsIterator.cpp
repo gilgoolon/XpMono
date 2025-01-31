@@ -2,9 +2,9 @@
 
 #include <cstdint>
 
-ImportedFunctionsIterator::ImportedFunctionsIterator(const void* module,
-                                                     const IMAGE_IMPORT_DESCRIPTOR* imported_module,
-                                                     bool& result):
+Pe::ImportedFunctionsIterator::ImportedFunctionsIterator(const void* module,
+                                                         const IMAGE_IMPORT_DESCRIPTOR* imported_module,
+                                                         bool& result):
 	m_next_thunk(nullptr),
 	m_module(module)
 {
@@ -14,13 +14,13 @@ ImportedFunctionsIterator::ImportedFunctionsIterator(const void* module,
 	result = true;
 }
 
-bool ImportedFunctionsIterator::has_next() const
+bool Pe::ImportedFunctionsIterator::has_next() const
 {
 	static constexpr DWORD TERMINATOR = 0;
 	return m_next_thunk->u1.Function != TERMINATOR;
 }
 
-const IMAGE_THUNK_DATA32* ImportedFunctionsIterator::next()
+const IMAGE_THUNK_DATA32* Pe::ImportedFunctionsIterator::next()
 {
 	return m_next_thunk++;
 }
