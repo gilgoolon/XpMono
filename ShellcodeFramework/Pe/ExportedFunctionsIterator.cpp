@@ -24,7 +24,7 @@ ExportedFunctionsIterator::ExportedFunctionsIterator(const void* module, bool& r
 	const auto export_directory = reinterpret_cast<const IMAGE_EXPORT_DIRECTORY*>(
 		static_cast<const uint8_t*>(module) + export_data_directory->VirtualAddress);
 	m_num_functions = export_directory->NumberOfFunctions;
-	m_functions = reinterpret_cast<void* const*>(static_cast<const uint8_t*>(module) + export_directory->
+	m_functions = reinterpret_cast<const uint32_t*>(static_cast<const uint8_t*>(module) + export_directory->
 		AddressOfFunctions);
 	m_num_names = export_directory->NumberOfNames;
 	m_names = reinterpret_cast<const uint32_t*>(static_cast<const uint8_t*>(module) + export_directory->AddressOfNames);
@@ -48,7 +48,7 @@ const char* ExportedFunctionsIterator::get_function_name(const uint16_t ordinal)
 
 bool ExportedFunctionsIterator::has_next() const
 {
-	while (m_current_index < m_num_functions && m_functions[m_current_index] == nullptr)
+	while (m_current_index < m_num_functions && m_functions[m_current_index] == 0)
 	{
 		m_current_index++;
 	}

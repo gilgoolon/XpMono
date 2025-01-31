@@ -17,7 +17,7 @@ private:
 public:
 	struct Entry final
 	{
-		void* address;
+		uint32_t rva;
 		uint16_t ordinal;
 		const char* name;
 	};
@@ -29,7 +29,7 @@ public:
 private:
 	const void* m_module;
 	uint32_t m_num_functions;
-	void* const* m_functions;
+	const uint32_t* m_functions;
 	uint32_t m_num_names;
 	const uint32_t* m_names;
 	const uint32_t* m_name_ordinals;

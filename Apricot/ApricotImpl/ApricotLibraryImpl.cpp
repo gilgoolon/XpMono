@@ -94,6 +94,7 @@ ApricotLibraryImpl::~ApricotLibraryImpl()
 	{
 		TRACE(L"failed calling entry point on DETACH");
 	}
+	unload_dependencies();
 }
 
 void ApricotLibraryImpl::map_section_entry(const Pe::SectionIterator::Entry& entry)
@@ -274,7 +275,7 @@ ApricotCode ApricotLibraryImpl::get_proc_address(const uint16_t ordinal, void*& 
 		}
 		if (function.ordinal == ordinal)
 		{
-			result = function.address;
+			result = static_cast<uint8_t*>(m_memory.get()) + function.rva;
 			return ApricotCode::SUCCESS;
 		}
 	}
@@ -302,7 +303,7 @@ ApricotCode ApricotLibraryImpl::get_proc_address(const char* name, void*& result
 		}
 		if (Strings::equals(name, function.name))
 		{
-			result = function.address;
+			result = static_cast<uint8_t*>(m_memory.get()) + function.rva;
 			return ApricotCode::SUCCESS;
 		}
 	}
