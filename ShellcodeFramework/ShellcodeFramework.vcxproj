@@ -20,8 +20,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{c5df661b-9926-4c3f-be5f-e843ec7f91f0}</ProjectGuid>
-    <RootNamespace>ApricotImpl</RootNamespace>
+    <ProjectGuid>{c6d5dfb2-079f-4f52-9665-c1a99f7f0d48}</ProjectGuid>
+    <RootNamespace>ShellcodeFramework</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
