@@ -2,6 +2,7 @@
 
 #include "Pe.hpp"
 #include "SectionIterator.hpp"
+#include "Trace.hpp"
 
 #include <Windows.h>
 
@@ -54,6 +55,19 @@ ApricotLibraryImpl::ApricotLibraryImpl(const uint8_t* unloaded_module,
 		return;
 	}
 
+	BOOL entry_point_result = FALSE;
+	if (!call_entry_point(DLL_PROCESS_ATTACH, entry_point_result))
+	{
+		result = ApricotCode::FAILED_PE_CALL_ENTRY_POINT;
+		return;
+	}
+	if (entry_point_result == FALSE)
+	{
+		call_entry_point(DLL_PROCESS_DETACH, entry_point_result);
+		result = ApricotCode::FAILED_ENTRY_POINT_FAILED;
+		return;
+	}
+
 	m_is_initialized = true;
 	result = ApricotCode::SUCCESS;
 }
@@ -62,6 +76,12 @@ ApricotLibraryImpl::~ApricotLibraryImpl()
 {
 	if (!m_is_initialized)
 	{
+		return;
+	}
+	BOOL ignored_return_value = TRUE;
+	if (!call_entry_point(DLL_PROCESS_DETACH, ignored_return_value))
+	{
+		TRACE(L"failed calling entry point on DETACH");
 	}
 }
 
