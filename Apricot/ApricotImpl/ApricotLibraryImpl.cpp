@@ -7,19 +7,11 @@
 #include "Pe/ImportedFunctionsIterator.hpp"
 #include "Pe/ImportedModulesIterator.hpp"
 #include "Pe/Pe.hpp"
+#include "Pe/RelocationBlocksIterator.hpp"
+#include "Pe/RelocationEntriesIterator.hpp"
 #include "Pe/SectionIterator.hpp"
 
 #include <Windows.h>
-
-static void* get_preferred_address_safe(const uint8_t* unloaded_module)
-{
-	const IMAGE_OPTIONAL_HEADER32* const optional_header = Pe::get_optional_header(unloaded_module);
-	if (optional_header == nullptr)
-	{
-		return nullptr;
-	}
-	return reinterpret_cast<void*>(optional_header->ImageBase);
-}
 
 static uint32_t get_image_size_safe(const uint8_t* unloaded_module)
 {
@@ -36,7 +28,7 @@ ApricotLibraryImpl::ApricotLibraryImpl(const uint8_t* unloaded_module,
                                        ApricotCode& result):
 	m_is_initialized(false),
 	m_memory(
-		get_preferred_address_safe(unloaded_module),
+		nullptr,
 		get_image_size_safe(unloaded_module),
 		Shellcode::HeapMemory::Permissions::READ_WRITE,
 		m_is_initialized
@@ -51,6 +43,12 @@ ApricotLibraryImpl::ApricotLibraryImpl(const uint8_t* unloaded_module,
 	if (!map_sections(unloaded_module))
 	{
 		result = ApricotCode::FAILED_PE_MAP_SECTIONS;
+		return;
+	}
+
+	if (!perform_relocations())
+	{
+		result = ApricotCode::FAILED_PE_PERFORM_RELOCATIONS;
 		return;
 	}
 
@@ -143,6 +141,41 @@ bool ApricotLibraryImpl::finalize_sections()
 		if (!finalize_section_entry(entry, section_alignment))
 		{
 			return false;
+		}
+	}
+	return true;
+}
+
+bool ApricotLibraryImpl::perform_relocations()
+{
+	bool result = false;
+	RelocationBlocksIterator relocations(m_memory.get(), result);
+	if (!result)
+	{
+		return false;
+	}
+	const IMAGE_OPTIONAL_HEADER32* const optional_header = Pe::get_optional_header(m_memory.get());
+	if (optional_header == nullptr)
+	{
+		return false;
+	}
+	const uint32_t relocation_delta = reinterpret_cast<uint32_t>(m_memory.get()) - optional_header->ImageBase;
+	while (relocations.has_next())
+	{
+		const RelocationBlocksIterator::Entry relocation_block = relocations.next();
+		RelocationEntriesIterator entries(relocation_block);
+		while (entries.has_next())
+		{
+			const RelocationEntriesIterator::Entry entry = entries.next();
+			if (entry.type == RelocationEntriesIterator::Type::REL_ABSOLUTE)
+			{
+				continue;
+			}
+			if (entry.type != RelocationEntriesIterator::Type::REL_HIGHLOW)
+			{
+				return false;
+			}
+			*const_cast<uint32_t*>(entry.address) += relocation_delta;
 		}
 	}
 	return true;

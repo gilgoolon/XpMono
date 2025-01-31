@@ -21,6 +21,8 @@ private:
 	[[nodiscard]] bool finalize_section_entry(const Pe::SectionIterator::Entry& entry, uint32_t section_alignment);
 	bool finalize_sections();
 
+	bool perform_relocations();
+
 	using DllEntryPoint = BOOL(WINAPI*)(HMODULE, DWORD, DWORD);
 	bool call_entry_point(DWORD reason, BOOL& return_value);
 
