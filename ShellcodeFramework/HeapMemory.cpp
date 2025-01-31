@@ -2,14 +2,11 @@
 
 #include "Trace.hpp"
 
+static constexpr void* NO_PREFERRED_ADDRESS = nullptr;
+
 Shellcode::HeapMemory::HeapMemory(const uint32_t size, const Permissions permissions, bool& result):
-	m_address(nullptr),
-	m_size(size),
-	m_is_initialized(false)
+	HeapMemory(NO_PREFERRED_ADDRESS, size, permissions, result)
 {
-	static constexpr void* NO_PREFERRED_ADDRESS = nullptr;
-	m_is_initialized = allocate_memory(NO_PREFERRED_ADDRESS, size, permissions, m_address);
-	result = m_is_initialized;
 }
 
 Shellcode::HeapMemory::HeapMemory(void* preferred_address,
@@ -17,10 +14,8 @@ Shellcode::HeapMemory::HeapMemory(void* preferred_address,
                                   const Permissions permissions,
                                   bool& result):
 	m_address(nullptr),
-	m_size(size),
-	m_is_initialized(false)
+	m_is_initialized(allocate_memory(preferred_address, size, permissions, m_address))
 {
-	m_is_initialized = allocate_memory(preferred_address, size, permissions, m_address);
 	result = m_is_initialized;
 }
 

@@ -32,7 +32,6 @@ public:
 
 private:
 	void* m_address;
-	uint32_t m_size;
 	bool m_is_initialized;
 };
 }
