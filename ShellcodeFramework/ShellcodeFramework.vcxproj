@@ -10,13 +10,6 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Include\ApricotCode.hpp" />
-    <ClInclude Include="Include\ApricotLibraryImpl.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="ApricotLibraryImpl.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
