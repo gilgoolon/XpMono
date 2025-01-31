@@ -1,14 +1,15 @@
 ﻿#pragma once
-#include "ApricotLibraryImpl.hpp"
 #include "Utils/Buffer.hpp"
 
 #include <memory>
+
+struct ApricotLibraryContext;
 
 class ApricotLibrary final
 {
 public:
 	explicit ApricotLibrary(const Buffer& buffer);
-	~ApricotLibrary() = default;
+	~ApricotLibrary();
 	ApricotLibrary(const ApricotLibrary&) = delete;
 	ApricotLibrary& operator=(const ApricotLibrary&) = delete;
 	ApricotLibrary(ApricotLibrary&&) = delete;
@@ -26,5 +27,5 @@ public:
 	}
 
 private:
-	std::unique_ptr<ApricotLibraryImpl> m_library;
+	std::unique_ptr<ApricotLibraryContext> m_library;
 };

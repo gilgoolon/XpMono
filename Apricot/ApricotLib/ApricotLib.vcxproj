@@ -12,7 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApricotLibrary.cpp" />
-    <ClCompile Include="Include\ApricotException.cpp" />
+    <ClCompile Include="ApricotException.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\ApricotException.hpp" />
@@ -21,6 +21,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Framework\Framework.vcxproj">
       <Project>{5b5c1f35-e8a8-44e2-9133-38047262f449}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ShellcodeFramework\ShellcodeFramework.vcxproj">
+      <Project>{c6d5dfb2-079f-4f52-9665-c1a99f7f0d48}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ApricotImpl\ApricotImpl.vcxproj">
+      <Project>{c5df661b-9926-4c3f-be5f-e843ec7f91f0}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -21,9 +21,15 @@
     <ClInclude Include="Include\ApricotLibraryImpl.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ApricotLibraryCImpl.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApricotLibraryImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ApricotLibraryCImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

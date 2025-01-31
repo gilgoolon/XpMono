@@ -2,23 +2,35 @@
 
 #include "ApricotCode.hpp"
 #include "ApricotException.hpp"
+#include "ApricotLibraryCImpl.hpp"
 #include "Trace.hpp"
 
 ApricotLibrary::ApricotLibrary(const Buffer& buffer):
-	m_library(nullptr)
+	m_library(std::make_unique<ApricotLibraryContext>())
 {
-	auto result = ApricotCode::UNKNOWN_ERROR;
-	m_library = std::make_unique<ApricotLibraryImpl>(buffer.data(), buffer.size(), &result);
+	const ApricotCode result = APRICOT_LIBRARY__create(m_library.get(), buffer.data(), buffer.size());
 	if (result != ApricotCode::SUCCESS)
 	{
 		throw ApricotException(ErrorCode::FAILED_APRICOT_LOAD, result);
 	}
 }
 
+ApricotLibrary::~ApricotLibrary()
+{
+	try
+	{
+		APRICOT_LIBRARY__destroy(m_library.get());
+	}
+	catch (...)
+	{
+		TRACE(L"failed to unload Apricot library")
+	}
+}
+
 void* ApricotLibrary::get_exported_procedure(const uint16_t ordinal) const
 {
 	void* result = nullptr;
-	const ApricotCode code = m_library->get_proc_address(ordinal, &result);
+	const ApricotCode code = APRICOT_LIBRARY__get_proc_address(m_library.get(), ordinal, &result);
 	if (code != ApricotCode::SUCCESS)
 	{
 		throw ApricotException(ErrorCode::FAILED_APRICOT_GET, code);

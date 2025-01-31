@@ -13,11 +13,13 @@
   <ItemGroup>
     <ClInclude Include="Include\Pe.hpp" />
     <ClInclude Include="Include\SectionIterator.hpp" />
+    <ClInclude Include="Include\Std.hpp" />
     <ClInclude Include="Include\Trace.hpp" />
     <ClInclude Include="Include\HeapMemory.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HeapMemory.cpp" />
+    <ClCompile Include="Std.cpp" />
     <ClCompile Include="SectionIterator.cpp" />
     <ClCompile Include="Pe.cpp" />
   </ItemGroup>

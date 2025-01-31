@@ -12,10 +12,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\ApricotCode.hpp" />
+    <ClInclude Include="Include\ApricotLibraryCImpl.hpp" />
     <ClInclude Include="Include\ApricotLibraryImpl.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApricotLibraryImpl.cpp" />
+    <ClCompile Include="ApricotLibraryCImpl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ShellcodeFramework\ShellcodeFramework.vcxproj">
