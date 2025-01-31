@@ -11,11 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Pe.hpp" />
     <ClInclude Include="Include\Trace.hpp" />
     <ClInclude Include="Include\HeapMemory.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HeapMemory.cpp" />
+    <ClCompile Include="Pe.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
