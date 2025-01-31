@@ -31,6 +31,11 @@ private:
 public:
 	[[nodiscard]] void* get() const;
 
+	static void memcpy(void* dest, const void* source, uint32_t size);
+
+	[[nodiscard]] static uint32_t align(uint32_t offset, uint32_t alignment);
+	[[nodiscard]] static bool set_permissions(void* address, uint32_t size, DWORD perms);
+
 private:
 	void* m_address;
 	bool m_is_initialized;

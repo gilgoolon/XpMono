@@ -51,3 +51,29 @@ void* Shellcode::HeapMemory::get() const
 {
 	return m_address;
 }
+
+void Shellcode::HeapMemory::memcpy(void* dest, const void* source, const uint32_t size)
+{
+	auto cur_dest = static_cast<uint8_t*>(dest);
+	auto cur_source = static_cast<const uint8_t*>(source);
+	for (uint32_t i = 0; i < size; ++i)
+	{
+		*cur_dest++ = *cur_source++;
+	}
+}
+
+uint32_t Shellcode::HeapMemory::align(const uint32_t offset, const uint32_t alignment)
+{
+	const uint32_t rem = offset % alignment;
+	if (rem == 0)
+	{
+		return offset;
+	}
+	return offset - rem + alignment;
+}
+
+bool Shellcode::HeapMemory::set_permissions(void* address, const uint32_t size, const DWORD perms)
+{
+	DWORD old_perms = 0;
+	return VirtualProtect(address, size, perms, &old_perms) != FALSE;
+}
