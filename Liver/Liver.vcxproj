@@ -51,7 +51,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)../Framework/Include/;$(SolutionDir)../Apricot/ApricotLib/Include/;$(SolutionDir)../Apricot/ApricotImpl/Include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../Framework/Include/;$(SolutionDir)../Apricot/ApricotLib/Include/;$(SolutionDir)../Apricot/ApricotImpl/Include/;$(SolutionDir)..\Fig\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -65,7 +65,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)../Framework/Include/;$(SolutionDir)../Apricot/ApricotLib/Include/;$(SolutionDir)../Apricot/ApricotImpl/Include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../Framework/Include/;$(SolutionDir)../Apricot/ApricotLib/Include/;$(SolutionDir)../Apricot/ApricotImpl/Include/;$(SolutionDir)..\Fig\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -75,12 +75,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Fig\FigException.cpp" />
+    <ClCompile Include="Fig\FigModule.cpp" />
+    <ClCompile Include="Fig\FigOperation.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Framework\Framework.vcxproj">
       <Project>{5b5c1f35-e8a8-44e2-9133-38047262f449}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Fig\FigException.hpp" />
+    <ClInclude Include="Fig\FigModule.hpp" />
+    <ClInclude Include="Fig\FigOperation.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

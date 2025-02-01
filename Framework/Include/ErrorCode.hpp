@@ -58,6 +58,12 @@ enum class ErrorCode : uint8_t
 	// Apricot
 	FAILED_APRICOT_LOAD,
 	FAILED_APRICOT_GET,
+
+	// Fig
+	FAILED_FIG_INITIALIZE,
+	FAILED_FIG_EXECUTE,
+	FAILED_FIG_STATUS,
+	FAILED_FIG_TAKE,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);

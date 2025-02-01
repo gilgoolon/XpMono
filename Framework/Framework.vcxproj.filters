@@ -72,6 +72,9 @@
     <ClCompile Include="Filesystem\File.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Include\Synchronization\UnmanagedEvent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\CommandLineArguments.hpp">
@@ -141,6 +144,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Synchronization\IWaitable.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Synchronization\UnmanagedEvent.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

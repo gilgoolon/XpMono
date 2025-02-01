@@ -2,6 +2,7 @@
 #include "ApricotLibrary.hpp"
 #include "Exception.hpp"
 #include "Trace.hpp"
+#include "Fig/FigException.hpp"
 #include "Filesystem/File.hpp"
 
 #include <Windows.h>
@@ -25,6 +26,17 @@ int WINAPI wWinMain([[maybe_unused]] HINSTANCE hInstance,
 			ex.code(),
 			" and ApricotCode ",
 			static_cast<uint32_t>(ex.apricot_code())
+		)
+	}
+	catch (const FigException& ex)
+	{
+		TRACE(
+			"uncaught FigException with code ",
+			ex.code(),
+			" and FigCode ",
+			static_cast<uint32_t>(ex.fig_code()),
+			" and FigSpecificCode ",
+			ex.fig_specific_code()
 		)
 	}
 	catch (const WinApiException& ex)
