@@ -22,5 +22,5 @@ void LoadedFigs::unload(const Fig::FigId id)
 	{
 		throw Exception(ErrorCode::FIG_NOT_LOADED);
 	}
-	m_loaded_figs.erase(std::remove(m_loaded_figs.begin(), m_loaded_figs.end(), id), m_loaded_figs.end());
+	m_loaded_figs.erase(id);
 }
