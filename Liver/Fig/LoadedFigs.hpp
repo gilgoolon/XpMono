@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "Fig/FigModule.hpp"
+#include "FigModule.hpp"
 
 #include <unordered_map>
 
