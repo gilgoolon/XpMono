@@ -1,8 +1,8 @@
 ﻿#include "ApricotException.hpp"
 #include "ApricotLibrary.hpp"
 #include "Exception.hpp"
+#include "FigException.hpp"
 #include "Trace.hpp"
-#include "Fig/FigException.hpp"
 #include "Filesystem/File.hpp"
 
 #include <Windows.h>

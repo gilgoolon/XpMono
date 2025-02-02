@@ -2,8 +2,8 @@
 #include "Synchronization/Event.hpp"
 #include "Utils/Buffer.hpp"
 
-#include <ApricotLibrary.hpp>
 #include "FigApi.hpp"
+#include <ApricotLibrary.hpp>
 
 class FigOperation;
 
