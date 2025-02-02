@@ -78,6 +78,8 @@
     <ClCompile Include="Fig\FigException.cpp" />
     <ClCompile Include="Fig\FigModule.cpp" />
     <ClCompile Include="Fig\FigOperation.cpp" />
+    <ClCompile Include="LoadedFigs.cpp" />
+    <ClCompile Include="LoadedFigsContainer.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +91,8 @@
     <ClInclude Include="Fig\FigException.hpp" />
     <ClInclude Include="Fig\FigModule.hpp" />
     <ClInclude Include="Fig\FigOperation.hpp" />
+    <ClInclude Include="LoadedFigs.hpp" />
+    <ClInclude Include="LoadedFigsContainer.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
