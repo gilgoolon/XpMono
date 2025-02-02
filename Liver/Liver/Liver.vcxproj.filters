@@ -27,10 +27,10 @@
     <ClCompile Include="Fig\FigOperation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LoadedFigs.cpp">
+    <ClCompile Include="Fig\LoadedFigs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LoadedFigsContainer.cpp">
+    <ClCompile Include="Fig\LoadedFigsContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,10 +44,10 @@
     <ClInclude Include="Fig\FigOperation.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LoadedFigs.hpp">
+    <ClInclude Include="Fig\LoadedFigs.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LoadedFigsContainer.hpp">
+    <ClInclude Include="Fig\LoadedFigsContainer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
