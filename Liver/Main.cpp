@@ -63,6 +63,13 @@ static void main_logic()
 	ApricotLibrary lib(
 		File(LR"(C:\Users\alper\OneDrive\Documents\XpMono\Apricot\Debug\SimpleDll.dll)", File::Mode::READ).read()
 	);
+	const Buffer fig_buffer = File(
+		LR"(C:\Users\alper\OneDrive\Documents\XpMono\Liver\Debug\CubeClimberFig.dll)",
+		File::Mode::READ
+	).read();
+	constexpr Fig::FigId fig_id = 1;
+	TRACE(L"loading fig library with id ", fig_id);
+	ApricotLibrary fig_lib(fig_buffer);
 	using SimpleFunction = void(*)();
 	lib.call<SimpleFunction>(1);
 }

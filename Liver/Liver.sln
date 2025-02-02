@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Liver", "Liver.vcxproj", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Framework", "..\Framework\Framework.vcxproj", "{5B5C1F35-E8A8-44E2-9133-38047262F449}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CubeClimberFig", "..\CubeClimberFig\CubeClimberFig.vcxproj", "{90B6DEF1-6AA3-4427-8415-DEA583772C97}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -21,6 +23,10 @@ Global
 		{5B5C1F35-E8A8-44E2-9133-38047262F449}.Debug|x86.Build.0 = Debug|Win32
 		{5B5C1F35-E8A8-44E2-9133-38047262F449}.Release|x86.ActiveCfg = Release|Win32
 		{5B5C1F35-E8A8-44E2-9133-38047262F449}.Release|x86.Build.0 = Release|Win32
+		{90B6DEF1-6AA3-4427-8415-DEA583772C97}.Debug|x86.ActiveCfg = Debug|Win32
+		{90B6DEF1-6AA3-4427-8415-DEA583772C97}.Debug|x86.Build.0 = Debug|Win32
+		{90B6DEF1-6AA3-4427-8415-DEA583772C97}.Release|x86.ActiveCfg = Release|Win32
+		{90B6DEF1-6AA3-4427-8415-DEA583772C97}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
