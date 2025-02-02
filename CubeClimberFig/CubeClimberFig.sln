@@ -7,6 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CubeClimberFig", "CubeClimb
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Framework", "..\Framework\Framework.vcxproj", "{5B5C1F35-E8A8-44E2-9133-38047262F449}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Runner", "Runner\Runner.vcxproj", "{A70E95A9-E15D-41D3-A98B-1DA07F237FFF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Fig", "..\Fig\Fig.vcxproj", "{31E00270-3EF4-40AE-88F1-3F5BD2DB58F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -21,6 +25,14 @@ Global
 		{5B5C1F35-E8A8-44E2-9133-38047262F449}.Debug|x86.Build.0 = Debug|Win32
 		{5B5C1F35-E8A8-44E2-9133-38047262F449}.Release|x86.ActiveCfg = Release|Win32
 		{5B5C1F35-E8A8-44E2-9133-38047262F449}.Release|x86.Build.0 = Release|Win32
+		{A70E95A9-E15D-41D3-A98B-1DA07F237FFF}.Debug|x86.ActiveCfg = Debug|Win32
+		{A70E95A9-E15D-41D3-A98B-1DA07F237FFF}.Debug|x86.Build.0 = Debug|Win32
+		{A70E95A9-E15D-41D3-A98B-1DA07F237FFF}.Release|x86.ActiveCfg = Release|Win32
+		{A70E95A9-E15D-41D3-A98B-1DA07F237FFF}.Release|x86.Build.0 = Release|Win32
+		{31E00270-3EF4-40AE-88F1-3F5BD2DB58F5}.Debug|x86.ActiveCfg = Debug|Win32
+		{31E00270-3EF4-40AE-88F1-3F5BD2DB58F5}.Debug|x86.Build.0 = Debug|Win32
+		{31E00270-3EF4-40AE-88F1-3F5BD2DB58F5}.Release|x86.ActiveCfg = Release|Win32
+		{31E00270-3EF4-40AE-88F1-3F5BD2DB58F5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

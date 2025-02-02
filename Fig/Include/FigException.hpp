@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "Exception.hpp"
 
-#include <FigApi.hpp>
+#include "FigApi.hpp"
 
 class FigException final : public Exception
 {
