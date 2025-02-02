@@ -1,4 +1,4 @@
-﻿#include "UnmanagedEvent.hpp"
+﻿#include "Synchronization/UnmanagedEvent.hpp"
 
 UnmanagedEvent::UnmanagedEvent(const HANDLE handle):
 	m_handle(handle)

@@ -72,7 +72,7 @@
     <ClCompile Include="Filesystem\File.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Synchronization\UnmanagedEvent.cpp">
+    <ClCompile Include="Synchronization\UnmanagedEvent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
