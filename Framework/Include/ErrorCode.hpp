@@ -66,6 +66,8 @@ enum class ErrorCode : uint8_t
 	FAILED_FIG_TAKE,
 	FIG_ALREADY_LOADED,
 	FIG_NOT_LOADED,
+	FAILED_EVENT_WAIT,
+	WAIT_TIMED_OUT,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);

@@ -21,6 +21,12 @@ public:
 	[[nodiscard]] Fig::VersionMinor minor() const;
 	[[nodiscard]] Fig::VersionMajor major() const;
 
+	struct StatusResult final
+	{
+		Fig::ExecutionStatus execution_status;
+		Fig::FigSpecificCode fig_specific_code;
+	};
+
 	[[nodiscard]] std::unique_ptr<FigOperation> execute(Fig::OperationType type, const Buffer& parameters);
 
 private:
@@ -29,11 +35,13 @@ private:
 	Fig::FigInformation m_information;
 	Event m_fig_quit_event;
 
-	[[nodiscard]] Fig::ExecutionStatus status(Fig::OperationId id) const;
+	[[nodiscard]] StatusResult status(Fig::OperationId id) const;
 
 	[[nodiscard]] std::vector<uint8_t> take(Fig::OperationId id);
 
 	static constexpr std::wstring_view EVENT_PREFIX = L"FigEvent";
 
 	[[nodiscard]] static std::wstring event_name(Fig::FigId fig_id);
+
+	friend class FigOperation;
 };

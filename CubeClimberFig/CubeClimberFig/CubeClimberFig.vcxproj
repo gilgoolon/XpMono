@@ -88,6 +88,9 @@
   <ItemGroup>
     <None Include="Source.def" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Api.hpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

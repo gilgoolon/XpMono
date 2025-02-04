@@ -18,6 +18,8 @@ public:
 	FigOperation& operator=(FigOperation&&) = delete;
 
 	[[nodiscard]] Buffer take();
+	[[nodiscard]] FigModule::StatusResult status() const;
+	[[nodiscard]] FigModule::StatusResult wait() const;
 
 private:
 	std::shared_ptr<FigModule> m_module;

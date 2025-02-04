@@ -63,7 +63,7 @@ std::unique_ptr<FigOperation> FigModule::execute(const Fig::OperationType type, 
 	return std::make_unique<PublicFigOperation>(shared_from_this(), operation_id, operation_event);
 }
 
-Fig::ExecutionStatus FigModule::status(const Fig::OperationId id) const
+FigModule::StatusResult FigModule::status(const Fig::OperationId id) const
 {
 	Fig::FigSpecificCode specific_code = Fig::FIG_SPECIFIC_CODE_RESERVED;
 	auto status = Fig::ExecutionStatus::FINISHED;
@@ -72,11 +72,7 @@ Fig::ExecutionStatus FigModule::status(const Fig::OperationId id) const
 	{
 		throw FigException(ErrorCode::FAILED_FIG_STATUS, code);
 	}
-	if (status == Fig::ExecutionStatus::FAILED)
-	{
-		throw FigException(ErrorCode::FAILED_FIG_EXECUTE, code, specific_code);
-	}
-	return status;
+	return {status, specific_code};
 }
 
 std::vector<uint8_t> FigModule::take(const Fig::OperationId id)

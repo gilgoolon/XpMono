@@ -1,7 +1,9 @@
 ﻿#include "Exception.hpp"
 #include "FigException.hpp"
 #include "FigModule.hpp"
+#include "FigOperation.hpp"
 #include "Trace.hpp"
+#include "../CubeClimberFig/Api.hpp"
 #include "Filesystem/File.hpp"
 
 #include <ApricotException.hpp>
@@ -63,7 +65,37 @@ static void main_logic()
 {
 	static constexpr Fig::FigId FIG_ID = 1;
 	const Buffer fig_buffer = File(L"../Debug/CubeClimberFig.dll", File::Mode::READ).read();
-	FigModule fig(FIG_ID, fig_buffer);
-	TRACE("fig id: ", fig.id(), " fig version: ", fig.major(), ".", fig.minor());
+	const auto fig = std::make_shared<FigModule>(FIG_ID, fig_buffer);
+	TRACE("fig id: ", fig->id(), " fig version: ", fig->major(), ".", fig->minor());
+	std::unique_ptr<FigOperation> fig_operation = fig->execute(
+		static_cast<Fig::OperationType>(CubeClimberOperation::DIRLIST),
+		{}
+	);
+	bool is_over = false;
+	File output(L"output.txt", File::Mode::WRITE);
+	while (!is_over)
+	{
+		const FigModule::StatusResult status = fig_operation->wait();
+		switch (status.execution_status)
+		{
+		case Fig::ExecutionStatus::FAILED:
+			TRACE(L"failed with fig code: ", status.fig_specific_code);
+			throw Exception(ErrorCode::FAILED_FIG_EXECUTE);
+		case Fig::ExecutionStatus::FINISHED:
+			is_over = true;
+			break;
+		case Fig::ExecutionStatus::EXECUTING:
+			continue;
+		case Fig::ExecutionStatus::EXECUTING_CAN_TAKE:
+			break;
+		}
+		Buffer data;
+		do
+		{
+			data = fig_operation->take();
+			output.write(data);
+		}
+		while (!data.empty());
+	}
 	TRACE("finished successfully")
 }
