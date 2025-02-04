@@ -14,7 +14,14 @@ public:
 		WRITE = FILE_GENERIC_WRITE,
 	};
 
-	explicit File(const std::filesystem::path& path, Mode mode);
+	enum class Disposition : uint32_t
+	{
+		OPEN = OPEN_EXISTING,
+		CREATE = CREATE_NEW,
+		OVERRIDE = CREATE_ALWAYS,
+	};
+
+	explicit File(const std::filesystem::path& path, Mode mode, Disposition disposition);
 	~File() = default;
 	File(const File&) = delete;
 	File& operator=(const File&) = delete;
@@ -33,5 +40,5 @@ public:
 private:
 	ScopedHandle m_handle;
 
-	[[nodiscard]] static HANDLE create_file(const std::filesystem::path&, Mode mode);
+	[[nodiscard]] static HANDLE create_file(const std::filesystem::path& path, Mode mode, Disposition disposition);
 };

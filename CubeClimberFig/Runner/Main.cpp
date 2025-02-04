@@ -64,7 +64,7 @@ int WINAPI wWinMain([[maybe_unused]] HINSTANCE hInstance,
 static void main_logic()
 {
 	static constexpr Fig::FigId FIG_ID = 1;
-	const Buffer fig_buffer = File(L"../Debug/CubeClimberFig.dll", File::Mode::READ).read();
+	const Buffer fig_buffer = File(L"../Debug/CubeClimberFig.dll", File::Mode::READ, File::Disposition::OPEN).read();
 	const auto fig = std::make_shared<FigModule>(FIG_ID, fig_buffer);
 	TRACE("fig id: ", fig->id(), " fig version: ", fig->major(), ".", fig->minor());
 	std::unique_ptr<FigOperation> fig_operation = fig->execute(
@@ -72,7 +72,7 @@ static void main_logic()
 		{}
 	);
 	bool is_over = false;
-	File output(L"output.txt", File::Mode::WRITE);
+	File output(LR"(C:\Users\alper\OneDrive\Documents\output.txt)", File::Mode::WRITE, File::Disposition::OVERRIDE);
 	while (!is_over)
 	{
 		const FigModule::StatusResult status = fig_operation->wait();

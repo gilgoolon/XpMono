@@ -7,7 +7,7 @@
 
 class FigOperation;
 
-class FigModule final : std::enable_shared_from_this<FigModule>
+class FigModule final : public std::enable_shared_from_this<FigModule>
 {
 public:
 	explicit FigModule(Fig::FigId fig_id, const Buffer& data);
