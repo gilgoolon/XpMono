@@ -49,6 +49,7 @@ enum class ErrorCode : uint8_t
 	// Events
 	FAILED_EVENT_OPEN,
 	FAILED_EVENT_CREATE,
+	FAILED_EVENT_SET,
 	FAILED_WAIT,
 
 	// Process Iterator

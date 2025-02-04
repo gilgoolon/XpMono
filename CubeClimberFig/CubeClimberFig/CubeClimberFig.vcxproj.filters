@@ -21,6 +21,12 @@
     <ClCompile Include="Impl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="IOperationHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Operations\DirlistHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source.def">
@@ -29,6 +35,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Api.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IOperationHandler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Operations\DirlistHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

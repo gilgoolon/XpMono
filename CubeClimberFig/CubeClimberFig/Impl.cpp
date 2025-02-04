@@ -1,4 +1,7 @@
-﻿#include "FigApi.hpp"
+﻿#include "Api.hpp"
+#include "FigApi.hpp"
+#include "IOperationHandler.hpp"
+#include "Operations/DirlistHandler.hpp"
 #include "Synchronization/CriticalSection.hpp"
 #include "Synchronization/Event.hpp"
 #include "Synchronization/UnmanagedEvent.hpp"
@@ -10,20 +13,14 @@ static constexpr Fig::VersionMajor VERSION_MAJOR = 6;
 static constexpr Fig::VersionMinor VERSION_MINOR = 9;
 
 static std::unique_ptr<UnmanagedEvent> g__quit_event = nullptr;
-
-struct OperationMetadata final
-{
-	std::unique_ptr<Event> operation_event;
-};
-
-static std::unordered_map<Fig::OperationId, OperationMetadata> g__operations;
+static std::unordered_map<Fig::OperationId, std::unique_ptr<IOperationHandler>> g__operations;
 static std::unique_ptr<CriticalSection> g__operations_lock = nullptr;
 
-Fig::FigCode __cdecl execute([[maybe_unused]] __in Fig::OperationType operation,
-                             [[maybe_unused]] __in const uint8_t* parameters_buffer,
-                             [[maybe_unused]] __in uint32_t parameters_buffer_size,
-                             [[maybe_unused]] __out Fig::OperationId* id,
-                             [[maybe_unused]] __out HANDLE* operation_event)
+Fig::FigCode __cdecl execute([[maybe_unused]] __in const Fig::OperationType operation,
+                             [[maybe_unused]] __in const uint8_t* const parameters_buffer,
+                             [[maybe_unused]] __in const uint32_t parameters_buffer_size,
+                             [[maybe_unused]] __out Fig::OperationId* const id,
+                             [[maybe_unused]] __out HANDLE* const operation_event)
 {
 	static Fig::OperationId next_id = 0;
 	const Fig::OperationId generated_id = ++next_id;
@@ -34,25 +31,54 @@ Fig::FigCode __cdecl execute([[maybe_unused]] __in Fig::OperationType operation,
 		Event::Type::AUTO_RESET
 	);
 	*operation_event = event->handle();
+	std::unique_ptr<IOperationHandler> handler = nullptr;
+	switch (operation)
+	{
+	case static_cast<Fig::OperationType>(CubeClimberOperation::DIRLIST):
+		handler = std::make_unique<DirlistHandler>(std::move(event));
+		break;
+	default:
+		return Fig::FigCode::FAILED_UNSUPPORTED_OPERATION;
+	}
+	handler->run();
 	const CriticalSection::Acquired acquired = g__operations_lock->acquire();
 	g__operations.emplace(
 		generated_id,
-		OperationMetadata{std::move(event)}
+		std::move(handler)
 	);
 	return Fig::FigCode::SUCCESS;
 }
 
-Fig::FigCode __cdecl status([[maybe_unused]] __in Fig::OperationId id,
-                            [[maybe_unused]] __out Fig::ExecutionStatus* status,
-                            [[maybe_unused]] __out Fig::FigSpecificCode* specific_code)
+Fig::FigCode __cdecl status([[maybe_unused]] __in const Fig::OperationId id,
+                            [[maybe_unused]] __out Fig::ExecutionStatus* const status,
+                            [[maybe_unused]] __out Fig::FigSpecificCode* const specific_code)
 {
+	const CriticalSection::Acquired acquired = g__operations_lock->acquire();
+	const auto found = g__operations.find(id);
+	if (found == g__operations.end())
+	{
+		return Fig::FigCode::FAILED_INVALID_OPERATION_ID;
+	}
+	const std::unique_ptr<IOperationHandler>& handler = found->second;
+	*status = handler->status();
+	*specific_code = handler->specific_code();
 	return Fig::FigCode::SUCCESS;
 }
 
-Fig::FigCode __cdecl take([[maybe_unused]] __in Fig::OperationId id,
-                          [[maybe_unused]] __out uint8_t* buffer,
-                          [[maybe_unused]] __inout uint32_t* buffer_size)
+Fig::FigCode __cdecl take([[maybe_unused]] __in const Fig::OperationId id,
+                          [[maybe_unused]] __out uint8_t* const buffer,
+                          [[maybe_unused]] __inout uint32_t* const buffer_size)
 {
+	const CriticalSection::Acquired acquired = g__operations_lock->acquire();
+	const auto found = g__operations.find(id);
+	if (found == g__operations.end())
+	{
+		return Fig::FigCode::FAILED_INVALID_OPERATION_ID;
+	}
+	const std::unique_ptr<IOperationHandler>& handler = found->second;
+	const Buffer result = handler->take(*buffer_size);
+	*buffer_size = result.size();
+	std::copy_n(result.data(), result.size(), buffer);
 	return Fig::FigCode::SUCCESS;
 }
 

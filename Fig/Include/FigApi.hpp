@@ -17,6 +17,7 @@ enum class FigCode : uint32_t
 	SUCCESS = 0,
 	FAILED_UNKNOWN,
 	FAILED_UNSUPPORTED_OPERATION,
+	FAILED_INVALID_OPERATION_ID,
 };
 
 using OperationType = uint32_t;

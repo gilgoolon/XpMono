@@ -17,10 +17,18 @@ HANDLE Event::handle() const
 	return m_handle.get();
 }
 
+void Event::set()
+{
+	if (SetEvent(m_handle.get()) == FALSE)
+	{
+		throw WinApiException(ErrorCode::FAILED_EVENT_SET);
+	}
+}
+
 HANDLE Event::open_event(const std::wstring& name)
 {
 	static constexpr BOOL DONT_INHERIT = FALSE;
-	const HANDLE result = OpenEventW(SYNCHRONIZE, DONT_INHERIT, name.c_str());
+	const HANDLE result = OpenEventW(SYNCHRONIZE | EVENT_MODIFY_STATE, DONT_INHERIT, name.c_str());
 	if (result == nullptr)
 	{
 		throw WinApiException(ErrorCode::FAILED_EVENT_OPEN);
