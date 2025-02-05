@@ -78,7 +78,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
-    <ClCompile Include="Impl.cpp" />
     <ClCompile Include="Operations\DirlistHandler.cpp" />
   </ItemGroup>
   <ItemGroup>

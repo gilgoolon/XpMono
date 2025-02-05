@@ -18,9 +18,6 @@
     <ClCompile Include="DllMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Impl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Operations\DirlistHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

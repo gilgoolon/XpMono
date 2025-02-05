@@ -1,15 +1,39 @@
 ﻿#include "Exception.hpp"
+#include "FigImplException.hpp"
+#include "FigManager.hpp"
 #include "Trace.hpp"
+#include "Operations/DirlistHandler.hpp"
 
 #include <Windows.h>
 
-static void process_attach();
+Fig::FigInformation FigManager::g_information = {1, 6, 9};
+std::wstring FigManager::g_name = L"CubeClimber";
 
-static void process_detach();
+std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::OperationType operation_type,
+                                                            std::unique_ptr<Event> operation_event)
+{
+	switch (operation_type)
+	{
+	case static_cast<Fig::OperationType>(DirlistHandler::TYPE):
+		return std::make_shared<DirlistHandler>(std::move(operation_event));
+	default:
+		throw FigImplException(Fig::FigCode::FAILED_UNSUPPORTED_OPERATION);
+	}
+}
 
-BOOL APIENTRY DllMain([[maybe_unused]] HINSTANCE hInstance,
-                      [[maybe_unused]] DWORD dwReason,
-                      [[maybe_unused]] LPVOID lpReserved)
+void process_attach()
+{
+	TRACE(L"PROCESS ATTACH")
+}
+
+void process_detach()
+{
+	TRACE(L"PROCESS DETACH")
+}
+
+BOOL APIENTRY DllMain([[maybe_unused]] const HINSTANCE hInstance,
+                      [[maybe_unused]] const DWORD dwReason,
+                      [[maybe_unused]] const LPVOID lpReserved)
 {
 	try
 	{
@@ -40,14 +64,4 @@ BOOL APIENTRY DllMain([[maybe_unused]] HINSTANCE hInstance,
 		TRACE("uncaught unknown or critical exception")
 	}
 	return FALSE;
-}
-
-void process_attach()
-{
-	TRACE(L"PROCESS ATTACH")
-}
-
-void process_detach()
-{
-	TRACE(L"PROCESS DETACH")
 }
