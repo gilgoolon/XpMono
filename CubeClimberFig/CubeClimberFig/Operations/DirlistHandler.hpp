@@ -1,10 +1,12 @@
 ﻿#pragma once
-#include "../IOperationHandler.hpp"
+#include "IOperationHandler.hpp"
 #include "Synchronization/Event.hpp"
 
 class DirlistHandler final : public IOperationHandler
 {
 public:
+	static constexpr Fig::OperationType TYPE = 1;
+
 	explicit DirlistHandler(std::unique_ptr<Event> operation_event);
 	~DirlistHandler() override = default;
 	DirlistHandler(const DirlistHandler&) = delete;

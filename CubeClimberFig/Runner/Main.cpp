@@ -3,7 +3,6 @@
 #include "FigModule.hpp"
 #include "FigOperation.hpp"
 #include "Trace.hpp"
-#include "../CubeClimberFig/Api.hpp"
 #include "Filesystem/File.hpp"
 
 #include <ApricotException.hpp>
@@ -67,10 +66,7 @@ static void main_logic()
 	const Buffer fig_buffer = File(L"../Debug/CubeClimberFig.dll", File::Mode::READ, File::Disposition::OPEN).read();
 	const auto fig = std::make_shared<FigModule>(FIG_ID, fig_buffer);
 	TRACE("fig id: ", fig->id(), " fig version: ", fig->major(), ".", fig->minor());
-	std::unique_ptr<FigOperation> fig_operation = fig->execute(
-		static_cast<Fig::OperationType>(CubeClimberOperation::DIRLIST),
-		{}
-	);
+	const std::unique_ptr<FigOperation> fig_operation = fig->execute(1, {});
 	bool is_over = false;
 	File output(LR"(C:\Users\alper\OneDrive\Documents\output.txt)", File::Mode::WRITE, File::Disposition::OVERRIDE);
 	while (!is_over)
