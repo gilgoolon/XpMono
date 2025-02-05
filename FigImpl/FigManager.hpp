@@ -13,7 +13,9 @@ namespace FigManager
 extern Fig::FigInformation g_information;
 extern std::wstring g_name;
 [[nodiscard]] extern std::shared_ptr<IOperationHandler>
-make_handler(Fig::OperationType operation_type, std::unique_ptr<Event> operation_event);
+make_handler(Fig::OperationType operation_type,
+             const Buffer& operation_parameters,
+             std::unique_ptr<Event> operation_event);
 // up to here
 
 extern std::shared_ptr<UnmanagedEvent> g_quit_event;

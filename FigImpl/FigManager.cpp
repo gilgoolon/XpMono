@@ -29,17 +29,17 @@ static std::unique_ptr<Event> make_operation_event(const Fig::OperationId id)
 }
 
 Fig::FigCode FigManager::execute(const Fig::OperationType operation,
-                                 const uint8_t* parameters_buffer,
-                                 uint32_t parameters_buffer_size,
-                                 Fig::OperationId* id,
-                                 HANDLE* operation_event)
+                                 const uint8_t* const parameters_buffer,
+                                 const uint32_t parameters_buffer_size,
+                                 Fig::OperationId* const id,
+                                 HANDLE* const operation_event)
 {
 	const uint32_t generated_id = Random::uint32();
 	*id = generated_id;
 	std::unique_ptr<Event> event = make_operation_event(generated_id);
 	*operation_event = event->handle();
 	const Buffer raw_parameters = {parameters_buffer, parameters_buffer + parameters_buffer_size};
-	std::shared_ptr<IOperationHandler> handler = make_handler(operation, std::move(event));
+	std::shared_ptr<IOperationHandler> handler = make_handler(operation, raw_parameters, std::move(event));
 	Thread handler_worker(std::make_unique<HandlerRunner>(handler));
 	const CriticalSection::Acquired acquired = g_operations_lock->acquire();
 	g_operations.emplace(

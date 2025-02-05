@@ -10,6 +10,7 @@ Fig::FigInformation FigManager::g_information = {1, 6, 9};
 std::wstring FigManager::g_name = L"CubeClimber";
 
 std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::OperationType operation_type,
+                                                            [[maybe_unused]] const Buffer& operation_parameters,
                                                             std::unique_ptr<Event> operation_event)
 {
 	switch (operation_type)
