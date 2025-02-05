@@ -6,6 +6,11 @@
 #include <iomanip>
 #include <sstream>
 
+void Time::sleep(const Duration duration)
+{
+	Sleep(duration_cast<Millis>(duration).count());
+}
+
 Time::Datetime Time::now()
 {
 	return std::chrono::system_clock::now();

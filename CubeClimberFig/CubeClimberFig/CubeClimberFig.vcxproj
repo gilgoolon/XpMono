@@ -78,8 +78,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
+    <ClCompile Include="HandlerRunner.cpp" />
     <ClCompile Include="Impl.cpp" />
-    <ClCompile Include="IOperationHandler.cpp" />
     <ClCompile Include="Operations\DirlistHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Api.hpp" />
+    <ClInclude Include="HandlerRunner.hpp" />
     <ClInclude Include="IOperationHandler.hpp" />
     <ClInclude Include="Operations\DirlistHandler.hpp" />
   </ItemGroup>

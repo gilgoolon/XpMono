@@ -1,7 +1,9 @@
 ﻿#include "Api.hpp"
 #include "FigApi.hpp"
+#include "HandlerRunner.hpp"
 #include "IOperationHandler.hpp"
 #include "Operations/DirlistHandler.hpp"
+#include "Processes/Thread.hpp"
 #include "Synchronization/CriticalSection.hpp"
 #include "Synchronization/Event.hpp"
 #include "Synchronization/UnmanagedEvent.hpp"
@@ -13,7 +15,7 @@ static constexpr Fig::VersionMajor VERSION_MAJOR = 6;
 static constexpr Fig::VersionMinor VERSION_MINOR = 9;
 
 static std::unique_ptr<UnmanagedEvent> g__quit_event = nullptr;
-static std::unordered_map<Fig::OperationId, std::unique_ptr<IOperationHandler>> g__operations;
+static std::unordered_map<Fig::OperationId, std::shared_ptr<IOperationHandler>> g__operations;
 static std::unique_ptr<CriticalSection> g__operations_lock = nullptr;
 
 Fig::FigCode __cdecl execute([[maybe_unused]] __in const Fig::OperationType operation,
@@ -31,16 +33,16 @@ Fig::FigCode __cdecl execute([[maybe_unused]] __in const Fig::OperationType oper
 		Event::Type::AUTO_RESET
 	);
 	*operation_event = event->handle();
-	std::unique_ptr<IOperationHandler> handler = nullptr;
+	std::shared_ptr<IOperationHandler> handler = nullptr;
 	switch (operation)
 	{
 	case static_cast<Fig::OperationType>(CubeClimberOperation::DIRLIST):
-		handler = std::make_unique<DirlistHandler>(std::move(event));
+		handler = std::make_shared<DirlistHandler>(std::move(event));
 		break;
 	default:
 		return Fig::FigCode::FAILED_UNSUPPORTED_OPERATION;
 	}
-	handler->run();
+	Thread handler_worker(std::make_unique<HandlerRunner>(handler));
 	const CriticalSection::Acquired acquired = g__operations_lock->acquire();
 	g__operations.emplace(
 		generated_id,
@@ -59,7 +61,7 @@ Fig::FigCode __cdecl status([[maybe_unused]] __in const Fig::OperationId id,
 	{
 		return Fig::FigCode::FAILED_INVALID_OPERATION_ID;
 	}
-	const std::unique_ptr<IOperationHandler>& handler = found->second;
+	const std::shared_ptr<IOperationHandler>& handler = found->second;
 	*status = handler->status();
 	*specific_code = handler->specific_code();
 	return Fig::FigCode::SUCCESS;
@@ -75,7 +77,7 @@ Fig::FigCode __cdecl take([[maybe_unused]] __in const Fig::OperationId id,
 	{
 		return Fig::FigCode::FAILED_INVALID_OPERATION_ID;
 	}
-	const std::unique_ptr<IOperationHandler>& handler = found->second;
+	const std::shared_ptr<IOperationHandler>& handler = found->second;
 	const Buffer result = handler->take(*buffer_size);
 	*buffer_size = result.size();
 	std::copy_n(result.data(), result.size(), buffer);

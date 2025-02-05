@@ -21,6 +21,8 @@ using std::chrono::duration_cast;
 
 static constexpr Duration INSTANT = Duration::zero();
 
+void sleep(Duration duration);
+
 [[nodiscard]] Datetime now();
 
 [[nodiscard]] Datetime to_datetime(const FILETIME& ft);
