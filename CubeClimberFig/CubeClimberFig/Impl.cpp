@@ -1,4 +1,5 @@
 ﻿#include "Api.hpp"
+#include "Config.hpp"
 #include "FigApi.hpp"
 #include "HandlerRunner.hpp"
 #include "IOperationHandler.hpp"
@@ -7,6 +8,7 @@
 #include "Synchronization/CriticalSection.hpp"
 #include "Synchronization/Event.hpp"
 #include "Synchronization/UnmanagedEvent.hpp"
+#include "Utils/Random.hpp"
 
 #include <unordered_map>
 
@@ -14,7 +16,7 @@ static constexpr Fig::FigId FIG_ID = 1;
 static constexpr Fig::VersionMajor VERSION_MAJOR = 6;
 static constexpr Fig::VersionMinor VERSION_MINOR = 9;
 
-static std::unique_ptr<UnmanagedEvent> g__quit_event = nullptr;
+static std::shared_ptr<UnmanagedEvent> g__quit_event = nullptr;
 static std::unordered_map<Fig::OperationId, std::shared_ptr<IOperationHandler>> g__operations;
 static std::unique_ptr<CriticalSection> g__operations_lock = nullptr;
 
@@ -24,12 +26,10 @@ Fig::FigCode __cdecl execute([[maybe_unused]] __in const Fig::OperationType oper
                              [[maybe_unused]] __out Fig::OperationId* const id,
                              [[maybe_unused]] __out HANDLE* const operation_event)
 {
-	static Fig::OperationId next_id = 0;
-	const Fig::OperationId generated_id = ++next_id;
+	const uint32_t generated_id = Random::uint32();
 	*id = generated_id;
-	static constexpr std::wstring_view EVENT_PREFIX = L"Global\\CubeClimberEvent";
 	auto event = std::make_unique<Event>(
-		std::wstring{EVENT_PREFIX} + std::to_wstring(generated_id),
+		std::wstring{Config::EVENT_PREFIX} + std::to_wstring(generated_id),
 		Event::Type::AUTO_RESET
 	);
 	*operation_event = event->handle();
@@ -90,7 +90,7 @@ Fig::FigCode __cdecl initialize(__in HANDLE unmanaged_quit_event,
 {
 	*information = {FIG_ID, VERSION_MAJOR, VERSION_MINOR};
 	*interfaces = {execute, status, take};
-	g__quit_event = std::make_unique<UnmanagedEvent>(unmanaged_quit_event);
+	g__quit_event = std::make_shared<UnmanagedEvent>(unmanaged_quit_event);
 	g__operations_lock = std::make_unique<CriticalSection>();
 	return Fig::FigCode::SUCCESS;
 }

@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Api.hpp" />
+    <ClInclude Include="Config.hpp" />
     <ClInclude Include="HandlerRunner.hpp" />
     <ClInclude Include="IOperationHandler.hpp" />
     <ClInclude Include="Operations\DirlistHandler.hpp" />
