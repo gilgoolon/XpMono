@@ -11,60 +11,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CommandLineArguments.cpp" />
-    <ClCompile Include="Debug.cpp" />
-    <ClCompile Include="Errno.cpp" />
-    <ClCompile Include="ErrorCode.cpp" />
-    <ClCompile Include="Exception.cpp" />
-    <ClCompile Include="Filesystem\File.cpp" />
-    <ClCompile Include="Utils\Random.cpp" />
-    <ClCompile Include="Synchronization\UnmanagedEvent.cpp" />
-    <ClCompile Include="Processes\DynamicLibrary.cpp" />
-    <ClCompile Include="Processes\Process.cpp" />
-    <ClCompile Include="Processes\ProcessIterator.cpp" />
-    <ClCompile Include="Processes\RemoteMemory.cpp" />
-    <ClCompile Include="Processes\ScopedHandle.cpp" />
-    <ClCompile Include="Processes\ScopedLocalHeapAllocation.cpp" />
-    <ClCompile Include="Processes\Thread.cpp" />
-    <ClCompile Include="Processes\UnopenedProcess.cpp" />
-    <ClCompile Include="Synchronization\CriticalSection.cpp" />
-    <ClCompile Include="Synchronization\Event.cpp" />
-    <ClCompile Include="Synchronization\IWaitable.cpp" />
-    <ClCompile Include="Utils\Strings.cpp" />
-    <ClCompile Include="Utils\Time.cpp" />
+    <ClCompile Include="FigImplException.cpp" />
+    <ClCompile Include="FigManager.cpp" />
+    <ClCompile Include="HandlerRunner.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\CommandLineArguments.hpp" />
-    <ClInclude Include="Include\Debug.hpp" />
-    <ClInclude Include="Include\Errno.hpp" />
-    <ClInclude Include="Include\ErrorCode.hpp" />
-    <ClInclude Include="Include\Exception.hpp" />
-    <ClInclude Include="Include\Filesystem\File.hpp" />
-    <ClInclude Include="Include\Processes\DynamicLibrary.hpp" />
-    <ClInclude Include="Include\Processes\IRunner.hpp" />
-    <ClInclude Include="Include\Processes\Process.hpp" />
-    <ClInclude Include="Include\Processes\ProcessIterator.hpp" />
-    <ClInclude Include="Include\Processes\RemoteMemory.hpp" />
-    <ClInclude Include="Include\Processes\ScopedHandle.hpp" />
-    <ClInclude Include="Include\Processes\ScopedLocalHeapAllocation.hpp" />
-    <ClInclude Include="Include\Processes\Thread.hpp" />
-    <ClInclude Include="Include\Processes\UnopenedProcess.hpp" />
-    <ClInclude Include="Include\Synchronization\CriticalSection.hpp" />
-    <ClInclude Include="Include\Synchronization\Event.hpp" />
-    <ClInclude Include="Include\Synchronization\UnmanagedEvent.hpp" />
-    <ClInclude Include="Include\Trace.hpp" />
-    <ClInclude Include="Include\Utils\Buffer.hpp" />
-    <ClInclude Include="Include\Utils\Formatting.hpp" />
-    <ClInclude Include="Include\Utils\Random.hpp" />
-    <ClInclude Include="Include\Utils\Strings.hpp" />
-    <ClInclude Include="Include\Utils\Time.hpp" />
-    <ClInclude Include="Include\Synchronization\IWaitable.hpp" />
+    <ClInclude Include="FigImplException.hpp" />
+    <ClInclude Include="FigManager.hpp" />
+    <ClInclude Include="HandlerRunner.hpp" />
+    <ClInclude Include="IOperationHandler.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{5b5c1f35-e8a8-44e2-9133-38047262f449}</ProjectGuid>
-    <RootNamespace>Framework</RootNamespace>
+    <ProjectGuid>{b152b3cb-d8d0-41e8-8bd7-f4ed852578bb}</ProjectGuid>
+    <RootNamespace>FigImpl</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -101,7 +62,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>Include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../Framework/Include/;$(SolutionDir)../Fig/Include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -114,7 +75,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>Include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../Framework/Include/;$(SolutionDir)../Fig/Include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

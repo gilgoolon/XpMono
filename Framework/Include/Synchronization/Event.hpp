@@ -11,6 +11,8 @@ public:
 		AUTO_RESET = TRUE,
 	};
 
+	static constexpr std::wstring_view GLOBAL_NAMESPACE = L"Global/";
+
 	explicit Event(const std::wstring& name);
 	explicit Event(const std::wstring& name, Type type);
 	~Event() override = default;
@@ -19,9 +21,11 @@ public:
 	Event(Event&&) = delete;
 	Event& operator=(Event&&) = delete;
 
-private:
 	[[nodiscard]] HANDLE handle() const override;
 
+	void set();
+
+private:
 	[[nodiscard]] static HANDLE open_event(const std::wstring& name);
 
 	[[nodiscard]] static HANDLE create_event(const std::wstring& name, Type type);

@@ -49,6 +49,7 @@ enum class ErrorCode : uint8_t
 	// Events
 	FAILED_EVENT_OPEN,
 	FAILED_EVENT_CREATE,
+	FAILED_EVENT_SET,
 	FAILED_WAIT,
 
 	// Process Iterator
@@ -58,6 +59,16 @@ enum class ErrorCode : uint8_t
 	// Apricot
 	FAILED_APRICOT_LOAD,
 	FAILED_APRICOT_GET,
+
+	// Fig
+	FAILED_FIG_INITIALIZE,
+	FAILED_FIG_EXECUTE,
+	FAILED_FIG_STATUS,
+	FAILED_FIG_TAKE,
+	FIG_ALREADY_LOADED,
+	FIG_NOT_LOADED,
+	FAILED_EVENT_WAIT,
+	WAIT_TIMED_OUT,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);

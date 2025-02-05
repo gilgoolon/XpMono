@@ -2,8 +2,8 @@
 
 #include "Exception.hpp"
 
-File::File(const std::filesystem::path& path, const Mode mode):
-	m_handle(create_file(path, mode))
+File::File(const std::filesystem::path& path, Mode mode, Disposition disposition):
+	m_handle(create_file(path, mode, disposition))
 {
 }
 
@@ -87,12 +87,12 @@ void File::seek(const uint64_t offset) const
 	}
 }
 
-HANDLE File::create_file(const std::filesystem::path& path, const Mode mode)
+HANDLE File::create_file(const std::filesystem::path& path, Mode mode, Disposition disposition)
 {
 	static constexpr LPSECURITY_ATTRIBUTES DEFAULT_SECURITY = nullptr;
 	static constexpr DWORD REGULAR_FILE = 0;
 	static constexpr HANDLE EMPTY_FILE = nullptr;
-	const DWORD creation_disposition = mode == Mode::READ ? OPEN_EXISTING : CREATE_NEW;
+	const DWORD creation_disposition = static_cast<DWORD>(disposition);
 	const DWORD access = static_cast<DWORD>(mode);
 	const HANDLE result = CreateFileW(
 		path.wstring().c_str(),

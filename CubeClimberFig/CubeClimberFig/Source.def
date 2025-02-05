@@ -1,0 +1,3 @@
+LIBRARY CubeClimberFig
+EXPORTS
+	initialize @1 NONAME
