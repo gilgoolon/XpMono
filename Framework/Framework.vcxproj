@@ -17,6 +17,7 @@
     <ClCompile Include="ErrorCode.cpp" />
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="Filesystem\File.cpp" />
+    <ClCompile Include="Utils\Random.cpp" />
     <ClCompile Include="Synchronization\UnmanagedEvent.cpp" />
     <ClCompile Include="Processes\DynamicLibrary.cpp" />
     <ClCompile Include="Processes\Process.cpp" />
@@ -54,6 +55,7 @@
     <ClInclude Include="Include\Trace.hpp" />
     <ClInclude Include="Include\Utils\Buffer.hpp" />
     <ClInclude Include="Include\Utils\Formatting.hpp" />
+    <ClInclude Include="Include\Utils\Random.hpp" />
     <ClInclude Include="Include\Utils\Strings.hpp" />
     <ClInclude Include="Include\Utils\Time.hpp" />
     <ClInclude Include="Include\Synchronization\IWaitable.hpp" />
