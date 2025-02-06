@@ -78,6 +78,21 @@
     <ClCompile Include="Utils\Random.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\System.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Wmi\WmiConnection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Wmi\WmiRuntime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Wmi\WmiException.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Wmi\WmiReleaser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\CommandLineArguments.hpp">
@@ -153,6 +168,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Utils\Random.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Utils\System.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Wmi\WmiConnection.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Wmi\WmiRuntime.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Wmi\WmiException.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Wmi\WmiReleaser.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

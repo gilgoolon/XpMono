@@ -17,6 +17,9 @@
     <ClCompile Include="ErrorCode.cpp" />
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="Filesystem\File.cpp" />
+    <ClCompile Include="Wmi\WmiException.cpp" />
+    <ClCompile Include="Wmi\WmiReleaser.cpp" />
+    <ClCompile Include="Wmi\WmiRuntime.cpp" />
     <ClCompile Include="Utils\Random.cpp" />
     <ClCompile Include="Synchronization\UnmanagedEvent.cpp" />
     <ClCompile Include="Processes\DynamicLibrary.cpp" />
@@ -31,7 +34,9 @@
     <ClCompile Include="Synchronization\Event.cpp" />
     <ClCompile Include="Synchronization\IWaitable.cpp" />
     <ClCompile Include="Utils\Strings.cpp" />
+    <ClCompile Include="Utils\System.cpp" />
     <ClCompile Include="Utils\Time.cpp" />
+    <ClCompile Include="Wmi\WmiConnection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\CommandLineArguments.hpp" />
@@ -59,6 +64,11 @@
     <ClInclude Include="Include\Utils\Strings.hpp" />
     <ClInclude Include="Include\Utils\Time.hpp" />
     <ClInclude Include="Include\Synchronization\IWaitable.hpp" />
+    <ClInclude Include="Include\Utils\System.hpp" />
+    <ClInclude Include="Include\Wmi\WmiConnection.hpp" />
+    <ClInclude Include="Include\Wmi\WmiException.hpp" />
+    <ClInclude Include="Include\Wmi\WmiRuntime.hpp" />
+    <ClInclude Include="Include\Wmi\WmiReleaser.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
