@@ -7,8 +7,8 @@ namespace Protections
 class ProgramProtector final
 {
 public:
-	explicit ProgramProtector();
-	~ProgramProtector();
+	explicit ProgramProtector() = default;
+	~ProgramProtector() = default;
 	ProgramProtector(const ProgramProtector&) = delete;
 	ProgramProtector& operator=(const ProgramProtector&) = delete;
 	ProgramProtector(ProgramProtector&&) = delete;

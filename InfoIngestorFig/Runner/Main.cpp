@@ -4,6 +4,7 @@
 #include "FigOperation.hpp"
 #include "Trace.hpp"
 #include "Filesystem/File.hpp"
+#include "Protections/ProgramProtector.hpp"
 
 #include <ApricotException.hpp>
 
@@ -18,6 +19,7 @@ int WINAPI wWinMain([[maybe_unused]] HINSTANCE hInstance,
 {
 	try
 	{
+		Protections::ProgramProtector protector;
 		main_logic();
 		return EXIT_SUCCESS;
 	}

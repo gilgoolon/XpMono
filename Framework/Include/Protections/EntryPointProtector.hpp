@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "StructuredExceptionTranslator.hpp"
+#include "UnhandledExceptionFilter.hpp"
 
 namespace Protections
 {
@@ -15,5 +16,6 @@ public:
 
 private:
 	StructuredExceptionTranslator m_translator;
+	UnhandledExceptionFilter m_filter;
 };
 }

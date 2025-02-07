@@ -22,6 +22,7 @@
     <ClCompile Include="Protections\StructuredExceptionTranslator.cpp" />
     <ClCompile Include="Protections\PureCall.cpp" />
     <ClCompile Include="Protections\InvalidParameter.cpp" />
+    <ClCompile Include="Protections\UnhandledExceptionFilter.cpp" />
     <ClCompile Include="Wmi\WmiVariant.cpp" />
     <ClCompile Include="Wmi\WmiResult.cpp" />
     <ClCompile Include="Wmi\WmiException.cpp" />
@@ -84,6 +85,7 @@
     <ClInclude Include="Include\Wmi\WmiVariant.hpp" />
     <ClInclude Include="Include\Protections\AbortBehavior.hpp" />
     <ClInclude Include="Include\Protections\ErrorMode.hpp" />
+    <ClInclude Include="Include\Protections\UnhandledExceptionFilter.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -127,6 +129,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>Include/</AdditionalIncludeDirectories>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -143,6 +146,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>Include/</AdditionalIncludeDirectories>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

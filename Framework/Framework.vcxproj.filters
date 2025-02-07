@@ -111,6 +111,9 @@
     <ClCompile Include="Protections\ErrorMode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Protections\UnhandledExceptionFilter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\CommandLineArguments.hpp">
@@ -228,6 +231,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Protections\ProgramProtector.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Protections\UnhandledExceptionFilter.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
