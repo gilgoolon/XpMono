@@ -40,12 +40,16 @@ std::wstring WmiResult::get_formatted_property(const std::wstring& property_name
 		return std::to_wstring(variant.uint16());
 	case VT_UI4:
 		return std::to_wstring(variant.uint32());
+	case VT_UI8:
+		return std::to_wstring(variant.uint64());
 	case VT_I1:
 		return std::to_wstring(variant.int8());
 	case VT_I2:
 		return std::to_wstring(variant.int16());
 	case VT_I4:
 		return std::to_wstring(variant.int32());
+	case VT_I8:
+		return std::to_wstring(variant.int64());
 	case VT_DATE:
 		return Strings::to_wstring(Time::to_string(variant.datetime()));
 	default:

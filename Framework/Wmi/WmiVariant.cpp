@@ -39,6 +39,11 @@ bool WmiVariant::boolean() const
 	return m_variant.boolVal != VARIANT_FALSE;
 }
 
+uint64_t WmiVariant::uint64() const
+{
+	return m_variant.ullVal;
+}
+
 uint32_t WmiVariant::uint32() const
 {
 	return m_variant.ulVal;
@@ -52,6 +57,11 @@ uint16_t WmiVariant::uint16() const
 uint8_t WmiVariant::uint8() const
 {
 	return m_variant.bVal;
+}
+
+int64_t WmiVariant::int64() const
+{
+	return m_variant.llVal;
 }
 
 int32_t WmiVariant::int32() const
