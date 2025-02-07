@@ -117,6 +117,9 @@
     <ClCompile Include="Protections\TerminationHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Include\Wmi\SafeArrayAccess.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\CommandLineArguments.hpp">
@@ -240,6 +243,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Protections\TerminationHandler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Wmi\SafeArrayAccess.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

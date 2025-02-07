@@ -46,6 +46,11 @@ std::string Strings::to_string(const std::wstring& str)
 	return utf8_str;
 }
 
+std::wstring Strings::to_wstring(const BSTR& str)
+{
+	return str;
+}
+
 Buffer Strings::to_buffer(const std::wstring& str)
 {
 	const auto* const start = reinterpret_cast<const uint8_t*>(str.data());
@@ -92,4 +97,32 @@ std::wstring Strings::to_wstring(const std::string& str)
 		throw WinApiException(ErrorCode::FAILED_STRING_CONVERSION);
 	}
 	return utf16_str;
+}
+
+std::wstring Strings::join(const std::vector<std::wstring>& strings, wchar_t separator)
+{
+	if (strings.empty())
+	{
+		return L"";
+	}
+
+	uint32_t total_size = 0;
+	for (const auto& s : strings)
+	{
+		total_size += s.size();
+	}
+	total_size += strings.size() - 1;
+
+	std::wstring result;
+	result.reserve(total_size);
+
+	for (uint32_t i = 0; i < strings.size(); ++i)
+	{
+		result += strings[i];
+		if (i != strings.size() - 1)
+		{
+			result += separator;
+		}
+	}
+	return result;
 }

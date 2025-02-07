@@ -29,6 +29,11 @@ VARIANT* WmiVariant::get()
 	return &m_variant;
 }
 
+VARTYPE WmiVariant::type() const
+{
+	return m_variant.vt;
+}
+
 std::wstring WmiVariant::wstring() const
 {
 	return m_variant.bstrVal ? m_variant.bstrVal : L"";

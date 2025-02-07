@@ -83,6 +83,7 @@ enum class ErrorCode : uint8_t
 	FAILED_WMI_VARIANT_TIME_CONVERSION,
 	FAILED_SYSTEM_TIME_CONVERSION,
 	WMI_UNSUPPORTED_VARIANT_TYPE,
+	FAILED_SAFE_ARRAY_ACCESS,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);

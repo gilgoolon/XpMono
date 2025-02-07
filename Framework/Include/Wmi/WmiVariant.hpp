@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "SafeArrayAccess.hpp"
 #include "Utils/Time.hpp"
 
 #include <string>
@@ -15,6 +16,7 @@ public:
 	WmiVariant& operator=(WmiVariant&&) = delete;
 
 	[[nodiscard]] VARIANT* get();
+	[[nodiscard]] VARTYPE type() const;
 
 	[[nodiscard]] std::wstring wstring() const;
 	[[nodiscard]] bool boolean() const;
@@ -27,6 +29,13 @@ public:
 	[[nodiscard]] int16_t int16() const;
 	[[nodiscard]] int8_t int8() const;
 	[[nodiscard]] Time::Datetime datetime() const;
+
+	template <typename T>
+	[[nodiscard]] std::vector<T> array() const
+	{
+		const SafeArrayAccess access(m_variant.parray);
+		return access.value<T>();
+	}
 
 private:
 	VARIANT m_variant;

@@ -17,6 +17,7 @@
     <ClCompile Include="ErrorCode.cpp" />
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="Filesystem\File.cpp" />
+    <ClCompile Include="Include\Wmi\SafeArrayAccess.cpp" />
     <ClCompile Include="Protections\TerminationHandler.cpp" />
     <ClCompile Include="Protections\AbortBehavior.cpp" />
     <ClCompile Include="Protections\ErrorMode.cpp" />
@@ -79,6 +80,7 @@
     <ClInclude Include="Include\Utils\Strings.hpp" />
     <ClInclude Include="Include\Utils\Time.hpp" />
     <ClInclude Include="Include\Synchronization\IWaitable.hpp" />
+    <ClInclude Include="Include\Wmi\SafeArrayAccess.hpp" />
     <ClInclude Include="Include\Wmi\WmiConnection.hpp" />
     <ClInclude Include="Include\Wmi\WmiException.hpp" />
     <ClInclude Include="Include\Wmi\WmiResult.hpp" />
