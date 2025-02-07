@@ -2,6 +2,7 @@
 
 #include "Exception.hpp"
 #include "Trace.hpp"
+#include "Protections/EntryPointProtector.hpp"
 
 #include <process.h>
 
@@ -14,6 +15,7 @@ uint32_t Thread::thread_main(void* const argument)
 {
 	try
 	{
+		Protections::EntryPointProtector protections;
 		const IRunner::Ptr runner(static_cast<IRunner*>(argument));
 		runner->run();
 		return EXIT_SUCCESS;
@@ -29,6 +31,10 @@ uint32_t Thread::thread_main(void* const argument)
 	catch (const Exception& ex)
 	{
 		TRACE("uncaught Exception with code ", ex.code())
+	}
+	catch (const CriticalException&)
+	{
+		TRACE(L"uncaught critical exception")
 	}
 	catch (const std::exception& ex)
 	{

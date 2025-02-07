@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "AbortBehavior.hpp"
 #include "LibraryProtector.hpp"
+#include "TerminationHandler.hpp"
 
 namespace Protections
 {
@@ -17,5 +18,6 @@ public:
 private:
 	LibraryProtector m_library_protector;
 	AbortBehavior m_abort_behavior;
+	TerminationHandler m_terminate_handler;
 };
 }

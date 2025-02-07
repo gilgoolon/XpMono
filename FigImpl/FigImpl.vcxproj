@@ -14,6 +14,7 @@
     <ClCompile Include="FigImplException.cpp" />
     <ClCompile Include="FigManager.cpp" />
     <ClCompile Include="HandlerRunner.cpp" />
+    <ClCompile Include="IOperationHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FigImplException.hpp" />

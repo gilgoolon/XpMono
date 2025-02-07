@@ -5,7 +5,7 @@
 class IOperationHandler
 {
 public:
-	explicit IOperationHandler() = default;
+	explicit IOperationHandler();
 	virtual ~IOperationHandler() = default;
 	IOperationHandler(const IOperationHandler&) = delete;
 	IOperationHandler& operator=(const IOperationHandler&) = delete;
@@ -13,8 +13,14 @@ public:
 	IOperationHandler& operator=(IOperationHandler&&) = delete;
 
 	[[nodiscard]] virtual Buffer take(uint32_t max_size) = 0;
-	[[nodiscard]] virtual Fig::ExecutionStatus status() = 0;
-	[[nodiscard]] virtual Fig::FigSpecificCode specific_code() = 0;
+	[[nodiscard]] virtual Fig::ExecutionStatus status();
+	[[nodiscard]] virtual Fig::FigSpecificCode specific_code();
+
+	void error(Fig::FigSpecificCode specific_code);
 
 	virtual void run() = 0;
+
+protected:
+	Fig::ExecutionStatus m_status;
+	Fig::FigSpecificCode m_specific_code;
 };

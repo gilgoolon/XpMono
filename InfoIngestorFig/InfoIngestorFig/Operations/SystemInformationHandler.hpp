@@ -16,15 +16,11 @@ public:
 	SystemInformationHandler& operator=(SystemInformationHandler&&) = delete;
 
 	[[nodiscard]] Buffer take(uint32_t max_size) override;
-	[[nodiscard]] Fig::ExecutionStatus status() override;
-	[[nodiscard]] Fig::FigSpecificCode specific_code() override;
 
 	void run() override;
 
 private:
 	std::unique_ptr<Event> m_operation_event;
-	Fig::ExecutionStatus m_status;
-	Fig::FigSpecificCode m_code;
 	Buffer m_result_left;
 	CriticalSection m_result_lock;
 };

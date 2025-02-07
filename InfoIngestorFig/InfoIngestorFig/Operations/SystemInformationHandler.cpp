@@ -8,8 +8,6 @@
 
 SystemInformationHandler::SystemInformationHandler(std::unique_ptr<Event> operation_event):
 	m_operation_event(std::move(operation_event)),
-	m_status(Fig::ExecutionStatus::EXECUTING),
-	m_code(Fig::FIG_SPECIFIC_CODE_RESERVED),
 	m_result_left{},
 	m_result_lock()
 {
@@ -26,16 +24,6 @@ Buffer SystemInformationHandler::take([[maybe_unused]] const uint32_t max_size)
 	}
 	m_result_left.erase(m_result_left.begin(), m_result_left.begin() + static_cast<int32_t>(taken_size));
 	return result;
-}
-
-Fig::ExecutionStatus SystemInformationHandler::status()
-{
-	return m_status;
-}
-
-Fig::FigSpecificCode SystemInformationHandler::specific_code()
-{
-	return m_code;
 }
 
 void SystemInformationHandler::run()
@@ -116,6 +104,7 @@ void SystemInformationHandler::run()
 	static constexpr std::wstring_view FIELD_VALUE_SEPARATOR = L": ";
 	for (const std::wstring_view& field : FIELDS)
 	{
+		TRACE(L"running field: ", field);
 		const std::wstring value = os.get_formatted_property(std::wstring{field});
 		const Buffer data = Strings::to_buffer(
 			std::wstring{field} + std::wstring{FIELD_VALUE_SEPARATOR} + value + std::wstring{PAIR_SUFFIX}

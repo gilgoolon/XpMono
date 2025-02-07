@@ -1,6 +1,7 @@
 ﻿#include "Wmi/WmiResult.hpp"
 
 #include "Exception.hpp"
+#include "Trace.hpp"
 #include "Utils/Strings.hpp"
 #include "Wmi/WmiException.hpp"
 #include "Wmi/WmiVariant.hpp"
@@ -53,6 +54,7 @@ std::wstring WmiResult::get_formatted_property(const std::wstring& property_name
 	case VT_DATE:
 		return Strings::to_wstring(Time::to_string(variant.datetime()));
 	default:
-		throw Exception(ErrorCode::WMI_UNSSUPORTED_VARIANT_TYPE);
+		TRACE(L"unsupported variant type")
+		throw Exception(ErrorCode::WMI_UNSUPPORTED_VARIANT_TYPE);
 	}
 }
