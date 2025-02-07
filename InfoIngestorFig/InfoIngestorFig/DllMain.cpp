@@ -3,6 +3,7 @@
 #include "FigManager.hpp"
 #include "Trace.hpp"
 #include "Operations/SystemInformationHandler.hpp"
+#include "Protections/LibraryProtector.hpp"
 
 #include <Windows.h>
 
@@ -32,6 +33,8 @@ void process_detach()
 	TRACE(L"PROCESS DETACH")
 }
 
+static std::unique_ptr<Protections::LibraryProtector> g_protector = nullptr;
+
 BOOL APIENTRY DllMain([[maybe_unused]] const HINSTANCE hInstance,
                       [[maybe_unused]] const DWORD dwReason,
                       [[maybe_unused]] const LPVOID lpReserved)
@@ -40,11 +43,13 @@ BOOL APIENTRY DllMain([[maybe_unused]] const HINSTANCE hInstance,
 	{
 		if (dwReason == DLL_PROCESS_ATTACH)
 		{
+			g_protector = std::make_unique<Protections::LibraryProtector>();
 			process_attach();
 		}
 		if (dwReason == DLL_PROCESS_DETACH)
 		{
 			process_detach();
+			g_protector.reset();
 		}
 		return TRUE;
 	}

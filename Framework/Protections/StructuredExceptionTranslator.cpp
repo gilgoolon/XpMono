@@ -22,7 +22,8 @@ Protections::StructuredExceptionTranslator::~StructuredExceptionTranslator()
 	}
 }
 
-void Protections::StructuredExceptionTranslator::translator(const unsigned int code, _EXCEPTION_POINTERS* const ep)
+void Protections::StructuredExceptionTranslator::translator(const unsigned int code,
+                                                            [[maybe_unused ]] _EXCEPTION_POINTERS* const ep)
 {
 	TRACE(L"CRITICAL EXCEPTION: code: ", code);
 	throw CriticalException();
