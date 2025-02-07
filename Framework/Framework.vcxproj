@@ -17,6 +17,11 @@
     <ClCompile Include="ErrorCode.cpp" />
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="Filesystem\File.cpp" />
+    <ClCompile Include="Protections\AbortBehavior.cpp" />
+    <ClCompile Include="Protections\ErrorMode.cpp" />
+    <ClCompile Include="Protections\StructuredExceptionTranslator.cpp" />
+    <ClCompile Include="Protections\PureCall.cpp" />
+    <ClCompile Include="Protections\InvalidParameter.cpp" />
     <ClCompile Include="Wmi\WmiVariant.cpp" />
     <ClCompile Include="Wmi\WmiResult.cpp" />
     <ClCompile Include="Wmi\WmiException.cpp" />
@@ -55,6 +60,12 @@
     <ClInclude Include="Include\Processes\ScopedLocalHeapAllocation.hpp" />
     <ClInclude Include="Include\Processes\Thread.hpp" />
     <ClInclude Include="Include\Processes\UnopenedProcess.hpp" />
+    <ClInclude Include="Include\Protections\EntryPointProtector.hpp" />
+    <ClInclude Include="Include\Protections\InvalidParameter.hpp" />
+    <ClInclude Include="Include\Protections\LibraryProtector.hpp" />
+    <ClInclude Include="Include\Protections\ProgramProtector.hpp" />
+    <ClInclude Include="Include\Protections\PureCall.hpp" />
+    <ClInclude Include="Include\Protections\StructuredExceptionTranslator.hpp" />
     <ClInclude Include="Include\Synchronization\CriticalSection.hpp" />
     <ClInclude Include="Include\Synchronization\Event.hpp" />
     <ClInclude Include="Include\Synchronization\UnmanagedEvent.hpp" />
@@ -71,6 +82,8 @@
     <ClInclude Include="Include\Wmi\WmiRuntime.hpp" />
     <ClInclude Include="Include\Wmi\WmiReleaser.hpp" />
     <ClInclude Include="Include\Wmi\WmiVariant.hpp" />
+    <ClInclude Include="Include\Protections\AbortBehavior.hpp" />
+    <ClInclude Include="Include\Protections\ErrorMode.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
