@@ -12,6 +12,8 @@ namespace Strings
 
 [[nodiscard]] std::wstring to_wstring(const Buffer& buffer);
 
+[[nodiscard]] std::wstring to_wstring(const std::string& buffer);
+
 template <typename Buffer, typename... Buffers>
 std::vector<typename Buffer::value_type> concat(const Buffer& first, const Buffers&... rest)
 {

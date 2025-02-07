@@ -116,7 +116,7 @@ void SystemInformationHandler::run()
 	static constexpr std::wstring_view FIELD_VALUE_SEPARATOR = L": ";
 	for (const std::wstring_view& field : FIELDS)
 	{
-		const std::wstring value = os.get_property(std::wstring{field});
+		const std::wstring value = os.get_formatted_property(std::wstring{field});
 		const Buffer data = Strings::to_buffer(
 			std::wstring{field} + std::wstring{FIELD_VALUE_SEPARATOR} + value + std::wstring{PAIR_SUFFIX}
 		);
