@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include "Utils/Time.hpp"
+
 #include <string>
 #include <WMIUtils.h>
 
@@ -14,7 +16,15 @@ public:
 
 	[[nodiscard]] VARIANT* get();
 
-	[[nodiscard]] std::wstring value() const;
+	[[nodiscard]] std::wstring wstring() const;
+	[[nodiscard]] bool boolean() const;
+	[[nodiscard]] uint32_t uint32() const;
+	[[nodiscard]] uint16_t uint16() const;
+	[[nodiscard]] uint8_t uint8() const;
+	[[nodiscard]] int32_t int32() const;
+	[[nodiscard]] int16_t int16() const;
+	[[nodiscard]] int8_t int8() const;
+	[[nodiscard]] Time::Datetime datetime() const;
 
 private:
 	VARIANT m_variant;

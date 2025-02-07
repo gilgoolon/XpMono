@@ -10,7 +10,7 @@ WmiResult::WmiResult(IWbemClassObject* const object):
 	m_object->AddRef();
 }
 
-std::wstring WmiResult::get_property(const std::wstring& property_name)
+std::wstring WmiResult::get_formatted_property(const std::wstring& property_name)
 {
 	static constexpr long RESERVED = 0;
 	WmiVariant variant;

@@ -15,6 +15,7 @@ public:
 	WmiResult& operator=(WmiResult&&) = delete;
 
 	[[nodiscard]] std::wstring get_property(const std::wstring& property_name);
+	[[nodiscard]] std::wstring get_formatted_property(const std::wstring& property_name);
 
 private:
 	WmiReleaser m_object;

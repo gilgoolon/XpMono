@@ -27,6 +27,8 @@ void sleep(Duration duration);
 
 [[nodiscard]] Datetime to_datetime(const FILETIME& ft);
 
+[[nodiscard]] Datetime to_datetime(const SYSTEMTIME& st);
+
 [[nodiscard]] std::string to_string(const Datetime& dt);
 
 [[nodiscard]] std::string to_string(const Duration& duration);
