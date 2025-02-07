@@ -1,13 +1,15 @@
 ﻿#include "Wmi/WmiConnection.hpp"
 
+#include "Trace.hpp"
 #include "Wmi/WmiException.hpp"
+#include "Wmi/WmiVariant.hpp"
 
 #include <comutil.h>
 
 WmiConnection::WmiConnection(const std::wstring& namespace_path):
 	m_runtime(),
 	m_locator(create_locator()),
-	m_services(connect_server(dynamic_cast<IWbemLocator*>(m_locator.get()), namespace_path))
+	m_services(connect_server(static_cast<IWbemLocator*>(m_locator.get()), namespace_path))
 {
 	const HRESULT hresult = CoSetProxyBlanket(
 		m_services.get(),
@@ -23,6 +25,41 @@ WmiConnection::WmiConnection(const std::wstring& namespace_path):
 	{
 		throw WmiException(ErrorCode::FAILED_WMI_SET_PROXY, hresult);
 	}
+}
+
+std::vector<std::unique_ptr<WmiResult>> WmiConnection::query(const std::wstring& query) const
+{
+	static constexpr std::string_view WMI_QUERY_LANGUAGE = "WQL";
+	static constexpr long SYNC_QUERY = WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY;
+	static constexpr IWbemContext* NO_CONTEXT = nullptr;
+	IEnumWbemClassObject* enumerator = nullptr;
+	HRESULT hresult = static_cast<IWbemServices*>(m_services.get())->ExecQuery(
+		bstr_t(WMI_QUERY_LANGUAGE.data()),
+		bstr_t(query.c_str()),
+		SYNC_QUERY,
+		NO_CONTEXT,
+		&enumerator
+	);
+	if (FAILED(hresult))
+	{
+		throw WmiException(ErrorCode::FAILED_WMI_QUERY, hresult);
+	}
+	WmiReleaser enumerator_releaser(enumerator);
+	std::vector<std::unique_ptr<WmiResult>> results;
+	while (enumerator)
+	{
+		IWbemClassObject* object = nullptr;
+		ULONG uReturn = 0;
+		hresult = enumerator->Next(WBEM_INFINITE, 1, &object, &uReturn);
+		if (FAILED(hresult))
+		{
+			throw WmiException(ErrorCode::FAILED_WMI_ENUMERATE_RESULT, hresult);
+		}
+		if (uReturn == 0) break;
+		WmiReleaser object_releaser(object);
+		results.push_back(std::make_unique<WmiResult>(object));
+	}
+	return results;
 }
 
 IWbemLocator* WmiConnection::create_locator()
@@ -53,7 +90,7 @@ IWbemServices* WmiConnection::connect_server(IWbemLocator* locator, const std::w
 
 	IWbemServices* result = nullptr;
 	const HRESULT hresult = locator->ConnectServer(
-		_bstr_t(namespace_path.c_str()),
+		bstr_t(namespace_path.c_str()),
 		NO_USER,
 		NO_PASSWORD,
 		DEFAULT_LOCALE,

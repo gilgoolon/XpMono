@@ -77,6 +77,9 @@ enum class ErrorCode : uint8_t
 	FAILED_WMI_CONNECT_SERVER,
 	FAILED_WMI_SET_PROXY,
 	FAILED_WMI_INITIALIZE_SECURITY,
+	FAILED_WMI_GET_PROPERTY,
+	FAILED_WMI_QUERY,
+	FAILED_WMI_ENUMERATE_RESULT,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);
