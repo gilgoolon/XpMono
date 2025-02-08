@@ -15,12 +15,5 @@ public:
 	SystemInformationHandler(SystemInformationHandler&&) = delete;
 	SystemInformationHandler& operator=(SystemInformationHandler&&) = delete;
 
-	[[nodiscard]] Buffer take(uint32_t max_size) override;
-
 	void run() override;
-
-private:
-	std::unique_ptr<Event> m_operation_event;
-	Buffer m_result_left;
-	CriticalSection m_result_lock;
 };
