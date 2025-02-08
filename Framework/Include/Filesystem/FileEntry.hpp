@@ -34,4 +34,5 @@ private:
 	Time::Datetime m_access;
 
 	friend class FileIterator;
+	friend class RecursiveFileIterator;
 };

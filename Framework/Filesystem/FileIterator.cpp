@@ -4,6 +4,7 @@
 #include "Trace.hpp"
 
 FileIterator::FileIterator(const std::filesystem::path& folder):
+	m_folder(folder),
 	m_handle(nullptr),
 	m_next_entry(nullptr)
 {
@@ -63,14 +64,19 @@ void FileIterator::retrieve_next()
 		{
 			if (GetLastError() == ERROR_NO_MORE_FILES)
 			{
+				m_next_entry = nullptr;
 				break;
 			}
 			throw WinApiException(ErrorCode::FAILED_FILE_ITERATOR_NEXT);
 		}
 		m_next_entry = std::make_unique<FileEntry>(
-			m_path,
+			m_folder,
 			Buffer{reinterpret_cast<const uint8_t*>(&data), reinterpret_cast<const uint8_t*>(&data) + sizeof data}
 		);
+	}
+	if (m_next_entry != nullptr && is_ignored(*m_next_entry))
+	{
+		m_next_entry = nullptr;
 	}
 }
 

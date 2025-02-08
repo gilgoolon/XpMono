@@ -17,7 +17,7 @@ public:
 	[[nodiscard]] std::unique_ptr<FileEntry> next();
 
 private:
-	std::filesystem::path m_path;
+	std::filesystem::path m_folder;
 	HANDLE m_handle;
 	std::unique_ptr<FileEntry> m_next_entry;
 
