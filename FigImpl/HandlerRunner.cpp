@@ -18,13 +18,11 @@ void HandlerRunner::run()
 	catch (const FigImplException& ex)
 	{
 		m_handler->error(ex.specific_code());
-		TRACE(L"run threw FigImplException")
 		throw;
 	}
 	catch (const Exception& ex)
 	{
 		m_handler->error(static_cast<Fig::FigSpecificCode>(ex.code()));
-		TRACE(L"run threw Exception")
 		throw;
 	}
 	catch (...)

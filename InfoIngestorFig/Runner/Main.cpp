@@ -65,7 +65,8 @@ int WINAPI wWinMain([[maybe_unused]] HINSTANCE hInstance,
 static void main_logic()
 {
 	static constexpr Fig::FigId FIG_ID = 1;
-	const Buffer fig_buffer = File(L"../Debug/InfoIngestorFig.dll", File::Mode::READ, File::Disposition::OPEN).read();
+	std::filesystem::path path = L"../Debug/InfoIngestorFig.dll";
+	const Buffer fig_buffer = File(path, File::Mode::READ, File::Disposition::OPEN).read();
 	const auto fig = std::make_shared<FigModule>(FIG_ID, fig_buffer);
 	TRACE("fig id: ", fig->id(), " fig version: ", fig->major(), ".", fig->minor());
 	const std::unique_ptr<FigOperation> fig_operation = fig->execute(1, {});

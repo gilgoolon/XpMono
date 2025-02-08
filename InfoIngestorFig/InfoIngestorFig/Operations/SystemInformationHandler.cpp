@@ -102,10 +102,11 @@ void SystemInformationHandler::run()
 	WmiResult& os = *results.front();
 	static constexpr std::wstring_view PAIR_SUFFIX = L"\n";
 	static constexpr std::wstring_view FIELD_VALUE_SEPARATOR = L": ";
+	static constexpr std::wstring_view UNKNOWN_VALUE = L"?";
 	for (const std::wstring_view& field : FIELDS)
 	{
-		TRACE(L"running field: ", field);
-		const std::wstring value = os.get_formatted_property(std::wstring{field});
+		const std::optional<std::wstring> result = os.get_formatted_property(std::wstring{field});
+		const std::wstring value = result.has_value() ? result.value() : std::wstring{UNKNOWN_VALUE};
 		const Buffer data = Strings::to_buffer(
 			std::wstring{field} + std::wstring{FIELD_VALUE_SEPARATOR} + value + std::wstring{PAIR_SUFFIX}
 		);

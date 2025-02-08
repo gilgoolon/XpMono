@@ -12,7 +12,7 @@ WmiResult::WmiResult(IWbemClassObject* const object):
 	m_object->AddRef();
 }
 
-std::wstring WmiResult::get_formatted_property(const std::wstring& property_name)
+std::optional<std::wstring> WmiResult::get_formatted_property(const std::wstring& property_name)
 {
 	static constexpr long RESERVED = 0;
 	WmiVariant variant;
@@ -27,6 +27,11 @@ std::wstring WmiResult::get_formatted_property(const std::wstring& property_name
 	);
 	if (FAILED(hresult))
 	{
+		if (hresult == WBEM_E_NOT_FOUND)
+		{
+			TRACE(L"property not found: ", property_name)
+			return {};
+		}
 		throw WmiException(ErrorCode::FAILED_WMI_GET_PROPERTY, hresult);
 	}
 	const bool is_array = (value_type & CIM_FLAG_ARRAY) > 0;
@@ -104,6 +109,6 @@ std::wstring WmiResult::get_formatted_property(const std::wstring& property_name
 		return Strings::to_wstring(Time::to_string(variant.datetime()));
 	default:
 		TRACE(L"unsupported variant type: ", value_type)
-		return L"?";
+		return {};
 	}
 }

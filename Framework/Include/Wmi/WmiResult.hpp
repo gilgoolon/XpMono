@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "WmiReleaser.hpp"
 
+#include <optional>
 #include <string>
 #include <wbemcli.h>
 
@@ -14,7 +15,7 @@ public:
 	WmiResult(WmiResult&&) = delete;
 	WmiResult& operator=(WmiResult&&) = delete;
 
-	[[nodiscard]] std::wstring get_formatted_property(const std::wstring& property_name);
+	[[nodiscard]] std::optional<std::wstring> get_formatted_property(const std::wstring& property_name);
 
 private:
 	WmiReleaser m_object;

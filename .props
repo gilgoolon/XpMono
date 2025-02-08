@@ -7,6 +7,11 @@
             <WarningLevel>Level4</WarningLevel>
             <TreatWarningAsError>true</TreatWarningAsError>
             <ExceptionHandling>Async</ExceptionHandling>
+            <SDLCheck>false</SDLCheck>
+            <DisableSecurityCheck>true</DisableSecurityCheck>
+            <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+            <BufferSecurityCheck>false</BufferSecurityCheck>
+            <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
         </ClCompile>
         <Link>
             <SubSystem>Windows</SubSystem>

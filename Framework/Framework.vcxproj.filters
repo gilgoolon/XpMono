@@ -248,5 +248,8 @@
     <ClInclude Include="Include\Wmi\SafeArrayAccess.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Processes\ILibrary.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
