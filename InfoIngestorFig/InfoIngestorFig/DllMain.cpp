@@ -2,6 +2,7 @@
 #include "FigImplException.hpp"
 #include "FigManager.hpp"
 #include "Trace.hpp"
+#include "Operations/DirlistHandler.hpp"
 #include "Operations/SystemInformationHandler.hpp"
 #include "Protections/LibraryProtector.hpp"
 
@@ -18,6 +19,8 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 	{
 	case static_cast<Fig::OperationType>(SystemInformationHandler::TYPE):
 		return std::make_shared<SystemInformationHandler>(std::move(operation_event));
+	case static_cast<Fig::OperationType>(DirlistHandler::TYPE):
+		return std::make_shared<DirlistHandler>(std::move(operation_event));
 	default:
 		throw FigImplException(Fig::FigCode::FAILED_UNSUPPORTED_OPERATION);
 	}

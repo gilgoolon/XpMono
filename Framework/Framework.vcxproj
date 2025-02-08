@@ -17,6 +17,9 @@
     <ClCompile Include="ErrorCode.cpp" />
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="Filesystem\File.cpp" />
+    <ClCompile Include="Filesystem\FileIterator.cpp" />
+    <ClCompile Include="Filesystem\FileEntry.cpp" />
+    <ClCompile Include="Utils\Sizes.cpp" />
     <ClCompile Include="Include\Wmi\SafeArrayAccess.cpp" />
     <ClCompile Include="Protections\TerminationHandler.cpp" />
     <ClCompile Include="Protections\AbortBehavior.cpp" />
@@ -54,6 +57,9 @@
     <ClInclude Include="Include\ErrorCode.hpp" />
     <ClInclude Include="Include\Exception.hpp" />
     <ClInclude Include="Include\Filesystem\File.hpp" />
+    <ClInclude Include="Include\Filesystem\FileEntry.hpp" />
+    <ClInclude Include="Include\Filesystem\FileIterator.hpp" />
+    <ClInclude Include="Include\Interfaces\ISerializable.hpp" />
     <ClInclude Include="Include\Processes\DynamicLibrary.hpp" />
     <ClInclude Include="Include\Processes\ILibrary.hpp" />
     <ClInclude Include="Include\Processes\IRunner.hpp" />
@@ -78,6 +84,7 @@
     <ClInclude Include="Include\Utils\Buffer.hpp" />
     <ClInclude Include="Include\Utils\Formatting.hpp" />
     <ClInclude Include="Include\Utils\Random.hpp" />
+    <ClInclude Include="Include\Utils\Sizes.hpp" />
     <ClInclude Include="Include\Utils\Strings.hpp" />
     <ClInclude Include="Include\Utils\Time.hpp" />
     <ClInclude Include="Include\Synchronization\IWaitable.hpp" />

@@ -23,7 +23,7 @@ std::vector<typename Buffer::value_type> concat(const Buffer& first, const Buffe
 	using ValueType = typename Buffer::value_type;
 	std::vector<std::span<const ValueType>> spans = {std::span(first), std::span(rest)...};
 
-	std::size_t total_size = 0;
+	uint32_t total_size = 0;
 	for (const auto& span : spans)
 	{
 		total_size += span.size();
