@@ -126,3 +126,15 @@ std::wstring Strings::join(const std::vector<std::wstring>& strings, wchar_t sep
 	}
 	return result;
 }
+
+std::vector<std::wstring> Strings::parse_raw_strings(const std::wstring& raw_strings)
+{
+	std::vector<std::wstring> result;
+	for (uint32_t i = 0;
+	     raw_strings[0] != L'\0';
+	     i += wcsnlen_s(raw_strings.c_str() + i, raw_strings.size()) + 1)
+	{
+		result.push_back(raw_strings.data() + i);
+	}
+	return result;
+}

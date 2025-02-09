@@ -132,6 +132,9 @@
     <ClCompile Include="Filesystem\RecursiveFileIterator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Include\Filesystem\VolumeIterator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\CommandLineArguments.hpp">
@@ -276,6 +279,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Filesystem\RecursiveFileIterator.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Filesystem\VolumeIterator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

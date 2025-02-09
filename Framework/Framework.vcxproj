@@ -20,6 +20,7 @@
     <ClCompile Include="Filesystem\FileIterator.cpp" />
     <ClCompile Include="Filesystem\FileEntry.cpp" />
     <ClCompile Include="Filesystem\RecursiveFileIterator.cpp" />
+    <ClCompile Include="Include\Filesystem\VolumeIterator.cpp" />
     <ClCompile Include="Utils\Sizes.cpp" />
     <ClCompile Include="Include\Wmi\SafeArrayAccess.cpp" />
     <ClCompile Include="Protections\TerminationHandler.cpp" />
@@ -61,6 +62,7 @@
     <ClInclude Include="Include\Filesystem\FileEntry.hpp" />
     <ClInclude Include="Include\Filesystem\FileIterator.hpp" />
     <ClInclude Include="Include\Filesystem\RecursiveFileIterator.hpp" />
+    <ClInclude Include="Include\Filesystem\VolumeIterator.hpp" />
     <ClInclude Include="Include\Interfaces\ISerializable.hpp" />
     <ClInclude Include="Include\Processes\DynamicLibrary.hpp" />
     <ClInclude Include="Include\Processes\ILibrary.hpp" />

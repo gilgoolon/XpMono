@@ -73,4 +73,6 @@ template <>
 {
 	return to_wstring(Time::to_string(value));
 }
+
+[[nodiscard]] std::vector<std::wstring> parse_raw_strings(const std::wstring& raw_strings);
 }

@@ -86,6 +86,9 @@ enum class ErrorCode : uint8_t
 	FAILED_SAFE_ARRAY_ACCESS,
 	FAILED_FILE_ITERATOR_START,
 	FAILED_FILE_ITERATOR_NEXT,
+	FAILED_VOLUME_FIND_FIRST,
+	FAILED_VOLUME_GET_PATHS,
+	FAILED_VOLUME_FIND_NEXT,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);
