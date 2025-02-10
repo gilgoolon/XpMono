@@ -11,7 +11,7 @@ Thread::Thread(IRunner::Ptr runner):
 {
 }
 
-uint32_t Thread::thread_main(void* const argument)
+DWORD Thread::thread_main(const LPVOID argument)
 {
 	try
 	{
@@ -49,11 +49,11 @@ uint32_t Thread::thread_main(void* const argument)
 
 HANDLE Thread::create_thread(IRunner::Ptr runner)
 {
-	static constexpr void* DEFAULT_SECURITY = nullptr;
-	static constexpr unsigned DEFAULT_STACK_SIZE = 0;
-	static constexpr unsigned RUN_ON_CREATION = 0;
-	static constexpr unsigned* DONT_OUT_TID = nullptr;
-	const uintptr_t result = _beginthreadex(
+	static constexpr LPSECURITY_ATTRIBUTES DEFAULT_SECURITY = nullptr;
+	static constexpr DWORD DEFAULT_STACK_SIZE = 0;
+	static constexpr DWORD RUN_ON_CREATION = 0;
+	static constexpr LPDWORD DONT_OUT_TID = nullptr;
+	const HANDLE result = CreateThread(
 		DEFAULT_SECURITY,
 		DEFAULT_STACK_SIZE,
 		thread_main,
@@ -61,10 +61,10 @@ HANDLE Thread::create_thread(IRunner::Ptr runner)
 		RUN_ON_CREATION,
 		DONT_OUT_TID
 	);
-	if (result == 0)
+	if (result == nullptr)
 	{
 		throw WinApiException(ErrorCode::FAILED_THREAD_CREATE);
 	}
 	runner.release();
-	return reinterpret_cast<HANDLE>(result);
+	return result;
 }
