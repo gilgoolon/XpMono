@@ -11,10 +11,10 @@
             <DisableSecurityCheck>true</DisableSecurityCheck>
             <BasicRuntimeChecks>Default</BasicRuntimeChecks>
             <BufferSecurityCheck>false</BufferSecurityCheck>
-            <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
         </ClCompile>
         <Link>
             <SubSystem>Windows</SubSystem>
+            <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
         </Link>
     </ItemDefinitionGroup>
 </Project>

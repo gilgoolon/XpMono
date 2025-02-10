@@ -5,7 +5,9 @@ for path in glob("C:\\Users\\alper\\OneDrive\\Documents\\XpMono\\**\\*.vcxproj",
     lines = []
     with open(path, 'r') as f:
         for line in f.readlines():
-            if "<SDLCheck>true</SDLCheck>" not in line:
+            if "<ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>" not in line:
                 lines.append(line)
+            else:
+                print("found")
     with open(path, 'w') as f:
         f.writelines(lines)

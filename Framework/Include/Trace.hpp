@@ -13,3 +13,5 @@
         debug(Formatting::format(L"[" __PROJECTW__ L"] ", std::filesystem::path(__FILE__).filename().wstring(), ":", __LINE__, " " ,__FUNCTION__, " - ", __VA_ARGS__, L"\n")); \
     } catch (...) \
 	{debug(L"failed to trace");};
+
+#define TRACE_S(str) debug(L"[" __PROJECTW__ L"] " __FILEW__ L":" __FUNCTIONW__ L" - " str);
