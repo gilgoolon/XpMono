@@ -20,7 +20,7 @@
     <ClCompile Include="Filesystem\FileIterator.cpp" />
     <ClCompile Include="Filesystem\FileEntry.cpp" />
     <ClCompile Include="Filesystem\RecursiveFileIterator.cpp" />
-    <ClCompile Include="Include\Filesystem\VolumeIterator.cpp" />
+    <ClCompile Include="Filesystem\VolumeIterator.cpp" />
     <ClCompile Include="Utils\Sizes.cpp" />
     <ClCompile Include="Include\Wmi\SafeArrayAccess.cpp" />
     <ClCompile Include="Protections\TerminationHandler.cpp" />

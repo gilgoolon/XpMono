@@ -132,7 +132,7 @@
     <ClCompile Include="Filesystem\RecursiveFileIterator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Filesystem\VolumeIterator.cpp">
+    <ClCompile Include="Filesystem\VolumeIterator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
