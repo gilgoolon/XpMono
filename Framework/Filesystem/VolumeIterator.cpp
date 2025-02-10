@@ -46,7 +46,7 @@ void VolumeIterator::add_guid_paths(const std::wstring& guid)
 		size,
 		&size
 	);
-	if (result != TRUE)
+	if (result != FALSE)
 	{
 		return;
 	}
@@ -57,11 +57,11 @@ void VolumeIterator::add_guid_paths(const std::wstring& guid)
 	buffer.resize(size);
 	result = GetVolumePathNamesForVolumeNameW(
 		guid.c_str(),
-		nullptr,
+		buffer.data(),
 		size,
 		&size
 	);
-	if (GetLastError() != ERROR_MORE_DATA)
+	if (result == FALSE)
 	{
 		throw WinApiException(ErrorCode::FAILED_VOLUME_GET_PATHS);
 	}
