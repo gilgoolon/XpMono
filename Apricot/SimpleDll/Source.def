@@ -2,3 +2,7 @@ LIBRARY SimpleDll.dll
 EXPORTS
 	exported_function_by_ordinal1 @1 NONAME
 	exported_function_by_name @5
+	throwing_function
+	throwing_uncaught_function
+	throwing_uncaught_seh_function
+	throwing_seh_function
