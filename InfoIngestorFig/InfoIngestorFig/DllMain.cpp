@@ -20,7 +20,7 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 	case static_cast<Fig::OperationType>(SystemInformationHandler::TYPE):
 		return std::make_shared<SystemInformationHandler>(std::move(operation_event));
 	case static_cast<Fig::OperationType>(DirlistHandler::TYPE):
-		return std::make_shared<DirlistHandler>(std::move(operation_event));
+		return std::make_shared<DirlistHandler>(std::move(operation_event), operation_parameters);
 	default:
 		throw FigImplException(Fig::FigCode::FAILED_UNSUPPORTED_OPERATION);
 	}
