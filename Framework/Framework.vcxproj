@@ -66,6 +66,7 @@
     <ClInclude Include="Include\Filesystem\RecursiveFileIterator.hpp" />
     <ClInclude Include="Include\Filesystem\VolumeIterator.hpp" />
     <ClInclude Include="Include\Interfaces\ISerializable.hpp" />
+    <ClInclude Include="Include\Json.hpp" />
     <ClInclude Include="Include\Processes\DynamicLibrary.hpp" />
     <ClInclude Include="Include\Processes\ILibrary.hpp" />
     <ClInclude Include="Include\Processes\IRunner.hpp" />
@@ -145,7 +146,7 @@
     <ClCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>Include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include/;C:\Users\alper\.sdks\json-3.11.2\</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
@@ -161,7 +162,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>Include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include/;C:\Users\alper\.sdks\json-3.11.2\</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>

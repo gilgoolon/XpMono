@@ -290,5 +290,8 @@
     <ClInclude Include="Include\Filesystem\FullFilesystemIterator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Json.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

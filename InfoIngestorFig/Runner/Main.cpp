@@ -2,9 +2,11 @@
 #include "FigException.hpp"
 #include "FigModule.hpp"
 #include "FigOperation.hpp"
+#include "Json.hpp"
 #include "Trace.hpp"
 #include "Filesystem/File.hpp"
 #include "Protections/ProgramProtector.hpp"
+#include "Utils/Strings.hpp"
 
 #include <ApricotException.hpp>
 
@@ -69,7 +71,12 @@ static void main_logic()
 	const Buffer fig_buffer = File(path, File::Mode::READ, File::Disposition::OPEN).read();
 	const auto fig = std::make_shared<FigModule>(FIG_ID, fig_buffer);
 	TRACE("fig id: ", fig->id(), " fig version: ", fig->major(), ".", fig->minor());
-	const std::unique_ptr<FigOperation> fig_operation = fig->execute(2, {});
+	const Json parameters = {
+		{"path", "C:\\Users"},
+		{"depth", 3}
+	};
+	TRACE(L"json value: ", parameters.dump().c_str())
+	const std::unique_ptr<FigOperation> fig_operation = fig->execute(2, Json::to_bson(parameters));
 	bool is_over = false;
 	File output(LR"(C:\Users\alper\OneDrive\Documents\output.txt)", File::Mode::WRITE, File::Disposition::OVERRIDE);
 	while (!is_over)

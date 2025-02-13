@@ -1,11 +1,12 @@
 ﻿#pragma once
 #include "IOperationHandler.hpp"
+#include "Json.hpp"
 
 #include <filesystem>
 
 class DirlistHandler final : public IOperationHandler
 {
-	explicit DirlistHandler(std::unique_ptr<Event> operation_event, const json& parameters);
+	explicit DirlistHandler(std::unique_ptr<Event> operation_event, const Json& parameters);
 
 public:
 	static constexpr Fig::FigId TYPE = 2;
