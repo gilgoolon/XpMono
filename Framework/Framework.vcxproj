@@ -22,6 +22,7 @@
     <ClCompile Include="Filesystem\RecursiveFileIterator.cpp" />
     <ClCompile Include="Filesystem\VolumeIterator.cpp" />
     <ClCompile Include="Filesystem\FullFilesystemIterator.cpp" />
+    <ClCompile Include="Crypto\Base64.cpp" />
     <ClCompile Include="Utils\Sizes.cpp" />
     <ClCompile Include="Include\Wmi\SafeArrayAccess.cpp" />
     <ClCompile Include="Protections\TerminationHandler.cpp" />
@@ -54,11 +55,16 @@
     <ClCompile Include="Wmi\WmiConnection.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\.sdks\base64\base64.hpp" />
     <ClInclude Include="Include\CommandLineArguments.hpp" />
+    <ClInclude Include="Include\Crypto\Base64.hpp" />
     <ClInclude Include="Include\Debug.hpp" />
     <ClInclude Include="Include\Errno.hpp" />
     <ClInclude Include="Include\ErrorCode.hpp" />
     <ClInclude Include="Include\Exception.hpp" />
+    <ClInclude Include="Include\External\base64\base64.hpp" />
+    <ClInclude Include="Include\External\nlohmann\json.hpp" />
+    <ClInclude Include="Include\External\nlohmann\json_fwd.hpp" />
     <ClInclude Include="Include\Filesystem\File.hpp" />
     <ClInclude Include="Include\Filesystem\FileEntry.hpp" />
     <ClInclude Include="Include\Filesystem\FileIterator.hpp" />
