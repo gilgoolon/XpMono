@@ -18,7 +18,7 @@ namespace Strings
 [[nodiscard]] std::wstring to_wstring(const std::string& buffer);
 
 template <typename Buffer, typename... Buffers>
-std::vector<typename Buffer::value_type> concat(const Buffer& first, const Buffers&... rest)
+std::vector<typename Buffer::value_type> concat_containers(const Buffer& first, const Buffers&... rest)
 {
 	using ValueType = typename Buffer::value_type;
 	std::vector<std::span<const ValueType>> spans = {std::span(first), std::span(rest)...};
@@ -37,6 +37,19 @@ std::vector<typename Buffer::value_type> concat(const Buffer& first, const Buffe
 		dest = std::copy(span.begin(), span.end(), dest);
 	}
 
+	return result;
+}
+
+template <typename String, typename... Strings>
+String concat(const String& first, const Strings&... rest)
+{
+	using ValueType = typename String::value_type;
+	std::vector<std::span<const ValueType>> spans = {std::span(first), std::span(rest)...};
+
+	uint32_t total_size = first.size() + ((rest.size()) + ...);
+	String result = first;
+	result.reserve(total_size);
+	(result.append(rest), ...);
 	return result;
 }
 
