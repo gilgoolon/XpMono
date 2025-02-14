@@ -18,6 +18,10 @@ public:
 	std::vector<T> value() const
 	{
 		std::vector<T> result;
+		if (m_safearray == nullptr)
+		{
+			return result;
+		}
 		static constexpr UINT SINGLE_DIM = 1;
 		LONG low_bound = 0;
 		LONG up_bound = 0;
