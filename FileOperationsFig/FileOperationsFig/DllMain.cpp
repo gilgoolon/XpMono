@@ -3,6 +3,7 @@
 #include "FigManager.hpp"
 #include "Trace.hpp"
 #include "Operations/DirlistHandler.hpp"
+#include "Operations/DropFileHandler.hpp"
 #include "Protections/LibraryProtector.hpp"
 
 #include <Windows.h>
@@ -18,6 +19,8 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 	{
 	case static_cast<Fig::OperationType>(DirlistHandler::TYPE):
 		return std::make_shared<DirlistHandler>(std::move(operation_event), operation_parameters);
+	case static_cast<Fig::OperationType>(DropFileHandler::TYPE):
+		return std::make_shared<DropFileHandler>(std::move(operation_event), operation_parameters);
 	default:
 		throw FigImplException(Fig::FigCode::FAILED_UNSUPPORTED_OPERATION);
 	}

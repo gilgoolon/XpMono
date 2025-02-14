@@ -6,6 +6,7 @@
 #include "Trace.hpp"
 #include "Filesystem/File.hpp"
 #include "Protections/ProgramProtector.hpp"
+#include "Utils/Strings.hpp"
 
 #include <ApricotException.hpp>
 
@@ -81,8 +82,8 @@ static void main_logic()
 #endif
 	TRACE("fig id: ", fig->id(), " fig version: ", fig->major(), ".", fig->minor());
 	const Json parameters = {
-		{"path", "C:\\Users"},
-		{"depth", 1}
+		{"destination", Strings::to_string(LR"(C:\Users\alper\OneDrive\Documents\new file.txt)")},
+		{"data", "SGVsbG8gV29ybGQh"}
 	};
 	TRACE(L"json value: ", parameters.dump().c_str())
 	const std::unique_ptr<FigOperation> fig_operation = fig->execute(2, Json::to_bson(parameters));
