@@ -20,9 +20,10 @@ void WmiQueryMultiOperationHandler::run()
 	static constexpr std::wstring_view FIELD_VALUE_SEPARATOR = L": ";
 	static constexpr std::wstring_view UNKNOWN_VALUE = L"?";
 	static constexpr std::wstring_view FIELD_PREFIX = L"- ";
+	uint32_t i = 1;
 	for (const std::unique_ptr<WmiResult>& entry : connection.query(query))
 	{
-		append(Strings::to_buffer(m_class_name + L'1'));
+		append(Strings::to_buffer(m_class_name + std::to_wstring(i++) + std::wstring{PAIR_SUFFIX}));
 		for (const std::wstring& field : m_fields)
 		{
 			const std::optional<std::wstring> result = entry->get_formatted_property(field);

@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "IOperationHandler.hpp"
 
-class WmiQueryMultiOperationHandler final : public IOperationHandler
+class WmiQueryMultiOperationHandler : public IOperationHandler
 {
 public:
 	explicit WmiQueryMultiOperationHandler(std::unique_ptr<Event> operation_event,
