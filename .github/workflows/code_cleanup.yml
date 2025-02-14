@@ -1,0 +1,22 @@
+name: ReSharper CodeCleanup
+
+on: [ pull_request ]
+
+jobs:
+    cleanup:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                solution: ${{ fromJson(env.sln_files) }}
+
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v3
+
+            -   name: Cleanup Code
+                id: cleanup
+                uses: ArturWincenciak/ReSharper_CleanupCode@v4.14
+                with:
+                    solution: '${{ matrix.solution }}'
+                    fail_on_reformat_needed: 'yes'
+                    jb_cleanup_code_arg: '--verbosity=INFO --exclude=Exetrnal/ --settings=XpSettings.DotSettings'
