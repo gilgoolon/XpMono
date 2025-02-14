@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Processes/ScopedHandle.hpp"
 #include "Utils/Buffer.hpp"
+#include "Utils/Time.hpp"
 
 #include <filesystem>
 #include <Windows.h>
@@ -36,6 +37,8 @@ public:
 	void write(const Buffer& data, uint64_t offset);
 
 	void seek(uint64_t offset) const;
+
+	void set_metadata_of(const File& file);
 
 private:
 	ScopedHandle m_handle;

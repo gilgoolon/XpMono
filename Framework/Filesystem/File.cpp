@@ -87,6 +87,25 @@ void File::seek(const uint64_t offset) const
 	}
 }
 
+void File::set_metadata_of(const File& file)
+{
+	FILETIME creation{};
+	FILETIME access{};
+	FILETIME modification{};
+
+	BOOL result =
+		GetFileTime(file.m_handle.get(), &creation, &access, &modification);
+	if (result == FALSE)
+	{
+		throw WinApiException(ErrorCode::FAILED_FILE_GET_TIME);
+	}
+	result = SetFileTime(m_handle.get(), &creation, &access, &modification);
+	if (result == FALSE)
+	{
+		throw WinApiException(ErrorCode::FAILED_FILE_SET_TIME);
+	}
+}
+
 HANDLE File::create_file(const std::filesystem::path& path, Mode mode, Disposition disposition)
 {
 	static constexpr LPSECURITY_ATTRIBUTES DEFAULT_SECURITY = nullptr;

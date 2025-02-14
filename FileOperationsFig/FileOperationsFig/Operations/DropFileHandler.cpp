@@ -1,5 +1,7 @@
 ﻿#include "DropFileHandler.hpp"
 
+#include "Filesystem/File.hpp"
+
 namespace Parameters
 {
 static constexpr std::string_view DESTINATION = "destination";
@@ -23,4 +25,11 @@ DropFileHandler::DropFileHandler(std::unique_ptr<Event> operation_event, const B
 
 void DropFileHandler::run()
 {
+	File destination(m_destination, File::Mode::WRITE, File::Disposition::OVERRIDE);
+	destination.write(m_data);
+	if (m_metadata_file.has_value())
+	{
+		destination.set_metadata_of(File(m_metadata_file.value(), File::Mode::READ, File::Disposition::OPEN));
+	}
+	finished();
 }
