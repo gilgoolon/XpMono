@@ -1,0 +1,35 @@
+name: ReSharper CodeCleanup
+
+on: [ pull_request ]
+
+jobs:
+    solutions:
+        runs-on: ubuntu-latest
+        outputs:
+            files: ${{ steps.find_slns.outputs.sln_files }}
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
+  
+            - name: Find Solution Files
+              id: find_slns
+              run: echo "sln_files=$(find . -name '*.sln' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+
+    cleanup:
+        runs-on: ubuntu-latest
+        needs: solutions
+        strategy:
+            matrix:
+                solution: ${{ fromJson(needs.solutions.outputs.files) }}
+
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v4
+
+            -   name: Cleanup Code
+                id: cleanup
+                uses: ArturWincenciak/ReSharper_CleanupCode@v3.0
+                with:
+                    solution: '${{ matrix.solution }}'
+                    fail_on_reformat_needed: 'yes'
+                    jb_cleanup_code_arg: '--verbosity=INFO --exclude=Exetrnal/ --settings=XpSettings.DotSettings'

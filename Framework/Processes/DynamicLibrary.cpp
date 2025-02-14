@@ -42,3 +42,13 @@ void* DynamicLibrary::get_exported_procedure(const std::string& name) const
 	}
 	return result;
 }
+
+void* DynamicLibrary::get_exported_procedure(const uint16_t ordinal) const
+{
+	const FARPROC result = GetProcAddress(m_module, MAKEINTRESOURCEA(ordinal));
+	if (result == nullptr)
+	{
+		throw WinApiException(ErrorCode::FAILED_LIBRARY_GET_PROC_ADDRESS);
+	}
+	return result;
+}

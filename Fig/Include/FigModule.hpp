@@ -1,16 +1,19 @@
 ﻿#pragma once
+#include "Processes/ILibrary.hpp"
 #include "Synchronization/Event.hpp"
 #include "Utils/Buffer.hpp"
 
 #include "FigApi.hpp"
-#include <ApricotLibrary.hpp>
+#include <filesystem>
 
 class FigOperation;
 
 class FigModule final : public std::enable_shared_from_this<FigModule>
 {
 public:
+	explicit FigModule(Fig::FigId fig_id, std::unique_ptr<ILibrary> library);
 	explicit FigModule(Fig::FigId fig_id, const Buffer& data);
+	explicit FigModule(Fig::FigId fig_id, const std::filesystem::path& path);
 	~FigModule() = default;
 	FigModule(const FigModule&) = delete;
 	FigModule& operator=(const FigModule&) = delete;
@@ -30,7 +33,7 @@ public:
 	[[nodiscard]] std::unique_ptr<FigOperation> execute(Fig::OperationType type, const Buffer& parameters);
 
 private:
-	ApricotLibrary m_apricot_library;
+	std::unique_ptr<ILibrary> m_library;
 	Fig::FigInterfaces m_interfaces;
 	Fig::FigInformation m_information;
 	Event m_fig_quit_event;

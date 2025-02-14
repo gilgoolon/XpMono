@@ -17,9 +17,10 @@ Pe::RelocationEntriesIterator::Entry Pe::RelocationEntriesIterator::next()
 	--m_calls_left;
 	static constexpr uint32_t OFFSET_MASK = 0x0fff;
 	static constexpr uint32_t TYPE_SHIFT = 12;
+	const uint32_t block_offset = *m_current_entry & OFFSET_MASK;
 	const Entry result = {
 		static_cast<Type>(*m_current_entry >> TYPE_SHIFT),
-		reinterpret_cast<const uint32_t*>(static_cast<const uint8_t*>(m_block_rva) + (*m_current_entry & OFFSET_MASK))
+		reinterpret_cast<const uint32_t*>(static_cast<const uint8_t*>(m_block_rva) + block_offset)
 	};
 	++m_current_entry;
 	return result;

@@ -6,9 +6,17 @@
             <LanguageStandard>stdcpp20</LanguageStandard>
             <WarningLevel>Level4</WarningLevel>
             <TreatWarningAsError>true</TreatWarningAsError>
+            <ExceptionHandling>Async</ExceptionHandling>
+            <SDLCheck>false</SDLCheck>
+            <DisableSecurityCheck>true</DisableSecurityCheck>
+            <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+            <BufferSecurityCheck>false</BufferSecurityCheck>
         </ClCompile>
         <Link>
             <SubSystem>Windows</SubSystem>
+            <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+            <RandomizedBaseAddress>true</RandomizedBaseAddress>
+            <DataExecutionPrevention>false</DataExecutionPrevention>
         </Link>
     </ItemDefinitionGroup>
 </Project>

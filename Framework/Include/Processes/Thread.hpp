@@ -13,7 +13,7 @@ public:
 	Thread& operator=(Thread&&) = delete;
 
 private:
-	[[nodiscard]] static uint32_t __stdcall thread_main(void* argument);
+	[[nodiscard]] static DWORD WINAPI thread_main(LPVOID argument);
 
 	[[nodiscard]] static HANDLE create_thread(IRunner::Ptr runner);
 

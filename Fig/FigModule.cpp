@@ -2,14 +2,17 @@
 
 #include "FigException.hpp"
 #include "FigOperation.hpp"
+#include "Processes/DynamicLibrary.hpp"
 
-FigModule::FigModule(const Fig::FigId fig_id, const Buffer& data):
-	m_apricot_library(data),
+#include <ApricotLibrary.hpp>
+
+FigModule::FigModule(const Fig::FigId fig_id, std::unique_ptr<ILibrary> library):
+	m_library(std::move(library)),
 	m_interfaces{},
 	m_information{},
 	m_fig_quit_event(event_name(fig_id), Event::Type::MANUAL_RESET)
 {
-	const Fig::FigCode code = m_apricot_library.call<Fig::InitializeFunction>(
+	const Fig::FigCode code = m_library->call<Fig::InitializeFunction>(
 		Fig::INITIALIZE_ORDINAL,
 		m_fig_quit_event.handle(),
 		&m_interfaces,
@@ -19,6 +22,16 @@ FigModule::FigModule(const Fig::FigId fig_id, const Buffer& data):
 	{
 		throw FigException(ErrorCode::FAILED_FIG_INITIALIZE, code);
 	}
+}
+
+FigModule::FigModule(const Fig::FigId fig_id, const Buffer& data):
+	FigModule(fig_id, std::make_unique<ApricotLibrary>(data))
+{
+}
+
+FigModule::FigModule(const Fig::FigId fig_id, const std::filesystem::path& path):
+	FigModule(fig_id, std::make_unique<DynamicLibrary>(path))
+{
 }
 
 Fig::FigId FigModule::id() const

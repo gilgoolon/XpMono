@@ -2,6 +2,7 @@
 
 #include "Exception.hpp"
 #include "Trace.hpp"
+#include "Protections/EntryPointProtector.hpp"
 
 #include <process.h>
 
@@ -10,27 +11,32 @@ Thread::Thread(IRunner::Ptr runner):
 {
 }
 
-uint32_t Thread::thread_main(void* const argument)
+DWORD Thread::thread_main(const LPVOID argument)
 {
 	try
 	{
+		Protections::EntryPointProtector protections;
 		const IRunner::Ptr runner(static_cast<IRunner*>(argument));
 		runner->run();
 		return EXIT_SUCCESS;
 	}
-	catch (const WinApiException& ex)
+	catch ([[maybe_unused]] const WinApiException& ex)
 	{
 		TRACE("uncaught WinApiException with code ", ex.code(), " and error ", ex.error())
 	}
-	catch (const WinApiNtException& ex)
+	catch ([[maybe_unused]] const WinApiNtException& ex)
 	{
 		TRACE("uncaught WinApiExceptionNt with code ", ex.code(), " and status ", ex.status())
 	}
-	catch (const Exception& ex)
+	catch ([[maybe_unused]] const Exception& ex)
 	{
 		TRACE("uncaught Exception with code ", ex.code())
 	}
-	catch (const std::exception& ex)
+	catch ([[maybe_unused]] const CriticalException&)
+	{
+		TRACE(L"uncaught critical exception")
+	}
+	catch ([[maybe_unused]] const std::exception& ex)
 	{
 		TRACE("uncaught std::exception: ", ex.what())
 	}
@@ -43,11 +49,11 @@ uint32_t Thread::thread_main(void* const argument)
 
 HANDLE Thread::create_thread(IRunner::Ptr runner)
 {
-	static constexpr void* DEFAULT_SECURITY = nullptr;
-	static constexpr unsigned DEFAULT_STACK_SIZE = 0;
-	static constexpr unsigned RUN_ON_CREATION = 0;
-	static constexpr unsigned* DONT_OUT_TID = nullptr;
-	const uintptr_t result = _beginthreadex(
+	static constexpr LPSECURITY_ATTRIBUTES DEFAULT_SECURITY = nullptr;
+	static constexpr DWORD DEFAULT_STACK_SIZE = 0;
+	static constexpr DWORD RUN_ON_CREATION = 0;
+	static constexpr LPDWORD DONT_OUT_TID = nullptr;
+	const HANDLE result = CreateThread(
 		DEFAULT_SECURITY,
 		DEFAULT_STACK_SIZE,
 		thread_main,
@@ -55,10 +61,10 @@ HANDLE Thread::create_thread(IRunner::Ptr runner)
 		RUN_ON_CREATION,
 		DONT_OUT_TID
 	);
-	if (result == 0)
+	if (result == nullptr)
 	{
 		throw WinApiException(ErrorCode::FAILED_THREAD_CREATE);
 	}
 	runner.release();
-	return reinterpret_cast<HANDLE>(result);
+	return result;
 }

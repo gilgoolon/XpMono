@@ -51,7 +51,8 @@ static void main_logic()
 {
 	const Buffer dll_data = File(
 		LR"(C:\Users\alper\OneDrive\Documents\XpMono\Apricot\Debug\SimpleDll.dll)",
-		File::Mode::READ
+		File::Mode::READ,
+		File::Disposition::OPEN
 	).read();
 	const ApricotLibrary library(dll_data);
 

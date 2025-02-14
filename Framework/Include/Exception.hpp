@@ -53,3 +53,14 @@ public:
 private:
 	NTSTATUS m_status;
 };
+
+class CriticalException final
+{
+public:
+	explicit CriticalException() = default;
+	~CriticalException() = default;
+	CriticalException(const CriticalException&) = delete;
+	CriticalException& operator=(const CriticalException&) = delete;
+	CriticalException(CriticalException&&) = delete;
+	CriticalException& operator=(CriticalException&&) = delete;
+};

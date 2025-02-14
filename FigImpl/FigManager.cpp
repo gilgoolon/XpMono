@@ -1,7 +1,11 @@
 ﻿#include "FigManager.hpp"
 
+#include "Exception.hpp"
+#include "FigImplException.hpp"
 #include "HandlerRunner.hpp"
+#include "Trace.hpp"
 #include "Processes/Thread.hpp"
+#include "Protections/EntryPointProtector.hpp"
 #include "Synchronization/Event.hpp"
 #include "Utils/Random.hpp"
 
@@ -13,11 +17,41 @@ Fig::FigCode FigManager::initialize(HANDLE unmanaged_quit_event,
                                     Fig::FigInterfaces* interfaces,
                                     Fig::FigInformation* information)
 {
-	*information = g_information;
-	*interfaces = {execute, status, take};
-	g_quit_event = std::make_shared<UnmanagedEvent>(unmanaged_quit_event);
-	g_operations_lock = std::make_unique<CriticalSection>();
-	return Fig::FigCode::SUCCESS;
+	try
+	{
+		Protections::EntryPointProtector protector;
+		*information = g_information;
+		*interfaces = {execute, status, take};
+		g_quit_event = std::make_shared<UnmanagedEvent>(unmanaged_quit_event);
+		g_operations_lock = std::make_unique<CriticalSection>();
+		return Fig::FigCode::SUCCESS;
+	}
+	catch (const FigImplException& ex)
+	{
+		TRACE(L"failed with specific code: ", ex.specific_code());
+		return ex.code();
+	}
+	catch ([[maybe_unused]] const WinApiException& ex)
+	{
+		TRACE("uncaught WinApiException with code ", ex.code(), " and error ", ex.error())
+	}
+	catch ([[maybe_unused]] const Exception& ex)
+	{
+		TRACE("uncaught Exception with code ", ex.code())
+	}
+	catch ([[maybe_unused]] const CriticalException&)
+	{
+		TRACE("uncaught CriticalException")
+	}
+	catch ([[maybe_unused]] const std::exception& ex)
+	{
+		TRACE("uncaught std::exception: ", ex.what())
+	}
+	catch (...)
+	{
+		TRACE("uncaught unknown or critical exception")
+	}
+	return Fig::FigCode::FAILED_UNKNOWN;
 }
 
 static std::unique_ptr<Event> make_operation_event(const Fig::OperationId id)
@@ -34,50 +68,140 @@ Fig::FigCode FigManager::execute(const Fig::OperationType operation,
                                  Fig::OperationId* const id,
                                  HANDLE* const operation_event)
 {
-	const uint32_t generated_id = Random::uint32();
-	*id = generated_id;
-	std::unique_ptr<Event> event = make_operation_event(generated_id);
-	*operation_event = event->handle();
-	const Buffer raw_parameters = {parameters_buffer, parameters_buffer + parameters_buffer_size};
-	std::shared_ptr<IOperationHandler> handler = make_handler(operation, raw_parameters, std::move(event));
-	Thread handler_worker(std::make_unique<HandlerRunner>(handler));
-	const CriticalSection::Acquired acquired = g_operations_lock->acquire();
-	g_operations.emplace(
-		generated_id,
-		std::move(handler)
-	);
-	return Fig::FigCode::SUCCESS;
+	try
+	{
+		Protections::EntryPointProtector protector;
+		const uint32_t generated_id = Random::uint32();
+		*id = generated_id;
+		std::unique_ptr<Event> event = make_operation_event(generated_id);
+		*operation_event = event->handle();
+		const Buffer raw_parameters = {parameters_buffer, parameters_buffer + parameters_buffer_size};
+		std::shared_ptr<IOperationHandler> handler = make_handler(operation, raw_parameters, std::move(event));
+		Thread handler_worker(std::make_unique<HandlerRunner>(handler));
+		const CriticalSection::Acquired acquired = g_operations_lock->acquire();
+		g_operations.emplace(
+			generated_id,
+			std::move(handler)
+		);
+		return Fig::FigCode::SUCCESS;
+	}
+	catch ([[maybe_unused]] const FigImplException& ex)
+	{
+		TRACE(L"failed with specific code: ", ex.specific_code())
+		return ex.code();
+	}
+	catch ([[maybe_unused]] const WinApiException& ex)
+	{
+		TRACE("uncaught WinApiException with code ", ex.code(), " and error ", ex.error())
+	}
+	catch ([[maybe_unused]] const Exception& ex)
+	{
+		TRACE("uncaught Exception with code ", ex.code())
+	}
+	catch ([[maybe_unused]] const CriticalException& ex)
+	{
+		TRACE("uncaught CriticalException")
+	}
+	catch ([[maybe_unused]] const std::exception& ex)
+	{
+		TRACE("uncaught std::exception: ", ex.what())
+	}
+	catch (...)
+	{
+		TRACE("uncaught unknown or critical exception")
+	}
+	return Fig::FigCode::FAILED_UNKNOWN;
 }
 
 Fig::FigCode FigManager::status(const Fig::OperationId id,
                                 Fig::ExecutionStatus* const status,
                                 Fig::FigSpecificCode* const specific_code)
 {
-	const CriticalSection::Acquired acquired = g_operations_lock->acquire();
-	const auto found = g_operations.find(id);
-	if (found == g_operations.end())
+	try
 	{
-		return Fig::FigCode::FAILED_INVALID_OPERATION_ID;
+		Protections::EntryPointProtector protector;
+		const CriticalSection::Acquired acquired = g_operations_lock->acquire();
+		const auto found = g_operations.find(id);
+		if (found == g_operations.end())
+		{
+			return Fig::FigCode::FAILED_INVALID_OPERATION_ID;
+		}
+		const std::shared_ptr<IOperationHandler>& handler = found->second;
+		*status = handler->status();
+		*specific_code = handler->specific_code();
+		return Fig::FigCode::SUCCESS;
 	}
-	const std::shared_ptr<IOperationHandler>& handler = found->second;
-	*status = handler->status();
-	*specific_code = handler->specific_code();
-	return Fig::FigCode::SUCCESS;
+	catch ([[maybe_unused]] const FigImplException& ex)
+	{
+		TRACE(L"failed with specific code: ", ex.specific_code())
+		return ex.code();
+	}
+	catch ([[maybe_unused]] const WinApiException& ex)
+	{
+		TRACE("uncaught WinApiException with code ", ex.code(), " and error ", ex.error())
+	}
+	catch ([[maybe_unused]] const Exception& ex)
+	{
+		TRACE("uncaught Exception with code ", ex.code())
+	}
+	catch ([[maybe_unused]] const CriticalException&)
+	{
+		TRACE("uncaught CriticalException")
+	}
+	catch ([[maybe_unused]] const std::exception& ex)
+	{
+		TRACE("uncaught std::exception: ", ex.what())
+	}
+	catch (...)
+	{
+		TRACE("uncaught unknown or critical exception")
+	}
+	return Fig::FigCode::FAILED_UNKNOWN;
 }
 
 Fig::FigCode FigManager::take(const Fig::OperationId id, uint8_t* const buffer, uint32_t* const buffer_size)
 {
-	const CriticalSection::Acquired acquired = g_operations_lock->acquire();
-	const auto found = g_operations.find(id);
-	if (found == g_operations.end())
+	try
 	{
-		return Fig::FigCode::FAILED_INVALID_OPERATION_ID;
+		Protections::EntryPointProtector protector;
+		const CriticalSection::Acquired acquired = g_operations_lock->acquire();
+		const auto found = g_operations.find(id);
+		if (found == g_operations.end())
+		{
+			return Fig::FigCode::FAILED_INVALID_OPERATION_ID;
+		}
+		const std::shared_ptr<IOperationHandler>& handler = found->second;
+		const Buffer result = handler->take(*buffer_size);
+		*buffer_size = result.size();
+		std::copy_n(result.data(), result.size(), buffer);
+		return Fig::FigCode::SUCCESS;
 	}
-	const std::shared_ptr<IOperationHandler>& handler = found->second;
-	const Buffer result = handler->take(*buffer_size);
-	*buffer_size = result.size();
-	std::copy_n(result.data(), result.size(), buffer);
-	return Fig::FigCode::SUCCESS;
+	catch ([[maybe_unused]] const FigImplException& ex)
+	{
+		TRACE(L"failed with specific code: ", ex.specific_code())
+		return ex.code();
+	}
+	catch ([[maybe_unused]] const WinApiException& ex)
+	{
+		TRACE("uncaught WinApiException with code ", ex.code(), " and error ", ex.error())
+	}
+	catch ([[maybe_unused]] const Exception& ex)
+	{
+		TRACE("uncaught Exception with code ", ex.code())
+	}
+	catch ([[maybe_unused]] const CriticalException&)
+	{
+		TRACE("uncaught CriticalException")
+	}
+	catch ([[maybe_unused]] const std::exception& ex)
+	{
+		TRACE("uncaught std::exception: ", ex.what())
+	}
+	catch (...)
+	{
+		TRACE("uncaught unknown or critical exception")
+	}
+	return Fig::FigCode::FAILED_UNKNOWN;
 }
 
 static_assert(

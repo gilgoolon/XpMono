@@ -34,6 +34,16 @@ Time::Datetime Time::to_datetime(const FILETIME& ft)
 	return result;
 }
 
+Time::Datetime Time::to_datetime(const SYSTEMTIME& st)
+{
+	FILETIME result{};
+	if (SystemTimeToFileTime(&st, &result) == FALSE)
+	{
+		throw WinApiException(ErrorCode::FAILED_SYSTEM_TIME_CONVERSION);
+	}
+	return to_datetime(result);
+}
+
 std::string Time::to_string(const Datetime& dt)
 {
 	const time_t time_t = std::chrono::system_clock::to_time_t(dt);
