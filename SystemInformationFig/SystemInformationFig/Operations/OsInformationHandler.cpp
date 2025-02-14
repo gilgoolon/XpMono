@@ -1,7 +1,7 @@
 ﻿#include "OsInformationHandler.hpp"
 
 OsInformationHandler::OsInformationHandler(std::unique_ptr<Event> operation_event):
-	WmiSingleOperationHandler(
+	WmiQuerySingleOperationHandler(
 		std::move(operation_event),
 		L"Win32_OperatingSystem",
 		{

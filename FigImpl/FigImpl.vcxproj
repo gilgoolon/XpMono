@@ -15,16 +15,16 @@
     <ClCompile Include="FigManager.cpp" />
     <ClCompile Include="HandlerRunner.cpp" />
     <ClCompile Include="Handlers\IOperationHandler.cpp" />
-    <ClCompile Include="Handlers\WmiMultiOperationHandler.cpp" />
-    <ClCompile Include="Handlers\WmiSingleOperationHandler.cpp" />
+    <ClCompile Include="Handlers\WmiQueryMultiOperationHandler.cpp" />
+    <ClCompile Include="Handlers\WmiQuerySingleOperationHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\Handlers\WmiMultiOperationHandler.hpp" />
+    <ClInclude Include="Include\Handlers\WmiQueryMultiOperationHandler.hpp" />
     <ClInclude Include="Include\FigImplException.hpp" />
     <ClInclude Include="Include\FigManager.hpp" />
     <ClInclude Include="Include\HandlerRunner.hpp" />
     <ClInclude Include="Include\Handlers\IOperationHandler.hpp" />
-    <ClInclude Include="Include\Handlers\WmiSingleOperationHandler.hpp" />
+    <ClInclude Include="Include\Handlers\WmiQuerySingleOperationHandler.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

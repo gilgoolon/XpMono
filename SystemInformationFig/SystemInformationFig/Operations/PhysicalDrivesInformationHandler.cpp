@@ -4,7 +4,7 @@
 #include "Wmi/WmiConnection.hpp"
 
 PhysicalDrivesInformationHandler::PhysicalDrivesInformationHandler(std::unique_ptr<Event> operation_event):
-	WmiSingleOperationHandler(
+	WmiQuerySingleOperationHandler(
 		std::move(operation_event),
 		L"Win32_DiskDrive",
 		{

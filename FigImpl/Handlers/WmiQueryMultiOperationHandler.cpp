@@ -1,18 +1,18 @@
-﻿#include "Handlers/WmiMultiOperationHandler.hpp"
+﻿#include "Handlers/WmiQueryMultiOperationHandler.hpp"
 
 #include "Utils/Strings.hpp"
 #include "Wmi/WmiConnection.hpp"
 
-WmiMultiOperationHandler::WmiMultiOperationHandler(std::unique_ptr<Event> operation_event,
-                                                   const std::wstring& class_name,
-                                                   std::vector<std::wstring>&& fields):
+WmiQueryMultiOperationHandler::WmiQueryMultiOperationHandler(std::unique_ptr<Event> operation_event,
+                                                             const std::wstring& class_name,
+                                                             std::vector<std::wstring>&& fields):
 	IOperationHandler(std::move(operation_event)),
 	m_class_name(class_name),
 	m_fields(fields)
 {
 }
 
-void WmiMultiOperationHandler::run()
+void WmiQueryMultiOperationHandler::run()
 {
 	const WmiConnection connection;
 	const std::wstring query = L"SELECT * FROM " + m_class_name;

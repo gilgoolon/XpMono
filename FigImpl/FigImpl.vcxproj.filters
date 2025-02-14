@@ -27,10 +27,10 @@
     <ClCompile Include="Handlers\IOperationHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Handlers\WmiSingleOperationHandler.cpp">
+    <ClCompile Include="Handlers\WmiQuerySingleOperationHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Handlers\WmiMultiOperationHandler.cpp">
+    <ClCompile Include="Handlers\WmiQueryMultiOperationHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,10 +47,10 @@
     <ClInclude Include="Include\FigImplException.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Handlers\WmiSingleOperationHandler.hpp">
+    <ClInclude Include="Include\Handlers\WmiQuerySingleOperationHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Handlers\WmiMultiOperationHandler.hpp">
+    <ClInclude Include="Include\Handlers\WmiQueryMultiOperationHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

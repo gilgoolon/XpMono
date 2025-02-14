@@ -1,8 +1,8 @@
 ﻿#pragma once
 #include "Handlers/IOperationHandler.hpp"
-#include "Handlers/WmiSingleOperationHandler.hpp"
+#include "Handlers/WmiQuerySingleOperationHandler.hpp"
 
-class PhysicalDrivesInformationHandler final : public WmiSingleOperationHandler
+class PhysicalDrivesInformationHandler final : public WmiQuerySingleOperationHandler
 {
 public:
 	static constexpr Fig::OperationType TYPE = 2;
