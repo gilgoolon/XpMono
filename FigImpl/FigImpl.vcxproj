@@ -15,14 +15,14 @@
     <ClCompile Include="FigManager.cpp" />
     <ClCompile Include="HandlerRunner.cpp" />
     <ClCompile Include="Handlers\IOperationHandler.cpp" />
-    <ClCompile Include="Handlers\WmiOperationHandler.cpp" />
+    <ClCompile Include="Handlers\WmiSingleOperationHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\FigImplException.hpp" />
     <ClInclude Include="Include\FigManager.hpp" />
     <ClInclude Include="Include\HandlerRunner.hpp" />
     <ClInclude Include="Include\Handlers\IOperationHandler.hpp" />
-    <ClInclude Include="Include\Handlers\WmiOperationHandler.hpp" />
+    <ClInclude Include="Include\Handlers\WmiSingleOperationHandler.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

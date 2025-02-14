@@ -1,18 +1,18 @@
-﻿#include "Handlers/WmiOperationHandler.hpp"
+﻿#include "Handlers/WmiSingleOperationHandler.hpp"
 
 #include "Utils/Strings.hpp"
 #include "Wmi/WmiConnection.hpp"
 
-WmiOperationHandler::WmiOperationHandler(std::unique_ptr<Event> operation_event,
-                                         const std::wstring& class_name,
-                                         std::vector<std::wstring>&& fields):
+WmiSingleOperationHandler::WmiSingleOperationHandler(std::unique_ptr<Event> operation_event,
+                                                     const std::wstring& class_name,
+                                                     std::vector<std::wstring>&& fields):
 	IOperationHandler(std::move(operation_event)),
 	m_class_name(class_name),
-	m_fields(fields)
+	m_fields(std::move(fields))
 {
 }
 
-void WmiOperationHandler::run()
+void WmiSingleOperationHandler::run()
 {
 	const WmiConnection connection;
 	const std::wstring query = L"SELECT * FROM " + m_class_name;

@@ -2,7 +2,7 @@
 #include "Handlers/IOperationHandler.hpp"
 #include "Handlers/WmiOperationHandler.hpp"
 
-class OsInformationHandler final : public WmiOperationHandler
+class OsInformationHandler final : public WmiSingleOperationHandler
 {
 public:
 	static constexpr Fig::OperationType TYPE = 1;
