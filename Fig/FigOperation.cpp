@@ -34,7 +34,7 @@ FigModule::StatusResult FigOperation::wait() const
 	case WaitStatus::OBJECT_CLOSED:
 		[[fallthrough]];
 	default:
-		throw WinApiException(ErrorCode::FAILED_EVENT_WAIT);
+		throw WinApiException(ErrorCode::FAILED_WAIT);
 	}
 	return status();
 }
