@@ -15,9 +15,11 @@
     <ClCompile Include="FigManager.cpp" />
     <ClCompile Include="HandlerRunner.cpp" />
     <ClCompile Include="Handlers\IOperationHandler.cpp" />
+    <ClCompile Include="Handlers\WmiMultiOperationHandler.cpp" />
     <ClCompile Include="Handlers\WmiSingleOperationHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Handlers\WmiMultiOperationHandler.hpp" />
     <ClInclude Include="Include\FigImplException.hpp" />
     <ClInclude Include="Include\FigManager.hpp" />
     <ClInclude Include="Include\HandlerRunner.hpp" />

@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Handlers/IOperationHandler.hpp"
-#include "Handlers/WmiOperationHandler.hpp"
+#include "Handlers/WmiSingleOperationHandler.hpp"
 
 class OsInformationHandler final : public WmiSingleOperationHandler
 {
