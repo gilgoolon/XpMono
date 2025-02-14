@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "IOperationHandler.hpp"
 #include "Json.hpp"
+#include "Filesystem/IFileIterator.hpp"
 
 #include <filesystem>
 
@@ -18,6 +19,11 @@ public:
 	DirlistHandler(DirlistHandler&&) = delete;
 	DirlistHandler& operator=(DirlistHandler&&) = delete;
 
+private:
+	[[nodiscard]] static std::unique_ptr<IFileIterator> make_iterator(const std::optional<std::filesystem::path>& path,
+	                                                                  std::optional<uint32_t> depth);
+
+public:
 	void run() override;
 
 private:

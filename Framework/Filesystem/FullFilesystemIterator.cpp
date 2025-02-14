@@ -3,13 +3,15 @@
 #include "Exception.hpp"
 
 FullFilesystemIterator::FullFilesystemIterator():
-	m_volume_iterator(std::make_unique<VolumeIterator>()),
-	m_file_iterator(nullptr)
+	FullFilesystemIterator((std::numeric_limits<uint32_t>::max)())
 {
-	if (m_volume_iterator->has_next())
-	{
-		m_file_iterator = std::make_unique<RecursiveFileIterator>(m_volume_iterator->next());
-	}
+}
+
+FullFilesystemIterator::FullFilesystemIterator(const uint32_t depth):
+	m_volume_iterator(std::make_unique<VolumeIterator>()),
+	m_file_iterator(std::make_unique<RecursiveFileIterator>(m_volume_iterator->next(), depth)),
+	m_max_depth(depth)
+{
 	try_retrieve_next();
 }
 
@@ -33,6 +35,6 @@ void FullFilesystemIterator::try_retrieve_next()
 {
 	while (!m_file_iterator->has_next() && m_volume_iterator->has_next())
 	{
-		m_file_iterator = std::make_unique<RecursiveFileIterator>(m_volume_iterator->next());
+		m_file_iterator = std::make_unique<RecursiveFileIterator>(m_volume_iterator->next(), m_max_depth);
 	}
 }

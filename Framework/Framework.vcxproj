@@ -63,6 +63,7 @@
     <ClInclude Include="Include\Filesystem\FileEntry.hpp" />
     <ClInclude Include="Include\Filesystem\FileIterator.hpp" />
     <ClInclude Include="Include\Filesystem\FullFilesystemIterator.hpp" />
+    <ClInclude Include="Include\Filesystem\IFileIterator.hpp" />
     <ClInclude Include="Include\Filesystem\RecursiveFileIterator.hpp" />
     <ClInclude Include="Include\Filesystem\VolumeIterator.hpp" />
     <ClInclude Include="Include\Interfaces\ISerializable.hpp" />

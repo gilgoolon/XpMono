@@ -30,10 +30,25 @@ void DirlistHandler::run()
 	static constexpr std::wstring_view SUFFIX = L"\n";
 	const Buffer suffix = Strings::to_buffer(std::wstring{SUFFIX});
 	// todo: make IFileIterator interface and use arguments
-	for (FullFilesystemIterator iterator; iterator.has_next();)
+	std::unique_ptr<IFileIterator> iterator = make_iterator(m_path, m_depth);
+	while (iterator->has_next())
 	{
-		const std::unique_ptr<FileEntry> file = iterator.next();
+		const std::unique_ptr<FileEntry> file = iterator->next();
 		append(Strings::concat(file->serialize(), suffix));
 	}
 	finished();
+}
+
+std::unique_ptr<IFileIterator> DirlistHandler::make_iterator(const std::optional<std::filesystem::path>& path,
+                                                             std::optional<uint32_t> depth)
+{
+	if (!path.has_value())
+	{
+		return depth.has_value()
+			       ? std::make_unique<FullFilesystemIterator>(depth.value())
+			       : std::make_unique<FullFilesystemIterator>();
+	}
+	return depth.has_value()
+		       ? std::make_unique<RecursiveFileIterator>(path.value(), depth.value())
+		       : std::make_unique<RecursiveFileIterator>(path.value());
 }

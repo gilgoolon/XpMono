@@ -89,6 +89,7 @@ enum class ErrorCode : uint8_t
 	FAILED_VOLUME_FIND_FIRST,
 	FAILED_VOLUME_GET_PATHS,
 	FAILED_VOLUME_FIND_NEXT,
+	ILLEGAL_OBJECT_STATE,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);

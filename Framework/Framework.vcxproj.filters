@@ -293,5 +293,8 @@
     <ClInclude Include="Include\Json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Filesystem\IFileIterator.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

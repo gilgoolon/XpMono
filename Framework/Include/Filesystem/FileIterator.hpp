@@ -1,20 +1,20 @@
 ﻿#pragma once
-#include "FileEntry.hpp"
+#include "IFileIterator.hpp"
 
 #include <memory>
 
-class FileIterator final
+class FileIterator final : public IFileIterator
 {
 public:
 	explicit FileIterator(const std::filesystem::path& folder);
-	~FileIterator();
+	~FileIterator() override;
 	FileIterator(const FileIterator&) = delete;
 	FileIterator& operator=(const FileIterator&) = delete;
 	FileIterator(FileIterator&&) = delete;
 	FileIterator& operator=(FileIterator&&) = delete;
 
-	[[nodiscard]] bool has_next() const;
-	[[nodiscard]] std::unique_ptr<FileEntry> next();
+	[[nodiscard]] bool has_next() const override;
+	[[nodiscard]] std::unique_ptr<FileEntry> next() override;
 
 private:
 	std::filesystem::path m_folder;
