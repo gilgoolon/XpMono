@@ -31,19 +31,19 @@ Fig::FigCode FigManager::initialize(HANDLE unmanaged_quit_event,
 		TRACE(L"failed with specific code: ", ex.specific_code());
 		return ex.code();
 	}
-	catch (const WinApiException& ex)
+	catch ([[maybe_unused]] const WinApiException& ex)
 	{
 		TRACE("uncaught WinApiException with code ", ex.code(), " and error ", ex.error())
 	}
-	catch (const Exception& ex)
+	catch ([[maybe_unused]] const Exception& ex)
 	{
 		TRACE("uncaught Exception with code ", ex.code())
 	}
-	catch (const CriticalException&)
+	catch ([[maybe_unused]] const CriticalException&)
 	{
 		TRACE("uncaught CriticalException")
 	}
-	catch (const std::exception& ex)
+	catch ([[maybe_unused]] const std::exception& ex)
 	{
 		TRACE("uncaught std::exception: ", ex.what())
 	}
@@ -85,24 +85,24 @@ Fig::FigCode FigManager::execute(const Fig::OperationType operation,
 		);
 		return Fig::FigCode::SUCCESS;
 	}
-	catch (const FigImplException& ex)
+	catch ([[maybe_unused]] const FigImplException& ex)
 	{
 		TRACE(L"failed with specific code: ", ex.specific_code())
 		return ex.code();
 	}
-	catch (const WinApiException& ex)
+	catch ([[maybe_unused]] const WinApiException& ex)
 	{
 		TRACE("uncaught WinApiException with code ", ex.code(), " and error ", ex.error())
 	}
-	catch (const Exception& ex)
+	catch ([[maybe_unused]] const Exception& ex)
 	{
 		TRACE("uncaught Exception with code ", ex.code())
 	}
-	catch (const CriticalException&)
+	catch ([[maybe_unused]] const CriticalException& ex)
 	{
 		TRACE("uncaught CriticalException")
 	}
-	catch (const std::exception& ex)
+	catch ([[maybe_unused]] const std::exception& ex)
 	{
 		TRACE("uncaught std::exception: ", ex.what())
 	}
@@ -131,24 +131,24 @@ Fig::FigCode FigManager::status(const Fig::OperationId id,
 		*specific_code = handler->specific_code();
 		return Fig::FigCode::SUCCESS;
 	}
-	catch (const FigImplException& ex)
+	catch ([[maybe_unused]] const FigImplException& ex)
 	{
 		TRACE(L"failed with specific code: ", ex.specific_code())
 		return ex.code();
 	}
-	catch (const WinApiException& ex)
+	catch ([[maybe_unused]] const WinApiException& ex)
 	{
 		TRACE("uncaught WinApiException with code ", ex.code(), " and error ", ex.error())
 	}
-	catch (const Exception& ex)
+	catch ([[maybe_unused]] const Exception& ex)
 	{
 		TRACE("uncaught Exception with code ", ex.code())
 	}
-	catch (const CriticalException&)
+	catch ([[maybe_unused]] const CriticalException&)
 	{
 		TRACE("uncaught CriticalException")
 	}
-	catch (const std::exception& ex)
+	catch ([[maybe_unused]] const std::exception& ex)
 	{
 		TRACE("uncaught std::exception: ", ex.what())
 	}
@@ -176,24 +176,24 @@ Fig::FigCode FigManager::take(const Fig::OperationId id, uint8_t* const buffer, 
 		std::copy_n(result.data(), result.size(), buffer);
 		return Fig::FigCode::SUCCESS;
 	}
-	catch (const FigImplException& ex)
+	catch ([[maybe_unused]] const FigImplException& ex)
 	{
 		TRACE(L"failed with specific code: ", ex.specific_code())
 		return ex.code();
 	}
-	catch (const WinApiException& ex)
+	catch ([[maybe_unused]] const WinApiException& ex)
 	{
 		TRACE("uncaught WinApiException with code ", ex.code(), " and error ", ex.error())
 	}
-	catch (const Exception& ex)
+	catch ([[maybe_unused]] const Exception& ex)
 	{
 		TRACE("uncaught Exception with code ", ex.code())
 	}
-	catch (const CriticalException&)
+	catch ([[maybe_unused]] const CriticalException&)
 	{
 		TRACE("uncaught CriticalException")
 	}
-	catch (const std::exception& ex)
+	catch ([[maybe_unused]] const std::exception& ex)
 	{
 		TRACE("uncaught std::exception: ", ex.what())
 	}

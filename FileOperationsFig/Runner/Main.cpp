@@ -24,7 +24,7 @@ int WINAPI wWinMain([[maybe_unused]] HINSTANCE hInstance,
 		main_logic();
 		return EXIT_SUCCESS;
 	}
-	catch (const ApricotException& ex)
+	catch ([[maybe_unused]] const ApricotException& ex)
 	{
 		TRACE(
 			"uncaught ApricotException with code ",
@@ -33,7 +33,7 @@ int WINAPI wWinMain([[maybe_unused]] HINSTANCE hInstance,
 			static_cast<uint32_t>(ex.apricot_code())
 		)
 	}
-	catch (const FigException& ex)
+	catch ([[maybe_unused]] const FigException& ex)
 	{
 		TRACE(
 			"uncaught FigException with code ",
@@ -44,15 +44,15 @@ int WINAPI wWinMain([[maybe_unused]] HINSTANCE hInstance,
 			ex.fig_specific_code()
 		)
 	}
-	catch (const WinApiException& ex)
+	catch ([[maybe_unused]] const WinApiException& ex)
 	{
 		TRACE("uncaught WinApiException with code ", ex.code(), " and error ", ex.error())
 	}
-	catch (const Exception& ex)
+	catch ([[maybe_unused]] const Exception& ex)
 	{
 		TRACE("uncaught Exception with code ", ex.code())
 	}
-	catch (const std::exception& ex)
+	catch ([[maybe_unused]] const std::exception& ex)
 	{
 		TRACE("uncaught std::exception: ", ex.what())
 	}

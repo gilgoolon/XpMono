@@ -56,15 +56,15 @@ BOOL APIENTRY DllMain([[maybe_unused]] const HINSTANCE hInstance,
 		}
 		return TRUE;
 	}
-	catch (const WinApiException& ex)
+	catch ([[maybe_unused]] const WinApiException& ex)
 	{
 		TRACE("uncaught WinApiException with code ", ex.code(), " and error ", ex.error())
 	}
-	catch (const Exception& ex)
+	catch ([[maybe_unused]] const Exception& ex)
 	{
 		TRACE("uncaught Exception with code ", ex.code())
 	}
-	catch (const std::exception& ex)
+	catch ([[maybe_unused]] const std::exception& ex)
 	{
 		TRACE("uncaught std::exception: ", ex.what())
 	}

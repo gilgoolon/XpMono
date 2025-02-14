@@ -20,10 +20,10 @@ Protections::InvalidParameter::~InvalidParameter()
 	}
 }
 
-void Protections::InvalidParameter::handler(const wchar_t* const expression,
-                                            const wchar_t* const function,
-                                            const wchar_t* const file,
-                                            const unsigned int line,
+void Protections::InvalidParameter::handler([[maybe_unused]] const wchar_t* const expression,
+                                            [[maybe_unused]] const wchar_t* const function,
+                                            [[maybe_unused]] const wchar_t* const file,
+                                            [[maybe_unused]] const unsigned int line,
                                             [[maybe_unused]] const uintptr_t reserved)
 {
 	TRACE(

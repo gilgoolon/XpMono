@@ -20,23 +20,23 @@ DWORD Thread::thread_main(const LPVOID argument)
 		runner->run();
 		return EXIT_SUCCESS;
 	}
-	catch (const WinApiException& ex)
+	catch ([[maybe_unused]] const WinApiException& ex)
 	{
 		TRACE("uncaught WinApiException with code ", ex.code(), " and error ", ex.error())
 	}
-	catch (const WinApiNtException& ex)
+	catch ([[maybe_unused]] const WinApiNtException& ex)
 	{
 		TRACE("uncaught WinApiExceptionNt with code ", ex.code(), " and status ", ex.status())
 	}
-	catch (const Exception& ex)
+	catch ([[maybe_unused]] const Exception& ex)
 	{
 		TRACE("uncaught Exception with code ", ex.code())
 	}
-	catch (const CriticalException&)
+	catch ([[maybe_unused]] const CriticalException&)
 	{
 		TRACE(L"uncaught critical exception")
 	}
-	catch (const std::exception& ex)
+	catch ([[maybe_unused]] const std::exception& ex)
 	{
 		TRACE("uncaught std::exception: ", ex.what())
 	}
