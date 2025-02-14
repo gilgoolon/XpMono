@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "External/Json.hpp"
+#include "External/nlohmann/json.hpp"
 
 #include "Exception.hpp"
 
