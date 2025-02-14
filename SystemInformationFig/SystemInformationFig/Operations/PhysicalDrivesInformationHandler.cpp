@@ -3,79 +3,63 @@
 #include "Utils/Strings.hpp"
 #include "Wmi/WmiConnection.hpp"
 
-#include <array>
-#include <string_view>
-
-void PhysicalDrivesInformationHandler::run()
+PhysicalDrivesInformationHandler::PhysicalDrivesInformationHandler(std::unique_ptr<Event> operation_event):
+	WmiOperationHandler(
+		std::move(operation_event),
+		L"Win32_DiskDrive",
+		{
+			L"Availability",
+			L"BytesPerSector",
+			L"Capabilities",
+			L"CapabilityDescriptions",
+			L"Caption",
+			L"CompressionMethod",
+			L"ConfigManagerErrorCode",
+			L"ConfigManagerUserConfig",
+			L"CreationClassName",
+			L"DefaultBlockSize",
+			L"Description",
+			L"DeviceID",
+			L"ErrorCleared",
+			L"ErrorDescription",
+			L"ErrorMethodology",
+			L"FirmwareRevision",
+			L"Index",
+			L"InstallDate",
+			L"InterfaceType",
+			L"LastErrorCode",
+			L"Manufacturer",
+			L"MaxBlockSize",
+			L"MaxMediaSize",
+			L"MediaLoaded",
+			L"MediaType",
+			L"MinBlockSize",
+			L"Model",
+			L"Name",
+			L"NeedsCleaning",
+			L"NumberOfMediaSupported",
+			L"Partitions",
+			L"PNPDeviceID",
+			L"PowerManagementCapabilities",
+			L"PowerManagementSupported",
+			L"SCSIBus",
+			L"SCSILogicalUnit",
+			L"SCSIPort",
+			L"SCSITargetId",
+			L"SectorsPerTrack",
+			L"SerialNumber",
+			L"Signature",
+			L"Size",
+			L"Status",
+			L"StatusInfo",
+			L"SystemCreationClassName",
+			L"SystemName",
+			L"TotalCylinders",
+			L"TotalHeads",
+			L"TotalSectors",
+			L"TotalTracks",
+			L"TracksPerCylinder"
+		}
+	)
 {
-	using namespace std::literals;
-	static constexpr std::array FIELDS = {
-		L"Availability"sv,
-		L"BytesPerSector"sv,
-		L"Capabilities"sv,
-		L"CapabilityDescriptions"sv,
-		L"Caption"sv,
-		L"CompressionMethod"sv,
-		L"ConfigManagerErrorCode"sv,
-		L"ConfigManagerUserConfig"sv,
-		L"CreationClassName"sv,
-		L"DefaultBlockSize"sv,
-		L"Description"sv,
-		L"DeviceID"sv,
-		L"ErrorCleared"sv,
-		L"ErrorDescription"sv,
-		L"ErrorMethodology"sv,
-		L"FirmwareRevision"sv,
-		L"Index"sv,
-		L"InstallDate"sv,
-		L"InterfaceType"sv,
-		L"LastErrorCode"sv,
-		L"Manufacturer"sv,
-		L"MaxBlockSize"sv,
-		L"MaxMediaSize"sv,
-		L"MediaLoaded"sv,
-		L"MediaType"sv,
-		L"MinBlockSize"sv,
-		L"Model"sv,
-		L"Name"sv,
-		L"NeedsCleaning"sv,
-		L"NumberOfMediaSupported"sv,
-		L"Partitions"sv,
-		L"PNPDeviceID"sv,
-		L"PowerManagementCapabilities"sv,
-		L"PowerManagementSupported"sv,
-		L"SCSIBus"sv,
-		L"SCSILogicalUnit"sv,
-		L"SCSIPort"sv,
-		L"SCSITargetId"sv,
-		L"SectorsPerTrack"sv,
-		L"SerialNumber"sv,
-		L"Signature"sv,
-		L"Size"sv,
-		L"Status"sv,
-		L"StatusInfo"sv,
-		L"SystemCreationClassName"sv,
-		L"SystemName"sv,
-		L"TotalCylinders"sv,
-		L"TotalHeads"sv,
-		L"TotalSectors"sv,
-		L"TotalTracks"sv,
-		L"TracksPerCylinder"sv
-	};
-	const WmiConnection connection;
-	const std::vector<std::unique_ptr<WmiResult>> results = connection.query(L"SELECT * FROM Win32_DiskDrive");
-	WmiResult& os = *results.front();
-	static constexpr std::wstring_view PAIR_SUFFIX = L"\n";
-	static constexpr std::wstring_view FIELD_VALUE_SEPARATOR = L": ";
-	static constexpr std::wstring_view UNKNOWN_VALUE = L"?";
-	for (const std::wstring_view& field : FIELDS)
-	{
-		const std::optional<std::wstring> result = os.get_formatted_property(std::wstring{field});
-		const std::wstring value = result.has_value() ? result.value() : std::wstring{UNKNOWN_VALUE};
-		const Buffer data = Strings::to_buffer(
-			std::wstring{field} + std::wstring{FIELD_VALUE_SEPARATOR} + value + std::wstring{PAIR_SUFFIX}
-		);
-		append(data);
-	}
-	finished();
 }
