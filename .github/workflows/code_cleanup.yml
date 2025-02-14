@@ -3,27 +3,24 @@ name: ReSharper CodeCleanup
 on: [ pull_request ]
 
 jobs:
-    find-solutions:
+    solutions:
         runs-on: ubuntu-latest
         outputs:
-            sln_files: ${{ steps.find_slns.outputs.sln_files }}
+            files: ${{ steps.find_slns.outputs.sln_files }}
         steps:
             - name: Checkout Code
               uses: actions/checkout@v4
   
-            - name: Log Solutions
-              id: log_solutions
-              run: echo find . -name '*.sln' && echo Break && find . -name '*.sln' | jq -R -s -c 'split("\n")[:-1]'
-
             - name: Find Solution Files
               id: find_slns
-              run: echo "sln_files=$(find . -name '*.sln' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_ENV
+              run: echo "sln_files=$(find . -name '*.sln' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
 
     cleanup:
         runs-on: ubuntu-latest
+        needs: solutions
         strategy:
             matrix:
-                solution: ${{ fromJson(needs.find-solutions.outputs.sln_files) }}
+                solution: ${{ fromJson(needs.solutions.outputs.files) }}
 
         steps:
             -   name: Checkout
