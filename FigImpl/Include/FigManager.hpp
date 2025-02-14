@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "FigApi.hpp"
-#include "IOperationHandler.hpp"
+#include "Handlers/IOperationHandler.hpp"
 #include "Synchronization/CriticalSection.hpp"
 #include "Synchronization/Event.hpp"
 #include "Synchronization/UnmanagedEvent.hpp"
