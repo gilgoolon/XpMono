@@ -6,7 +6,6 @@
 #include "Trace.hpp"
 #include "Filesystem/File.hpp"
 #include "Protections/ProgramProtector.hpp"
-#include "Utils/Strings.hpp"
 
 #include <ApricotException.hpp>
 
@@ -67,7 +66,7 @@ int WINAPI wWinMain([[maybe_unused]] HINSTANCE hInstance,
 static void main_logic()
 {
 	static constexpr Fig::FigId FIG_ID = 1;
-	std::filesystem::path path = L"../Debug/InfoIngestorFig.dll";
+	std::filesystem::path path = L"../Debug/FileOperationsFig.dll";
 #ifndef _DEBUG
 	const Buffer fig_buffer = File(path, File::Mode::READ, File::Disposition::OPEN).read();
 	const auto fig = std::make_shared<FigModule>(FIG_ID, fig_buffer);
