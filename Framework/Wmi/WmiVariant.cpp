@@ -86,10 +86,19 @@ int8_t WmiVariant::int8() const
 
 Time::Datetime WmiVariant::datetime() const
 {
-	SYSTEMTIME system_time{};
-	if (VariantTimeToSystemTime(m_variant.date, &system_time) != TRUE)
+	const std::wstring date_as_string = wstring();
+	static constexpr uint32_t VARIANT_TIME_AS_STRING_LENGTH = 20;
+	if (date_as_string.size() < VARIANT_TIME_AS_STRING_LENGTH)
 	{
 		throw WinApiException(ErrorCode::FAILED_WMI_VARIANT_TIME_CONVERSION);
 	}
-	return Time::to_datetime(system_time);
+	SYSTEMTIME result{};
+	result.wYear = static_cast<WORD>(std::stoul(date_as_string.substr(0, 4)));
+	result.wMonth = static_cast<WORD>(std::stoul(date_as_string.substr(4, 2)));
+	result.wDay = static_cast<WORD>(std::stoul(date_as_string.substr(6, 2)));
+	result.wHour = static_cast<WORD>(std::stoul(date_as_string.substr(8, 2)));
+	result.wMinute = static_cast<WORD>(std::stoul(date_as_string.substr(10, 2)));
+	result.wSecond = static_cast<WORD>(std::stoul(date_as_string.substr(12, 2)));
+	result.wMilliseconds = static_cast<WORD>(std::stoul(date_as_string.substr(15, 3)));
+	return Time::to_datetime(result);
 }
