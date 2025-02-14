@@ -3,6 +3,7 @@
 #include "FigManager.hpp"
 #include "Trace.hpp"
 #include "Operations/OsInformationHandler.hpp"
+#include "Operations/PhysicalDrivesInformationHandler.hpp"
 #include "Protections/LibraryProtector.hpp"
 
 #include <Windows.h>
@@ -18,6 +19,8 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 	{
 	case static_cast<Fig::OperationType>(OsInformationHandler::TYPE):
 		return std::make_shared<OsInformationHandler>(std::move(operation_event));
+	case static_cast<Fig::OperationType>(PhysicalDrivesInformationHandler::TYPE):
+		return std::make_shared<PhysicalDrivesInformationHandler>(std::move(operation_event));
 	default:
 		throw FigImplException(Fig::FigCode::FAILED_UNSUPPORTED_OPERATION);
 	}

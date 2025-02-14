@@ -6,11 +6,6 @@
 #include <array>
 #include <string_view>
 
-OsInformationHandler::OsInformationHandler(std::unique_ptr<Event> operation_event):
-	IOperationHandler(std::move(operation_event))
-{
-}
-
 void OsInformationHandler::run()
 {
 	using namespace std::string_view_literals;

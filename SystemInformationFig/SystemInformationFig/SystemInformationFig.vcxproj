@@ -79,6 +79,7 @@
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="Operations\OsInformationHandler.cpp" />
+    <ClCompile Include="Operations\PhysicalDrivesInformationHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FigImpl\FigImpl.vcxproj">
@@ -93,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Operations\OsInformationHandler.hpp" />
+    <ClInclude Include="Operations\PhysicalDrivesInformationHandler.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

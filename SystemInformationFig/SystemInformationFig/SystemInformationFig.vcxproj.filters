@@ -21,6 +21,9 @@
     <ClCompile Include="Operations\OsInformationHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Operations\PhysicalDrivesInformationHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source.def">
@@ -29,6 +32,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Operations\OsInformationHandler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Operations\PhysicalDrivesInformationHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

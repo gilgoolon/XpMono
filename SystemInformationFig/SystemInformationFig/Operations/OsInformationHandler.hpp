@@ -6,7 +6,7 @@ class OsInformationHandler final : public IOperationHandler
 public:
 	static constexpr Fig::OperationType TYPE = 1;
 
-	explicit OsInformationHandler(std::unique_ptr<Event> operation_event);
+	using IOperationHandler::IOperationHandler;
 	~OsInformationHandler() override = default;
 	OsInformationHandler(const OsInformationHandler&) = delete;
 	OsInformationHandler& operator=(const OsInformationHandler&) = delete;
