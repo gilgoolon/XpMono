@@ -1,4 +1,4 @@
-﻿#include "SystemInformationHandler.hpp"
+﻿#include "OsInformationHandler.hpp"
 
 #include "Trace.hpp"
 #include "Utils/Strings.hpp"
@@ -6,12 +6,12 @@
 #include <array>
 #include <string_view>
 
-SystemInformationHandler::SystemInformationHandler(std::unique_ptr<Event> operation_event):
+OsInformationHandler::OsInformationHandler(std::unique_ptr<Event> operation_event):
 	IOperationHandler(std::move(operation_event))
 {
 }
 
-void SystemInformationHandler::run()
+void OsInformationHandler::run()
 {
 	using namespace std::string_view_literals;
 	static constexpr std::array FIELDS = {

@@ -78,7 +78,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
-    <ClCompile Include="Operations\SystemInformationHandler.cpp" />
+    <ClCompile Include="Operations\OsInformationHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FigImpl\FigImpl.vcxproj">
@@ -92,7 +92,7 @@
     <None Include="Source.def" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Operations\SystemInformationHandler.hpp" />
+    <ClInclude Include="Operations\OsInformationHandler.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
