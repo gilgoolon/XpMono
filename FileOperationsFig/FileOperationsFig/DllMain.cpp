@@ -3,12 +3,11 @@
 #include "FigManager.hpp"
 #include "Trace.hpp"
 #include "Operations/DirlistHandler.hpp"
-#include "Operations/SystemInformationHandler.hpp"
 #include "Protections/LibraryProtector.hpp"
 
 #include <Windows.h>
 
-Fig::FigInformation FigManager::g_information = {1, 6, 9};
+Fig::FigInformation FigManager::g_information = {1, 1, 0};
 std::wstring FigManager::g_name = L"FileFetcher";
 
 std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::OperationType operation_type,
@@ -17,8 +16,6 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 {
 	switch (operation_type)
 	{
-	case static_cast<Fig::OperationType>(SystemInformationHandler::TYPE):
-		return std::make_shared<SystemInformationHandler>(std::move(operation_event));
 	case static_cast<Fig::OperationType>(DirlistHandler::TYPE):
 		return std::make_shared<DirlistHandler>(std::move(operation_event), operation_parameters);
 	default:

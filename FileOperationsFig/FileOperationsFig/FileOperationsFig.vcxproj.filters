@@ -18,9 +18,6 @@
     <ClCompile Include="DllMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Operations\SystemInformationHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Operations\DirlistHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -31,9 +28,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Operations\SystemInformationHandler.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Operations\DirlistHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

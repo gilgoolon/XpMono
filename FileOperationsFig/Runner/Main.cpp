@@ -66,7 +66,13 @@ int WINAPI wWinMain([[maybe_unused]] HINSTANCE hInstance,
 static void main_logic()
 {
 	static constexpr Fig::FigId FIG_ID = 1;
-	std::filesystem::path path = L"../Debug/FileOperationsFig.dll";
+	std::filesystem::path path = L"../"
+#ifdef _DEBUG
+		"Debug"
+#else
+		"Release"
+#endif
+		"/FileOperationsFig.dll";
 #ifndef _DEBUG
 	const Buffer fig_buffer = File(path, File::Mode::READ, File::Disposition::OPEN).read();
 	const auto fig = std::make_shared<FigModule>(FIG_ID, fig_buffer);

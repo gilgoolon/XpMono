@@ -79,7 +79,6 @@
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="Operations\DirlistHandler.cpp" />
-    <ClCompile Include="Operations\SystemInformationHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FigImpl\FigImpl.vcxproj">
@@ -94,7 +93,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Operations\DirlistHandler.hpp" />
-    <ClInclude Include="Operations\SystemInformationHandler.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
