@@ -11,6 +11,10 @@ jobs:
             - name: Checkout Code
               uses: actions/checkout@v4
   
+            - name: Log Solutions
+              id: log_solutions
+              run: echo find . -name '*.sln' && echo Break && find . -name '*.sln' | jq -R -s -c 'split("\n")[:-1]'
+
             - name: Find Solution Files
               id: find_slns
               run: echo "sln_files=$(find . -name '*.sln' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_ENV
