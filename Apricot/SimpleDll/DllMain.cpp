@@ -29,7 +29,7 @@ void throwing_function()
 		TRACE(L"in throwing function ");
 		throw WinApiException(ErrorCode::UNKNOWN_ERROR);
 	}
-	catch (const Exception& exception)
+	catch ([[maybe_unused]] const Exception& exception)
 	{
 		TRACE(L"caught exception with code: ", exception.code());
 		MessageBoxW(nullptr, L"SimpleDll::throwing_function", L"SimpleDll", 0);
