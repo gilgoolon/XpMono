@@ -18,24 +18,13 @@ namespace Strings
 [[nodiscard]] std::wstring to_wstring(const std::string& buffer);
 
 template <typename Buffer, typename... Buffers>
-std::vector<typename Buffer::value_type> concat(const Buffer& first, const Buffers&... rest)
+Buffer concat(const Buffer& first, const Buffers&... rest)
 {
-	using ValueType = typename Buffer::value_type;
-	std::vector<std::span<const ValueType>> spans = {std::span(first), std::span(rest)...};
+	uint32_t total_size = first.size() + (rest.size() + ...);
 
-	uint32_t total_size = 0;
-	for (const auto& span : spans)
-	{
-		total_size += span.size();
-	}
-
-	std::vector<ValueType> result(total_size);
-
-	auto dest = result.begin();
-	for (const auto& span : spans)
-	{
-		dest = std::copy(span.begin(), span.end(), dest);
-	}
+	Buffer result = first;
+	result.reserve(total_size);
+	(result.insert(result.end(), rest.begin(), rest.end()), ...);
 
 	return result;
 }
@@ -53,13 +42,15 @@ template <typename T>
 template <typename T>
 [[nodiscard]] std::wstring to_wstring(const std::vector<T>& arr)
 {
+	static constexpr std::wstring_view PREFIX = L"[";
+	static constexpr std::wstring_view SUFFIX = L"]";
 	static constexpr wchar_t SEPARATOR = L',';
 	std::vector<std::wstring> values;
 	for (const T& value : arr)
 	{
 		values.push_back(Strings::to_wstring<T>(value));
 	}
-	return join(values, SEPARATOR);
+	return std::wstring{PREFIX} + join(values, SEPARATOR) + std::wstring{SUFFIX};
 }
 
 template <>

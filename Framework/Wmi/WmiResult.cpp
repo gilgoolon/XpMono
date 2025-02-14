@@ -34,6 +34,10 @@ std::optional<std::wstring> WmiResult::get_formatted_property(const std::wstring
 		}
 		throw WmiException(ErrorCode::FAILED_WMI_GET_PROPERTY, hresult);
 	}
+	if (!variant.has_value())
+	{
+		return {};
+	}
 	const bool is_array = (value_type & CIM_FLAG_ARRAY) > 0;
 	if (is_array)
 	{

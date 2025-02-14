@@ -14,13 +14,17 @@
     <ClCompile Include="FigImplException.cpp" />
     <ClCompile Include="FigManager.cpp" />
     <ClCompile Include="HandlerRunner.cpp" />
-    <ClCompile Include="IOperationHandler.cpp" />
+    <ClCompile Include="Handlers\IOperationHandler.cpp" />
+    <ClCompile Include="Handlers\WmiQueryMultiOperationHandler.cpp" />
+    <ClCompile Include="Handlers\WmiQuerySingleOperationHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FigImplException.hpp" />
-    <ClInclude Include="FigManager.hpp" />
-    <ClInclude Include="HandlerRunner.hpp" />
-    <ClInclude Include="IOperationHandler.hpp" />
+    <ClInclude Include="Include\Handlers\WmiQueryMultiOperationHandler.hpp" />
+    <ClInclude Include="Include\FigImplException.hpp" />
+    <ClInclude Include="Include\FigManager.hpp" />
+    <ClInclude Include="Include\HandlerRunner.hpp" />
+    <ClInclude Include="Include\Handlers\IOperationHandler.hpp" />
+    <ClInclude Include="Include\Handlers\WmiQuerySingleOperationHandler.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -62,7 +66,7 @@
     <ClCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)../Framework/Include/;$(SolutionDir)../Fig/Include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../Framework/Include/;$(SolutionDir)../Fig/Include/;Include/</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
@@ -75,7 +79,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)../Framework/Include/;$(SolutionDir)../Fig/Include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../Framework/Include/;$(SolutionDir)../Fig/Include/;Include/</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>

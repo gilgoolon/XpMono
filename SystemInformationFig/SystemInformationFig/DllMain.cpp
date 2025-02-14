@@ -2,13 +2,16 @@
 #include "FigImplException.hpp"
 #include "FigManager.hpp"
 #include "Trace.hpp"
-#include "Operations/DirlistHandler.hpp"
+#include "Operations/BiosInformationHandler.hpp"
+#include "Operations/OsInformationHandler.hpp"
+#include "Operations/PhysicalDrivesInformationHandler.hpp"
+#include "Operations/UsersInformationHandler.hpp"
 #include "Protections/LibraryProtector.hpp"
 
 #include <Windows.h>
 
-Fig::FigInformation FigManager::g_information = {1, 1, 0};
-std::wstring FigManager::g_name = L"FileFetcher";
+Fig::FigInformation FigManager::g_information = {2, 1, 0};
+std::wstring FigManager::g_name = L"SystemInformationFig";
 
 std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::OperationType operation_type,
                                                             [[maybe_unused]] const Buffer& operation_parameters,
@@ -16,8 +19,14 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 {
 	switch (operation_type)
 	{
-	case static_cast<Fig::OperationType>(DirlistHandler::TYPE):
-		return std::make_shared<DirlistHandler>(std::move(operation_event), operation_parameters);
+	case static_cast<Fig::OperationType>(OsInformationHandler::TYPE):
+		return std::make_shared<OsInformationHandler>(std::move(operation_event));
+	case static_cast<Fig::OperationType>(PhysicalDrivesInformationHandler::TYPE):
+		return std::make_shared<PhysicalDrivesInformationHandler>(std::move(operation_event));
+	case static_cast<Fig::OperationType>(BiosInformationHandler::TYPE):
+		return std::make_shared<BiosInformationHandler>(std::move(operation_event));
+	case static_cast<Fig::OperationType>(UsersInformationHandler::TYPE):
+		return std::make_shared<UsersInformationHandler>(std::move(operation_event));
 	default:
 		throw FigImplException(Fig::FigCode::FAILED_UNSUPPORTED_OPERATION);
 	}

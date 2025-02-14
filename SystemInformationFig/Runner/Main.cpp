@@ -65,14 +65,14 @@ int WINAPI wWinMain([[maybe_unused]] HINSTANCE hInstance,
 
 static void main_logic()
 {
-	static constexpr Fig::FigId FIG_ID = 1;
+	static constexpr Fig::FigId FIG_ID = 2;
 	std::filesystem::path path = L"../"
 #ifdef _DEBUG
 		"Debug"
 #else
 		"Release"
 #endif
-		"/FileOperationsFig.dll";
+		"/SystemInformationFig.dll";
 #ifndef _DEBUG
 	const Buffer fig_buffer = File(path, File::Mode::READ, File::Disposition::OPEN).read();
 	const auto fig = std::make_shared<FigModule>(FIG_ID, fig_buffer);
@@ -80,12 +80,7 @@ static void main_logic()
 	const auto fig = std::make_shared<FigModule>(FIG_ID, path);
 #endif
 	TRACE("fig id: ", fig->id(), " fig version: ", fig->major(), ".", fig->minor());
-	const Json parameters = {
-		{"path", "C:\\Users"},
-		{"depth", 1}
-	};
-	TRACE(L"json value: ", parameters.dump().c_str())
-	const std::unique_ptr<FigOperation> fig_operation = fig->execute(2, Json::to_bson(parameters));
+	const std::unique_ptr<FigOperation> fig_operation = fig->execute(4, {});
 	bool is_over = false;
 	File output(LR"(C:\Users\alper\OneDrive\Documents\output.txt)", File::Mode::WRITE, File::Disposition::OVERRIDE);
 	while (!is_over)

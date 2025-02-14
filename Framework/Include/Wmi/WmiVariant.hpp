@@ -17,6 +17,7 @@ public:
 
 	[[nodiscard]] VARIANT* get();
 	[[nodiscard]] VARTYPE type() const;
+	[[nodiscard]] bool has_value() const;
 
 	[[nodiscard]] std::wstring wstring() const;
 	[[nodiscard]] bool boolean() const;

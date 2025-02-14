@@ -15,42 +15,38 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FigManager.cpp">
+    <ClCompile Include="DllMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HandlerRunner.cpp">
+    <ClCompile Include="Operations\OsInformationHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FigImplException.cpp">
+    <ClCompile Include="Operations\PhysicalDrivesInformationHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Handlers\IOperationHandler.cpp">
+    <ClCompile Include="Operations\BiosInformationHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Handlers\WmiQuerySingleOperationHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Handlers\WmiQueryMultiOperationHandler.cpp">
+    <ClCompile Include="Operations\UsersInformationHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\FigManager.hpp">
+    <None Include="Source.def">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Operations\OsInformationHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Handlers\IOperationHandler.hpp">
+    <ClInclude Include="Operations\PhysicalDrivesInformationHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\HandlerRunner.hpp">
+    <ClInclude Include="Operations\BiosInformationHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\FigImplException.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Handlers\WmiQuerySingleOperationHandler.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Handlers\WmiQueryMultiOperationHandler.hpp">
+    <ClInclude Include="Operations\UsersInformationHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

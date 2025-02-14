@@ -1,0 +1,40 @@
+﻿#include "UsersInformationHandler.hpp"
+
+UsersInformationHandler::UsersInformationHandler(std::unique_ptr<Event> operation_event):
+	WmiQueryMultiOperationHandler(
+		std::move(operation_event),
+		L"Win32_UserProfile",
+		{
+			L"SID",
+			L"LocalPath",
+			L"Loaded",
+			L"RefCount",
+			L"Special",
+			L"RoamingConfigured",
+			L"RoamingPath",
+			L"RoamingPreference",
+			L"Status",
+			L"LastUseTime",
+			L"LastDownloadTime",
+			L"LastUploadTime",
+			L"HealthStatus",
+			L"LastAttempedProfileDownloadTime",
+			L"LastAttemptedProfileUploadTime",
+			L"LastBackgroundRegistryUploadTime",
+			L"AppDataRoaming",
+			L"Desktop",
+			L"StartMenu",
+			L"Documents",
+			L"Pictures",
+			L"Music",
+			L"Videos",
+			L"Favorites",
+			L"Contacts",
+			L"Downloads",
+			L"Links",
+			L"Searches",
+			L"SavedGames",
+		}
+	)
+{
+}

@@ -1,4 +1,4 @@
-﻿#include "IOperationHandler.hpp"
+﻿#include "Handlers/IOperationHandler.hpp"
 
 IOperationHandler::IOperationHandler(std::unique_ptr<Event> operation_event):
 	m_lock(),
@@ -37,6 +37,7 @@ void IOperationHandler::error(const Fig::FigSpecificCode specific_code)
 	const auto acquired = m_lock.acquire();
 	m_status = Fig::ExecutionStatus::FAILED;
 	m_specific_code = specific_code;
+	m_event->set();
 }
 
 void IOperationHandler::finished()
