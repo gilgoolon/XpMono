@@ -1,0 +1,3 @@
+LIBRARY SystemInformationFig
+EXPORTS
+	initialize @1 NONAME
