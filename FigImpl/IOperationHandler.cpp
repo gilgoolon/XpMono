@@ -37,6 +37,7 @@ void IOperationHandler::error(const Fig::FigSpecificCode specific_code)
 	const auto acquired = m_lock.acquire();
 	m_status = Fig::ExecutionStatus::FAILED;
 	m_specific_code = specific_code;
+	m_event->set();
 }
 
 void IOperationHandler::finished()
