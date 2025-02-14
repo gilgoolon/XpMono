@@ -34,6 +34,11 @@ VARTYPE WmiVariant::type() const
 	return m_variant.vt;
 }
 
+bool WmiVariant::has_value() const
+{
+	return m_variant.vt != VT_NULL;
+}
+
 std::wstring WmiVariant::wstring() const
 {
 	return m_variant.bstrVal ? m_variant.bstrVal : L"";
