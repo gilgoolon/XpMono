@@ -32,4 +32,4 @@ jobs:
                 with:
                     solution: '${{ matrix.solution }}'
                     fail_on_reformat_needed: 'yes'
-                    jb_cleanup_code_arg: '--verbosity=INFO --exclude=Exetrnal/ --settings=XpSettings.DotSettings'
+                    jb_cleanup_code_arg: '--verbosity=INFO --profile=Built-in: Full Cleanup --exclude=Exetrnal/ --settings=XpSettings.DotSettings'
