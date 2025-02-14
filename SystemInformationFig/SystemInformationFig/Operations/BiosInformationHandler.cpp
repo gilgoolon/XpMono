@@ -1,0 +1,42 @@
+﻿#include "BiosInformationHandler.hpp"
+
+BiosInformationHandler::BiosInformationHandler(std::unique_ptr<Event> operation_event):
+	WmiQuerySingleOperationHandler(
+		std::move(operation_event),
+		L"Win32_BIOS",
+		{
+			L"BiosCharacteristics",
+			L"BIOSVersion",
+			L"BuildNumber",
+			L"Caption",
+			L"CodeSet",
+			L"CurrentLanguage",
+			L"Description",
+			L"EmbeddedControllerMajorVersion",
+			L"EmbeddedControllerMinorVersion",
+			L"IdentificationCode",
+			L"InstallableLanguages",
+			L"InstallDate",
+			L"LanguageEdition",
+			L"ListOfLanguages",
+			L"Manufacturer",
+			L"Name",
+			L"OtherTargetOS",
+			L"PrimaryBIOS",
+			L"ReleaseDate",
+			L"SerialNumber",
+			L"SMBIOSBIOSVersion",
+			L"SMBIOSMajorVersion",
+			L"SMBIOSMinorVersion",
+			L"SMBIOSPresent",
+			L"SoftwareElementID",
+			L"SoftwareElementState",
+			L"Status",
+			L"SystemBiosMajorVersion",
+			L"SystemBiosMinorVersion",
+			L"TargetOperatingSystem",
+			L"Version",
+		}
+	)
+{
+}

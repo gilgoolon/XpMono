@@ -2,6 +2,7 @@
 #include "FigImplException.hpp"
 #include "FigManager.hpp"
 #include "Trace.hpp"
+#include "Operations/BiosInformationHandler.hpp"
 #include "Operations/OsInformationHandler.hpp"
 #include "Operations/PhysicalDrivesInformationHandler.hpp"
 #include "Protections/LibraryProtector.hpp"
@@ -21,6 +22,8 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 		return std::make_shared<OsInformationHandler>(std::move(operation_event));
 	case static_cast<Fig::OperationType>(PhysicalDrivesInformationHandler::TYPE):
 		return std::make_shared<PhysicalDrivesInformationHandler>(std::move(operation_event));
+	case static_cast<Fig::OperationType>(BiosInformationHandler::TYPE):
+		return std::make_shared<BiosInformationHandler>(std::move(operation_event));
 	default:
 		throw FigImplException(Fig::FigCode::FAILED_UNSUPPORTED_OPERATION);
 	}

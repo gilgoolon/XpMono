@@ -78,6 +78,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
+    <ClCompile Include="Operations\BiosInformationHandler.cpp" />
     <ClCompile Include="Operations\OsInformationHandler.cpp" />
     <ClCompile Include="Operations\PhysicalDrivesInformationHandler.cpp" />
   </ItemGroup>
@@ -93,6 +94,7 @@
     <None Include="Source.def" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Operations\BiosInformationHandler.hpp" />
     <ClInclude Include="Operations\OsInformationHandler.hpp" />
     <ClInclude Include="Operations\PhysicalDrivesInformationHandler.hpp" />
   </ItemGroup>
