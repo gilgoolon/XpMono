@@ -290,10 +290,13 @@
     <ClInclude Include="Include\Filesystem\FullFilesystemIterator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Json.hpp">
+    <ClInclude Include="Include\External\json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Filesystem\IFileIterator.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
