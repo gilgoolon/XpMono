@@ -80,7 +80,7 @@ static void main_logic()
 	const auto fig = std::make_shared<FigModule>(FIG_ID, path);
 #endif
 	TRACE("fig id: ", fig->id(), " fig version: ", fig->major(), ".", fig->minor());
-	const std::unique_ptr<FigOperation> fig_operation = fig->execute(3, {});
+	const std::unique_ptr<FigOperation> fig_operation = fig->execute(4, {});
 	bool is_over = false;
 	File output(LR"(C:\Users\alper\OneDrive\Documents\output.txt)", File::Mode::WRITE, File::Disposition::OVERRIDE);
 	while (!is_over)

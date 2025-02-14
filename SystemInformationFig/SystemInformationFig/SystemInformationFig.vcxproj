@@ -81,6 +81,7 @@
     <ClCompile Include="Operations\BiosInformationHandler.cpp" />
     <ClCompile Include="Operations\OsInformationHandler.cpp" />
     <ClCompile Include="Operations\PhysicalDrivesInformationHandler.cpp" />
+    <ClCompile Include="Operations\UsersInformationHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FigImpl\FigImpl.vcxproj">
@@ -97,6 +98,7 @@
     <ClInclude Include="Operations\BiosInformationHandler.hpp" />
     <ClInclude Include="Operations\OsInformationHandler.hpp" />
     <ClInclude Include="Operations\PhysicalDrivesInformationHandler.hpp" />
+    <ClInclude Include="Operations\UsersInformationHandler.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
