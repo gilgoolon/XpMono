@@ -4,13 +4,15 @@
 #include "Trace.hpp"
 
 DeviceContext::DeviceContext():
+	m_dependent_device_context(nullptr),
 	m_device_context(get_virtual_screen()),
 	m_existing(false)
 {
 }
 
-DeviceContext::DeviceContext(const DeviceContext& device_context):
-	m_device_context(create_compatible(device_context)),
+DeviceContext::DeviceContext(std::shared_ptr<DeviceContext> device_context):
+	m_dependent_device_context(std::move(device_context)),
+	m_device_context(create_compatible(*m_dependent_device_context)),
 	m_existing(true)
 {
 }

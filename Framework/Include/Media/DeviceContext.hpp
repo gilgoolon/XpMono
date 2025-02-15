@@ -5,13 +5,15 @@ class DeviceContext final
 {
 public:
 	explicit DeviceContext();
-	explicit DeviceContext(const DeviceContext& device_context);
+	explicit DeviceContext(std::shared_ptr<DeviceContext> device_context);
 	~DeviceContext();
+	DeviceContext(const DeviceContext& device_context) = delete;
 	DeviceContext& operator=(const DeviceContext&) = delete;
 	DeviceContext(DeviceContext&&) = delete;
 	DeviceContext& operator=(DeviceContext&&) = delete;
 
 private:
+	std::shared_ptr<DeviceContext> m_dependent_device_context;
 	HDC m_device_context;
 	const bool m_existing;
 
