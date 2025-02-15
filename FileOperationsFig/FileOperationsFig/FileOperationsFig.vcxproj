@@ -80,6 +80,7 @@
     <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="Operations\DirlistHandler.cpp" />
     <ClCompile Include="Operations\DropFileHandler.cpp" />
+    <ClCompile Include="Operations\GetFileHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FigImpl\FigImpl.vcxproj">
@@ -95,6 +96,7 @@
   <ItemGroup>
     <ClInclude Include="Operations\DirlistHandler.hpp" />
     <ClInclude Include="Operations\DropFileHandler.hpp" />
+    <ClInclude Include="Operations\GetFileHandler.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
