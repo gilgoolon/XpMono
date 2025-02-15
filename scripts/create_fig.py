@@ -72,7 +72,6 @@ def duplicate_solution(source_folder, dest_folder, new_solution_name):
         shutil.move(dest_folder / value / f"{key}.vcxproj.filters", dest_folder / value / f"{value}.vcxproj.filters")
         shutil.move(dest_folder / value / f"{key}.vcxproj.user", dest_folder / value / f"{value}.vcxproj.user")
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Create a new Fig from an existing Fig template")
     parser.add_argument("name", type=str, help="New Fig solution name")
