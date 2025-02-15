@@ -5,8 +5,7 @@ class ScreenshotHandler final : public IOperationHandler
 {
 public:
 	using IOperationHandler::IOperationHandler;
-	explicit ScreenshotHandler();
-	~ScreenshotHandler() override;
+	~ScreenshotHandler() override = default;
 	ScreenshotHandler(const ScreenshotHandler&) = delete;
 	ScreenshotHandler& operator=(const ScreenshotHandler&) = delete;
 	ScreenshotHandler(ScreenshotHandler&&) = delete;

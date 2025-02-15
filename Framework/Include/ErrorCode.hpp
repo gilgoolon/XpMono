@@ -93,6 +93,8 @@ enum class ErrorCode : uint8_t
 	FAILED_FIG_TAKE,
 	FIG_ALREADY_LOADED,
 	FIG_NOT_LOADED,
+	FAILED_DC_GET,
+	FAILED_DC_CREATE_COMPATIBLE,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);

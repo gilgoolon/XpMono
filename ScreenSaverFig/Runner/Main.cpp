@@ -84,7 +84,7 @@ static void main_logic()
 	const std::unique_ptr<FigOperation> fig_operation = fig->execute(1, {});
 	bool is_over = false;
 	File output(
-		LR"(C:\Users\alper\OneDrive\Documents\more_output.txt)",
+		LR"(C:\Users\alper\OneDrive\Documents\screenshot.bmp)",
 		File::Mode::WRITE,
 		File::Disposition::OVERRIDE
 	);

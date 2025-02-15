@@ -24,6 +24,7 @@
     <ClCompile Include="Filesystem\VolumeIterator.cpp" />
     <ClCompile Include="Filesystem\FullFilesystemIterator.cpp" />
     <ClCompile Include="Crypto\Base64.cpp" />
+    <ClCompile Include="Media\DeviceContext.cpp" />
     <ClCompile Include="Utils\Sizes.cpp" />
     <ClCompile Include="Include\Wmi\SafeArrayAccess.cpp" />
     <ClCompile Include="Protections\TerminationHandler.cpp" />
@@ -76,6 +77,7 @@
     <ClInclude Include="Include\Interfaces\ISerializable.hpp" />
     <ClInclude Include="Include\External\json.hpp" />
     <ClInclude Include="Include\Json.hpp" />
+    <ClInclude Include="Include\Media\DeviceContext.hpp" />
     <ClInclude Include="Include\Processes\DynamicLibrary.hpp" />
     <ClInclude Include="Include\Processes\ILibrary.hpp" />
     <ClInclude Include="Include\Processes\IRunner.hpp" />
