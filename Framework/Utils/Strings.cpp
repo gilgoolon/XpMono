@@ -51,12 +51,6 @@ std::wstring Strings::to_wstring(const BSTR& str)
 	return str;
 }
 
-Buffer Strings::to_buffer(const std::wstring& str)
-{
-	const auto* const start = reinterpret_cast<const uint8_t*>(str.data());
-	return Buffer(start, start + str.size() * sizeof(std::wstring::value_type));
-}
-
 std::wstring Strings::to_wstring(const Buffer& buffer)
 {
 	const auto* const start = reinterpret_cast<const std::wstring::value_type*>(buffer.data());

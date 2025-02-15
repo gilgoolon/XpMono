@@ -1,7 +1,7 @@
 ﻿#pragma once
-#include "IOperationHandler.hpp"
 #include "Json.hpp"
 #include "Filesystem/IFileIterator.hpp"
+#include "Handlers/IOperationHandler.hpp"
 
 #include <filesystem>
 
@@ -10,7 +10,7 @@ class DirlistHandler final : public IOperationHandler
 	explicit DirlistHandler(std::unique_ptr<Event> operation_event, const Json& parameters);
 
 public:
-	static constexpr Fig::FigId TYPE = 2;
+	static constexpr Fig::FigId TYPE = 1;
 
 	explicit DirlistHandler(std::unique_ptr<Event> operation_event, const Buffer& parameters);
 	~DirlistHandler() override = default;

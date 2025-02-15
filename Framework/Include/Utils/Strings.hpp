@@ -11,7 +11,12 @@ namespace Strings
 
 [[nodiscard]] std::wstring to_wstring(const BSTR& str);
 
-[[nodiscard]] Buffer to_buffer(const std::wstring& str);
+template <typename String>
+[[nodiscard]] Buffer to_buffer(const String& str)
+{
+	const auto* const start = reinterpret_cast<const uint8_t*>(str.data());
+	return Buffer(start, start + str.size() * sizeof(String::value_type));
+}
 
 [[nodiscard]] std::wstring to_wstring(const Buffer& buffer);
 

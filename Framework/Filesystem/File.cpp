@@ -45,10 +45,11 @@ Buffer File::read(const uint32_t size) const
 		&bytes_read,
 		UNUSED_OVERLAPPED
 	);
-	if (result == FALSE || bytes_read != size)
+	if (result == FALSE)
 	{
 		throw WinApiException(ErrorCode::FAILED_FILE_READ);
 	}
+	buff.resize(bytes_read);
 	return buff;
 }
 
@@ -84,6 +85,25 @@ void File::seek(const uint64_t offset) const
 	if (result == INVALID_SET_FILE_POINTER)
 	{
 		throw WinApiException(ErrorCode::FAILED_FILE_SEEK);
+	}
+}
+
+void File::set_metadata_of(const File& file)
+{
+	FILETIME creation{};
+	FILETIME access{};
+	FILETIME modification{};
+
+	BOOL result =
+		GetFileTime(file.m_handle.get(), &creation, &access, &modification);
+	if (result == FALSE)
+	{
+		throw WinApiException(ErrorCode::FAILED_FILE_GET_TIME);
+	}
+	result = SetFileTime(m_handle.get(), &creation, &access, &modification);
+	if (result == FALSE)
+	{
+		throw WinApiException(ErrorCode::FAILED_FILE_SET_TIME);
 	}
 }
 

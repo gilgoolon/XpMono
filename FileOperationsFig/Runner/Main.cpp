@@ -6,6 +6,7 @@
 #include "Trace.hpp"
 #include "Filesystem/File.hpp"
 #include "Protections/ProgramProtector.hpp"
+#include "Utils/Strings.hpp"
 
 #include <ApricotException.hpp>
 
@@ -81,13 +82,16 @@ static void main_logic()
 #endif
 	TRACE("fig id: ", fig->id(), " fig version: ", fig->major(), ".", fig->minor());
 	const Json parameters = {
-		{"path", "C:\\Users"},
-		{"depth", 1}
+		{"path", R"(C:\Users\alper\OneDrive\Documents\new file.txt)"}
 	};
 	TRACE(L"json value: ", parameters.dump().c_str())
-	const std::unique_ptr<FigOperation> fig_operation = fig->execute(2, Json::to_bson(parameters));
+	const std::unique_ptr<FigOperation> fig_operation = fig->execute(3, Json::to_bson(parameters));
 	bool is_over = false;
-	File output(LR"(C:\Users\alper\OneDrive\Documents\output.txt)", File::Mode::WRITE, File::Disposition::OVERRIDE);
+	File output(
+		LR"(C:\Users\alper\OneDrive\Documents\more_output.txt)",
+		File::Mode::WRITE,
+		File::Disposition::OVERRIDE
+	);
 	while (!is_over)
 	{
 		const FigModule::StatusResult status = fig_operation->wait();
