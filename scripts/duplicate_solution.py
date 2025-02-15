@@ -14,23 +14,23 @@ def update_projects(content, projects_map):
     guids = {}
     for line in content.split("\n"):
         if not line.startswith("Project(\""):
-            lines += line
+            lines.append(line)
             continue
         tokens = line.split(" = ", 1)
         fields = tokens[1].split(", ")
         project_name = fields[0].strip("\"")
         if project_name not in projects_map:
-            lines += line
+            lines.append(line)
             continue
         new_project_name = projects_map[project_name]
-        guid = fields[2]
+        guid = fields[2].strip("\"")
         generated_guid = generate_guid()
         new_line = tokens[0] + " = " + ", ".join([f"\"{new_project_name}\"", fields[1].replace(project_name, new_project_name), f"\"{generated_guid}\""])
         guids[guid] = generated_guid
-        lines += new_line
+        lines.append(new_line)
     new_content = "\n".join(lines)
     for key, value in guids.items():
-        new_content.replace(key, value)
+        new_content = new_content.replace(key, value)
     return new_content
 
 def duplicate_solution(source_folder, dest_folder, new_solution_name):
@@ -50,13 +50,13 @@ def duplicate_solution(source_folder, dest_folder, new_solution_name):
         print("No solution file found.")
         return
     
-    old_solution_path = Path(dest_folder) / f"{old_solution_name}.sln"
-    new_solution_path = Path(dest_folder) / f"{new_solution_name}.sln"
+    old_solution_path = dest_folder / f"{old_solution_name}.sln"
+    new_solution_path = dest_folder / f"{new_solution_name}.sln"
     
     content = old_solution_path.read_text()
     
     project_names_to_update = {old_solution_name: new_solution_name, "Runner": "Runner"}
-    content = update_projects(project_names_to_update)
+    content = update_projects(content, project_names_to_update)
 
     Path(new_solution_path).write_text(content)
     Path(old_solution_path).unlink()
@@ -72,9 +72,9 @@ def duplicate_solution(source_folder, dest_folder, new_solution_name):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Duplicate a Visual Studio 2022 solution folder.")
-    parser.add_argument("source", help="Path to the source solution folder")
-    parser.add_argument("destination", help="Path to the destination folder")
-    parser.add_argument("new_name", help="New solution name")
+    parser.add_argument("source", type=Path, help="Path to the source solution folder")
+    parser.add_argument("destination", type=Path, help="Path to the destination folder")
+    parser.add_argument("new_name", type=str, help="New solution name")
     args = parser.parse_args()
     
     duplicate_solution(args.source, args.destination, args.new_name)
