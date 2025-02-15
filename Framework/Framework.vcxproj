@@ -56,7 +56,6 @@
     <ClCompile Include="Wmi\WmiConnection.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\.sdks\base64\base64.hpp" />
     <ClInclude Include="Include\Filesystem\FileContentIterator.hpp" />
     <ClInclude Include="Include\CommandLineArguments.hpp" />
     <ClInclude Include="Include\Crypto\Base64.hpp" />
