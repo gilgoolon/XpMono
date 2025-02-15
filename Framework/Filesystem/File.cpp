@@ -45,10 +45,11 @@ Buffer File::read(const uint32_t size) const
 		&bytes_read,
 		UNUSED_OVERLAPPED
 	);
-	if (result == FALSE || bytes_read != size)
+	if (result == FALSE)
 	{
 		throw WinApiException(ErrorCode::FAILED_FILE_READ);
 	}
+	buff.resize(bytes_read);
 	return buff;
 }
 

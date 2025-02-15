@@ -27,7 +27,7 @@ Buffer FileContentIterator::next()
 	{
 		throw Exception(ErrorCode::OUT_OF_BOUNDS);
 	}
-	Buffer result = std::move(m_next_data.value());
+	Buffer result = m_next_data.value();
 	m_next_data.reset();
-	return std::move(result);
+	return result;
 }
