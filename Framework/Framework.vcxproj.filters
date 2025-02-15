@@ -141,6 +141,9 @@
     <ClCompile Include="Crypto\Base64.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Filesystem\FileContentIterator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\CommandLineArguments.hpp">
@@ -315,6 +318,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\External\nlohmann\json_fwd.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Filesystem\FileContentIterator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -26,8 +26,8 @@ public:
 	~File() = default;
 	File(const File&) = delete;
 	File& operator=(const File&) = delete;
-	File(File&&) = delete;
-	File& operator=(File&&) = delete;
+	File(File&&) = default;
+	File& operator=(File&&) = default;
 
 	[[nodiscard]] Buffer read() const;
 	[[nodiscard]] Buffer read(uint32_t size) const;

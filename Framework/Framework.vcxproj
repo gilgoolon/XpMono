@@ -17,6 +17,7 @@
     <ClCompile Include="ErrorCode.cpp" />
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="Filesystem\File.cpp" />
+    <ClCompile Include="Filesystem\FileContentIterator.cpp" />
     <ClCompile Include="Filesystem\FileIterator.cpp" />
     <ClCompile Include="Filesystem\FileEntry.cpp" />
     <ClCompile Include="Filesystem\RecursiveFileIterator.cpp" />
@@ -56,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\.sdks\base64\base64.hpp" />
+    <ClInclude Include="Include\Filesystem\FileContentIterator.hpp" />
     <ClInclude Include="Include\CommandLineArguments.hpp" />
     <ClInclude Include="Include\Crypto\Base64.hpp" />
     <ClInclude Include="Include\Debug.hpp" />
