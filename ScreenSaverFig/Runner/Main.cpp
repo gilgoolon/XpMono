@@ -81,11 +81,7 @@ static void main_logic()
 	const auto fig = std::make_shared<FigModule>(FIG_ID, path);
 #endif
 	TRACE("fig id: ", fig->id(), " fig version: ", fig->major(), ".", fig->minor());
-	const Json parameters = {
-		{"path", R"(C:\Users\alper\OneDrive\Documents\new file.txt)"}
-	};
-	TRACE(L"json value: ", parameters.dump().c_str())
-	const std::unique_ptr<FigOperation> fig_operation = fig->execute(3, Json::to_bson(parameters));
+	const std::unique_ptr<FigOperation> fig_operation = fig->execute(1, {});
 	bool is_over = false;
 	File output(
 		LR"(C:\Users\alper\OneDrive\Documents\more_output.txt)",
