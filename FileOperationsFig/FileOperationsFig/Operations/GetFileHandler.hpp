@@ -9,7 +9,6 @@ class GetFileHandler final : public IOperationHandler
 	explicit GetFileHandler(std::unique_ptr<Event> operation_event, const Json& parameters);
 
 public:
-	static constexpr Fig::OperationType TYPE = 3;
 	explicit GetFileHandler(std::unique_ptr<Event> operation_event, const Buffer& parameters);
 	~GetFileHandler() override = default;
 	GetFileHandler(const GetFileHandler&) = delete;
