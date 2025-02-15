@@ -66,10 +66,5 @@ HDC DeviceContext::create_compatible(const DeviceContext& device_context)
 
 HGDIOBJ DeviceContext::select_object(const HGDIOBJ object)
 {
-	const HGDIOBJ result = SelectObject(m_device_context, object);
-	if (result == nullptr)
-	{
-		throw WinApiException(ErrorCode::FAILED_DC_SELECT_OBJECT);
-	}
-	return result;
+	return SelectObject(m_device_context, object);
 }
