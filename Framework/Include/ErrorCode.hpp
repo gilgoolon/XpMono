@@ -98,6 +98,8 @@ enum class ErrorCode : uint8_t
 	FAILED_GET_DIMENSIONS,
 	FAILED_BMP_CREATE_COMPATIBLE,
 	FAILED_DC_SELECT_OBJECT,
+	FAILED_BMP_INVALID_DC,
+	FAILED_BMP_CAPTURE,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);

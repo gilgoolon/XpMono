@@ -3,6 +3,7 @@
 #include "Media/DeviceContext.hpp"
 #include "Media/ScreenBitmap.hpp"
 
+/*
 #include <gdiplus.h>
 #include <Windows.h>
 
@@ -105,13 +106,13 @@ static Buffer serialize_bitmap(HBITMAP hBitmap)
 	ReleaseDC(nullptr, hDC);
 	return pixelData;
 }
+*/
 
 void ScreenshotHandler::run()
 {
 	auto virtual_screen = std::make_shared<DeviceContext>();
 	auto target_screen = std::make_shared<DeviceContext>(virtual_screen);
 	ScreenBitmap bitmap(virtual_screen);
-	BitBlt(target_screen, 0, 0, right_bound, bottom_bound, virtual_screen, left_bound, top_bound, SRCCOPY | CAPTUREBLT);
-	append(make_bmp(bmpTarget, serialize_bitmap(bmpTarget)));
+	append(bitmap.capture());
 	finished();
 }
