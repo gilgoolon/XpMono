@@ -6,6 +6,9 @@ import uuid
 import re
 import argparse
 
+
+FIG_TEMPLATE = "FileOperationsFig"
+
 def generate_guid():
     return "{" + str(uuid.uuid4()).upper() + "}"
 
@@ -71,10 +74,12 @@ def duplicate_solution(source_folder, dest_folder, new_solution_name):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Duplicate a Visual Studio 2022 solution folder.")
-    parser.add_argument("source", type=Path, help="Path to the source solution folder")
-    parser.add_argument("destination", type=Path, help="Path to the destination folder")
-    parser.add_argument("new_name", type=str, help="New solution name")
+    parser = argparse.ArgumentParser(description="Create a new Fig from an existing Fig template")
+    parser.add_argument("name", type=str, help="New Fig solution name")
     args = parser.parse_args()
     
-    duplicate_solution(args.source, args.destination, args.new_name)
+    repo_path = Path(os.getcwd()).parent
+    template_folder = repo_path / FIG_TEMPLATE
+    fig_name = args.name
+    new_folder = repo_path / fig_name
+    duplicate_solution(template_folder, new_folder, fig_name)
