@@ -95,6 +95,9 @@ enum class ErrorCode : uint8_t
 	FIG_NOT_LOADED,
 	FAILED_DC_GET,
 	FAILED_DC_CREATE_COMPATIBLE,
+	FAILED_GET_DIMENSIONS,
+	FAILED_BMP_CREATE_COMPATIBLE,
+	FAILED_DC_SELECT_OBJECT,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);

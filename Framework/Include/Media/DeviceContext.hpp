@@ -19,4 +19,8 @@ private:
 
 	[[nodiscard]] static HDC get_virtual_screen();
 	[[nodiscard]] static HDC create_compatible(const DeviceContext& device_context);
+
+	HGDIOBJ select_object(HGDIOBJ object);
+
+	friend class ScreenBitmap;
 };
