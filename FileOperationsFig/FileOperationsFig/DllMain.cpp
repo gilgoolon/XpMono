@@ -1,4 +1,5 @@
-﻿#include "Exception.hpp"
+﻿#include "Api.hpp"
+#include "Exception.hpp"
 #include "FigImplException.hpp"
 #include "FigManager.hpp"
 #include "Trace.hpp"
@@ -9,7 +10,7 @@
 
 #include <Windows.h>
 
-Fig::FigInformation FigManager::g_information = {1, 1, 0};
+Fig::FigInformation FigManager::g_information = {Api::FIG_ID, Api::VERSION_MAJOR, Api::VERSION_MINOR};
 std::wstring FigManager::g_name = L"FileFetcher";
 
 std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::OperationType operation_type,
@@ -18,11 +19,11 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 {
 	switch (operation_type)
 	{
-	case static_cast<Fig::OperationType>(DirlistHandler::TYPE):
+	case static_cast<Fig::OperationType>(Api::OperationType::DIRLIST):
 		return std::make_shared<DirlistHandler>(std::move(operation_event), operation_parameters);
-	case static_cast<Fig::OperationType>(DropFileHandler::TYPE):
+	case static_cast<Fig::OperationType>(Api::OperationType::DROP_FILE):
 		return std::make_shared<DropFileHandler>(std::move(operation_event), operation_parameters);
-	case static_cast<Fig::OperationType>(GetFileHandler::TYPE):
+	case static_cast<Fig::OperationType>(Api::OperationType::GET_FILE):
 		return std::make_shared<GetFileHandler>(std::move(operation_event), operation_parameters);
 	default:
 		throw FigImplException(Fig::FigCode::FAILED_UNSUPPORTED_OPERATION);

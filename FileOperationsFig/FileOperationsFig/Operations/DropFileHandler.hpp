@@ -10,8 +10,6 @@ class DropFileHandler final : public IOperationHandler
 	                         const Json& parameters);
 
 public:
-	static constexpr Fig::OperationType TYPE = 2;
-
 	explicit DropFileHandler(std::unique_ptr<Event> operation_event, const Buffer& parameters);
 	~DropFileHandler() override = default;
 	DropFileHandler(const DropFileHandler&) = delete;

@@ -94,6 +94,7 @@
     <None Include="Source.def" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Api.hpp" />
     <ClInclude Include="Operations\DirlistHandler.hpp" />
     <ClInclude Include="Operations\DropFileHandler.hpp" />
     <ClInclude Include="Operations\GetFileHandler.hpp" />

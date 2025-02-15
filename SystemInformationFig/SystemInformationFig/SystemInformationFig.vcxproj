@@ -95,6 +95,7 @@
     <None Include="Source.def" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Api.hpp" />
     <ClInclude Include="Operations\BiosInformationHandler.hpp" />
     <ClInclude Include="Operations\OsInformationHandler.hpp" />
     <ClInclude Include="Operations\PhysicalDrivesInformationHandler.hpp" />
