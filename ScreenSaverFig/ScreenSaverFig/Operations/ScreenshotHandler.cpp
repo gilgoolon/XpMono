@@ -84,7 +84,8 @@ static Buffer serialize_bitmap(HBITMAP hBitmap)
 	bi.biBitCount = 32; // Ensure we get 32-bit BGRA pixels
 	bi.biCompression = BI_RGB;
 
-	std::vector<BYTE> pixelData(bmp.bmWidth * bmp.bmHeight * 4); // 4 bytes per pixel (BGRA)
+	std::vector<BYTE> pixelData(sizeof bi, bmp.bmWidth * bmp.bmHeight * 4); // 4 bytes per pixel (BGRA)
+	std::copy_n(&bi, sizeof bi, pixelData.data());
 
 	HDC hDC = GetDC(nullptr);
 	if (!hDC)
@@ -102,7 +103,6 @@ static Buffer serialize_bitmap(HBITMAP hBitmap)
 	{
 		pixelData.clear();
 	}
-
 	ReleaseDC(nullptr, hDC);
 	return pixelData;
 }

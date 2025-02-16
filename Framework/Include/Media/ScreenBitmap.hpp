@@ -14,7 +14,7 @@ public:
 
 private:
 	[[nodiscard]] static HBITMAP create_compatible(DeviceContext& device_context);
-	[[nodiscard]] static Buffer get_bmp_buffer(HBITMAP object);
+	[[nodiscard]] Buffer get_bmp_buffer(HBITMAP object) const;
 
 public:
 	[[nodiscard]] Buffer capture() const;

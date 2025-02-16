@@ -99,6 +99,7 @@ enum class ErrorCode : uint8_t
 	FAILED_DC_SELECT_OBJECT,
 	FAILED_BMP_INVALID_DC,
 	FAILED_BMP_CAPTURE,
+	FAILED_BMP_SERIALIZE,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);

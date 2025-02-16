@@ -36,10 +36,48 @@ HBITMAP ScreenBitmap::create_compatible(DeviceContext& device_context)
 	return result;
 }
 
-Buffer ScreenBitmap::get_bmp_buffer([[maybe_unused]] HBITMAP object)
+Buffer ScreenBitmap::get_bmp_buffer([[maybe_unused]] const HBITMAP object) const
 {
-	// TODO
-	return {};
+	if (m_target_screen->m_dependent_device_context == nullptr)
+	{
+		throw Exception(ErrorCode::FAILED_BMP_INVALID_DC);
+	}
+
+	BITMAP bmp;
+	if (GetObjectW(object, sizeof(BITMAP), &bmp) == FALSE)
+	{
+		throw WinApiException(ErrorCode::FAILED_BMP_SERIALIZE);
+	}
+
+	static constexpr uint32_t BYTES_PER_PIXEL = 4;
+	static constexpr uint32_t BITS_PER_BYTE = 8;
+
+	BITMAPINFOHEADER bi{};
+	bi.biSize = sizeof(BITMAPINFOHEADER);
+	bi.biWidth = bmp.bmWidth;
+	bi.biHeight = -bmp.bmHeight;
+	bi.biPlanes = 1;
+	bi.biBitCount = BYTES_PER_PIXEL * BITS_PER_BYTE;
+	bi.biCompression = BI_RGB;
+
+	Buffer pixel_data(sizeof bi + bmp.bmWidth * bmp.bmHeight * BYTES_PER_PIXEL);
+	std::copy_n(reinterpret_cast<const uint8_t*>(&bi), sizeof bi, pixel_data.data());
+
+	static constexpr UINT FIRST_LINE = 0;
+	const int result = GetDIBits(
+		m_target_screen->m_dependent_device_context->m_device_context,
+		object,
+		FIRST_LINE,
+		bmp.bmHeight,
+		pixel_data.data() + sizeof bi,
+		reinterpret_cast<BITMAPINFO*>(&bi),
+		DIB_RGB_COLORS
+	);
+	if (result == FALSE)
+	{
+		throw WinApiException(ErrorCode::FAILED_BMP_SERIALIZE);
+	}
+	return pixel_data;
 }
 
 Buffer ScreenBitmap::capture() const
