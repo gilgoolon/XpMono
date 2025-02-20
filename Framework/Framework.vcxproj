@@ -24,6 +24,10 @@
     <ClCompile Include="Filesystem\VolumeIterator.cpp" />
     <ClCompile Include="Filesystem\FullFilesystemIterator.cpp" />
     <ClCompile Include="Crypto\Base64.cpp" />
+    <ClCompile Include="Media\BitmapFormat.cpp" />
+    <ClCompile Include="Media\Dimensions.cpp" />
+    <ClCompile Include="Media\ScreenBitmap.cpp" />
+    <ClCompile Include="Media\DeviceContext.cpp" />
     <ClCompile Include="Utils\Sizes.cpp" />
     <ClCompile Include="Include\Wmi\SafeArrayAccess.cpp" />
     <ClCompile Include="Protections\TerminationHandler.cpp" />
@@ -56,7 +60,6 @@
     <ClCompile Include="Wmi\WmiConnection.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\.sdks\base64\base64.hpp" />
     <ClInclude Include="Include\Filesystem\FileContentIterator.hpp" />
     <ClInclude Include="Include\CommandLineArguments.hpp" />
     <ClInclude Include="Include\Crypto\Base64.hpp" />
@@ -77,6 +80,9 @@
     <ClInclude Include="Include\Interfaces\ISerializable.hpp" />
     <ClInclude Include="Include\External\json.hpp" />
     <ClInclude Include="Include\Json.hpp" />
+    <ClInclude Include="Include\Media\BitmapFormat.hpp" />
+    <ClInclude Include="Include\Media\DeviceContext.hpp" />
+    <ClInclude Include="Include\Media\ScreenBitmap.hpp" />
     <ClInclude Include="Include\Processes\DynamicLibrary.hpp" />
     <ClInclude Include="Include\Processes\ILibrary.hpp" />
     <ClInclude Include="Include\Processes\IRunner.hpp" />
@@ -115,6 +121,7 @@
     <ClInclude Include="Include\Protections\AbortBehavior.hpp" />
     <ClInclude Include="Include\Protections\ErrorMode.hpp" />
     <ClInclude Include="Include\Protections\UnhandledExceptionFilter.hpp" />
+    <ClInclude Include="Include\Media\Dimensions.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
