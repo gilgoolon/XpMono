@@ -66,7 +66,7 @@ int WINAPI wWinMain([[maybe_unused]] HINSTANCE hInstance,
 
 static void main_logic()
 {
-	static constexpr Fig::FigId FIG_ID = 1;
+	static constexpr Fig::FigId FIG_ID = 3;
 	std::filesystem::path path = L"../"
 #ifdef _DEBUG
 		"Debug"

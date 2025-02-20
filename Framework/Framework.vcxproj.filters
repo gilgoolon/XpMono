@@ -153,6 +153,9 @@
     <ClCompile Include="Media\Dimensions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Media\BitmapFormat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\CommandLineArguments.hpp">
@@ -336,6 +339,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Media\Dimensions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Media\BitmapFormat.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
