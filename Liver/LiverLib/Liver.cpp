@@ -13,7 +13,11 @@ void Liver::run()
 	TRACE(L"running liver");
 
 	Buffer command_buffer;
-	m_handler_factory->create()
+	ICommand::Ptr command = m_command_factory->create(command_buffer);
+	ICommandHandler::Ptr handler = CommandHandlerFactory::create(std::move(command));
+	handler->handle(*this);
+
+	TRACE(L"finished liver");
 }
 
 std::unique_ptr<Liver> Liver::create([[maybe_unused]] const Buffer& liver_configuration)

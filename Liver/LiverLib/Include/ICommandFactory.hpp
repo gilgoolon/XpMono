@@ -5,6 +5,8 @@
 class ICommandFactory
 {
 public:
+	using Ptr = std::unique_ptr<ICommandFactory>;
+
 	explicit ICommandFactory() = default;
 	virtual ~ICommandFactory() = default;
 	ICommandFactory(const ICommandFactory&) = delete;

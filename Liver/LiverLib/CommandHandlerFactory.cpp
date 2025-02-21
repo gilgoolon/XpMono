@@ -1,6 +1,6 @@
 ﻿#include "CommandHandlerFactory.hpp"
 
-ICommandHandler::Ptr CommandHandlerFactory::create(std::shared_ptr<ICommand> command)
+ICommandHandler::Ptr CommandHandlerFactory::create(ICommand::Ptr command)
 {
 	return nullptr;
 }

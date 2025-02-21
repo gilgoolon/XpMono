@@ -2,6 +2,10 @@
 #include <cstdint>
 #include <memory>
 
+enum class CommandType : uint32_t
+{
+};
+
 class ICommand
 {
 public:
@@ -16,4 +20,5 @@ public:
 	ICommand& operator=(ICommand&&) = delete;
 
 	[[nodiscard]] Id id() const;
+	virtual CommandType type() const = 0;
 };

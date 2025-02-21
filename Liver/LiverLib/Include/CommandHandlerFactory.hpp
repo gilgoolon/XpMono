@@ -3,5 +3,5 @@
 
 namespace CommandHandlerFactory
 {
-[[nodiscard]] ICommandHandler::Ptr create(std::shared_ptr<ICommand> command);
+[[nodiscard]] ICommandHandler::Ptr create(ICommand::Ptr command);
 };

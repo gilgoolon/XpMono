@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "CommandHandlerFactory.hpp"
+#include "ICommandFactory.hpp"
 #include "Synchronization/Event.hpp"
 #include "Utils/Buffer.hpp"
 
