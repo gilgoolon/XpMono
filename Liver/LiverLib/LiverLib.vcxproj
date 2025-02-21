@@ -11,15 +11,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Commands\LoadDllCommand.hpp" />
+    <ClInclude Include="Include\Handlers\LoadDllHandler.hpp" />
     <ClInclude Include="Include\ICommandFactory.hpp" />
     <ClInclude Include="Include\ICommand.hpp" />
     <ClInclude Include="Include\ICommandHandler.hpp" />
     <ClInclude Include="Include\CommandHandlerFactory.hpp" />
     <ClInclude Include="Include\IProduct.hpp" />
+    <ClInclude Include="Include\LibrariesContainer.hpp" />
     <ClInclude Include="Include\Liver.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CommandHandlerFactory.cpp" />
+    <ClCompile Include="Commands\LoadDllCommand.cpp" />
+    <ClCompile Include="Include\Handlers\LoadDllHandler.cpp" />
+    <ClCompile Include="LibrariesContainer.cpp" />
     <ClCompile Include="IProduct.cpp" />
     <ClCompile Include="Liver.cpp" />
   </ItemGroup>

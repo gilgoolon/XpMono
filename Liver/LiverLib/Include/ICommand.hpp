@@ -4,6 +4,7 @@
 
 enum class CommandType : uint32_t
 {
+	LOAD_DLL = 0,
 };
 
 class ICommand
