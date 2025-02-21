@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "ICommandHandlerFactory.hpp"
+#include "CommandHandlerFactory.hpp"
 #include "Synchronization/Event.hpp"
 #include "Utils/Buffer.hpp"
 
@@ -24,5 +24,5 @@ public:
 
 private:
 	Event::Ptr m_quit_event;
-	ICommandHandlerFactory::Ptr m_handler_factory;
+	ICommandFactory::Ptr m_command_factory;
 };

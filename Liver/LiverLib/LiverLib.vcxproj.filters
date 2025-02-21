@@ -18,7 +18,7 @@
     <ClInclude Include="Include\Liver.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\ICommandHandlerFactory.hpp">
+    <ClInclude Include="Include\CommandHandlerFactory.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\ICommandHandler.hpp">
@@ -30,12 +30,18 @@
     <ClInclude Include="Include\IProduct.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ICommandFactory.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Liver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IProduct.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandHandlerFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

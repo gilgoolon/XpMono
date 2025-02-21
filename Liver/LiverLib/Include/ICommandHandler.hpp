@@ -13,7 +13,7 @@ class ICommandHandler
 public:
 	using Ptr = std::unique_ptr<ICommandHandler>;
 
-	explicit ICommandHandler(ICommand::Ptr command);
+	explicit ICommandHandler() = default;
 	virtual ~ICommandHandler() = default;
 	ICommandHandler(const ICommandHandler&) = delete;
 	ICommandHandler& operator=(const ICommandHandler&) = delete;

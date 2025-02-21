@@ -11,13 +11,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\ICommandFactory.hpp" />
     <ClInclude Include="Include\ICommand.hpp" />
     <ClInclude Include="Include\ICommandHandler.hpp" />
-    <ClInclude Include="Include\ICommandHandlerFactory.hpp" />
+    <ClInclude Include="Include\CommandHandlerFactory.hpp" />
     <ClInclude Include="Include\IProduct.hpp" />
     <ClInclude Include="Include\Liver.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CommandHandlerFactory.cpp" />
     <ClCompile Include="IProduct.cpp" />
     <ClCompile Include="Liver.cpp" />
   </ItemGroup>

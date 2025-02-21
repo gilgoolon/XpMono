@@ -10,7 +10,10 @@ Liver::Liver():
 
 void Liver::run()
 {
-	TRACE(L"running");
+	TRACE(L"running liver");
+
+	Buffer command_buffer;
+	m_handler_factory->create()
 }
 
 std::unique_ptr<Liver> Liver::create([[maybe_unused]] const Buffer& liver_configuration)
