@@ -24,7 +24,7 @@
     <ClInclude Include="Include\ICommandHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\ICommand.hpp">
+    <ClInclude Include="Include\Commands\ICommand.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\IProduct.hpp">
@@ -60,6 +60,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Include\Handlers\LoadDllHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Commands\ICommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

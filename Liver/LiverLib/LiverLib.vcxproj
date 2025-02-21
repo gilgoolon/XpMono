@@ -14,7 +14,7 @@
     <ClInclude Include="Include\Commands\LoadDllCommand.hpp" />
     <ClInclude Include="Include\Handlers\LoadDllHandler.hpp" />
     <ClInclude Include="Include\ICommandFactory.hpp" />
-    <ClInclude Include="Include\ICommand.hpp" />
+    <ClInclude Include="Include\Commands\ICommand.hpp" />
     <ClInclude Include="Include\ICommandHandler.hpp" />
     <ClInclude Include="Include\CommandHandlerFactory.hpp" />
     <ClInclude Include="Include\IProduct.hpp" />
@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CommandHandlerFactory.cpp" />
+    <ClCompile Include="Commands\ICommand.cpp" />
     <ClCompile Include="Commands\LoadDllCommand.cpp" />
     <ClCompile Include="Include\Handlers\LoadDllHandler.cpp" />
     <ClCompile Include="LibrariesContainer.cpp" />

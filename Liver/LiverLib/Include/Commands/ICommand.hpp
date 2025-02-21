@@ -13,7 +13,7 @@ public:
 	using Ptr = std::shared_ptr<ICommand>;
 	using Id = uint32_t;
 
-	explicit ICommand() = default;
+	explicit ICommand(Id command_id);
 	virtual ~ICommand() = default;
 	ICommand(const ICommand&) = delete;
 	ICommand& operator=(const ICommand&) = delete;
@@ -21,5 +21,8 @@ public:
 	ICommand& operator=(ICommand&&) = delete;
 
 	[[nodiscard]] Id id() const;
-	virtual CommandType type() const = 0;
+	[[nodiscard]] virtual CommandType type() const = 0;
+
+private:
+	Id m_id;
 };
