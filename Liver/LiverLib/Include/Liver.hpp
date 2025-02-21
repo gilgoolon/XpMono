@@ -1,8 +1,7 @@
 ﻿#pragma once
+#include "ICommandHandlerFactory.hpp"
 #include "Synchronization/Event.hpp"
 #include "Utils/Buffer.hpp"
-
-#include <memory>
 
 class Liver final
 {
@@ -20,8 +19,10 @@ private:
 public:
 	[[nodiscard]] static std::unique_ptr<Liver> create(const Buffer& liver_configuration);
 	static void main(const Buffer& liver_configuration);
+
 	[[nodiscard]] static std::wstring quit_event_name();
 
 private:
-	std::shared_ptr<Event> m_quit_event;
+	Event::Ptr m_quit_event;
+	ICommandHandlerFactory::Ptr m_handler_factory;
 };

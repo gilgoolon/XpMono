@@ -11,9 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\ICommand.hpp" />
+    <ClInclude Include="Include\ICommandHandler.hpp" />
+    <ClInclude Include="Include\ICommandHandlerFactory.hpp" />
+    <ClInclude Include="Include\IProduct.hpp" />
     <ClInclude Include="Include\Liver.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="IProduct.cpp" />
     <ClCompile Include="Liver.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -65,7 +70,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)../Framework/Include/;$(SolutionDir)../Apricot/ApricotLib/Include/;$(SolutionDir)../Apricot/ApricotImpl/Include/;$(SolutionDir)../Fig/Include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include/;$(SolutionDir)../Framework/Include/;$(SolutionDir)../Apricot/ApricotLib/Include/;$(SolutionDir)../Apricot/ApricotImpl/Include/;$(SolutionDir)../Fig/Include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -78,7 +83,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)../Framework/Include/;$(SolutionDir)../Apricot/ApricotLib/Include/;$(SolutionDir)../Apricot/ApricotImpl/Include/;$(SolutionDir)..\Fig\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include/;$(SolutionDir)../Framework/Include/;$(SolutionDir)../Apricot/ApricotLib/Include/;$(SolutionDir)../Apricot/ApricotImpl/Include/;$(SolutionDir)..\Fig\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
