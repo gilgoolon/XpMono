@@ -10,6 +10,27 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\ICommandFactory.hpp" />
+    <ClInclude Include="Include\ICommand.hpp" />
+    <ClInclude Include="Include\ICommandHandler.hpp" />
+    <ClInclude Include="Include\CommandHandlerFactory.hpp" />
+    <ClInclude Include="Include\IProduct.hpp" />
+    <ClInclude Include="Include\Liver.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CommandHandlerFactory.cpp" />
+    <ClCompile Include="IProduct.cpp" />
+    <ClCompile Include="Liver.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Fig\Fig.vcxproj">
+      <Project>{31e00270-3ef4-40ae-88f1-3f5bd2db58f5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Framework.vcxproj">
+      <Project>{5b5c1f35-e8a8-44e2-9133-38047262f449}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -51,6 +72,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>Include/;$(SolutionDir)../Framework/Include/;$(SolutionDir)../Apricot/ApricotLib/Include/;$(SolutionDir)../Apricot/ApricotImpl/Include/;$(SolutionDir)../Fig/Include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -63,6 +85,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>Include/;$(SolutionDir)../Framework/Include/;$(SolutionDir)../Apricot/ApricotLib/Include/;$(SolutionDir)../Apricot/ApricotImpl/Include/;$(SolutionDir)..\Fig\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

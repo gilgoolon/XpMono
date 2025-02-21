@@ -1,13 +1,10 @@
 ﻿#include "ApricotException.hpp"
-#include "ApricotLibrary.hpp"
 #include "Exception.hpp"
 #include "FigException.hpp"
+#include "Liver.hpp"
 #include "Trace.hpp"
-#include "Filesystem/File.hpp"
 
 #include <Windows.h>
-
-static void main_logic();
 
 int WINAPI wWinMain([[maybe_unused]] HINSTANCE hInstance,
                     [[maybe_unused]] HINSTANCE hPrevInstance,
@@ -16,7 +13,7 @@ int WINAPI wWinMain([[maybe_unused]] HINSTANCE hInstance,
 {
 	try
 	{
-		main_logic();
+		Liver::main({});
 		return EXIT_SUCCESS;
 	}
 	catch (const ApricotException& ex)
@@ -56,20 +53,4 @@ int WINAPI wWinMain([[maybe_unused]] HINSTANCE hInstance,
 		TRACE("uncaught unknown or critical exception")
 	}
 	return EXIT_SUCCESS;
-}
-
-static void main_logic()
-{
-	ApricotLibrary lib(
-		File(LR"(C:\Users\alper\OneDrive\Documents\XpMono\Apricot\Debug\SimpleDll.dll)", File::Mode::READ).read()
-	);
-	const Buffer fig_buffer = File(
-		LR"(C:\Users\alper\OneDrive\Documents\XpMono\Liver\Debug\CubeClimberFig.dll)",
-		File::Mode::READ
-	).read();
-	constexpr Fig::FigId fig_id = 1;
-	TRACE(L"loading fig library with id ", fig_id);
-	ApricotLibrary fig_lib(fig_buffer);
-	using SimpleFunction = void(*)();
-	lib.call<SimpleFunction>(1);
 }
