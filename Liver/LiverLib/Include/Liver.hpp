@@ -8,7 +8,7 @@
 class Liver final
 {
 public:
-	explicit Liver();
+	explicit Liver(Event::Ptr quit_event, ICommandFactory::Ptr command_factory, ICommunicator::Ptr communicator);
 	~Liver() = default;
 	Liver(const Liver&) = delete;
 	Liver& operator=(const Liver&) = delete;

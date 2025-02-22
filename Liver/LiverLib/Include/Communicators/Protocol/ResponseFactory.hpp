@@ -5,4 +5,4 @@
 namespace ResponseFactory
 {
 [[nodiscard]] IResponse::Ptr create(IInputStream::Ptr input);
-};
+}
