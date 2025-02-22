@@ -76,6 +76,8 @@
     <ClInclude Include="Include\Filesystem\IFileIterator.hpp" />
     <ClInclude Include="Include\Filesystem\RecursiveFileIterator.hpp" />
     <ClInclude Include="Include\Filesystem\VolumeIterator.hpp" />
+    <ClInclude Include="Include\Interfaces\IInputStream.hpp" />
+    <ClInclude Include="Include\Interfaces\IOutputStream.hpp" />
     <ClInclude Include="Include\Interfaces\ISerializable.hpp" />
     <ClInclude Include="Include\External\json.hpp" />
     <ClInclude Include="Include\Json.hpp" />

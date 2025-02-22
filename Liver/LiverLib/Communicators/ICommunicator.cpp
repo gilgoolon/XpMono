@@ -1,0 +1,1 @@
+﻿#include "Communicators/ICommunicator.hpp"
