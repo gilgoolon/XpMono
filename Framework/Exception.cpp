@@ -38,14 +38,3 @@ NTSTATUS WinApiNtException::status() const
 {
 	return m_status;
 }
-
-GenericFunctionException::GenericFunctionException(const uint32_t function_code):
-	Exception(ErrorCode::GENERIC_FUNCTION_EXCEPTION),
-	m_function_code(function_code)
-{
-}
-
-uint32_t GenericFunctionException::function_code() const
-{
-	return m_function_code;
-}

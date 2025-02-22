@@ -5,8 +5,6 @@
 class Event final : public IWaitable
 {
 public:
-	using Ptr = std::shared_ptr<Event>;
-
 	enum class Type : uint32_t
 	{
 		MANUAL_RESET = FALSE,

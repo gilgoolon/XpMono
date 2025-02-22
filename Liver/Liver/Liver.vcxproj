@@ -50,11 +50,11 @@
     <ClCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)LiverLib/Api/Include;$(SolutionDir)../Framework/Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../Framework/Include/;$(SolutionDir)../Apricot/ApricotLib/Include/;$(SolutionDir)../Apricot/ApricotImpl/Include/;$(SolutionDir)../Fig/Include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(OutDir)LiverLib.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\Apricot\Debug\ApricotLib.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -63,25 +63,37 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)LiverLib/Api/Include;$(SolutionDir)../Framework/Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../Framework/Include/;$(SolutionDir)../Apricot/ApricotLib/Include/;$(SolutionDir)../Apricot/ApricotImpl/Include/;$(SolutionDir)..\Fig\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(OutDir)LiverLib.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\Apricot\Release\ApricotLib.lib;$(SolutionDir)..\Apricot\Release\ApricotImpl.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Fig\FigException.cpp" />
+    <ClCompile Include="Fig\FigModule.cpp" />
+    <ClCompile Include="Fig\FigOperation.cpp" />
+    <ClCompile Include="Fig\LoadedFigs.cpp" />
+    <ClCompile Include="Fig\LoadedFigsContainer.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Framework\Framework.vcxproj">
       <Project>{5b5c1f35-e8a8-44e2-9133-38047262f449}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\LiverLib\LiverLib.vcxproj">
-      <Project>{6f33c5c4-ae36-4796-b376-770c13766d00}</Project>
+    <ProjectReference Include="..\Framework\Framework.vcxproj">
+      <Project>{5b5c1f35-e8a8-44e2-9133-38047262f449}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Fig\FigException.hpp" />
+    <ClInclude Include="Fig\FigModule.hpp" />
+    <ClInclude Include="Fig\FigOperation.hpp" />
+    <ClInclude Include="Fig\LoadedFigs.hpp" />
+    <ClInclude Include="Fig\LoadedFigsContainer.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

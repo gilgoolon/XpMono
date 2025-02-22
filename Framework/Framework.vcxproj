@@ -42,6 +42,7 @@
     <ClCompile Include="Wmi\WmiException.cpp" />
     <ClCompile Include="Wmi\WmiReleaser.cpp" />
     <ClCompile Include="Wmi\WmiRuntime.cpp" />
+    <ClCompile Include="Utils\Random.cpp" />
     <ClCompile Include="Synchronization\UnmanagedEvent.cpp" />
     <ClCompile Include="Processes\DynamicLibrary.cpp" />
     <ClCompile Include="Processes\Process.cpp" />
