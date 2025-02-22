@@ -11,15 +11,26 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Api\Include\LiverApi.hpp" />
+    <ClInclude Include="Include\CommandFactories\JsonCommandFactory.hpp" />
+    <ClInclude Include="Include\Commands\LoadDllCommand.hpp" />
+    <ClInclude Include="Include\Handlers\LoadDllHandler.hpp" />
     <ClInclude Include="Include\ICommandFactory.hpp" />
-    <ClInclude Include="Include\ICommand.hpp" />
+    <ClInclude Include="Include\Commands\ICommand.hpp" />
     <ClInclude Include="Include\ICommandHandler.hpp" />
     <ClInclude Include="Include\CommandHandlerFactory.hpp" />
     <ClInclude Include="Include\IProduct.hpp" />
+    <ClInclude Include="Include\LibrariesContainer.hpp" />
     <ClInclude Include="Include\Liver.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Api\LiverApi.cpp" />
     <ClCompile Include="CommandHandlerFactory.cpp" />
+    <ClCompile Include="Commands\ICommand.cpp" />
+    <ClCompile Include="Commands\LoadDllCommand.cpp" />
+    <ClCompile Include="Handlers\LoadDllHandler.cpp" />
+    <ClCompile Include="CommandFactories\JsonCommandFactory.cpp" />
+    <ClCompile Include="LibrariesContainer.cpp" />
     <ClCompile Include="IProduct.cpp" />
     <ClCompile Include="Liver.cpp" />
   </ItemGroup>
@@ -77,6 +88,9 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalOptions>/FORCE %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -92,6 +106,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalOptions>/FORCE %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

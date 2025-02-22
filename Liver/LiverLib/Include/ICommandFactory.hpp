@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "ICommand.hpp"
+#include "Commands/ICommand.hpp"
 #include "Utils/Buffer.hpp"
 
 class ICommandFactory
@@ -14,5 +14,5 @@ public:
 	ICommandFactory(ICommandFactory&&) = delete;
 	ICommandFactory& operator=(ICommandFactory&&) = delete;
 
-	[[nodiscard]] virtual ICommand::Ptr create(const Buffer& command);
+	[[nodiscard]] virtual ICommand::Ptr create(const Buffer& command) = 0;
 };

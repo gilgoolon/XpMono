@@ -1,6 +1,9 @@
 ﻿#include "Include/Liver.hpp"
 
+#include "CommandHandlerFactory.hpp"
+#include "ICommandHandler.hpp"
 #include "Trace.hpp"
+#include "Commands/ICommand.hpp"
 #include "Synchronization/Event.hpp"
 
 Liver::Liver():
@@ -14,7 +17,7 @@ void Liver::run()
 
 	Buffer command_buffer;
 	ICommand::Ptr command = m_command_factory->create(command_buffer);
-	ICommandHandler::Ptr handler = CommandHandlerFactory::create(std::move(command));
+	const ICommandHandler::Ptr handler = CommandHandlerFactory::create(std::move(command));
 	handler->handle(*this);
 
 	TRACE(L"finished liver");
@@ -23,12 +26,6 @@ void Liver::run()
 std::unique_ptr<Liver> Liver::create([[maybe_unused]] const Buffer& liver_configuration)
 {
 	return std::make_unique<Liver>();
-}
-
-void Liver::main(const Buffer& liver_configuration)
-{
-	const std::unique_ptr<Liver> liver = create(liver_configuration);
-	liver->run();
 }
 
 std::wstring Liver::quit_event_name()
