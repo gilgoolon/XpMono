@@ -28,4 +28,10 @@ public:
 		}
 		return *reinterpret_cast<const T*>(data.data());
 	}
+
+	[[nodiscard]] Buffer read_sized() const
+	{
+		const uint32_t size = read<uint32_t>();
+		return read(size);
+	}
 };

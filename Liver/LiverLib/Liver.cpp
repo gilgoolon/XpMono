@@ -35,10 +35,13 @@ void Liver::run()
 
 	case IResponse::Type::EXECUTE_COMMANDS:
 	{
-		auto execute_commands_response = std::dynamic_pointer_cast<ExecuteCommandsResponse>(std::move(response));
+		const auto execute_commands_response = std::dynamic_pointer_cast<ExecuteCommandsResponse>(std::move(response));
 		handle_execute_commands(*execute_commands_response);
 		break;
 	}
+
+	default:
+		throw Exception(ErrorCode::UNCOVERED_ENUM_VALUE);
 	}
 
 	TRACE(L"finished liver");
@@ -50,8 +53,8 @@ std::unique_ptr<Liver> Liver::create([[maybe_unused]] const Buffer& liver_config
 		std::make_shared<Event>(quit_event_name(), Event::Type::MANUAL_RESET),
 		std::make_unique<JsonCommandFactory>(),
 		std::make_unique<RawCommunicator>(
-			std::make_shared<File>(L"input.txt", File::Mode::READ, File::Disposition::OPEN),
-			std::make_shared<File>(L"output.txt", File::Mode::WRITE, File::Disposition::OVERRIDE)
+			std::make_shared<File>(L"C:\\Users\\alper\\input.txt", File::Mode::READ, File::Disposition::OPEN),
+			std::make_shared<File>(L"C:\\Users\\alper\\output.txt", File::Mode::WRITE, File::Disposition::OVERRIDE)
 		)
 	);
 }
