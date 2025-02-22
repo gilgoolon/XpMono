@@ -2,14 +2,14 @@
 #include <cstdint>
 #include <memory>
 
-enum class CommandType : uint32_t
-{
-	LOAD_DLL = 0,
-};
-
 class ICommand
 {
 public:
+	enum class Type: uint32_t
+	{
+		LOAD_DLL = 0,
+	};
+
 	using Ptr = std::shared_ptr<ICommand>;
 	using Id = uint32_t;
 
@@ -21,7 +21,7 @@ public:
 	ICommand& operator=(ICommand&&) = delete;
 
 	[[nodiscard]] Id id() const;
-	[[nodiscard]] virtual CommandType type() const = 0;
+	[[nodiscard]] virtual Type type() const = 0;
 
 private:
 	Id m_id;
