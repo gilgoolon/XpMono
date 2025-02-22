@@ -4,5 +4,5 @@
 
 namespace ResponseFactory
 {
-[[nodiscard]] IResponse::Ptr create(IInputStream::Ptr input);
+[[nodiscard]] IResponse::Ptr create(const IInputStream::Ptr& input);
 }

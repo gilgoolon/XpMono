@@ -34,8 +34,9 @@ std::unique_ptr<Liver> Liver::create([[maybe_unused]] const Buffer& liver_config
 	return std::make_unique<Liver>(
 		std::make_shared<Event>(quit_event_name(), Event::Type::MANUAL_RESET),
 		std::make_unique<JsonCommandFactory>(),
-		RawCommunicator::from_stream(
-			std::make_shared<File>(L"protocol.txt", File::Mode::READ_WRITE, File::Disposition::OPEN)
+		std::make_unique<RawCommunicator>(
+			std::make_shared<File>(L"input.txt", File::Mode::READ, File::Disposition::OPEN),
+			std::make_shared<File>(L"output.txt", File::Mode::WRITE, File::Disposition::OVERRIDE)
 		)
 	);
 }

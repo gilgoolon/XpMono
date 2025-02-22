@@ -18,7 +18,7 @@ public:
 	[[nodiscard]] virtual Buffer read(uint32_t size) const = 0;
 
 	template <typename T>
-	[[nodiscard]] T read_value() const
+	[[nodiscard]] T read() const
 	{
 		Buffer data = read(sizeof(T));
 		return *reinterpret_cast<const T*>(data.data());

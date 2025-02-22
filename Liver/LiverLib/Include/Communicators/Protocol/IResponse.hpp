@@ -17,6 +17,7 @@ public:
 	enum class Type : uint32_t
 	{
 		EXECUTE_COMMANDS = 0,
+		SEND_RANDOM,
 	};
 
 	[[nodiscard]] virtual Type type() const = 0;

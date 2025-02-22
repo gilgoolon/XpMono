@@ -15,6 +15,7 @@
     <ClInclude Include="Include\CommandFactories\JsonCommandFactory.hpp" />
     <ClInclude Include="Include\Commands\LoadDllCommand.hpp" />
     <ClInclude Include="Include\Communicators\ICommunicator.hpp" />
+    <ClInclude Include="Include\Communicators\Protocol\SendRandomResponse.hpp" />
     <ClInclude Include="Include\Communicators\Protocol\IRequest.hpp" />
     <ClInclude Include="Include\Communicators\Protocol\IResponse.hpp" />
     <ClInclude Include="Include\Communicators\Protocol\ResponseFactory.hpp" />
@@ -37,6 +38,7 @@
     <ClCompile Include="CommandFactories\JsonCommandFactory.cpp" />
     <ClCompile Include="Communicators\RawCommunicator.cpp" />
     <ClCompile Include="Communicators\Protocol\ResponseFactory.cpp" />
+    <ClCompile Include="Communicators\Protocol\SendRandomResponse.cpp" />
     <ClCompile Include="LibrariesContainer.cpp" />
     <ClCompile Include="IProduct.cpp" />
     <ClCompile Include="Liver.cpp" />

@@ -1,6 +1,20 @@
 ﻿#include "Communicators/Protocol/ResponseFactory.hpp"
 
-IResponse::Ptr ResponseFactory::create(IInputStream::Ptr input)
+#include "Exception.hpp"
+#include "Communicators/Protocol/SendRandomResponse.hpp"
+
+IResponse::Ptr ResponseFactory::create(const IInputStream::Ptr& input)
 {
-	return nullptr;
+	switch (input->read<IResponse::Type>())
+	{
+	case IResponse::Type::SEND_RANDOM:
+	{
+		return std::make_shared<SendRandomResponse>(input->read<uint32_t>());
+	}
+
+	default:
+	{
+		throw Exception(ErrorCode::UNCOVERED_ENUM_VALUE);
+	}
+	}
 }
