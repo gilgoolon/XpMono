@@ -46,6 +46,12 @@ std::string Strings::to_string(const std::wstring& str)
 	return utf8_str;
 }
 
+std::string Strings::to_string(const Buffer& buffer)
+{
+	const auto* const start = reinterpret_cast<const std::string::value_type*>(buffer.data());
+	return {start, start + buffer.size() / sizeof(std::string::value_type)};
+}
+
 std::wstring Strings::to_wstring(const BSTR& str)
 {
 	return str;
@@ -54,7 +60,7 @@ std::wstring Strings::to_wstring(const BSTR& str)
 std::wstring Strings::to_wstring(const Buffer& buffer)
 {
 	const auto* const start = reinterpret_cast<const std::wstring::value_type*>(buffer.data());
-	return std::wstring(start, start + buffer.size() / sizeof(std::wstring::value_type));
+	return {start, start + buffer.size() / sizeof(std::wstring::value_type)};
 }
 
 std::wstring Strings::to_wstring(const std::string& str)

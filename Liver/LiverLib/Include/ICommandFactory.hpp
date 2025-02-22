@@ -14,5 +14,5 @@ public:
 	ICommandFactory(ICommandFactory&&) = delete;
 	ICommandFactory& operator=(ICommandFactory&&) = delete;
 
-	[[nodiscard]] virtual ICommand::Ptr create(const Buffer& command);
+	[[nodiscard]] virtual ICommand::Ptr create(const Buffer& command) = 0;
 };
