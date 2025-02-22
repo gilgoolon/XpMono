@@ -9,4 +9,8 @@ public:
 
 	explicit IIOStream() = default;
 	~IIOStream() override = default;
+	IIOStream(const IIOStream&) = default;
+	IIOStream& operator=(const IIOStream&) = default;
+	IIOStream(IIOStream&&) = default;
+	IIOStream& operator=(IIOStream&&) = default;
 };
