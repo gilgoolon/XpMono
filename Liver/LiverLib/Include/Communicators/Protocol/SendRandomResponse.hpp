@@ -13,6 +13,8 @@ public:
 
 	[[nodiscard]] Type type() const override;
 
+	[[nodiscard]] uint32_t value() const;
+
 private:
 	uint32_t m_value;
 };

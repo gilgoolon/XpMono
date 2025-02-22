@@ -66,6 +66,12 @@
     <ClInclude Include="Include\Communicators\Protocol\SendRandomResponse.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Communicators\Protocol\KeepAliveRequest.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Communicators\Protocol\ExecuteCommandsResponse.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Liver.cpp">
@@ -102,6 +108,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Communicators\Protocol\SendRandomResponse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Communicators\Protocol\KeepAliveRequest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Communicators\Protocol\ExecuteCommandsResponse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

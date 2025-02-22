@@ -6,6 +6,11 @@
 class IRequest : public ISerializable
 {
 public:
+	enum class Type : uint32_t
+	{
+		KEEP_ALIVE = 0,
+	};
+
 	using Ptr = std::unique_ptr<IRequest>;
 
 	explicit IRequest() = default;
