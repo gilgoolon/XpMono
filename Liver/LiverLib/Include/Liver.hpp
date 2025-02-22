@@ -1,6 +1,7 @@
 ﻿#pragma once
-#include "CommandHandlerFactory.hpp"
 #include "ICommandFactory.hpp"
+#include "LibrariesContainer.hpp"
+#include "Commands/ICommand.hpp"
 #include "Synchronization/Event.hpp"
 #include "Utils/Buffer.hpp"
 
@@ -26,4 +27,7 @@ public:
 private:
 	Event::Ptr m_quit_event;
 	ICommandFactory::Ptr m_command_factory;
+
+public:
+	LibrariesContainer libraries;
 };

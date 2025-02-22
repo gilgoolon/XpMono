@@ -1,6 +1,6 @@
 ﻿#pragma once
-#include "ICommand.hpp"
 #include "IProduct.hpp"
+#include "Commands/ICommand.hpp"
 
 #include <vector>
 
