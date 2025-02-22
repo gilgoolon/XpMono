@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Exception.hpp"
 #include "Utils/Buffer.hpp"
 
 #include <memory>
@@ -21,6 +22,10 @@ public:
 	[[nodiscard]] T read() const
 	{
 		Buffer data = read(sizeof(T));
+		if (data.size() != sizeof(T))
+		{
+			throw Exception(ErrorCode::NOT_ENOUGH_DATA);
+		}
 		return *reinterpret_cast<const T*>(data.data());
 	}
 };
