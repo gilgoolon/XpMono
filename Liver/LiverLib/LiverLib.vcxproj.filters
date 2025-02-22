@@ -45,6 +45,9 @@
     <ClInclude Include="Include\CommandFactories\JsonCommandFactory.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Api\Include\LiverApi.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Liver.cpp">
@@ -69,6 +72,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CommandFactories\JsonCommandFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Api\LiverApi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

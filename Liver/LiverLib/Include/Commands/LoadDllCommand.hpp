@@ -15,7 +15,7 @@ public:
 	LoadDllCommand(LoadDllCommand&&) = delete;
 	LoadDllCommand& operator=(LoadDllCommand&&) = delete;
 
-	[[nodiscard]] CommandType type() const override;
+	[[nodiscard]] Type type() const override;
 
 private:
 	LibrariesContainer::LibraryId m_library_id;

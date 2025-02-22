@@ -6,7 +6,7 @@ LoadDllCommand::LoadDllCommand(const LibrariesContainer::LibraryId library_id, B
 {
 }
 
-CommandType LoadDllCommand::type() const
+ICommand::Type LoadDllCommand::type() const
 {
-	return CommandType::LOAD_DLL;
+	return Type::LOAD_DLL;
 }

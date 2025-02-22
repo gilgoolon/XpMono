@@ -13,7 +13,11 @@ public:
 	using Ptr = std::shared_ptr<ICommand>;
 	using Id = uint32_t;
 
+private:
 	explicit ICommand(Id command_id);
+
+public:
+	explicit ICommand();
 	virtual ~ICommand() = default;
 	ICommand(const ICommand&) = delete;
 	ICommand& operator=(const ICommand&) = delete;
