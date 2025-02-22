@@ -35,7 +35,6 @@
     <ClCompile Include="Commands\LoadDllCommand.cpp" />
     <ClCompile Include="Handlers\LoadDllHandler.cpp" />
     <ClCompile Include="CommandFactories\JsonCommandFactory.cpp" />
-    <ClCompile Include="Communicators\ICommunicator.cpp" />
     <ClCompile Include="Communicators\RawCommunicator.cpp" />
     <ClCompile Include="Communicators\Protocol\ResponseFactory.cpp" />
     <ClCompile Include="LibrariesContainer.cpp" />

@@ -92,9 +92,6 @@
     <ClCompile Include="Api\LiverApi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Communicators\ICommunicator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Communicators\RawCommunicator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
