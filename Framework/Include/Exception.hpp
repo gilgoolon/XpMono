@@ -64,19 +64,3 @@ public:
 	CriticalException(CriticalException&&) = delete;
 	CriticalException& operator=(CriticalException&&) = delete;
 };
-
-class GenericFunctionException final : public Exception
-{
-public:
-	explicit GenericFunctionException(uint32_t function_code);
-	~GenericFunctionException() override = default;
-	GenericFunctionException(const GenericFunctionException&) = delete;
-	GenericFunctionException& operator=(const GenericFunctionException&) = delete;
-	GenericFunctionException(GenericFunctionException&&) = delete;
-	GenericFunctionException& operator=(GenericFunctionException&&) = delete;
-
-	[[nodiscard]] uint32_t function_code() const;
-
-private:
-	uint32_t m_function_code;
-};

@@ -9,8 +9,6 @@ namespace Strings
 {
 [[nodiscard]] std::string to_string(const std::wstring& str);
 
-[[nodiscard]] std::string to_string(const Buffer& buffer);
-
 [[nodiscard]] std::wstring to_wstring(const BSTR& str);
 
 template <typename String>
