@@ -13,3 +13,8 @@ IResponse::Ptr RawCommunicator::send(const IRequest::Ptr request)
 	m_output->write(request->serialize());
 	return ResponseFactory::create(m_input);
 }
+
+std::unique_ptr<RawCommunicator> RawCommunicator::from_stream(const IIOStream::Ptr& stream)
+{
+	return std::make_unique<RawCommunicator>(stream, stream);
+}

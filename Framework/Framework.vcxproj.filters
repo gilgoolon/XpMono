@@ -347,5 +347,8 @@
     <ClInclude Include="Include\Interfaces\IOutputStream.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Interfaces\IIOStream.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

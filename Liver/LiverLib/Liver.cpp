@@ -5,11 +5,18 @@
 #include "Trace.hpp"
 #include "CommandFactories/JsonCommandFactory.hpp"
 #include "Commands/ICommand.hpp"
+#include "Communicators/RawCommunicator.hpp"
+#include "Filesystem/File.hpp"
 #include "Synchronization/Event.hpp"
 
 Liver::Liver():
 	m_quit_event(std::make_shared<Event>(quit_event_name(), Event::Type::MANUAL_RESET)),
 	m_command_factory(std::make_unique<JsonCommandFactory>()),
+	m_communicator(
+		RawCommunicator::from_stream(
+			std::make_shared<File>(L"protocol.txt", File::Mode::READ_WRITE, File::Disposition::OPEN)
+		)
+	),
 	libraries()
 {
 }

@@ -5,6 +5,8 @@
 class ICommunicator
 {
 public:
+	using Ptr = std::unique_ptr<ICommunicator>;
+
 	explicit ICommunicator() = default;
 	virtual ~ICommunicator() = default;
 	ICommunicator(const ICommunicator&) = delete;

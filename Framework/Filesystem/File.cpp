@@ -2,7 +2,7 @@
 
 #include "Exception.hpp"
 
-File::File(const std::filesystem::path& path, Mode mode, Disposition disposition):
+File::File(const std::filesystem::path& path, const Mode mode, const Disposition disposition):
 	m_handle(create_file(path, mode, disposition))
 {
 }
@@ -59,7 +59,7 @@ Buffer File::read(const uint64_t offset, const uint32_t size) const
 	return read(size);
 }
 
-void File::write(const Buffer& data)
+void File::write(const Buffer& data) const
 {
 	static constexpr LPOVERLAPPED UNUSED_OVERLAPPED = nullptr;
 	DWORD bytes_written = 0;
@@ -70,7 +70,7 @@ void File::write(const Buffer& data)
 	}
 }
 
-void File::write(const Buffer& data, const uint64_t offset)
+void File::write(const Buffer& data, const uint64_t offset) const
 {
 	seek(offset);
 	write(data);

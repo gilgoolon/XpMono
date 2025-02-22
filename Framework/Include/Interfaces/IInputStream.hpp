@@ -10,10 +10,6 @@ public:
 
 	explicit IInputStream() = default;
 	virtual ~IInputStream() = default;
-	IInputStream(const IInputStream&) = delete;
-	IInputStream& operator=(const IInputStream&) = delete;
-	IInputStream(IInputStream&&) = delete;
-	IInputStream& operator=(IInputStream&&) = delete;
 
-	[[nodiscard]] virtual Buffer read(uint32_t size) = 0;
+	[[nodiscard]] virtual Buffer read(uint32_t size) const = 0;
 };

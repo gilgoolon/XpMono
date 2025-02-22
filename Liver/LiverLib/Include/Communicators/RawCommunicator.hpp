@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "ICommunicator.hpp"
 #include "Interfaces/IInputStream.hpp"
+#include "Interfaces/IIOStream.hpp"
 #include "Interfaces/IOutputStream.hpp"
 
 class RawCommunicator final : public ICommunicator
@@ -14,6 +15,8 @@ public:
 	RawCommunicator& operator=(RawCommunicator&&) = delete;
 
 	[[nodiscard]] IResponse::Ptr send(IRequest::Ptr request) override;
+
+	[[nodiscard]] static std::unique_ptr<RawCommunicator> from_stream(const IIOStream::Ptr& stream);
 
 private:
 	IInputStream::Ptr m_input;

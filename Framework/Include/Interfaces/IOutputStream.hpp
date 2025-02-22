@@ -10,10 +10,6 @@ public:
 
 	explicit IOutputStream() = default;
 	virtual ~IOutputStream() = default;
-	IOutputStream(const IOutputStream&) = delete;
-	IOutputStream& operator=(const IOutputStream&) = delete;
-	IOutputStream(IOutputStream&&) = delete;
-	IOutputStream& operator=(IOutputStream&&) = delete;
 
-	virtual void write(const Buffer& data) = 0;
+	virtual void write(const Buffer& data) const = 0;
 };
