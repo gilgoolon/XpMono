@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\CommandFactories\JsonCommandFactory.hpp" />
     <ClInclude Include="Include\Commands\LoadDllCommand.hpp" />
     <ClInclude Include="Include\Handlers\LoadDllHandler.hpp" />
     <ClInclude Include="Include\ICommandFactory.hpp" />
@@ -25,7 +26,8 @@
     <ClCompile Include="CommandHandlerFactory.cpp" />
     <ClCompile Include="Commands\ICommand.cpp" />
     <ClCompile Include="Commands\LoadDllCommand.cpp" />
-    <ClCompile Include="Include\Handlers\LoadDllHandler.cpp" />
+    <ClCompile Include="Handlers\LoadDllHandler.cpp" />
+    <ClCompile Include="CommandFactories\JsonCommandFactory.cpp" />
     <ClCompile Include="LibrariesContainer.cpp" />
     <ClCompile Include="IProduct.cpp" />
     <ClCompile Include="Liver.cpp" />

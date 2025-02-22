@@ -42,6 +42,9 @@
     <ClInclude Include="Include\Handlers\LoadDllHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\CommandFactories\JsonCommandFactory.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Liver.cpp">
@@ -59,10 +62,13 @@
     <ClCompile Include="LibrariesContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Handlers\LoadDllHandler.cpp">
+    <ClCompile Include="Handlers\LoadDllHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Commands\ICommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandFactories\JsonCommandFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

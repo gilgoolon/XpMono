@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "ICommand.hpp"
+#include "Commands/ICommand.hpp"
 #include "Utils/Buffer.hpp"
 
 class ICommandFactory
