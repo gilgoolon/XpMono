@@ -20,7 +20,7 @@ public:
 private:
 	[[nodiscard]] static std::wstring quit_event_name();
 
-	[[nodiscard]] IRequest::Ptr make_request();
+	[[nodiscard]] IRequest::Ptr get_next_request();
 	void handle_response(IResponse::Ptr response);
 
 	void handle_execute_commands(const ExecuteCommandsResponse& response);

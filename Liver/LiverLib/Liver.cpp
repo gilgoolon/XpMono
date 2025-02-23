@@ -30,7 +30,7 @@ void Liver::run()
 		try
 		{
 			TRACE(L"liver iteration")
-			IRequest::Ptr request = make_request();
+			IRequest::Ptr request = get_next_request();
 			std::shared_ptr<IResponse> response = m_communicator->send(std::move(request));
 			handle_response(std::move(response));
 		}
@@ -77,7 +77,7 @@ std::wstring Liver::quit_event_name()
 	return std::wstring{Event::GLOBAL_NAMESPACE} + std::wstring{QUIT_EVENT_NAME};
 }
 
-IRequest::Ptr Liver::make_request()
+IRequest::Ptr Liver::get_next_request()
 {
 	return std::make_unique<KeepAliveRequest>();
 }
