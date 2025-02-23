@@ -80,3 +80,19 @@ public:
 private:
 	uint32_t m_function_code;
 };
+
+class WsaException final : public Exception
+{
+public:
+	explicit WsaException(ErrorCode code);
+	~WsaException() override = default;
+	WsaException(const WsaException&) = delete;
+	WsaException& operator=(const WsaException&) = delete;
+	WsaException(WsaException&&) = delete;
+	WsaException& operator=(WsaException&&) = delete;
+
+	[[nodiscard]] uint32_t wsa_code() const;
+
+private:
+	uint32_t m_wsa_code;
+};

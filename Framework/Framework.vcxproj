@@ -24,6 +24,7 @@
     <ClCompile Include="Filesystem\VolumeIterator.cpp" />
     <ClCompile Include="Filesystem\FullFilesystemIterator.cpp" />
     <ClCompile Include="Crypto\Base64.cpp" />
+    <ClCompile Include="Networking\Socket.cpp" />
     <ClCompile Include="Media\BitmapFormat.cpp" />
     <ClCompile Include="Media\Dimensions.cpp" />
     <ClCompile Include="Media\ScreenBitmap.cpp" />
@@ -85,6 +86,7 @@
     <ClInclude Include="Include\Media\BitmapFormat.hpp" />
     <ClInclude Include="Include\Media\DeviceContext.hpp" />
     <ClInclude Include="Include\Media\ScreenBitmap.hpp" />
+    <ClInclude Include="Include\Networking\Socket.hpp" />
     <ClInclude Include="Include\Processes\DynamicLibrary.hpp" />
     <ClInclude Include="Include\Processes\ILibrary.hpp" />
     <ClInclude Include="Include\Processes\IRunner.hpp" />
@@ -172,7 +174,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>wbemuuid.lib</AdditionalDependencies>
+      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -190,7 +192,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>wbemuuid.lib</AdditionalDependencies>
+      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
