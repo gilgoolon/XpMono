@@ -23,8 +23,12 @@ private:
 	[[nodiscard]] static SOCKET create();
 	void connect(SocketAddress address);
 
+public:
 	[[nodiscard]] Buffer read(uint32_t size) const override;
 	void write(const Buffer& data) const override;
 
+	[[nodiscard]] bool is_connected() const;
+
+private:
 	SOCKET m_socket;
 };

