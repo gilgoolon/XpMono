@@ -24,7 +24,7 @@
     <ClCompile Include="Filesystem\VolumeIterator.cpp" />
     <ClCompile Include="Filesystem\FullFilesystemIterator.cpp" />
     <ClCompile Include="Crypto\Base64.cpp" />
-    <ClCompile Include="Include\Networking\WsaInstance.cpp" />
+    <ClCompile Include="Networking\WsaInstance.cpp" />
     <ClCompile Include="Networking\Socket.cpp" />
     <ClCompile Include="Media\BitmapFormat.cpp" />
     <ClCompile Include="Media\Dimensions.cpp" />
