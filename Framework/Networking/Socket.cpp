@@ -1,4 +1,6 @@
-﻿#include "Networking/Socket.hpp"
+﻿#include <WinSock2.h>
+
+#include "Networking/Socket.hpp"
 
 #include "Trace.hpp"
 

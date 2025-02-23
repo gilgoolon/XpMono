@@ -1,4 +1,6 @@
-﻿#include "Exception.hpp"
+﻿#include <WinSock2.h>
+
+#include "Exception.hpp"
 
 #include <Windows.h>
 

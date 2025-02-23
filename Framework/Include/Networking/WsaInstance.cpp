@@ -1,6 +1,6 @@
-﻿#include "WsaInstance.hpp"
+﻿#include <WinSock2.h>
 
-#include <WinSock2.h>
+#include "WsaInstance.hpp"
 
 #include "Exception.hpp"
 #include "Trace.hpp"
