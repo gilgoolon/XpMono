@@ -110,6 +110,7 @@ enum class ErrorCode : uint8_t
 	FAILED_SOCKET_CONNECT,
 	FAILED_SOCKET_RECEIVE,
 	FAILED_SOCKET_SEND,
+	FAILED_WSA_START,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);
