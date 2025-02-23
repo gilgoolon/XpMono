@@ -19,6 +19,9 @@ public:
 private:
 	[[nodiscard]] static std::wstring quit_event_name();
 
+	[[nodiscard]] IRequest::Ptr make_request();
+	void handle_response(IResponse::Ptr response);
+
 	void handle_execute_commands(const ExecuteCommandsResponse& response);
 	void execute_commands(const std::vector<ICommand::Ptr>& commands);
 

