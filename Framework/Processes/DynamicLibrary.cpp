@@ -14,12 +14,12 @@ DynamicLibrary::~DynamicLibrary()
 	{
 		if (FreeLibrary(m_module) == FALSE)
 		{
-			TRACE(L"failed to free library")
+			TRACE(L"failed to free library");
 		}
 	}
 	catch (...)
 	{
-		TRACE(L"failed to free library")
+		TRACE(L"failed to free library");
 	}
 }
 

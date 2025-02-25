@@ -23,11 +23,11 @@ WsaInstance::~WsaInstance()
 		static constexpr int FAILED = 0;
 		if (WSACleanup() == FAILED)
 		{
-			TRACE(L"failed to close Wsa runtime")
+			TRACE(L"failed to close Wsa runtime");
 		}
 	}
 	catch (...)
 	{
-		TRACE(L"failed to close Wsa runtime")
+		TRACE(L"failed to close Wsa runtime");
 	}
 }

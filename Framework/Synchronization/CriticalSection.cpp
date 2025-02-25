@@ -15,7 +15,7 @@ CriticalSection::~CriticalSection()
 	}
 	catch (...)
 	{
-		TRACE(L"failed to delete critical section")
+		TRACE(L"failed to delete critical section");
 	}
 }
 
@@ -34,7 +34,7 @@ void CriticalSection::Unlocker::operator()(CRITICAL_SECTION* section) const
 	}
 	catch (...)
 	{
-		TRACE(L"failed unlocking critical section")
+		TRACE(L"failed unlocking critical section");
 	}
 }
 

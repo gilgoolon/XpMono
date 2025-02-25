@@ -26,20 +26,20 @@ DeviceContext::~DeviceContext()
 			static constexpr HWND VIRTUAL_SCREEN = nullptr;
 			if (ReleaseDC(VIRTUAL_SCREEN, m_device_context) == FALSE)
 			{
-				TRACE(L"failed to release DC")
+				TRACE(L"failed to release DC");
 			}
 		}
 		else
 		{
 			if (DeleteDC(m_device_context) == FALSE)
 			{
-				TRACE(L"failed to delete DC")
+				TRACE(L"failed to delete DC");
 			}
 		}
 	}
 	catch (...)
 	{
-		TRACE(L"failed to get destroy display context")
+		TRACE(L"failed to get destroy display context");
 	}
 }
 

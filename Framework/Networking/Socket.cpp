@@ -22,12 +22,12 @@ Socket::~Socket()
 		static constexpr int SUCCESS = 0;
 		if (closesocket(m_socket) != SUCCESS)
 		{
-			TRACE(L"failed to close socket")
+			TRACE(L"failed to close socket");
 		}
 	}
 	catch (...)
 	{
-		TRACE(L"failed to close socket")
+		TRACE(L"failed to close socket");
 	}
 }
 

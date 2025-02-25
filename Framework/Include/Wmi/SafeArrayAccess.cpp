@@ -28,11 +28,11 @@ SafeArrayAccess::~SafeArrayAccess()
 		}
 		if (FAILED(SafeArrayUnaccessData(m_safearray)))
 		{
-			TRACE(L"failed to unaccess safe array")
+			TRACE(L"failed to unaccess safe array");
 		}
 	}
 	catch (...)
 	{
-		TRACE(L"failed to unaccess safe array")
+		TRACE(L"failed to unaccess safe array");
 	}
 }

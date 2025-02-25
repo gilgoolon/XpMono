@@ -74,7 +74,7 @@ void Liver::handle_response(IResponse::Ptr response)
 	case IResponse::Type::SEND_RANDOM:
 	{
 		const auto send_random_response = std::dynamic_pointer_cast<SendRandomResponse>(std::move(response));
-		TRACE(L"SendRandomResponse random: ", send_random_response->value())
+		TRACE(L"SendRandomResponse random: ", send_random_response->value());
 		break;
 	}
 

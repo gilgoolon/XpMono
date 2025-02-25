@@ -17,12 +17,12 @@ RemoteMemory::~RemoteMemory()
 		static constexpr DWORD SIZE_WHEN_ALL = 0;
 		if (VirtualFreeEx(m_process.lock()->m_handle.get(), m_base_address, SIZE_WHEN_ALL, MEM_RELEASE) == FALSE)
 		{
-			TRACE(L"failed freeing remote memory")
+			TRACE(L"failed freeing remote memory");
 		}
 	}
 	catch (...)
 	{
-		TRACE(L"failed freeing remote memory")
+		TRACE(L"failed freeing remote memory");
 	}
 }
 

@@ -11,5 +11,5 @@ void LiverApi::main(const Buffer& configuration)
 		const std::unique_ptr<Liver> liver = Liver::create(configuration);
 		liver->run();
 	}
-	CATCH_AND_TRACE();
+	CATCH_AND_TRACE()
 }
