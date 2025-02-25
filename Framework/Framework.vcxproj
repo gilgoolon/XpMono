@@ -24,6 +24,7 @@
     <ClCompile Include="Filesystem\VolumeIterator.cpp" />
     <ClCompile Include="Filesystem\FullFilesystemIterator.cpp" />
     <ClCompile Include="Crypto\Base64.cpp" />
+    <ClCompile Include="Utils\Ip.cpp" />
     <ClCompile Include="Networking\MaintainedSocket.cpp" />
     <ClCompile Include="Networking\WsaInstance.cpp" />
     <ClCompile Include="Networking\Socket.cpp" />
@@ -89,6 +90,7 @@
     <ClInclude Include="Include\Media\BitmapFormat.hpp" />
     <ClInclude Include="Include\Media\DeviceContext.hpp" />
     <ClInclude Include="Include\Media\ScreenBitmap.hpp" />
+    <ClInclude Include="Include\Utils\Ip.hpp" />
     <ClInclude Include="Include\Networking\MaintainedSocket.hpp" />
     <ClInclude Include="Include\Networking\Socket.hpp" />
     <ClInclude Include="Include\Networking\WsaInstance.hpp" />
