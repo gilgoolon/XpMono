@@ -13,7 +13,7 @@ public:
 	explicit Liver(Event::Ptr quit_event,
 	               ICommandFactory::Ptr command_factory,
 	               ICommunicator::Ptr communicator,
-	               Time::Duration iteration_timeout);
+	               Time::Duration iteration_delay);
 	~Liver() = default;
 	Liver(const Liver&) = delete;
 	Liver& operator=(const Liver&) = delete;
@@ -38,7 +38,7 @@ private:
 	Event::Ptr m_quit_event;
 	ICommandFactory::Ptr m_command_factory;
 	ICommunicator::Ptr m_communicator;
-	Time::Duration m_iteration_timeout;
+	Time::Duration m_iteration_delay;
 
 public:
 	LibrariesContainer libraries;

