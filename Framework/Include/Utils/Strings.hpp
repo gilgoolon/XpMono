@@ -9,6 +9,8 @@ namespace Strings
 {
 [[nodiscard]] std::string to_string(const std::wstring& str);
 
+[[nodiscard]] std::string to_string(const Buffer& buffer);
+
 [[nodiscard]] std::wstring to_wstring(const BSTR& str);
 
 template <typename String>
@@ -71,4 +73,8 @@ template <>
 }
 
 [[nodiscard]] std::vector<std::wstring> parse_raw_strings(const std::wstring& raw_strings);
+
+[[nodiscard]] std::vector<std::string> split(const std::string& string, char delimiter);
+
+[[nodiscard]] uint8_t parse_uint8(const std::string& string);
 }

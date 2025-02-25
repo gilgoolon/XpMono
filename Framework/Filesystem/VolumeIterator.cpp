@@ -27,12 +27,12 @@ VolumeIterator::~VolumeIterator()
 	{
 		if (FindClose(m_find_handle) == FALSE)
 		{
-			TRACE(L"failed to close volume handle")
+			TRACE(L"failed to close volume handle");
 		}
 	}
 	catch (...)
 	{
-		TRACE(L"failed to close volume handle")
+		TRACE(L"failed to close volume handle");
 	}
 }
 

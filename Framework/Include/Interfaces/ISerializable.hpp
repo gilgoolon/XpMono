@@ -6,10 +6,12 @@ class ISerializable
 public:
 	explicit ISerializable() = default;
 	virtual ~ISerializable() = default;
-	ISerializable(const ISerializable&) = delete;
-	ISerializable& operator=(const ISerializable&) = delete;
-	ISerializable(ISerializable&&) = delete;
-	ISerializable& operator=(ISerializable&&) = delete;
 
 	[[nodiscard]] virtual Buffer serialize() const = 0;
+
+	template <typename T>
+	[[nodiscard]] static Buffer serialize(T value)
+	{
+		return {reinterpret_cast<const uint8_t*>(&value), reinterpret_cast<const uint8_t*>(&value) + sizeof(T)};
+	}
 };

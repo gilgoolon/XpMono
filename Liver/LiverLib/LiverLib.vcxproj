@@ -11,15 +11,41 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Api\Include\LiverApi.hpp" />
+    <ClInclude Include="Include\CommandFactories\JsonCommandFactory.hpp" />
+    <ClInclude Include="Include\Commands\LoadDllCommand.hpp" />
+    <ClInclude Include="Include\Communicators\ICommunicator.hpp" />
+    <ClInclude Include="Include\Communicators\Protocol\ExecuteCommandsResponse.hpp" />
+    <ClInclude Include="Include\Communicators\Protocol\KeepAliveRequest.hpp" />
+    <ClInclude Include="Include\Communicators\Protocol\SendRandomResponse.hpp" />
+    <ClInclude Include="Include\Communicators\Protocol\IRequest.hpp" />
+    <ClInclude Include="Include\Communicators\Protocol\IResponse.hpp" />
+    <ClInclude Include="Include\Communicators\Protocol\ResponseFactory.hpp" />
+    <ClInclude Include="Include\Communicators\RawCommunicator.hpp" />
+    <ClInclude Include="Include\Handlers\LoadDllHandler.hpp" />
     <ClInclude Include="Include\ICommandFactory.hpp" />
-    <ClInclude Include="Include\ICommand.hpp" />
+    <ClInclude Include="Include\Commands\ICommand.hpp" />
     <ClInclude Include="Include\ICommandHandler.hpp" />
     <ClInclude Include="Include\CommandHandlerFactory.hpp" />
     <ClInclude Include="Include\IProduct.hpp" />
+    <ClInclude Include="Include\LibrariesContainer.hpp" />
     <ClInclude Include="Include\Liver.hpp" />
+    <ClInclude Include="Include\LiverConfiguration.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Api\LiverApi.cpp" />
     <ClCompile Include="CommandHandlerFactory.cpp" />
+    <ClCompile Include="Commands\ICommand.cpp" />
+    <ClCompile Include="Commands\LoadDllCommand.cpp" />
+    <ClCompile Include="Handlers\LoadDllHandler.cpp" />
+    <ClCompile Include="CommandFactories\JsonCommandFactory.cpp" />
+    <ClCompile Include="Communicators\RawCommunicator.cpp" />
+    <ClCompile Include="Communicators\Protocol\ResponseFactory.cpp" />
+    <ClCompile Include="Communicators\Protocol\SendRandomResponse.cpp" />
+    <ClCompile Include="Communicators\Protocol\KeepAliveRequest.cpp" />
+    <ClCompile Include="Communicators\Protocol\ExecuteCommandsResponse.cpp" />
+    <ClCompile Include="LiverConfiguration.cpp" />
+    <ClCompile Include="LibrariesContainer.cpp" />
     <ClCompile Include="IProduct.cpp" />
     <ClCompile Include="Liver.cpp" />
   </ItemGroup>
@@ -77,6 +103,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -92,6 +119,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib />
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

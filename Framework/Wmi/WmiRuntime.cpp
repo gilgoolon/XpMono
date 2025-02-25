@@ -39,6 +39,6 @@ WmiRuntime::~WmiRuntime()
 	}
 	catch (...)
 	{
-		TRACE(L"failed to uninitialize wmi")
+		TRACE(L"failed to uninitialize wmi");
 	}
 }

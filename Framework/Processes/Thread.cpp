@@ -4,8 +4,6 @@
 #include "Trace.hpp"
 #include "Protections/EntryPointProtector.hpp"
 
-#include <process.h>
-
 Thread::Thread(IRunner::Ptr runner):
 	m_handle(create_thread(std::move(runner)))
 {
@@ -20,30 +18,7 @@ DWORD Thread::thread_main(const LPVOID argument)
 		runner->run();
 		return EXIT_SUCCESS;
 	}
-	catch ([[maybe_unused]] const WinApiException& ex)
-	{
-		TRACE("uncaught WinApiException with code ", ex.code(), " and error ", ex.error())
-	}
-	catch ([[maybe_unused]] const WinApiNtException& ex)
-	{
-		TRACE("uncaught WinApiExceptionNt with code ", ex.code(), " and status ", ex.status())
-	}
-	catch ([[maybe_unused]] const Exception& ex)
-	{
-		TRACE("uncaught Exception with code ", ex.code())
-	}
-	catch ([[maybe_unused]] const CriticalException&)
-	{
-		TRACE(L"uncaught critical exception")
-	}
-	catch ([[maybe_unused]] const std::exception& ex)
-	{
-		TRACE("uncaught std::exception: ", ex.what())
-	}
-	catch (...)
-	{
-		TRACE("uncaught unknown exception: ")
-	}
+	CATCH_AND_TRACE()
 	return EXIT_FAILURE;
 }
 

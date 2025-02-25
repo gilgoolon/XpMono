@@ -23,7 +23,7 @@ ApricotLibrary::~ApricotLibrary()
 	}
 	catch (...)
 	{
-		TRACE(L"failed to unload Apricot library")
+		TRACE(L"failed to unload Apricot library");
 	}
 }
 

@@ -11,6 +11,7 @@ enum class ErrorCode : uint8_t
 	OUT_OF_BOUNDS,
 	INVALID_ARGUMENT,
 	ILLEGAL_OBJECT_STATE,
+	NOT_ENOUGH_DATA,
 
 	// Utilities
 	FAILED_TIME_FORMAT_CONVERSION,
@@ -57,6 +58,7 @@ enum class ErrorCode : uint8_t
 	// Library
 	FAILED_LIBRARY_GET_PROC_ADDRESS,
 	FAILED_LIBRARY_LOAD,
+	GENERIC_FUNCTION_EXCEPTION,
 
 	// Events
 	FAILED_EVENT_OPEN,
@@ -93,6 +95,8 @@ enum class ErrorCode : uint8_t
 	FAILED_FIG_TAKE,
 	FIG_ALREADY_LOADED,
 	FIG_NOT_LOADED,
+
+	// Media
 	FAILED_DC_GET,
 	FAILED_DC_CREATE_COMPATIBLE,
 	FAILED_BMP_CREATE_COMPATIBLE,
@@ -100,6 +104,13 @@ enum class ErrorCode : uint8_t
 	FAILED_BMP_INVALID_DC,
 	FAILED_BMP_CAPTURE,
 	FAILED_BMP_SERIALIZE,
+
+	// Socket
+	FAILED_SOCKET_CREATE,
+	FAILED_SOCKET_CONNECT,
+	FAILED_SOCKET_RECEIVE,
+	FAILED_SOCKET_SEND,
+	FAILED_WSA_START,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);

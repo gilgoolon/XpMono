@@ -17,6 +17,6 @@ Protections::AbortBehavior::~AbortBehavior()
 	}
 	catch (...)
 	{
-		TRACE(L"failed to set previous abort behaviour")
+		TRACE(L"failed to set previous abort behaviour");
 	}
 }

@@ -8,11 +8,11 @@ void HandleCloser::operator()(const HANDLE handle) const
 	{
 		if (CloseHandle(handle) == FALSE)
 		{
-			TRACE(L"failed to close handle")
+			TRACE(L"failed to close handle");
 		}
 	}
 	catch (...)
 	{
-		TRACE(L"failed to close handle")
+		TRACE(L"failed to close handle");
 	}
 }

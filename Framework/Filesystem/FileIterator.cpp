@@ -29,12 +29,12 @@ FileIterator::~FileIterator()
 	{
 		if (FindClose(m_handle) == FALSE)
 		{
-			TRACE(L"failed to close file iterator")
+			TRACE(L"failed to close file iterator");
 		}
 	}
 	catch (...)
 	{
-		TRACE(L"failed to close file iterator")
+		TRACE(L"failed to close file iterator");
 	}
 }
 

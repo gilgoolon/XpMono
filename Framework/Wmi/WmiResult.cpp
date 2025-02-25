@@ -29,7 +29,7 @@ std::optional<std::wstring> WmiResult::get_formatted_property(const std::wstring
 	{
 		if (hresult == WBEM_E_NOT_FOUND)
 		{
-			TRACE(L"property not found: ", property_name)
+			TRACE(L"property not found: ", property_name);
 			return {};
 		}
 		throw WmiException(ErrorCode::FAILED_WMI_GET_PROPERTY, hresult);
@@ -112,7 +112,7 @@ std::optional<std::wstring> WmiResult::get_formatted_property(const std::wstring
 		}
 		return Strings::to_wstring(Time::to_string(variant.datetime()));
 	default:
-		TRACE(L"unsupported variant type: ", value_type)
+		TRACE(L"unsupported variant type: ", value_type);
 		return {};
 	}
 }
