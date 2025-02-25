@@ -85,6 +85,7 @@
     <ClInclude Include="Include\Interfaces\ISerializable.hpp" />
     <ClInclude Include="Include\External\json.hpp" />
     <ClInclude Include="Include\Json.hpp" />
+    <ClInclude Include="Include\Macros.hpp" />
     <ClInclude Include="Include\Media\BitmapFormat.hpp" />
     <ClInclude Include="Include\Media\DeviceContext.hpp" />
     <ClInclude Include="Include\Media\ScreenBitmap.hpp" />

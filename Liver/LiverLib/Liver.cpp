@@ -25,40 +25,21 @@ Liver::Liver(Event::Ptr quit_event,
 
 void Liver::run()
 {
-	TRACE(L"running liver")
+	TRACE(L"running liver");
 
 	while (m_quit_event->wait(m_iteration_timeout) == WaitStatus::TIMEOUT)
 	{
 		try
 		{
-			TRACE(L"liver iteration")
+			TRACE(L"liver iteration");
 			IRequest::Ptr request = get_next_request();
 			std::shared_ptr<IResponse> response = m_communicator->send(std::move(request));
 			handle_response(std::move(response));
 		}
-		catch ([[maybe_unused]] const WinApiException& ex)
-		{
-			TRACE("uncaught WinApiException with code ", ex.code(), " and error ", ex.error())
-		}
-		catch ([[maybe_unused]] const Exception& ex)
-		{
-			TRACE("uncaught Exception with code ", ex.code())
-		}
-		catch ([[maybe_unused]] const CriticalException&)
-		{
-			TRACE("uncaught CriticalException")
-		}
-		catch ([[maybe_unused]] const std::exception& ex)
-		{
-			TRACE("uncaught std::exception: ", ex.what())
-		}
-		catch (...)
-		{
-			TRACE("uncaught unknown or critical exception")
-		}
+		CATCH_AND_TRACE()
 	}
 
-	TRACE(L"finished liver")
+	TRACE(L"finished liver");
 }
 
 std::unique_ptr<Liver> Liver::create([[maybe_unused]] const Buffer& liver_configuration)
