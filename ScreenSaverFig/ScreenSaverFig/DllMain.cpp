@@ -9,7 +9,7 @@
 #include <Windows.h>
 
 Fig::FigInformation FigManager::g_information = {Api::FIG_ID, Api::VERSION_MAJOR, Api::VERSION_MINOR};
-std::wstring FigManager::g_name = L"ScreenSaver";
+std::wstring FigManager::g_name = L"ScreenSaverFig";
 
 std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::OperationType operation_type,
                                                             [[maybe_unused]] const Buffer& operation_parameters,
