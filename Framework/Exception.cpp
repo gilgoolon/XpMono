@@ -1,4 +1,6 @@
-﻿#include "Exception.hpp"
+﻿#include <WinSock2.h>
+
+#include "Exception.hpp"
 
 #include <Windows.h>
 
@@ -48,4 +50,15 @@ GenericFunctionException::GenericFunctionException(const uint32_t function_code)
 uint32_t GenericFunctionException::function_code() const
 {
 	return m_function_code;
+}
+
+WsaException::WsaException(const ErrorCode code):
+	Exception(code),
+	m_wsa_code(WSAGetLastError())
+{
+}
+
+uint32_t WsaException::wsa_code() const
+{
+	return m_wsa_code;
 }

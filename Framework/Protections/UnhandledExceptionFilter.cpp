@@ -15,7 +15,7 @@ Protections::UnhandledExceptionFilter::~UnhandledExceptionFilter()
 	}
 	catch (...)
 	{
-		TRACE(L"failed to set previous unhandled exception filter")
+		TRACE(L"failed to set previous unhandled exception filter");
 	}
 }
 

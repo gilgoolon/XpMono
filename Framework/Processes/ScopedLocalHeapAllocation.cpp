@@ -8,11 +8,11 @@ void LocalAllocationFreer::operator()(const HLOCAL address) const
 	{
 		if (LocalFree(address) != nullptr)
 		{
-			TRACE(L"failed to free local allocation")
+			TRACE(L"failed to free local allocation");
 		}
 	}
 	catch (...)
 	{
-		TRACE(L"failed to free local allocation")
+		TRACE(L"failed to free local allocation");
 	}
 }

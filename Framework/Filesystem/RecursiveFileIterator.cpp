@@ -64,7 +64,7 @@ void RecursiveFileIterator::append_next(const std::filesystem::path& path)
 	}
 	catch (const WinApiException& exception)
 	{
-		TRACE(L"failed to open directory ", path, " with error ", GetLastError())
+		TRACE(L"failed to open directory ", path, " with error ", GetLastError());
 		if (exception.error() == ERROR_ACCESS_DENIED)
 		{
 			return;

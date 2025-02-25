@@ -18,7 +18,7 @@ Protections::StructuredExceptionTranslator::~StructuredExceptionTranslator()
 	}
 	catch (...)
 	{
-		TRACE(L"failed to set previous structured exception translator")
+		TRACE(L"failed to set previous structured exception translator");
 	}
 }
 

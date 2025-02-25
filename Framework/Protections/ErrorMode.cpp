@@ -10,7 +10,7 @@ Protections::ErrorMode::ErrorMode():
 {
 	if (m_previous_mode == SET_MODE_ERROR)
 	{
-		TRACE(L"failed to set error mode")
+		TRACE(L"failed to set error mode");
 		throw CriticalException();
 	}
 }
@@ -21,11 +21,11 @@ Protections::ErrorMode::~ErrorMode()
 	{
 		if (_set_error_mode(m_previous_mode) == SET_MODE_ERROR)
 		{
-			TRACE(L"failed to set previous error mode")
+			TRACE(L"failed to set previous error mode");
 		}
 	}
 	catch (...)
 	{
-		TRACE(L"failed to set previous error mode")
+		TRACE(L"failed to set previous error mode");
 	}
 }

@@ -16,12 +16,12 @@ Protections::PureCall::~PureCall()
 	}
 	catch (...)
 	{
-		TRACE(L"failed to set previous purecall handler")
+		TRACE(L"failed to set previous purecall handler");
 	}
 }
 
 void Protections::PureCall::handler()
 {
-	TRACE(L"CRITICAL ERROR: CRT Pure Call")
+	TRACE(L"CRITICAL ERROR: CRT Pure Call");
 	throw CriticalException();
 }

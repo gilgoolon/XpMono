@@ -16,7 +16,7 @@ Protections::InvalidParameter::~InvalidParameter()
 	}
 	catch (...)
 	{
-		TRACE(L"failed to revert invalid parameter handler")
+		TRACE(L"failed to revert invalid parameter handler");
 	}
 }
 
@@ -35,6 +35,6 @@ void Protections::InvalidParameter::handler([[maybe_unused]] const wchar_t* cons
 		function,
 		L"\n\texpression: ",
 		expression
-	)
+	);
 	throw CriticalException();
 }

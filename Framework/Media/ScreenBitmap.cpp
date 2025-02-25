@@ -20,7 +20,7 @@ ScreenBitmap::~ScreenBitmap()
 	}
 	catch (...)
 	{
-		TRACE(L"failed to switch back to previous DC bitmap")
+		TRACE(L"failed to switch back to previous DC bitmap");
 	}
 }
 
