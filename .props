@@ -11,6 +11,7 @@
             <DisableSecurityCheck>true</DisableSecurityCheck>
             <BasicRuntimeChecks>Default</BasicRuntimeChecks>
             <BufferSecurityCheck>false</BufferSecurityCheck>
+            <AdditionalOptions>/Wv:18 %(AdditionalOptions)</AdditionalOptions>
         </ClCompile>
         <Link>
             <SubSystem>Windows</SubSystem>

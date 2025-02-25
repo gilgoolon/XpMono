@@ -2,7 +2,6 @@
 
 #include "Exception.hpp"
 #include "FigImplException.hpp"
-#include "Trace.hpp"
 
 HandlerRunner::HandlerRunner(std::shared_ptr<IOperationHandler> handler):
 	m_handler(std::move(handler))
