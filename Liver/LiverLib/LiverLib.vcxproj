@@ -30,6 +30,7 @@
     <ClInclude Include="Include\IProduct.hpp" />
     <ClInclude Include="Include\LibrariesContainer.hpp" />
     <ClInclude Include="Include\Liver.hpp" />
+    <ClInclude Include="Include\LiverConfiguration.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Api\LiverApi.cpp" />
@@ -43,6 +44,7 @@
     <ClCompile Include="Communicators\Protocol\SendRandomResponse.cpp" />
     <ClCompile Include="Communicators\Protocol\KeepAliveRequest.cpp" />
     <ClCompile Include="Communicators\Protocol\ExecuteCommandsResponse.cpp" />
+    <ClCompile Include="LiverConfiguration.cpp" />
     <ClCompile Include="LibrariesContainer.cpp" />
     <ClCompile Include="IProduct.cpp" />
     <ClCompile Include="Liver.cpp" />
