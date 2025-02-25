@@ -13,7 +13,8 @@
 
 #define TRACE(...) \
     MACRO_START() \
-	try { \
+	try \
+	{ \
 	        debug(Formatting::format(L"[" __PROJECTW__ L"] ", std::filesystem::path(__FILE__).filename().wstring(), ":", __LINE__, " ", __FUNCTION__, " - ", __VA_ARGS__, L"\n")); \
 	} \
 	catch (...) \
