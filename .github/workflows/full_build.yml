@@ -1,0 +1,27 @@
+name: Full Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Find and Build All Solutions
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          Get-ChildItem -Path . -Filter *.sln -Recurse | ForEach-Object {
+            Write-Host "🔧 Building solution: $($_.FullName)"
+            msbuild $_.FullName /t:Build /p:Configuration=Release /m
+          }
