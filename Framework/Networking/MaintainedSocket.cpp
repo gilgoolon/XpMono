@@ -1,6 +1,7 @@
 ﻿#include "Networking/MaintainedSocket.hpp"
 
 MaintainedSocket::MaintainedSocket(SocketAddress address):
+	m_wsa_instance(),
 	m_socket(std::make_unique<Socket>(address)),
 	m_address(address)
 {

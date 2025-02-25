@@ -34,7 +34,6 @@ public:
 	[[nodiscard]] static std::unique_ptr<Liver> create(const Buffer& liver_configuration);
 
 private:
-	WsaInstance m_wsa_instance;
 	Event::Ptr m_quit_event;
 	ICommandFactory::Ptr m_command_factory;
 	ICommunicator::Ptr m_communicator;

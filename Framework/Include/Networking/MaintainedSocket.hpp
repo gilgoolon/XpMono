@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Socket.hpp"
+#include "WsaInstance.hpp"
 
 class MaintainedSocket final : public IIOStream
 {
@@ -19,6 +20,7 @@ public:
 	void write(const Buffer& data) const override;
 
 private:
+	WsaInstance m_wsa_instance;
 	mutable std::unique_ptr<Socket> m_socket;
 	SocketAddress m_address;
 };
