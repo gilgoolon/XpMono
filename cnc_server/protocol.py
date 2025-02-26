@@ -40,7 +40,7 @@ class ReturnProductsRequestData:
 @dataclass
 class Request:
     header: RequestHeader
-    data: Optional[Any]
+    data: Optional[Any] = None
 
     @classmethod
     async def from_stream(cls, reader: asyncio.StreamReader) -> "RequestHeader":

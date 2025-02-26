@@ -3,7 +3,7 @@ import json
 import os
 from datetime import datetime
 import logging
-from protocol import ProtocolError, Request, Response, write_response
+from protocol import KeepAliveResponse, ProtocolError, Request, Response, write_response
 
 # Configure logging
 logging.basicConfig(
@@ -63,39 +63,7 @@ class CNCServer:
 
     def handle_request(self, request: Request) -> Response:
         """Handle a parsed request and generate appropriate response."""
-        if isinstance(request, StatusRequest):
-            # Check for commands
-            commands = self.get_client_commands(request.client_id)
-            
-            if commands:
-                return ExecuteCommandsResponse(
-                    request_id=request.request_id,
-                    client_id=request.client_id,
-                    response_type=ResponseType.EXECUTE_COMMANDS,
-                    commands=commands
-                )
-            else:
-                return KeepAliveResponse(
-                    request_id=request.request_id,
-                    client_id=request.client_id,
-                    response_type=ResponseType.KEEP_ALIVE,
-                    timestamp=datetime.now().isoformat()
-                )
-            
-        elif isinstance(request, CommandResultRequest):
-            # Log the command result
-            self.log_client_response(
-                request.client_id,
-                f"Command {request.command_id} result: {request.result}"
-            )
-            
-            # Send keep-alive response
-            return KeepAliveResponse(
-                request_id=request.request_id,
-                client_id=request.client_id,
-                response_type=ResponseType.KEEP_ALIVE,
-                timestamp=datetime.now().isoformat()
-            )
+        return KeepAliveResponse()
 
     async def handle_client(self, reader, writer):
         """Handle individual client connections."""
@@ -107,10 +75,10 @@ class CNCServer:
                 try:
                     # Parse the request using our protocol parser
                     request = await Request.from_stream(reader)
-                    logging.info(f"Received request type {request.request_type} from client {request.client_id}")
+                    logging.info(f"Received request type {request.header.request_type} from client {request.header.client_id}")
                     
                     # Handle the request
-                    response = self.handle_request(request, writer)
+                    response = self.handle_request(request)
 
                     await write_response(writer, response)
                     
