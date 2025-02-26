@@ -18,7 +18,6 @@ void MaintainedSocket::maintain_connection() const
 
 Buffer MaintainedSocket::read(const uint32_t size) const
 {
-	maintain_connection();
 	return m_socket->read(size);
 }
 
