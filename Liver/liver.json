@@ -1,5 +1,5 @@
 {
     "cnc_ip": "127.0.0.1",
-    "cnc_port": 8080,
+    "cnc_port": 8888,
     "iteration_delay": 15
 }
