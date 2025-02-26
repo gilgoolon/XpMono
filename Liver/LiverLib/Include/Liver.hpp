@@ -3,7 +3,6 @@
 #include "LibrariesContainer.hpp"
 #include "Communicators/ICommunicator.hpp"
 #include "Communicators/Protocol/ExecuteCommandsResponse.hpp"
-#include "Networking/WsaInstance.hpp"
 #include "Synchronization/Event.hpp"
 #include "Utils/Buffer.hpp"
 

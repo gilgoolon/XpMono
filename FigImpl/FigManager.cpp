@@ -53,7 +53,7 @@ Fig::FigCode FigManager::execute(const Fig::OperationType operation,
 	try
 	{
 		Protections::EntryPointProtector protector;
-		const uint32_t generated_id = Random::uint32();
+		const uint32_t generated_id = Random::generate<uint32_t>();
 		*id = generated_id;
 		std::unique_ptr<Event> event = make_operation_event(generated_id);
 		*operation_event = event->handle();
