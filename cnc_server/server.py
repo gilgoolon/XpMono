@@ -3,11 +3,7 @@ import json
 import os
 from datetime import datetime
 import logging
-from protocol import (
-    RequestParser, ProtocolError, RequestHeader, StatusRequest,
-    CommandResultRequest, ResponseType, KeepAliveResponse,
-    ExecuteCommandsResponse, write_response
-)
+from protocol import ProtocolError, Request, Response, write_response
 
 # Configure logging
 logging.basicConfig(
@@ -65,28 +61,26 @@ class CNCServer:
         except Exception as e:
             logging.error(f"Error logging response for client {client_id}: {e}")
 
-    async def handle_request(self, request: RequestHeader, writer: asyncio.StreamWriter) -> None:
+    def handle_request(self, request: Request) -> Response:
         """Handle a parsed request and generate appropriate response."""
         if isinstance(request, StatusRequest):
             # Check for commands
             commands = self.get_client_commands(request.client_id)
             
             if commands:
-                response = ExecuteCommandsResponse(
+                return ExecuteCommandsResponse(
                     request_id=request.request_id,
                     client_id=request.client_id,
                     response_type=ResponseType.EXECUTE_COMMANDS,
                     commands=commands
                 )
             else:
-                response = KeepAliveResponse(
+                return KeepAliveResponse(
                     request_id=request.request_id,
                     client_id=request.client_id,
                     response_type=ResponseType.KEEP_ALIVE,
                     timestamp=datetime.now().isoformat()
                 )
-                
-            await write_response(writer, response)
             
         elif isinstance(request, CommandResultRequest):
             # Log the command result
@@ -96,13 +90,12 @@ class CNCServer:
             )
             
             # Send keep-alive response
-            response = KeepAliveResponse(
+            return KeepAliveResponse(
                 request_id=request.request_id,
                 client_id=request.client_id,
                 response_type=ResponseType.KEEP_ALIVE,
                 timestamp=datetime.now().isoformat()
             )
-            await write_response(writer, response)
 
     async def handle_client(self, reader, writer):
         """Handle individual client connections."""
@@ -113,11 +106,13 @@ class CNCServer:
             while True:
                 try:
                     # Parse the request using our protocol parser
-                    request = await RequestParser.parse_request(reader)
+                    request = await Request.from_stream(reader)
                     logging.info(f"Received request type {request.request_type} from client {request.client_id}")
                     
                     # Handle the request
-                    await self.handle_request(request, writer)
+                    response = self.handle_request(request, writer)
+
+                    await write_response(writer, response)
                     
                 except ProtocolError as e:
                     logging.error(f"Protocol error from {client_addr}: {e}")
