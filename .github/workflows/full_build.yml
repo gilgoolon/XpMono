@@ -25,3 +25,10 @@ jobs:
             Write-Host "🔧 Building solution: $($_.FullName)"
             msbuild $_.FullName /t:Build /p:Configuration=Release /m
           }
+    - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+            name: build-artifacts
+            path: |
+            **/bin/Release/**
+            **/bin/x64/Release/**
