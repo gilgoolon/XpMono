@@ -17,6 +17,7 @@
     <ClInclude Include="Include\Communicators\ICommunicator.hpp" />
     <ClInclude Include="Include\Communicators\Protocol\ExecuteCommandsResponse.hpp" />
     <ClInclude Include="Include\Communicators\Protocol\KeepAliveRequest.hpp" />
+    <ClInclude Include="Include\Communicators\Protocol\KeepAliveResponse.hpp" />
     <ClInclude Include="Include\Communicators\Protocol\SendRandomResponse.hpp" />
     <ClInclude Include="Include\Communicators\Protocol\IRequest.hpp" />
     <ClInclude Include="Include\Communicators\Protocol\IResponse.hpp" />

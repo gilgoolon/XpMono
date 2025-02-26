@@ -5,12 +5,12 @@ from dataclasses import dataclass
 from typing import Optional, Any, Type
 
 class RequestType(enum.IntEnum):
-    STATUS = 0
-    COMMAND_RESULT = 1
+    KEEP_ALIVE = 0
+    RETURN_PRODUCTS = 1
 
 class ResponseType(enum.IntEnum):
-    KEEP_ALIVE = 1
-    EXECUTE_COMMANDS = 2
+    KEEP_ALIVE = 0
+    EXECUTE_COMMANDS = 1
 
 @dataclass
 class BaseRequest:

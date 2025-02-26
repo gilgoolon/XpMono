@@ -75,6 +75,9 @@
     <ClInclude Include="Include\LiverConfiguration.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Communicators\Protocol\KeepAliveResponse.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Liver.cpp">
