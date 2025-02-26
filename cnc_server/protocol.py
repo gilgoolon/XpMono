@@ -4,7 +4,7 @@ import struct
 import enum
 import asyncio
 from dataclasses import dataclass
-from typing import Optional, Any
+from typing import Optional, Any, List
 
 class RequestType(enum.IntEnum):
     KEEP_ALIVE = 0
@@ -63,11 +63,23 @@ class KeepAliveResponse(Response):
     def to_raw(self) -> bytes:
         return struct.pack("<I", ResponseType.KEEP_ALIVE)
 
+class Command:
+    command_id: int
+    data: bytes
+
+    def to_raw(self) -> bytes:
+        return struct.pack("<II", self.command_id, len(self.data)) + self.data
+
 @dataclass
 class ExecuteCommandsResponse(Response):
-    def to_raw(self) -> bytes:
-        raise NotImplemented()
+    commands: List[Command]
 
+    def to_raw(self) -> bytes:
+        return (
+            struct.pack("<II", ResponseType.EXECUTE_COMMANDS, len(self.commands)) +
+            b''.join(command.to_raw() for command in self.commands)
+        )
+        
 
 class ProtocolError(Exception):
     pass

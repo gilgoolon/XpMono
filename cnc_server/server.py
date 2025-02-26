@@ -3,7 +3,7 @@ import json
 import os
 from datetime import datetime
 import logging
-from protocol import KeepAliveResponse, ProtocolError, Request, Response, write_response
+from protocol import Command, ExecuteCommandsResponse, KeepAliveResponse, ProtocolError, Request, Response, write_response
 
 # Configure logging
 logging.basicConfig(
@@ -24,27 +24,35 @@ class CNCServer:
         os.makedirs(self.commands_dir, exist_ok=True)
         os.makedirs(self.logs_dir, exist_ok=True)
 
-    def get_client_commands(self, client_id):
-        """Check for command files for a specific client."""
+    def get_client_commands(self, client_id) -> list[Command]:
+        """Get all pending command files for a client."""
         client_dir = os.path.join(self.commands_dir, str(client_id))
         if not os.path.exists(client_dir):
-            return None
+            return []
         
-        command_files = [f for f in os.listdir(client_dir) if f.endswith('.cmd')]
-        if not command_files:
-            return None
-            
-        # Read the first command file
-        command_file = os.path.join(client_dir, command_files[0])
-        try:
-            with open(command_file, 'r') as f:
-                commands = f.read()
-            # Delete the file after reading
-            os.remove(command_file)
-            return commands
-        except Exception as e:
-            logging.error(f"Error reading command file for client {client_id}: {e}")
-            return None
+        commands = []
+        command_files = sorted([f for f in os.listdir(client_dir) if f.endswith('.cmd')])
+        
+        for cmd_file in command_files:
+            try:
+                # Extract command ID from filename (assuming format: command_<id>.cmd)
+                cmd_id = int(cmd_file.split('_')[1].split('.')[0])
+                file_path = os.path.join(client_dir, cmd_file)
+                
+                # Read binary data
+                with open(file_path, 'rb') as f:
+                    cmd_data = f.read()
+                
+                commands.append(Command(command_id=cmd_id, data=cmd_data))
+                
+                # Delete the file after reading
+                os.remove(file_path)
+                
+            except Exception as e:
+                logging.error(f"Error reading command file {cmd_file} for client {client_id}: {e}")
+                continue
+        
+        return commands
 
     def log_client_response(self, client_id, response):
         """Log client response to a file."""
@@ -63,7 +71,10 @@ class CNCServer:
 
     def handle_request(self, request: Request) -> Response:
         """Handle a parsed request and generate appropriate response."""
-        return KeepAliveResponse()
+        commands = self.get_client_commands(request.header.client_id)
+        if len(commands) == 0:
+            return KeepAliveResponse()
+        return ExecuteCommandsResponse(commands)
 
     async def handle_client(self, reader, writer):
         """Handle individual client connections."""
@@ -81,7 +92,7 @@ class CNCServer:
                     response = self.handle_request(request)
 
                     await write_response(writer, response)
-                    
+
                 except ProtocolError as e:
                     logging.error(f"Protocol error from {client_addr}: {e}")
                     break
