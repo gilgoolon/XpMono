@@ -85,12 +85,9 @@ void Socket::write(const Buffer& data) const
 
 bool Socket::is_connected() const
 {
-	char buffer;
-	static constexpr int PEEK_ONLY = MSG_PEEK;
-	const int result = recv(m_socket, &buffer, sizeof buffer, PEEK_ONLY);
-	if (result == SOCKET_ERROR)
-	{
-		throw WsaException(ErrorCode::FAILED_SOCKET_PEEK);
-	}
-	return result > 0;
+	sockaddr_storage add{};
+	int add_len = sizeof(add);
+	const int result = getpeername(m_socket, reinterpret_cast<struct sockaddr*>(&add), &add_len);
+	static constexpr int SUCCESS = 0;
+	return result == SUCCESS;
 }
