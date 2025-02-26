@@ -37,6 +37,7 @@
     <ClCompile Include="CommandHandlerFactory.cpp" />
     <ClCompile Include="Commands\ICommand.cpp" />
     <ClCompile Include="Commands\LoadDllCommand.cpp" />
+    <ClCompile Include="Communicators\Protocol\IRequest.cpp" />
     <ClCompile Include="Handlers\LoadDllHandler.cpp" />
     <ClCompile Include="CommandFactories\JsonCommandFactory.cpp" />
     <ClCompile Include="Communicators\RawCommunicator.cpp" />
