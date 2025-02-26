@@ -12,6 +12,7 @@
 #include "Communicators/Protocol/SendRandomResponse.hpp"
 #include "Networking/MaintainedSocket.hpp"
 #include "Synchronization/Event.hpp"
+#include "Utils/Random.hpp"
 
 Liver::Liver(Event::Ptr quit_event,
              ICommandFactory::Ptr command_factory,
@@ -21,6 +22,7 @@ Liver::Liver(Event::Ptr quit_event,
 	m_command_factory(std::move(command_factory)),
 	m_communicator(std::move(communicator)),
 	m_iteration_delay(iteration_delay),
+	m_liver_id(Random::generate<uint32_t>()),
 	libraries()
 {
 }
