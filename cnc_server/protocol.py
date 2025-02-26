@@ -1,8 +1,10 @@
+import abc
+import ctypes
 import struct
 import enum
 import asyncio
 from dataclasses import dataclass
-from typing import Optional, Any, Type
+from typing import Optional, Any
 
 class RequestType(enum.IntEnum):
     KEEP_ALIVE = 0
@@ -12,113 +14,65 @@ class ResponseType(enum.IntEnum):
     KEEP_ALIVE = 0
     EXECUTE_COMMANDS = 1
 
+async def read_exact(reader: asyncio.StreamReader, size: int) -> bytes:
+    data = await reader.read(size)
+    if len(data) < size:
+        raise ProtocolError("Connection closed while reading")
+    return data
+
 @dataclass
-class BaseRequest:
+class RequestHeader:
     request_type: RequestType
     client_id: int
 
-@dataclass
-class StatusRequest(BaseRequest):
-    timestamp: str
+    @classmethod
+    async def from_stream(cls, reader: asyncio.StreamReader) -> "RequestHeader":
+        FORMAT = "<II"
+        header_data = await read_exact(reader, struct.calcsize(FORMAT))
+        return RequestHeader(*struct.unpack(FORMAT, header_data))
 
 @dataclass
-class CommandResultRequest(BaseRequest):
-    command_id: int
-    result: str
+class ReturnProductsRequestData:
+    @classmethod
+    async def from_stream(cls, reader: asyncio.StreamReader) -> "RequestHeader":
+        raise NotImplemented()
 
 @dataclass
-class BaseResponse:
-    request_id: int
-    client_id: int
-    response_type: ResponseType
+class Request:
+    header: RequestHeader
+    data: Optional[Any]
+
+    @classmethod
+    async def from_stream(cls, reader: asyncio.StreamReader) -> "RequestHeader":
+        header = await RequestHeader.from_stream(reader)
+
+        if header.request_type == RequestType.KEEP_ALIVE:
+            return Request(header)
+        elif header.request_type == RequestType.RETURN_PRODUCTS:
+            return Request(header, await ReturnProductsRequestData.from_stream(reader))
+
+        raise ProtocolError(f"Invalid request type: {header.request_type}")
+
+class Response(abc.ABC):
+    @abc.abstractmethod
+    def to_raw(self) -> bytes:
+        pass
 
 @dataclass
-class KeepAliveResponse(BaseResponse):
-    timestamp: str
+class KeepAliveResponse(Response):
+    def to_raw(self) -> bytes:
+        return struct.pack("<I", ResponseType.KEEP_ALIVE)
 
 @dataclass
-class ExecuteCommandsResponse(BaseResponse):
-    commands: str
+class ExecuteCommandsResponse(Response):
+    def to_raw(self) -> bytes:
+        raise NotImplemented()
+
 
 class ProtocolError(Exception):
     pass
 
-class RequestParser:
-    HEADER_FORMAT = "<II"  # Two uint32: request_id, client_id
-    HEADER_SIZE = struct.calcsize(HEADER_FORMAT)
-
-    @classmethod
-    async def read_exact(cls, reader: asyncio.StreamReader, size: int) -> bytes:
-        """Read exactly size bytes from the reader."""
-        data = await reader.read(size)
-        if len(data) < size:
-            raise ProtocolError("Connection closed while reading")
-        return data
-
-    @classmethod
-    async def parse_header(cls, reader: asyncio.StreamReader) -> tuple[int, int]:
-        """Parse the common header fields."""
-        header_data = await cls.read_exact(reader, cls.HEADER_SIZE)
-        return struct.unpack(cls.HEADER_FORMAT, header_data)
-
-    @classmethod
-    async def parse_string(cls, reader: asyncio.StreamReader) -> str:
-        """Parse a length-prefixed string."""
-        length_data = await cls.read_exact(reader, 4)
-        length = struct.unpack("<I", length_data)[0]
-        if length > 1024 * 1024:  # 1MB limit
-            raise ProtocolError("String too long")
-        string_data = await cls.read_exact(reader, length)
-        return string_data.decode('utf-8')
-
-    @classmethod
-    async def parse_request(cls, reader: asyncio.StreamReader) -> BaseRequest:
-        """Parse a request from the reader."""
-        request_type, client_id = await cls.parse_header(reader)
-        
-        # Create base request
-        base = BaseRequest(RequestType(request_type), client_id)
-        
-        # Parse specific request type
-        if base.request_type == RequestType.STATUS:
-            return base
-        elif base.request_type == RequestType.COMMAND_RESULT:
-            command_id_data = await cls.read_exact(reader, 4)
-            command_id = struct.unpack("<I", command_id_data)[0]
-            result = await cls.parse_string(reader)
-            return CommandResultRequest(base.request_id, base.client_id, base.request_type, command_id, result)
-        else:
-            raise ProtocolError(f"Unknown request type: {request_type}")
-
-class ResponseSerializer:
-    @classmethod
-    def serialize_string(cls, s: str) -> bytes:
-        """Serialize a string with length prefix."""
-        encoded = s.encode('utf-8')
-        return struct.pack("<I", len(encoded)) + encoded
-
-    @classmethod
-    def serialize_response(cls, response: BaseResponse) -> bytes:
-        """Serialize a response to bytes."""
-        # Common header
-        data = struct.pack("<III",
-            response.request_id,
-            response.client_id,
-            response.response_type.value
-        )
-        
-        # Type-specific fields
-        if isinstance(response, KeepAliveResponse):
-            data += cls.serialize_string(response.timestamp)
-        elif isinstance(response, ExecuteCommandsResponse):
-            data += cls.serialize_string(response.commands)
-        else:
-            raise ProtocolError(f"Unknown response type: {type(response)}")
-            
-        return data
-
-async def write_response(writer: asyncio.StreamWriter, response: BaseResponse):
-    """Write a response to the stream."""
-    data = ResponseSerializer.serialize_response(response)
+async def write_response(writer: asyncio.StreamWriter, response: Response):
+    data = response.to_raw()
     writer.write(data)
     await writer.drain()

@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 import logging
 from protocol import (
-    RequestParser, ProtocolError, BaseRequest, StatusRequest,
+    RequestParser, ProtocolError, RequestHeader, StatusRequest,
     CommandResultRequest, ResponseType, KeepAliveResponse,
     ExecuteCommandsResponse, write_response
 )
@@ -65,7 +65,7 @@ class CNCServer:
         except Exception as e:
             logging.error(f"Error logging response for client {client_id}: {e}")
 
-    async def handle_request(self, request: BaseRequest, writer: asyncio.StreamWriter) -> None:
+    async def handle_request(self, request: RequestHeader, writer: asyncio.StreamWriter) -> None:
         """Handle a parsed request and generate appropriate response."""
         if isinstance(request, StatusRequest):
             # Check for commands
