@@ -21,7 +21,7 @@ DirlistHandler::DirlistHandler(std::unique_ptr<Event> operation_event, const Jso
 }
 
 DirlistHandler::DirlistHandler(std::unique_ptr<Event> operation_event, const Buffer& parameters) :
-	DirlistHandler(std::move(operation_event), Json::from_bson(parameters))
+	DirlistHandler(std::move(operation_event), Json::parse(Strings::to_string(parameters)))
 {
 }
 

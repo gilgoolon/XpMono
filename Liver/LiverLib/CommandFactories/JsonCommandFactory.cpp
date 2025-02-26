@@ -23,7 +23,7 @@ static constexpr std::string_view LIBRARY_ID = "library_id";
 
 ICommand::Ptr JsonCommandFactory::create(const Buffer& command)
 {
-	const Json data = Json::from_bson(Strings::to_string(command));
+	const Json data = Json::parse(Strings::to_string(command));
 	const Json info = data[std::string{Params::INFO_SECTION}];
 	const ICommand::Type command_type = info[std::string{Params::COMMAND_TYPE}].get<ICommand::Type>();
 	const Json parameters = data[std::string{Params::PARAMETERS_SECTION}];

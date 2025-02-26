@@ -2,6 +2,7 @@
 
 #include "Filesystem/File.hpp"
 #include "Filesystem/FileContentIterator.hpp"
+#include "Utils/Strings.hpp"
 
 namespace Parameters
 {
@@ -14,8 +15,8 @@ GetFileHandler::GetFileHandler(std::unique_ptr<Event> operation_event, const Jso
 {
 }
 
-GetFileHandler::GetFileHandler(std::unique_ptr<Event> operation_event, const Buffer& parameters):
-	GetFileHandler(std::move(operation_event), Json::from_bson(parameters))
+GetFileHandler::GetFileHandler(std::unique_ptr<Event> operation_event, const Buffer &parameters) :
+	GetFileHandler(std::move(operation_event), Json::parse(Strings::to_string(parameters)))
 {
 }
 
