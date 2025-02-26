@@ -35,8 +35,7 @@ class CNCServer:
         
         for cmd_file in command_files:
             try:
-                # Extract command ID from filename (assuming format: command_<id>.cmd)
-                cmd_id = int(cmd_file.split('_')[1].split('.')[0])
+                cmd_id = int(cmd_file.split('.')[0])
                 file_path = os.path.join(client_dir, cmd_file)
                 
                 # Read binary data

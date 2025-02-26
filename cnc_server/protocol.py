@@ -63,6 +63,7 @@ class KeepAliveResponse(Response):
     def to_raw(self) -> bytes:
         return struct.pack("<I", ResponseType.KEEP_ALIVE)
 
+@dataclass
 class Command:
     command_id: int
     data: bytes
