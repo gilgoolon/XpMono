@@ -29,7 +29,7 @@ void Liver::run()
 {
 	TRACE(L"running liver");
 
-	while (m_quit_event->wait(m_iteration_delay) == WaitStatus::TIMEOUT)
+	do
 	{
 		try
 		{
@@ -40,6 +40,7 @@ void Liver::run()
 		}
 		CATCH_AND_TRACE()
 	}
+	while (m_quit_event->wait(m_iteration_delay) == WaitStatus::TIMEOUT);
 
 	TRACE(L"finished liver");
 }
