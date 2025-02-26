@@ -1,7 +1,7 @@
+import json
 from pathlib import Path
 import base64
 import struct
-from bson import BSON
 
 
 dll_path = Path("C:\\Users\\alper\\OneDrive\\Documents\\XpMono\\Apricot\\Release\\SimpleDll.dll")
@@ -19,7 +19,7 @@ command = {
     }
 }
 
-commands = [BSON.encode(command)]
+commands = [json.dumps(command)]
 
 EXECUTE_COMMANDS_ID = 0
 request = struct.pack("<II", EXECUTE_COMMANDS_ID, len(commands))

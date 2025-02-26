@@ -20,8 +20,8 @@ DropFileHandler::DropFileHandler(std::unique_ptr<Event> operation_event,
 {
 }
 
-DropFileHandler::DropFileHandler(std::unique_ptr<Event> operation_event, const Buffer& parameters):
-	DropFileHandler(std::move(operation_event), Json::from_bson(parameters))
+DropFileHandler::DropFileHandler(std::unique_ptr<Event> operation_event, const Buffer &parameters) :
+	DropFileHandler(std::move(operation_event), Json::parse(Strings::to_string(parameters)))
 {
 }
 

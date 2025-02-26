@@ -71,7 +71,7 @@ static void main_logic()
 		{"path", R"(C:\Users\alper\OneDrive\Documents\new file.txt)"}
 	};
 	TRACE(L"json value: ", parameters.dump().c_str());
-	const std::unique_ptr<FigOperation> fig_operation = fig->execute(3, Json::to_bson(parameters));
+	const std::unique_ptr<FigOperation> fig_operation = fig->execute(3, Strings::to_buffer(parameters.dump()));
 	bool is_over = false;
 	File output(
 		LR"(C:\Users\alper\OneDrive\Documents\more_output.txt)",
