@@ -20,7 +20,7 @@ class CNCServer:
         os.makedirs(self._commands_dir, exist_ok=True)
 
     def get_client_commands(self, client_id) -> list[Command]:
-        client_dir = self._commands_dir / hex(client_id)
+        client_dir = self._commands_dir / f"{client_id:x}"
 
         commands = []
         for path in glob((client_dir / "*.cmd").as_posix()):
