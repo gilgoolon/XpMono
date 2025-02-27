@@ -1,67 +1,45 @@
-import asyncio
 import os
-from datetime import datetime
+import argparse
+import asyncio
 import logging
+from glob import glob
+from pathlib import Path
 from protocol import Command, ExecuteCommandsResponse, KeepAliveResponse, ProtocolError, Request, Response, write_response
 
-# Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
 class CNCServer:
-    def __init__(self, host='0.0.0.0', port=8888):
-        self.host = host
+    def __init__(self, interface: str, port: int, root: Path):
+        self.interface = interface
         self.port = port
-        self.clients = {}
-        self.base_dir = os.path.dirname(os.path.abspath(__file__))
-        self.commands_dir = os.path.join(self.base_dir, 'client_commands')
-        self.logs_dir = os.path.join(self.base_dir, 'client_logs')
-        
-        # Create necessary directories
+        self.root = root
+        self.commands_dir = self.root / "commands"
+        self.log_file = self.root / "log.txt"
+
         os.makedirs(self.commands_dir, exist_ok=True)
-        os.makedirs(self.logs_dir, exist_ok=True)
 
     def get_client_commands(self, client_id) -> list[Command]:
-        client_dir = os.path.join(self.commands_dir, str(client_id))
-        if not os.path.exists(client_dir):
-            return []
-        
+        client_dir = self.commands_dir / hex(client_id)
+
         commands = []
-        command_files = sorted([f for f in os.listdir(client_dir) if f.endswith('.cmd')])
-        
-        for cmd_file in command_files:
+        for path in glob((client_dir / "*.cmd").as_posix()):
             try:
-                cmd_id = int(cmd_file.split('.')[0])
-                file_path = os.path.join(client_dir, cmd_file)
+                path = Path(path)
+                command_id = int(path.stem, 16)
+                command_data = path.read_bytes()
                 
-                with open(file_path, 'rb') as f:
-                    cmd_data = f.read()
+                commands.append(Command(command_id=command_id, data=command_data))
                 
-                commands.append(Command(command_id=cmd_id, data=cmd_data))
-                
-                os.remove(file_path)
-                
+                path.unlink()
+
             except Exception as e:
-                logging.error(f"Error reading command file {cmd_file} for client {client_id}: {e}")
+                logging.error(f"Error reading command file {path} for client {hex(client_id)}: {e}")
                 continue
         
         return commands
-
-    def log_client_response(self, client_id, response):
-        client_log_dir = os.path.join(self.logs_dir, str(client_id))
-        os.makedirs(client_log_dir, exist_ok=True)
-        
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        log_file = os.path.join(client_log_dir, f"response_{timestamp}.log")
-        
-        try:
-            with open(log_file, 'w') as f:
-                f.write(f"Timestamp: {timestamp}\n")
-                f.write(f"Response: {response}\n")
-        except Exception as e:
-            logging.error(f"Error logging response for client {client_id}: {e}")
 
     def handle_request(self, request: Request) -> Response:
         commands = self.get_client_commands(request.header.client_id)
@@ -77,7 +55,7 @@ class CNCServer:
             while True:
                 try:
                     request = await Request.from_stream(reader)
-                    logging.info(f"Received request type {request.header.request_type} from client {request.header.client_id}")
+                    logging.info(f"Received request type {request.header.request_type} from client {hex(request.header.client_id)}")
                     
                     response = self.handle_request(request)
 
@@ -100,17 +78,26 @@ class CNCServer:
     async def start(self):
         server = await asyncio.start_server(
             self.handle_client,
-            self.host,
+            self.interface,
             self.port
         )
 
-        logging.info(f"CNC Server started on {self.host}:{self.port}")
+        logging.info(f"CNC Server started on {self.interface}:{self.port}")
         
         async with server:
             await server.serve_forever()
 
 if __name__ == "__main__":
-    server = CNCServer()
+    parser = argparse.ArgumentParser("Liver CNC Server")
+    parser.add_argument("--root", type=Path, default=Path(__file__).parent, help="Root folder of the cnc (commands, logs, etc...)")
+    parser.add_argument("--port", "-p", type=int, default=8888, help="Server port for clients")
+
+    args = parser.parse_args()
+
+    INTERFACE = '0.0.0.0'
+
+    server = CNCServer(interface=INTERFACE, port=args.port, root=args.root)
+
     try:
         asyncio.run(server.start())
     except KeyboardInterrupt:
