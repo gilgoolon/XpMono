@@ -82,12 +82,3 @@ void Socket::write(const Buffer& data) const
 		throw WsaException(ErrorCode::FAILED_SOCKET_SEND);
 	}
 }
-
-bool Socket::is_connected() const
-{
-	sockaddr_storage add{};
-	int add_len = sizeof(add);
-	const int result = getpeername(m_socket, reinterpret_cast<struct sockaddr*>(&add), &add_len);
-	static constexpr int SUCCESS = 0;
-	return result == SUCCESS;
-}

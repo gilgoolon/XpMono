@@ -34,7 +34,7 @@ class RequestHeader:
 @dataclass
 class ReturnProductsRequestData:
     @classmethod
-    async def from_stream(cls, reader: asyncio.StreamReader) -> "RequestHeader":
+    async def from_stream(cls, reader: asyncio.StreamReader) -> "ReturnProductsRequestData":
         raise NotImplemented()
 
 @dataclass
@@ -43,7 +43,7 @@ class Request:
     data: Optional[Any] = None
 
     @classmethod
-    async def from_stream(cls, reader: asyncio.StreamReader) -> "RequestHeader":
+    async def from_stream(cls, reader: asyncio.StreamReader) -> "Request":
         header = await RequestHeader.from_stream(reader)
 
         if header.request_type == RequestType.KEEP_ALIVE:
