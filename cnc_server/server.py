@@ -45,7 +45,7 @@ class CNCServer:
         return ExecuteCommandsResponse(commands)
 
     async def handle_client(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
-        client_addr = writer.get_extra_info('peername')
+        client_addr = writer.get_extra_info("peername")
         self._logger.info(f"New connection from {client_addr}")
 
         try:
