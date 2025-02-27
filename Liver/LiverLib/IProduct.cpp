@@ -2,8 +2,14 @@
 
 #include "Utils/Random.hpp"
 
+IProduct::IProduct(const uint32_t id):
+	m_id(id)
+
+{
+}
+
 IProduct::IProduct():
-	m_id(Random::generate<Id>())
+	IProduct(Random::generate<Id>())
 {
 }
 

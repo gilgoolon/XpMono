@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "ICommandFactory.hpp"
 #include "LibrariesContainer.hpp"
+#include "ProductsContainer.hpp"
 #include "Communicators/ICommunicator.hpp"
 #include "Communicators/Protocol/ExecuteCommandsResponse.hpp"
 #include "Synchronization/Event.hpp"
@@ -35,11 +36,12 @@ public:
 	[[nodiscard]] uint32_t liver_id() const;
 
 private:
+	uint32_t m_liver_id;
 	Event::Ptr m_quit_event;
 	ICommandFactory::Ptr m_command_factory;
 	ICommunicator::Ptr m_communicator;
 	Time::Duration m_iteration_delay;
-	uint32_t m_liver_id;
+	ProductsContainer m_products;
 
 public:
 	LibrariesContainer libraries;

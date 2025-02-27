@@ -18,11 +18,12 @@ Liver::Liver(Event::Ptr quit_event,
              ICommandFactory::Ptr command_factory,
              ICommunicator::Ptr communicator,
              const Time::Duration iteration_delay) :
+	m_liver_id(Random::generate<uint32_t>()),
 	m_quit_event(std::move(quit_event)),
 	m_command_factory(std::move(command_factory)),
 	m_communicator(std::move(communicator)),
 	m_iteration_delay(iteration_delay),
-	m_liver_id(Random::generate<uint32_t>()),
+	m_products(),
 	libraries()
 {
 }
@@ -121,6 +122,7 @@ void Liver::execute_commands(const std::vector<ICommand::Ptr>& commands)
 	for (const ICommand::Ptr& command : commands)
 	{
 		const ICommandHandler::Ptr handler = CommandHandlerFactory::create(command);
-		handler->handle(*this);
+		std::vector<IProduct::Ptr> products = handler->handle(*this);
+		m_products.insert_all(std::move(products));
 	}
 }
