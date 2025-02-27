@@ -1,6 +1,8 @@
 ﻿#include "Communicators/Protocol/KeepAliveRequest.hpp"
 
-Buffer KeepAliveRequest::serialize() const
+#include "Utils/Strings.hpp"
+
+KeepAliveRequest::KeepAliveRequest(const uint32_t liver_id):
+	IRequest(Type::KEEP_ALIVE, liver_id)
 {
-	return ISerializable::serialize(Type::KEEP_ALIVE);
 }

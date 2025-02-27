@@ -16,7 +16,8 @@ public:
 
 	enum class Type : uint32_t
 	{
-		EXECUTE_COMMANDS = 0,
+		KEEP_ALIVE = 0,
+		EXECUTE_COMMANDS,
 		SEND_RANDOM,
 	};
 

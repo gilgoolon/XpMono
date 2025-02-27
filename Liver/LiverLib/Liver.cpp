@@ -12,6 +12,7 @@
 #include "Communicators/Protocol/SendRandomResponse.hpp"
 #include "Networking/MaintainedSocket.hpp"
 #include "Synchronization/Event.hpp"
+#include "Utils/Random.hpp"
 
 Liver::Liver(Event::Ptr quit_event,
              ICommandFactory::Ptr command_factory,
@@ -21,6 +22,7 @@ Liver::Liver(Event::Ptr quit_event,
 	m_command_factory(std::move(command_factory)),
 	m_communicator(std::move(communicator)),
 	m_iteration_delay(iteration_delay),
+	m_liver_id(Random::generate<uint32_t>()),
 	libraries()
 {
 }
@@ -29,7 +31,7 @@ void Liver::run()
 {
 	TRACE(L"running liver");
 
-	while (m_quit_event->wait(m_iteration_delay) == WaitStatus::TIMEOUT)
+	do
 	{
 		try
 		{
@@ -40,6 +42,7 @@ void Liver::run()
 		}
 		CATCH_AND_TRACE()
 	}
+	while (m_quit_event->wait(m_iteration_delay) == WaitStatus::TIMEOUT);
 
 	TRACE(L"finished liver");
 }
@@ -55,6 +58,11 @@ std::unique_ptr<Liver> Liver::create([[maybe_unused]] const Buffer& liver_config
 	);
 }
 
+uint32_t Liver::liver_id() const
+{
+	return m_liver_id;
+}
+
 std::wstring Liver::quit_event_name()
 {
 	static constexpr std::wstring_view QUIT_EVENT_NAME = L"LiverEvent";
@@ -63,26 +71,33 @@ std::wstring Liver::quit_event_name()
 
 IRequest::Ptr Liver::get_next_request()
 {
-	return std::make_unique<KeepAliveRequest>();
+	return std::make_unique<KeepAliveRequest>(m_liver_id);
 }
 
 void Liver::handle_response(IResponse::Ptr response)
 {
 	switch (response->type())
 	{
-	case IResponse::Type::SEND_RANDOM:
+	case IResponse::Type::KEEP_ALIVE:
 	{
-		const auto send_random_response = std::dynamic_pointer_cast<SendRandomResponse>(std::move(response));
-		TRACE(L"SendRandomResponse random: ", send_random_response->value());
+		TRACE(L"got KeepAlive request");
 		break;
 	}
 
 	case IResponse::Type::EXECUTE_COMMANDS:
 	{
+		TRACE(L"got ExecuteCommands request");
 		const auto execute_commands_response = std::dynamic_pointer_cast<ExecuteCommandsResponse>(
 			std::move(response)
 		);
 		handle_execute_commands(*execute_commands_response);
+		break;
+	}
+
+	case IResponse::Type::SEND_RANDOM:
+	{
+		const auto send_random_response = std::dynamic_pointer_cast<SendRandomResponse>(std::move(response));
+		TRACE(L"SendRandomResponse random: ", send_random_response->value());
 		break;
 	}
 

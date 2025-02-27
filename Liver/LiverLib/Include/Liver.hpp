@@ -32,11 +32,14 @@ public:
 	void run();
 	[[nodiscard]] static std::unique_ptr<Liver> create(const Buffer& liver_configuration);
 
+	[[nodiscard]] uint32_t liver_id() const;
+
 private:
 	Event::Ptr m_quit_event;
 	ICommandFactory::Ptr m_command_factory;
 	ICommunicator::Ptr m_communicator;
 	Time::Duration m_iteration_delay;
+	uint32_t m_liver_id;
 
 public:
 	LibrariesContainer libraries;
