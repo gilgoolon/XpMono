@@ -8,7 +8,7 @@ class LoadDllCommand final : public ICommand
 public:
 	friend class LoadDllHandler;
 
-	explicit LoadDllCommand(LibrariesContainer::LibraryId library_id, Buffer dll_buffer);
+	explicit LoadDllCommand(Id id, LibrariesContainer::LibraryId library_id, Buffer dll_buffer);
 	~LoadDllCommand() override = default;
 	LoadDllCommand(const LoadDllCommand&) = delete;
 	LoadDllCommand& operator=(const LoadDllCommand&) = delete;

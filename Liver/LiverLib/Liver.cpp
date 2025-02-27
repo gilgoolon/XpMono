@@ -110,7 +110,7 @@ void Liver::handle_response(IResponse::Ptr response)
 void Liver::handle_execute_commands(const ExecuteCommandsResponse& response)
 {
 	std::vector<ICommand::Ptr> commands;
-	for (const Buffer& command : response.commands())
+	for (const Command& command : response.commands())
 	{
 		commands.push_back(m_command_factory->create(command));
 	}

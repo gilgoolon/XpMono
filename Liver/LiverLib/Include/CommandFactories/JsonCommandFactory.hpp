@@ -11,5 +11,5 @@ public:
 	JsonCommandFactory(JsonCommandFactory&&) = delete;
 	JsonCommandFactory& operator=(JsonCommandFactory&&) = delete;
 
-	[[nodiscard]] ICommand::Ptr create(const Buffer& command) override;
+	[[nodiscard]] ICommand::Ptr create(const Command& command) override;
 };
