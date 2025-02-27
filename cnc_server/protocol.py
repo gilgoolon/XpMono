@@ -1,10 +1,12 @@
 import abc
-import ctypes
-import struct
 import enum
+import secrets
+import struct
 import asyncio
 from dataclasses import dataclass
 from typing import Optional, Any, List
+
+import structs
 
 class RequestType(enum.IntEnum):
     KEEP_ALIVE = 0
@@ -14,12 +16,6 @@ class ResponseType(enum.IntEnum):
     KEEP_ALIVE = 0
     EXECUTE_COMMANDS = 1
 
-async def read_exact(reader: asyncio.StreamReader, size: int) -> bytes:
-    data = await reader.read(size)
-    if len(data) < size:
-        raise ProtocolError("Connection closed while reading")
-    return data
-
 @dataclass
 class RequestHeader:
     request_type: RequestType
@@ -27,15 +23,28 @@ class RequestHeader:
 
     @classmethod
     async def from_stream(cls, reader: asyncio.StreamReader) -> "RequestHeader":
-        FORMAT = "<II"
-        header_data = await read_exact(reader, struct.calcsize(FORMAT))
-        return RequestHeader(*struct.unpack(FORMAT, header_data))
+        return cls(*structs.read_struct(reader, "<II"))
+
+@dataclass
+class Product:
+    product_id: int
+    data: bytes
+
+    @classmethod
+    async def from_stream(cls, reader: asyncio.StreamReader) -> "Product":
+        product_id, = await structs.read_struct(reader, "<I")
+        data = await structs.read_sized_buffer(reader)
+        return cls(product_id, data)
 
 @dataclass
 class ReturnProductsRequestData:
+    products: List[Product]
+
     @classmethod
     async def from_stream(cls, reader: asyncio.StreamReader) -> "ReturnProductsRequestData":
-        raise NotImplemented()
+        products_count, = await structs.read_struct(reader, "<I")
+        products = [Product.from_stream(reader) for _ in range(products_count)]
+        return cls(products)
 
 @dataclass
 class Request:
@@ -47,9 +56,9 @@ class Request:
         header = await RequestHeader.from_stream(reader)
 
         if header.request_type == RequestType.KEEP_ALIVE:
-            return Request(header)
+            return cls(header)
         elif header.request_type == RequestType.RETURN_PRODUCTS:
-            return Request(header, await ReturnProductsRequestData.from_stream(reader))
+            return cls(header, await ReturnProductsRequestData.from_stream(reader))
 
         raise ProtocolError(f"Invalid request type: {header.request_type}")
 
@@ -89,3 +98,8 @@ async def write_response(writer: asyncio.StreamWriter, response: Response):
     data = response.to_raw()
     writer.write(data)
     await writer.drain()
+
+def generate_id(cls) -> int:
+    COMMAND_ID_BITS = 32
+    return secrets.randbits(COMMAND_ID_BITS)
+

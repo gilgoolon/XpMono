@@ -1,11 +1,11 @@
 import os
-from logger import make_logger
 import asyncio
 import logging
 import argparse
 from glob import glob
 from pathlib import Path
-from protocol import Command, ExecuteCommandsResponse, KeepAliveResponse, ProtocolError, Request, Response, write_response
+from logger import make_logger
+from protocol import Command, ExecuteCommandsResponse, KeepAliveResponse, ProtocolError, Request, Response, write_response, generate_id
 
 
 class CNCServer:
@@ -25,7 +25,7 @@ class CNCServer:
         for path in glob((client_dir / "*.cmd").as_posix()):
             try:
                 path = Path(path)
-                command_id = int(path.stem, 16)
+                command_id = generate_id()
                 command_data = path.read_bytes()
                 
                 commands.append(Command(command_id=command_id, data=command_data))
