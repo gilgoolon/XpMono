@@ -5,7 +5,7 @@ import argparse
 from glob import glob
 from pathlib import Path
 from logger import make_logger
-from protocol import Command, ExecuteCommandsResponse, KeepAliveResponse, ProtocolError, Request, Response, write_response, generate_id
+from protocol import Command, ExecuteCommandsResponse, KeepAliveResponse, ProtocolError, Request, RequestType, Response, write_response, generate_id
 
 
 class CNCServer:
@@ -14,6 +14,7 @@ class CNCServer:
         self._port = port
         self._root = root
         self._commands_dir = self._root / "commands"
+        self._products_dir = self._root / "products"
         self._logger = logger
 
         os.makedirs(self._commands_dir, exist_ok=True)
@@ -38,11 +39,30 @@ class CNCServer:
         
         return commands
 
-    def handle_request(self, request: Request) -> Response:
+    def handle_return_products(self, request: Request) -> None:
+        client_products_path = self._products_dir / f"{request.header.client_id:x}"
+        os.makedirs(client_products_path.as_posix(), exist_ok=True)
+
+        for product in request.data.products:
+            product_path = client_products_path / f"{product.product_id:x}"
+            product_path.write_bytes(product.data)
+            self._logger.info(f"Client {request.header.client_id:x} received product {product.product_id:x}")
+
+    def make_client_response(self, request: Request) -> Response:
         commands = self.get_client_commands(request.header.client_id)
         if len(commands) == 0:
             return KeepAliveResponse()
         return ExecuteCommandsResponse(commands)
+
+    def handle_request(self, request: Request) -> Response:
+        self._logger.info(f"Received request type {request.header.request_type} from client {request.header.client_id:x}")
+
+        if request.header.request_type == RequestType.RETURN_PRODUCTS:
+            self.handle_return_products(request)
+
+        response = self.make_client_response(request)
+        self._logger.info(f"Sending response type {response.type()} from client {request.header.client_id:x}")
+        return response
 
     async def handle_client(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
         client_addr = writer.get_extra_info("peername")
@@ -51,9 +71,7 @@ class CNCServer:
         try:
             while True:
                 try:
-                    request = await Request.from_stream(reader)
-                    self._logger.info(f"Received request type {request.header.request_type} from client {hex(request.header.client_id)}")
-                    
+                    request = await Request.from_stream(reader)                    
                     response = self.handle_request(request)
 
                     await write_response(writer, response)

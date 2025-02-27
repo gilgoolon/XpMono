@@ -23,7 +23,7 @@ class RequestHeader:
 
     @classmethod
     async def from_stream(cls, reader: asyncio.StreamReader) -> "RequestHeader":
-        return cls(*structs.read_struct(reader, "<II"))
+        return cls(*await structs.read_struct(reader, "<II"))
 
 @dataclass
 class Product:
@@ -67,10 +67,19 @@ class Response(abc.ABC):
     def to_raw(self) -> bytes:
         pass
 
+    @classmethod
+    @abc.abstractmethod
+    def type(cls) -> ResponseType:
+        pass
+
 @dataclass
 class KeepAliveResponse(Response):
     def to_raw(self) -> bytes:
-        return struct.pack("<I", ResponseType.KEEP_ALIVE)
+        return struct.pack("<I", self.type())
+
+    @classmethod
+    def type(cls) -> ResponseType:
+        return ResponseType.KEEP_ALIVE
 
 @dataclass
 class Command:
@@ -86,10 +95,14 @@ class ExecuteCommandsResponse(Response):
 
     def to_raw(self) -> bytes:
         return (
-            struct.pack("<II", ResponseType.EXECUTE_COMMANDS, len(self.commands)) +
+            struct.pack("<II", self.type(), len(self.commands)) +
             b''.join(command.to_raw() for command in self.commands)
         )
-        
+    
+    @classmethod
+    def type(cls) -> ResponseType:
+        return ResponseType.EXECUTE_COMMANDS
+
 
 class ProtocolError(Exception):
     pass
@@ -99,7 +112,7 @@ async def write_response(writer: asyncio.StreamWriter, response: Response):
     writer.write(data)
     await writer.drain()
 
-def generate_id(cls) -> int:
+def generate_id() -> int:
     COMMAND_ID_BITS = 32
     return secrets.randbits(COMMAND_ID_BITS)
 
