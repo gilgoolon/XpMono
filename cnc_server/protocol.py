@@ -37,7 +37,7 @@ class Product:
         product = await structs.read_struct(reader, "<III")
         data = await structs.read_sized_buffer(reader)
         return cls(*product, data)
-
+    
 @dataclass
 class ReturnProductsRequestData:
     products: List[Product]
