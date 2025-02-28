@@ -2,7 +2,6 @@
 #include "Commands/ICommand.hpp"
 #include "Interfaces/ISerializable.hpp"
 
-#include <cstdint>
 #include <memory>
 
 class IProduct : public ISerializable

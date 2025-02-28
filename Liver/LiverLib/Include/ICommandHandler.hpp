@@ -6,8 +6,6 @@
 
 class Liver;
 
-using LiverContext = Liver&;
-
 class ICommandHandler
 {
 public:
@@ -20,7 +18,6 @@ public:
 	ICommandHandler(ICommandHandler&&) = delete;
 	ICommandHandler& operator=(ICommandHandler&&) = delete;
 
-	virtual std::vector<IProduct::Ptr> handle(LiverContext context) const = 0;
-
-	[[nodiscard]] static std::vector<IProduct::Ptr> run_handler(LiverContext& context, const Ptr& handler);
+	std::vector<IProduct::Ptr> handle(ICommand::Ptr command);
+	virtual std::vector<IProduct::Ptr> do_handle(ICommand::Ptr) = 0;
 };
