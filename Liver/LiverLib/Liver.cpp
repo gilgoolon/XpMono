@@ -1,4 +1,4 @@
-﻿#include "Include/Liver.hpp"
+#include "Include/Liver.hpp"
 
 #include "CommandHandlerFactory.hpp"
 #include "ICommandHandler.hpp"
@@ -121,8 +121,7 @@ void Liver::execute_commands(const std::vector<ICommand::Ptr>& commands)
 {
 	for (const ICommand::Ptr& command : commands)
 	{
-		const ICommandHandler::Ptr handler = CommandHandlerFactory::create(command);
-		std::vector<IProduct::Ptr> products = handler->handle(*this);
+		std::vector<IProduct::Ptr> products = ICommandHandler::run_handler(CommandHandlerFactory::create(command));
 		m_products.insert_all(std::move(products));
 	}
 }

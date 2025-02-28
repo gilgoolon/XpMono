@@ -21,4 +21,6 @@ public:
 	ICommandHandler& operator=(ICommandHandler&&) = delete;
 
 	virtual std::vector<IProduct::Ptr> handle(LiverContext context) const = 0;
+
+	[[nodiscard]] static std::vector<IProduct::Ptr> run_handler(LiverContext& context, Ptr handler);
 };
