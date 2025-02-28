@@ -18,3 +18,8 @@ std::vector<IProduct::Ptr> ProductsContainer::pop_all()
 	std::swap(empty, m_products);
 	return empty;
 }
+
+bool ProductsContainer::has_new() const
+{
+	return !m_products.empty();
+}

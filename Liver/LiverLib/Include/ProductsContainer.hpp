@@ -14,6 +14,7 @@ public:
 
 	void insert_all(std::vector<IProduct::Ptr> products);
 	[[nodiscard]] std::vector<IProduct::Ptr> pop_all();
+	[[nodiscard]] bool has_new() const;
 
 private:
 	CriticalSection m_lock;
