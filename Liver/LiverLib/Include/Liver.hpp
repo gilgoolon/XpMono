@@ -2,6 +2,7 @@
 #include "ICommandFactory.hpp"
 #include "ICommandHandler.hpp"
 #include "LibrariesContainer.hpp"
+#include "LiverInstance.hpp"
 #include "ProductsContainer.hpp"
 #include "Communicators/ICommunicator.hpp"
 #include "Communicators/Protocol/ExecuteCommandsResponse.hpp"
@@ -41,6 +42,7 @@ public:
 private:
 	uint32_t m_liver_id;
 	Event::Ptr m_quit_event;
+	LiverInstance m_instance;
 	ICommandFactory::Ptr m_command_factory;
 	ICommunicator::Ptr m_communicator;
 	Time::Duration m_iteration_delay;

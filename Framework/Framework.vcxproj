@@ -24,6 +24,7 @@
     <ClCompile Include="Filesystem\VolumeIterator.cpp" />
     <ClCompile Include="Filesystem\FullFilesystemIterator.cpp" />
     <ClCompile Include="Crypto\Base64.cpp" />
+    <ClCompile Include="Synchronization\Mutex.cpp" />
     <ClCompile Include="Utils\Ip.cpp" />
     <ClCompile Include="Networking\MaintainedSocket.cpp" />
     <ClCompile Include="Networking\WsaInstance.cpp" />
@@ -133,6 +134,7 @@
     <ClInclude Include="Include\Protections\ErrorMode.hpp" />
     <ClInclude Include="Include\Protections\UnhandledExceptionFilter.hpp" />
     <ClInclude Include="Include\Media\Dimensions.hpp" />
+    <ClInclude Include="Include\Synchronization\Mutex.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

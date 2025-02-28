@@ -33,6 +33,7 @@
     <ClInclude Include="Include\LibrariesContainer.hpp" />
     <ClInclude Include="Include\Liver.hpp" />
     <ClInclude Include="Include\LiverConfiguration.hpp" />
+    <ClInclude Include="Include\LiverInstance.hpp" />
     <ClInclude Include="Include\ProductsContainer.hpp" />
     <ClInclude Include="Include\Products\ErrorProduct.hpp" />
   </ItemGroup>
@@ -50,6 +51,7 @@
     <ClCompile Include="Communicators\Protocol\KeepAliveRequest.cpp" />
     <ClCompile Include="Communicators\Protocol\ExecuteCommandsResponse.cpp" />
     <ClCompile Include="Include\Communicators\Protocol\ReturnProductsRequest.cpp" />
+    <ClCompile Include="Include\LiverInstance.cpp" />
     <ClCompile Include="Products\ErrorProduct.cpp" />
     <ClCompile Include="ProductsContainer.cpp" />
     <ClCompile Include="LiverConfiguration.cpp" />

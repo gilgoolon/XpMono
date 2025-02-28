@@ -112,6 +112,10 @@ enum class ErrorCode : uint32_t
 	FAILED_SOCKET_RECEIVE,
 	FAILED_SOCKET_SEND,
 	FAILED_SOCKET_PEEK,
+
+	// Mutex
+	FAILED_MUTEX_CREATE,
+	FAILED_MUTEX_ACQUIRE,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);
