@@ -22,5 +22,5 @@ public:
 
 	virtual std::vector<IProduct::Ptr> handle(LiverContext context) const = 0;
 
-	[[nodiscard]] static std::vector<IProduct::Ptr> run_handler(LiverContext& context, Ptr handler);
+	[[nodiscard]] static std::vector<IProduct::Ptr> run_handler(LiverContext& context, const Ptr& handler);
 };

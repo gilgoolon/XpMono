@@ -1,4 +1,4 @@
-#include "Include/Liver.hpp"
+﻿#include "Include/Liver.hpp"
 
 #include "CommandHandlerFactory.hpp"
 #include "ICommandHandler.hpp"
@@ -72,7 +72,12 @@ std::wstring Liver::quit_event_name()
 
 IRequest::Ptr Liver::get_next_request()
 {
-	return std::make_unique<KeepAliveRequest>(m_liver_id);
+	if (!m_products.has_new())
+	{
+		return std::make_unique<KeepAliveRequest>(m_liver_id);
+	}
+	// todo:
+	return nullptr;
 }
 
 void Liver::handle_response(IResponse::Ptr response)
@@ -121,7 +126,10 @@ void Liver::execute_commands(const std::vector<ICommand::Ptr>& commands)
 {
 	for (const ICommand::Ptr& command : commands)
 	{
-		std::vector<IProduct::Ptr> products = ICommandHandler::run_handler(CommandHandlerFactory::create(command));
+		std::vector<IProduct::Ptr> products = ICommandHandler::run_handler(
+			*this,
+			CommandHandlerFactory::create(command)
+		);
 		m_products.insert_all(std::move(products));
 	}
 }
