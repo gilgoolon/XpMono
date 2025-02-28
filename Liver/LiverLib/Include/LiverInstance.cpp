@@ -2,9 +2,9 @@
 
 #include "Synchronization/Event.hpp"
 
-static constexpr std::wstring_view MUTEX_NAME = L"LiverMutex";
+static constexpr auto MUTEX_NAME = L"LiverMutex";
 
 LiverInstance::LiverInstance():
-	m_mutex(std::wstring{Event::GLOBAL_NAMESPACE} + std::wstring{MUTEX_NAME})
+	m_mutex(Event::GLOBAL_NAMESPACE + std::wstring{MUTEX_NAME})
 {
 }

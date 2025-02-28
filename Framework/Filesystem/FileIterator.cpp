@@ -8,8 +8,8 @@ FileIterator::FileIterator(const std::filesystem::path& folder):
 	m_handle(nullptr),
 	m_next_entry(nullptr)
 {
-	static constexpr std::wstring_view ANY_FILE_SUFFIX = L"*";
-	const std::filesystem::path expression = folder / std::wstring{ANY_FILE_SUFFIX};
+	static constexpr auto ANY_FILE_SUFFIX = L"*";
+	const std::filesystem::path expression = folder / ANY_FILE_SUFFIX;
 	WIN32_FIND_DATAW data{};
 	m_handle = FindFirstFileW(expression.wstring().c_str(), &data);
 	if (m_handle == INVALID_HANDLE_VALUE)

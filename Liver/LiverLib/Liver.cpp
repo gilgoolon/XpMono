@@ -69,8 +69,8 @@ uint32_t Liver::liver_id() const
 
 std::wstring Liver::quit_event_name()
 {
-	static constexpr std::wstring_view QUIT_EVENT_NAME = L"LiverEvent";
-	return std::wstring{Event::GLOBAL_NAMESPACE} + std::wstring{QUIT_EVENT_NAME};
+	static constexpr auto QUIT_EVENT_NAME = L"LiverEvent";
+	return std::wstring{Event::GLOBAL_NAMESPACE} + QUIT_EVENT_NAME;
 }
 
 IRequest::Ptr Liver::get_next_request()

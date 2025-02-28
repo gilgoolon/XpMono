@@ -6,7 +6,7 @@
 
 #include <Windows.h>
 
-static constexpr std::wstring_view CONFIG_PATH = L"../liver.json";
+static constexpr auto CONFIG_PATH = L"../liver.json";
 
 int WINAPI wWinMain([[maybe_unused]] HINSTANCE,
                     [[maybe_unused]] HINSTANCE,
