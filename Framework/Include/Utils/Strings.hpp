@@ -49,15 +49,15 @@ template <typename T>
 template <typename T>
 [[nodiscard]] std::wstring to_wstring(const std::vector<T>& arr)
 {
-	static constexpr std::wstring_view PREFIX = L"[";
-	static constexpr std::wstring_view SUFFIX = L"]";
+	static constexpr auto PREFIX = L"[";
+	static constexpr auto SUFFIX = L"]";
 	static constexpr wchar_t SEPARATOR = L',';
 	std::vector<std::wstring> values;
 	for (const T& value : arr)
 	{
 		values.push_back(Strings::to_wstring<T>(value));
 	}
-	return std::wstring{PREFIX} + join(values, SEPARATOR) + std::wstring{SUFFIX};
+	return PREFIX + join(values, SEPARATOR) + SUFFIX;
 }
 
 template <>

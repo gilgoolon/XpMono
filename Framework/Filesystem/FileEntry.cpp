@@ -45,7 +45,7 @@ static std::wostream& operator<<(std::wostream& stream, const FileEntry::Type ty
 Buffer FileEntry::serialize() const
 {
 	std::wostringstream out;
-	static constexpr std::wstring_view SEPARATOR = L" | ";
+	static constexpr auto SEPARATOR = L" | ";
 	out << L"Path: " << m_path << SEPARATOR
 		<< L"Type: " << m_type << SEPARATOR
 		<< L"Size: " << m_size << SEPARATOR

@@ -13,7 +13,7 @@ public:
 		AUTO_RESET = TRUE,
 	};
 
-	static constexpr std::wstring_view GLOBAL_NAMESPACE = L"Global/";
+	static constexpr auto GLOBAL_NAMESPACE = L"Global/";
 
 	explicit Event(const std::wstring& name);
 	explicit Event(const std::wstring& name, Type type);

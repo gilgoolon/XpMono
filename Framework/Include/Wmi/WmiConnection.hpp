@@ -9,8 +9,8 @@
 class WmiConnection final
 {
 public:
-	static constexpr std::wstring_view WMI_ROOT_NAMESPACE = L"ROOT\\CimV2";
-	explicit WmiConnection(const std::wstring& namespace_path = std::wstring{WMI_ROOT_NAMESPACE});
+	static constexpr auto WMI_ROOT_NAMESPACE = L"ROOT\\CimV2";
+	explicit WmiConnection(const std::wstring& namespace_path = WMI_ROOT_NAMESPACE);
 	~WmiConnection() = default;
 	WmiConnection(const WmiConnection&) = delete;
 	WmiConnection& operator=(const WmiConnection&) = delete;

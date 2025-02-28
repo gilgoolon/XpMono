@@ -104,5 +104,5 @@ std::vector<uint8_t> FigModule::take(const Fig::OperationId id)
 
 std::wstring FigModule::event_name(const Fig::FigId fig_id)
 {
-	return std::wstring{Event::GLOBAL_NAMESPACE} + std::wstring{EVENT_PREFIX} + std::to_wstring(fig_id);
+	return std::wstring{Event::GLOBAL_NAMESPACE} + EVENT_PREFIX + std::to_wstring(fig_id);
 }
