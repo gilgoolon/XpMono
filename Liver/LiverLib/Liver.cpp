@@ -8,6 +8,7 @@
 #include "Commands/ICommand.hpp"
 #include "Communicators/RawCommunicator.hpp"
 #include "Communicators/Protocol/KeepAliveRequest.hpp"
+#include "Communicators/Protocol/ReturnProductsRequest.hpp"
 #include "Communicators/Protocol/SendRandomResponse.hpp"
 #include "Handlers/LoadDllHandler.hpp"
 #include "Networking/MaintainedSocket.hpp"
@@ -78,7 +79,7 @@ IRequest::Ptr Liver::get_next_request()
 	{
 		return std::make_unique<KeepAliveRequest>(m_liver_id);
 	}
-	return std::make_unique<ReturnProductsResponse>(m_liver_id, m_products.pop_all());
+	return std::make_unique<ReturnProductsRequest>(m_liver_id, m_products.pop_all());
 }
 
 void Liver::handle_response(IResponse::Ptr response)

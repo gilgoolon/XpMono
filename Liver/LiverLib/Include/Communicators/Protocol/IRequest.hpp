@@ -9,6 +9,7 @@ public:
 	enum class Type : uint32_t
 	{
 		KEEP_ALIVE = 0,
+		SEND_PRODUCTS,
 	};
 
 	using Ptr = std::unique_ptr<IRequest>;
@@ -20,7 +21,8 @@ public:
 	IRequest(IRequest&&) = delete;
 	IRequest& operator=(IRequest&&) = delete;
 
-	[[nodiscard]] Buffer serialize() const override;
+	[[nodiscard]] virtual Buffer data() const = 0;
+	[[nodiscard]] Buffer serialize() const final;
 
 private:
 	Type m_type;
