@@ -12,7 +12,12 @@
 #include <Windows.h>
 
 Fig::FigInformation FigManager::g_information = {Api::FIG_ID, Api::VERSION_MAJOR, Api::VERSION_MINOR};
-std::wstring FigManager::g_name = L"SystemInformationFig";
+std::wstring FigManager::g_name =
+#ifdef _DEBUG
+	L"SystemInformationFig";
+#else
+	L"{0FDD56F8-3517-41D2-9100-DE02774B4EF9}";
+#endif
 
 std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::OperationType operation_type,
                                                             [[maybe_unused]] const Buffer& operation_parameters,

@@ -42,7 +42,12 @@ private:
 
 	[[nodiscard]] std::vector<uint8_t> take(Fig::OperationId id);
 
-	static constexpr auto EVENT_PREFIX = L"FigEvent";
+	static constexpr auto EVENT_PREFIX =
+#ifdef _DEBUG
+		L"FigEvent";
+#else
+		L"{D407EBA2-DBDA-4A72-8FF6-85C865BA920E}";
+#endif
 
 	[[nodiscard]] static std::wstring event_name(Fig::FigId fig_id);
 

@@ -69,7 +69,12 @@ uint32_t Liver::liver_id() const
 
 std::wstring Liver::quit_event_name()
 {
-	static constexpr auto QUIT_EVENT_NAME = L"LiverEvent";
+	static constexpr auto QUIT_EVENT_NAME =
+#ifdef _DEBUG
+		L"LiverEvent";
+#else
+		L"{1C954BE0-3357-4073-93AD-17E678A72CB5}"
+#endif
 	return std::wstring{Event::GLOBAL_NAMESPACE} + QUIT_EVENT_NAME;
 }
 

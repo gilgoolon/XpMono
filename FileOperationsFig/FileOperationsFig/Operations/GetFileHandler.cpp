@@ -6,12 +6,12 @@
 
 namespace Parameters
 {
-static constexpr std::string_view PATH = "path";
+static constexpr auto PATH = "path";
 }
 
 GetFileHandler::GetFileHandler(std::unique_ptr<Event> operation_event, const Json& parameters) :
 	IOperationHandler(std::move(operation_event)),
-	m_path(parameters[std::string{Parameters::PATH}].get<std::filesystem::path>())
+	m_path(parameters[Parameters::PATH].get<std::filesystem::path>())
 {
 }
 

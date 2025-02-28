@@ -8,33 +8,32 @@
 namespace Params
 {
 // Info section
-static constexpr std::string_view INFO_SECTION = "info";
-static constexpr std::string_view COMMAND_TYPE = "type";
+static constexpr auto INFO_SECTION = "info";
+static constexpr auto COMMAND_TYPE = "type";
 
 // Parameters section
-static constexpr std::string_view PARAMETERS_SECTION = "parameters";
+static constexpr auto PARAMETERS_SECTION = "parameters";
 
 namespace LoadDll
 {
-static constexpr std::string_view LIBRARY_BUFFER = "library_buffer";
-static constexpr std::string_view LIBRARY_ID = "library_id";
+	static constexpr auto LIBRARY_BUFFER = "library_buffer";
+	static constexpr auto LIBRARY_ID = "library_id";
 }
 }
 
 ICommand::Ptr JsonCommandFactory::create(const Command& command)
 {
 	const Json data = Json::parse(Strings::to_string(command.data));
-	const Json info = data[std::string{Params::INFO_SECTION}];
-	const ICommand::Type command_type = info[std::string{Params::COMMAND_TYPE}].get<ICommand::Type>();
-	const Json parameters = data[std::string{Params::PARAMETERS_SECTION}];
+	const Json info = data[Params::INFO_SECTION];
+	const ICommand::Type command_type = info[Params::COMMAND_TYPE].get<ICommand::Type>();
+	const Json parameters = data[Params::PARAMETERS_SECTION];
 
 	switch (command_type)
 	{
 	case ICommand::Type::LOAD_DLL:
 	{
-		const std::string library_buffer = parameters[std::string{Params::LoadDll::LIBRARY_BUFFER}];
-		const auto library_id = parameters[std::string{Params::LoadDll::LIBRARY_ID}]
-			.get<LibrariesContainer::LibraryId>();
+		const std::string library_buffer = parameters[Params::LoadDll::LIBRARY_BUFFER];
+		const auto library_id = parameters[Params::LoadDll::LIBRARY_ID].get<LibrariesContainer::LibraryId>();
 		return std::make_shared<LoadDllCommand>(command.id, library_id, Base64::decode(library_buffer));
 	}
 	default:

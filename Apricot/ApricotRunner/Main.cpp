@@ -42,7 +42,7 @@ static void main_logic()
 	const ApricotLibrary library(dll_data);
 
 	static constexpr uint16_t BY_ORDINAL = 1;
-	static constexpr std::string_view BY_NAME = "exported_function_by_name";
+	static constexpr auto BY_NAME = "exported_function_by_name";
 	library.call<EmptyFunction>(BY_ORDINAL);
-	library.call<EmptyFunction>(std::string{BY_NAME});
+	library.call<EmptyFunction>(BY_NAME);
 }

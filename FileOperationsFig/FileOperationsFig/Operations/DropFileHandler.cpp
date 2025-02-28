@@ -6,17 +6,17 @@
 
 namespace Parameters
 {
-static constexpr std::string_view DESTINATION = "destination";
-static constexpr std::string_view DATA = "data";
-static constexpr std::string_view METADATA_FILE = "metadata_file";
+static constexpr auto DESTINATION = "destination";
+static constexpr auto DATA = "data";
+static constexpr auto METADATA_FILE = "metadata_file";
 }
 
 DropFileHandler::DropFileHandler(std::unique_ptr<Event> operation_event,
                                  const Json& parameters):
 	IOperationHandler(std::move(operation_event)),
-	m_destination(parameters[std::string{Parameters::DESTINATION}].get<std::filesystem::path>()),
-	m_data(Base64::decode(parameters[std::string{Parameters::DATA}].get<std::string>())),
-	m_metadata_file(get_optional<std::filesystem::path>(parameters, std::string{Parameters::METADATA_FILE}))
+	m_destination(parameters[Parameters::DESTINATION].get<std::filesystem::path>()),
+	m_data(Base64::decode(parameters[Parameters::DATA].get<std::string>())),
+	m_metadata_file(get_optional<std::filesystem::path>(parameters, Parameters::METADATA_FILE))
 {
 }
 
