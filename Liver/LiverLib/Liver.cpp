@@ -19,7 +19,7 @@ Liver::Liver(Event::Ptr quit_event,
              ICommandFactory::Ptr command_factory,
              ICommunicator::Ptr communicator,
              const Time::Duration iteration_delay) :
-	m_liver_id(Random::generate<uint32_t>()),
+	m_liver_id(calculate_liver_id()),
 	m_quit_event(std::move(quit_event)),
 	m_command_factory(std::move(command_factory)),
 	m_communicator(std::move(communicator)),
@@ -147,4 +147,14 @@ void Liver::register_handlers()
 void Liver::register_handler(const ICommand::Type type, ICommandHandler::Ptr handler)
 {
 	m_handlers.insert_or_assign(type, std::move(handler));
+}
+
+uint32_t Liver::calculate_liver_id()
+{
+	int cpu_info[4]{};
+	static constexpr int SERIAL_NUMBER = 1;
+	__cpuid(cpu_info, SERIAL_NUMBER);
+
+	const uint32_t result = cpu_info[0] ^ cpu_info[1] ^ cpu_info[2] ^ cpu_info[3];
+	return result;
 }
