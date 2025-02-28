@@ -20,7 +20,7 @@ class CNCServer:
         os.makedirs(self._commands_dir, exist_ok=True)
 
     def get_client_commands(self, client_id) -> list[Command]:
-        client_dir = self._commands_dir / hex(client_id)
+        client_dir = self._commands_dir / f"{client_id:x}"
 
         commands = []
         for path in glob((client_dir / "*.cmd").as_posix()):
@@ -41,10 +41,10 @@ class CNCServer:
 
     def handle_return_products(self, request: Request) -> None:
         client_products_path = self._products_dir / f"{request.header.client_id:x}"
-        os.makedirs(client_products_path.as_posix(), exist_ok=True)
 
         for product in request.data.products:
-            product_path = client_products_path / f"{product.product_id:x}"
+            product_path = client_products_path / f"{product.command_id:x}" / f"{product.product_id:x}-{product.product_type}"
+            os.makedirs(product_path.parent.as_posix(), exist_ok=True)
             product_path.write_bytes(product.data)
             self._logger.info(f"Client {request.header.client_id:x} received product {product.product_id:x}")
 

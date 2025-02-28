@@ -10,5 +10,5 @@ IRequest::IRequest(const Type type, const uint32_t liver_id):
 
 Buffer IRequest::serialize() const
 {
-	return Strings::concat(ISerializable::serialize(Type::KEEP_ALIVE), ISerializable::serialize(m_liver_id));
+	return Strings::concat(ISerializable::serialize(m_type), ISerializable::serialize(m_liver_id), data());
 }

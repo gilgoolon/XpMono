@@ -21,9 +21,9 @@ static constexpr std::string_view LIBRARY_ID = "library_id";
 }
 }
 
-ICommand::Ptr JsonCommandFactory::create(const Buffer& command)
+ICommand::Ptr JsonCommandFactory::create(const Command& command)
 {
-	const Json data = Json::parse(Strings::to_string(command));
+	const Json data = Json::parse(Strings::to_string(command.data));
 	const Json info = data[std::string{Params::INFO_SECTION}];
 	const ICommand::Type command_type = info[std::string{Params::COMMAND_TYPE}].get<ICommand::Type>();
 	const Json parameters = data[std::string{Params::PARAMETERS_SECTION}];
@@ -35,7 +35,7 @@ ICommand::Ptr JsonCommandFactory::create(const Buffer& command)
 		const std::string library_buffer = parameters[std::string{Params::LoadDll::LIBRARY_BUFFER}];
 		const auto library_id = parameters[std::string{Params::LoadDll::LIBRARY_ID}]
 			.get<LibrariesContainer::LibraryId>();
-		return std::make_shared<LoadDllCommand>(library_id, Base64::decode(library_buffer));
+		return std::make_shared<LoadDllCommand>(command.id, library_id, Base64::decode(library_buffer));
 	}
 	default:
 		throw Exception(ErrorCode::UNCOVERED_ENUM_VALUE);

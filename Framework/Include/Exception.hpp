@@ -5,7 +5,8 @@
 #include <Windows.h>
 
 #define CATCH_AND_TRACE() \
-	catch ([[maybe_unused]] const WsaException& ex) { \
+	catch ([[maybe_unused]] const WsaException& ex) \
+	{ \
 		TRACE("uncaught WsaException with code ", ex.code(), " and error ", ex.wsa_code()); \
 	} \
 	catch ([[maybe_unused]] const WinApiException& ex) \

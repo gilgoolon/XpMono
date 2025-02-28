@@ -5,15 +5,15 @@
 class LoadDllHandler final : public ICommandHandler
 {
 public:
-	explicit LoadDllHandler(ICommand::Ptr command);
+	explicit LoadDllHandler(std::shared_ptr<LibrariesContainer> libraries);
 	~LoadDllHandler() override = default;
 	LoadDllHandler(const LoadDllHandler&) = delete;
 	LoadDllHandler& operator=(const LoadDllHandler&) = delete;
 	LoadDllHandler(LoadDllHandler&&) = delete;
 	LoadDllHandler& operator=(LoadDllHandler&&) = delete;
 
-	[[nodiscard]] std::vector<IProduct::Ptr> handle(LiverContext context) const override;
+	[[nodiscard]] std::vector<IProduct::Ptr> do_handle(const ICommand::Ptr& command) override;
 
 private:
-	std::shared_ptr<LoadDllCommand> m_command;
+	std::shared_ptr<LibrariesContainer> m_libraries;
 };

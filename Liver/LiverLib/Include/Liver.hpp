@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "ICommandFactory.hpp"
+#include "ICommandHandler.hpp"
 #include "LibrariesContainer.hpp"
+#include "ProductsContainer.hpp"
 #include "Communicators/ICommunicator.hpp"
 #include "Communicators/Protocol/ExecuteCommandsResponse.hpp"
 #include "Synchronization/Event.hpp"
@@ -27,6 +29,8 @@ private:
 
 	void handle_execute_commands(const ExecuteCommandsResponse& response);
 	void execute_commands(const std::vector<ICommand::Ptr>& commands);
+	void register_handlers();
+	void register_handler(ICommand::Type type, ICommandHandler::Ptr handler);
 
 public:
 	void run();
@@ -35,12 +39,12 @@ public:
 	[[nodiscard]] uint32_t liver_id() const;
 
 private:
+	uint32_t m_liver_id;
 	Event::Ptr m_quit_event;
 	ICommandFactory::Ptr m_command_factory;
 	ICommunicator::Ptr m_communicator;
 	Time::Duration m_iteration_delay;
-	uint32_t m_liver_id;
-
-public:
-	LibrariesContainer libraries;
+	ProductsContainer m_products;
+	std::shared_ptr<LibrariesContainer> m_libraries;
+	std::unordered_map<ICommand::Type, ICommandHandler::Ptr> m_handlers;
 };

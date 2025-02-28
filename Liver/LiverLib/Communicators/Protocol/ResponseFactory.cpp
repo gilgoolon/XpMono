@@ -17,11 +17,13 @@ IResponse::Ptr ResponseFactory::create(const IInputStream::Ptr& input)
 	case IResponse::Type::EXECUTE_COMMANDS:
 	{
 		const uint32_t total_commands = input->read<uint32_t>();
-		std::vector<Buffer> commands;
+		std::vector<Command> commands;
 		commands.reserve(total_commands);
 		for (uint32_t i = 0; i < total_commands; ++i)
 		{
-			commands.emplace_back(input->read_sized());
+			const auto command_id = input->read<ICommand::Id>();
+			const Buffer command_data = input->read_sized();
+			commands.emplace_back(command_id, command_data);
 		}
 		return std::make_shared<ExecuteCommandsResponse>(std::move(commands));
 	}

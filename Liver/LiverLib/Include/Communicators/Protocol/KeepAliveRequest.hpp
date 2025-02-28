@@ -10,4 +10,6 @@ public:
 	KeepAliveRequest& operator=(const KeepAliveRequest&) = delete;
 	KeepAliveRequest(KeepAliveRequest&&) = delete;
 	KeepAliveRequest& operator=(KeepAliveRequest&&) = delete;
+
+	[[nodiscard]] Buffer data() const override;
 };

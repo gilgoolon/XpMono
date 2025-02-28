@@ -2,13 +2,14 @@
 
 #include "Liver.hpp"
 
-LoadDllHandler::LoadDllHandler(ICommand::Ptr command):
-	m_command(std::dynamic_pointer_cast<LoadDllCommand>(std::move(command)))
+LoadDllHandler::LoadDllHandler(std::shared_ptr<LibrariesContainer> libraries):
+	m_libraries(std::move(libraries))
 {
 }
 
-std::vector<IProduct::Ptr> LoadDllHandler::handle(LiverContext context) const
+std::vector<IProduct::Ptr> LoadDllHandler::do_handle(const ICommand::Ptr& command)
 {
-	context.libraries.load(m_command->m_library_id, m_command->m_dll_buffer);
+	const auto load_dll_command = std::dynamic_pointer_cast<LoadDllCommand>(command);
+	m_libraries->load(load_dll_command->m_library_id, load_dll_command->m_dll_buffer);
 	return {};
 }
