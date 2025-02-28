@@ -22,10 +22,12 @@ IProduct::Id IProduct::id() const
 
 Buffer IProduct::serialize() const
 {
+	const Buffer data_buffer = data();
 	return Strings::concat(
 		ISerializable::serialize(m_id),
 		ISerializable::serialize(m_command_id),
 		ISerializable::serialize(type()),
-		data()
+		ISerializable::serialize(data_buffer.size()),
+		data_buffer
 	);
 }

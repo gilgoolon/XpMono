@@ -4,10 +4,11 @@ void ProductsContainer::insert_all(std::vector<IProduct::Ptr> products)
 {
 	CriticalSection::Acquired acquired = m_lock.acquire();
 
-	for (IProduct::Ptr& product : products)
-	{
-		m_products.push_back(std::move(product));
-	}
+	m_products.insert(
+		m_products.end(),
+		std::make_move_iterator(products.begin()),
+		std::make_move_iterator(products.end())
+	);
 }
 
 std::vector<IProduct::Ptr> ProductsContainer::pop_all()

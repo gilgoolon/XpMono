@@ -8,7 +8,7 @@ ReturnProductsRequest::ReturnProductsRequest(const uint32_t liver_id, std::vecto
 
 Buffer ReturnProductsRequest::data() const
 {
-	Buffer result;
+	Buffer result = ISerializable::serialize(m_products.size());
 	for (const IProduct::Ptr& product : m_products)
 	{
 		const Buffer serialized = product->serialize();

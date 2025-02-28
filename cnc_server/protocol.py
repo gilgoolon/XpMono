@@ -28,13 +28,15 @@ class RequestHeader:
 @dataclass
 class Product:
     product_id: int
+    command_id: int
+    product_type: int
     data: bytes
 
     @classmethod
     async def from_stream(cls, reader: asyncio.StreamReader) -> "Product":
-        product_id, = await structs.read_struct(reader, "<I")
+        product = await structs.read_struct(reader, "<III")
         data = await structs.read_sized_buffer(reader)
-        return cls(product_id, data)
+        return cls(*product, data)
 
 @dataclass
 class ReturnProductsRequestData:
@@ -43,7 +45,7 @@ class ReturnProductsRequestData:
     @classmethod
     async def from_stream(cls, reader: asyncio.StreamReader) -> "ReturnProductsRequestData":
         products_count, = await structs.read_struct(reader, "<I")
-        products = [Product.from_stream(reader) for _ in range(products_count)]
+        products = [await Product.from_stream(reader) for _ in range(products_count)]
         return cls(products)
 
 @dataclass
