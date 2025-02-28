@@ -29,12 +29,12 @@ WmiConnection::WmiConnection(const std::wstring& namespace_path):
 
 std::vector<std::unique_ptr<WmiResult>> WmiConnection::query(const std::wstring& query) const
 {
-	static constexpr std::string_view WMI_QUERY_LANGUAGE = "WQL";
+	static constexpr auto WMI_QUERY_LANGUAGE = "WQL";
 	static constexpr long SYNC_QUERY = WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY;
 	static constexpr IWbemContext* NO_CONTEXT = nullptr;
 	IEnumWbemClassObject* enumerator = nullptr;
 	HRESULT hresult = static_cast<IWbemServices*>(m_services.get())->ExecQuery(
-		bstr_t(WMI_QUERY_LANGUAGE.data()),
+		bstr_t(WMI_QUERY_LANGUAGE),
 		bstr_t(query.c_str()),
 		SYNC_QUERY,
 		NO_CONTEXT,
