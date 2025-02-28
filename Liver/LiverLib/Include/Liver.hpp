@@ -32,6 +32,7 @@ private:
 	void execute_commands(const std::vector<ICommand::Ptr>& commands);
 	void register_handlers();
 	void register_handler(ICommand::Type type, ICommandHandler::Ptr handler);
+	[[nodiscard]] static uint32_t calculate_liver_id();
 
 public:
 	void run();
