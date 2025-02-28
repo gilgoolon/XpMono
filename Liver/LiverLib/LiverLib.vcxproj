@@ -28,7 +28,6 @@
     <ClInclude Include="Include\ICommandFactory.hpp" />
     <ClInclude Include="Include\Commands\ICommand.hpp" />
     <ClInclude Include="Include\ICommandHandler.hpp" />
-    <ClInclude Include="Include\CommandHandlerFactory.hpp" />
     <ClInclude Include="Include\IProduct.hpp" />
     <ClInclude Include="Include\LibrariesContainer.hpp" />
     <ClInclude Include="Include\Liver.hpp" />
@@ -38,7 +37,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Api\LiverApi.cpp" />
-    <ClCompile Include="CommandHandlerFactory.cpp" />
     <ClCompile Include="Commands\ICommand.cpp" />
     <ClCompile Include="Commands\LoadDllCommand.cpp" />
     <ClCompile Include="Communicators\Protocol\IRequest.cpp" />

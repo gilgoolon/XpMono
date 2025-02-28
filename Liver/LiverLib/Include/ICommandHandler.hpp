@@ -18,6 +18,6 @@ public:
 	ICommandHandler(ICommandHandler&&) = delete;
 	ICommandHandler& operator=(ICommandHandler&&) = delete;
 
-	std::vector<IProduct::Ptr> handle(ICommand::Ptr command);
-	virtual std::vector<IProduct::Ptr> do_handle(ICommand::Ptr) = 0;
+	std::vector<IProduct::Ptr> handle(const ICommand::Ptr& command);
+	virtual std::vector<IProduct::Ptr> do_handle(const ICommand::Ptr& command) = 0;
 };

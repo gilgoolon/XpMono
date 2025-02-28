@@ -12,7 +12,7 @@ public:
 	LoadDllHandler(LoadDllHandler&&) = delete;
 	LoadDllHandler& operator=(LoadDllHandler&&) = delete;
 
-	[[nodiscard]] std::vector<IProduct::Ptr> do_handle(ICommand::Ptr command) override;
+	[[nodiscard]] std::vector<IProduct::Ptr> do_handle(const ICommand::Ptr& command) override;
 
 private:
 	std::shared_ptr<LibrariesContainer> m_libraries;
