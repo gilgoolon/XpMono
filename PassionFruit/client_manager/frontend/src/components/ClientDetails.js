@@ -79,7 +79,7 @@ export default function ClientDetails({ client, onSendCommand }) {
               Current IP
             </Typography>
             <Typography variant="body1" gutterBottom>
-              {client.current_ip}
+              {client.current_ip || client.ip || client.ip_history?.[0]?.ip || 'N/A'}
             </Typography>
           </Grid>
         </Grid>
