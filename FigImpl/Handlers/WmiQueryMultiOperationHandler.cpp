@@ -29,11 +29,11 @@ void WmiQueryMultiOperationHandler::run()
 			const std::optional<std::wstring> result = entry->get_formatted_property(field);
 			const std::wstring value = result.has_value() ? result.value() : UNKNOWN_VALUE;
 			std::wstring formatted_result = Strings::concat(
-				FIELD_PREFIX,
+				std::wstring{FIELD_PREFIX},
 				field,
-				FIELD_VALUE_SEPARATOR,
+				std::wstring{FIELD_VALUE_SEPARATOR},
 				value,
-				PAIR_SUFFIX
+				std::wstring{PAIR_SUFFIX}
 			);
 			const Buffer data = Strings::to_buffer(formatted_result);
 			append(data);
