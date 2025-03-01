@@ -7,8 +7,9 @@ import struct
 import magic
 import io
 from PIL import Image
-import json
 from pathlib import Path
+
+import products
 
 app = Flask(__name__, static_folder='frontend/build')
 # Configure CORS to allow all methods and headers
@@ -22,18 +23,25 @@ CORS(app, resources={
 
 CHERRY_URL = 'http://localhost:8000'  # Your FastAPI server URL
 
-def parse_product_content(product_type: int, content: bytes):
+def parse_product_content(product_id: str, product_type: products.ProductType, content: bytes):
     """Parse the product content based on its format.
     Currently handles uint32 values and PNG images."""
-    if product_type == 0:
+    base_result = {
+        'id': product_id,
+        'formatted_type': products.format_product_type[product_type]
+    }
+    
+    if product_type == products.ProductType.COMMAND_ERROR:
         value, = struct.unpack('<I', content)
         return {
+            **base_result,
             'type': 'Command Error (uint32)',
             'value': value,
             'hex': f'0x{value:08X}',  # Hexadecimal representation
             'binary': f'0b{value:032b}'  # Binary representation
         }
-    elif product_type == 1:
+        
+    elif product_type == products.ProductType.IMAGE_PNG:
         try:
             # Verify it's a valid PNG
             img = Image.open(io.BytesIO(content))
@@ -46,6 +54,7 @@ def parse_product_content(product_type: int, content: bytes):
             img_base64 = base64.b64encode(img_buffer.getvalue()).decode('utf-8')
             
             return {
+                **base_result,
                 'type': 'image/png',
                 'data': f'data:image/png;base64,{img_base64}',
                 'width': img.width,
@@ -76,21 +85,28 @@ def get_client(client_id):
         # Parse each product's content
         if 'products' in client_data:
             parsed_products = {}
+            product_paths = {}  # Map product IDs to their paths
+            
             # Handle products as a list
-            for product in client_data['products']:
+            for product_path in client_data['products']:
                 try:
-                    path = Path(product)
+                    path = Path(product_path)
                     data = path.read_bytes()
-                    PRODUCT_TYPE_SEPARATOR = '-'
-                    product_type = int(path.stem.split(PRODUCT_TYPE_SEPARATOR)[-1])
-                    parsed_products[product] = parse_product_content(product_type, data)
+                    product_type = products.get_product_type(path)
+                    product_id = products.get_product_id(path)
+                    
+                    parsed_products[product_id] = parse_product_content(product_id, product_type, data)
+                    product_paths[product_id] = product_path
                 except Exception as e:
                     print(f"Exception while processing product with type {product_type}: {str(e)}")  # Debug log
-                    parsed_products[product] = {
+                    parsed_products[product_id] = {
                         'type': 'error',
                         'error': f'Error processing product: {str(e)}'
                     }
             
+            # Replace products list with IDs and add the mappings
+            client_data['products'] = list(parsed_products.keys())
+            client_data['product_paths'] = product_paths
             client_data['parsed_products'] = parsed_products
         
         return jsonify(client_data), response.status_code

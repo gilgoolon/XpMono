@@ -44,7 +44,7 @@ export default function ProductViewer({ product, productPath }) {
     return (
       <Box sx={{ width: '100%' }}>
         <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-          Path: {productPath}
+          ID: {product.id}
         </Typography>
         <Card>
           <CardMedia
@@ -61,12 +61,20 @@ export default function ProductViewer({ product, productPath }) {
             <Table size="small">
               <TableBody>
                 <TableRow>
+                  <TableCell component="th" scope="row">Type</TableCell>
+                  <TableCell>{product.formatted_type}</TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell component="th" scope="row">Dimensions</TableCell>
                   <TableCell>{product.width} × {product.height}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">Mode</TableCell>
                   <TableCell>{product.mode}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">Path</TableCell>
+                  <TableCell sx={{ wordBreak: 'break-all' }}>{productPath}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -80,14 +88,14 @@ export default function ProductViewer({ product, productPath }) {
   return (
     <Box sx={{ width: '100%' }}>
       <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-        Path: {productPath}
+        ID: {product.id}
       </Typography>
       <TableContainer component={Paper}>
         <Table>
           <TableBody>
             <TableRow>
               <TableCell component="th" scope="row">Type</TableCell>
-              <TableCell>{product.type}</TableCell>
+              <TableCell>{product.formatted_type}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell component="th" scope="row">Decimal</TableCell>
@@ -102,6 +110,10 @@ export default function ProductViewer({ product, productPath }) {
               <TableCell sx={{ fontFamily: 'monospace', wordBreak: 'break-all' }}>
                 {product.binary}
               </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell component="th" scope="row">Path</TableCell>
+              <TableCell sx={{ wordBreak: 'break-all' }}>{productPath}</TableCell>
             </TableRow>
           </TableBody>
         </Table>

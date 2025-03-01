@@ -11,20 +11,20 @@ import SendIcon from '@mui/icons-material/Send';
 import ProductViewer from './ProductViewer';
 
 export default function ClientDetails({ client, onSendCommand }) {
-  const [ipHistoryExpanded, setIpHistoryExpanded] = useState(false);
   const [commandData, setCommandData] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [ipHistoryExpanded, setIpHistoryExpanded] = useState(false);
 
   const handleSendCommand = async () => {
     setIsLoading(true);
-    setError(null);
     try {
       await onSendCommand(commandData);
       setCommandData('');
+      setError(null);
     } catch (err) {
-      setError(err.message || 'Failed to send command');
+      setError(err.message);
     } finally {
       setIsLoading(false);
     }
@@ -77,12 +77,14 @@ export default function ClientDetails({ client, onSendCommand }) {
             </Typography>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Typography variant="subtitle2" color="text.secondary">
-              Current IP
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              {client.current_ip || client.ip || client.ip_history?.[0]?.ip || 'N/A'}
-            </Typography>
+            <Box>
+              <Typography variant="subtitle2" color="text.secondary">
+                Current IP
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography variant="body1">{client.current_ip || client.ip || client.ip_history?.[0]?.ip || 'N/A'}</Typography>
+              </Box>
+            </Box>
           </Grid>
         </Grid>
         
@@ -126,25 +128,31 @@ export default function ClientDetails({ client, onSendCommand }) {
               Products
             </Typography>
             <Grid container spacing={2}>
-              {client.products.map((product, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <Card 
-                    sx={{ 
-                      cursor: 'pointer',
-                      '&:hover': {
-                        backgroundColor: 'action.hover'
-                      }
-                    }}
-                    onClick={() => setSelectedProduct(product)}
-                  >
-                    <CardContent>
-                      <Typography variant="subtitle2" noWrap>
-                        {product}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
+              {client.products.map((productId, index) => {
+                const product = client.parsed_products[productId];
+                return (
+                  <Grid item xs={12} sm={6} md={4} key={index}>
+                    <Card 
+                      sx={{ 
+                        cursor: 'pointer',
+                        '&:hover': {
+                          backgroundColor: 'action.hover'
+                        }
+                      }}
+                      onClick={() => setSelectedProduct(productId)}
+                    >
+                      <CardContent>
+                        <Typography variant="subtitle2" noWrap>
+                          {product?.formatted_type || 'Unknown Type'}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" noWrap>
+                          {product?.id || 'Unknown ID'}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                );
+              })}
             </Grid>
           </Paper>
         </Grid>
@@ -194,8 +202,8 @@ export default function ClientDetails({ client, onSendCommand }) {
                 {selectedProduct.split('/').pop()}
               </Typography>
               <ProductViewer 
-                product={client.parsed_products?.[selectedProduct]} 
-                productPath={selectedProduct}
+                product={client.parsed_products[selectedProduct]}
+                productPath={client.product_paths[selectedProduct]}
               />
             </Box>
           )}
