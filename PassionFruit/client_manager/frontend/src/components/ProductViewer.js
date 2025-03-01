@@ -8,14 +8,17 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-  CircularProgress
+  CircularProgress,
+  Card,
+  CardMedia,
+  CardContent
 } from '@mui/material';
 
 export default function ProductViewer({ product, productPath }) {
-  console.log('ProductViewer props:', { product, productPath }); // Debug log
+  console.log('ProductViewer props:', { product, productPath });
 
   if (!product) {
-    console.log('No product data available'); // Debug log
+    console.log('No product data available');
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
         <CircularProgress />
@@ -24,7 +27,7 @@ export default function ProductViewer({ product, productPath }) {
   }
 
   if (product.type === 'error') {
-    console.log('Product error:', product.error); // Debug log
+    console.log('Product error:', product.error);
     return (
       <Paper sx={{ p: 2, textAlign: 'center' }}>
         <Typography color="error">
@@ -34,8 +37,46 @@ export default function ProductViewer({ product, productPath }) {
     );
   }
 
-  console.log('Rendering product data:', product); // Debug log
+  console.log('Rendering product data:', product);
 
+  // Handle image display
+  if (product.type === 'image/png') {
+    return (
+      <Box sx={{ width: '100%' }}>
+        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+          Path: {productPath}
+        </Typography>
+        <Card>
+          <CardMedia
+            component="img"
+            image={product.data}
+            alt="Product Image"
+            sx={{ 
+              maxHeight: '500px',
+              objectFit: 'contain',
+              backgroundColor: 'background.paper'
+            }}
+          />
+          <CardContent>
+            <Table size="small">
+              <TableBody>
+                <TableRow>
+                  <TableCell component="th" scope="row">Dimensions</TableCell>
+                  <TableCell>{product.width} × {product.height}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">Mode</TableCell>
+                  <TableCell>{product.mode}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </Box>
+    );
+  }
+
+  // Handle uint32 display
   return (
     <Box sx={{ width: '100%' }}>
       <Typography variant="subtitle2" color="text.secondary" gutterBottom>

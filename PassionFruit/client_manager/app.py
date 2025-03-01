@@ -24,7 +24,7 @@ CHERRY_URL = 'http://localhost:8000'  # Your FastAPI server URL
 
 def parse_product_content(product_type: int, content: bytes):
     """Parse the product content based on its format.
-    Currently handles uint32 values, but can be extended for other formats."""
+    Currently handles uint32 values and PNG images."""
     if product_type == 0:
         value, = struct.unpack('<I', content)
         return {
@@ -33,10 +33,30 @@ def parse_product_content(product_type: int, content: bytes):
             'hex': f'0x{value:08X}',  # Hexadecimal representation
             'binary': f'0b{value:032b}'  # Binary representation
         }
+    elif product_type == 1:
+        try:
+            # Verify it's a valid PNG
+            img = Image.open(io.BytesIO(content))
+            if img.format != 'PNG':
+                raise ValueError("Not a PNG image")
+            
+            # Convert to base64 for frontend display
+            img_buffer = io.BytesIO()
+            img.save(img_buffer, format='PNG')
+            img_base64 = base64.b64encode(img_buffer.getvalue()).decode('utf-8')
+            
+            return {
+                'type': 'image/png',
+                'data': f'data:image/png;base64,{img_base64}',
+                'width': img.width,
+                'height': img.height,
+                'mode': img.mode
+            }
+        except Exception as e:
+            raise ValueError(f"Invalid PNG image: {str(e)}")
 
     raise ValueError(f"Unsupported product type: {product_type}")
 
-    
 
 # API endpoints that proxy to FastAPI
 @app.route('/api/clients', methods=['GET'])
@@ -58,8 +78,6 @@ def get_client(client_id):
             parsed_products = {}
             # Handle products as a list
             for product in client_data['products']:
-                print(f"Processing product: {product}")  # Debug log
-                # Get product content from FastAPI
                 try:
                     path = Path(product)
                     data = path.read_bytes()
@@ -67,94 +85,17 @@ def get_client(client_id):
                     product_type = int(path.stem.split(PRODUCT_TYPE_SEPARATOR)[-1])
                     parsed_products[product] = parse_product_content(product_type, data)
                 except Exception as e:
-                    print(f"Exception while processing {product}: {str(e)}")  # Debug log
+                    print(f"Exception while processing product with type {product_type}: {str(e)}")  # Debug log
                     parsed_products[product] = {
                         'type': 'error',
                         'error': f'Error processing product: {str(e)}'
                     }
             
             client_data['parsed_products'] = parsed_products
-            print(f"Final parsed products: {parsed_products}")  # Debug log
         
         return jsonify(client_data), response.status_code
     except requests.exceptions.RequestException as e:
         print(f"Request exception: {str(e)}")  # Debug log
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/api/products/<path:product_path>', methods=['GET'])
-def get_product(product_path):
-    try:
-        # Get the product path from FastAPI
-        response = requests.get(f'{CHERRY_URL}/get-product-path/{product_path}')
-        if response.status_code != 200:
-            return jsonify({'error': 'Product not found'}), 404
-            
-        file_path = response.json().get('path')
-        if not file_path or not os.path.exists(file_path):
-            return jsonify({'error': 'Product file not found'}), 404
-
-        # Use python-magic to detect file type
-        mime = magic.Magic(mime=True)
-        content_type = mime.from_file(file_path)
-
-        # Handle different file types
-        if content_type.startswith('image/'):
-            # Process image files
-            try:
-                with Image.open(file_path) as img:
-                    # Convert to RGB if necessary
-                    if img.mode in ('RGBA', 'LA'):
-                        background = Image.new('RGB', img.size, 'white')
-                        background.paste(img, mask=img.split()[-1])
-                        img = background
-                    elif img.mode != 'RGB':
-                        img = img.convert('RGB')
-                    
-                    # Save to bytes
-                    img_io = io.BytesIO()
-                    img.save(img_io, 'JPEG', quality=85)
-                    img_io.seek(0)
-                    
-                    return send_file(
-                        img_io,
-                        mimetype='image/jpeg',
-                        as_attachment=False
-                    )
-            except Exception as e:
-                return jsonify({'error': f'Error processing image: {str(e)}'}), 500
-
-        elif content_type == 'application/json' or content_type.startswith('text/'):
-            # Process text and JSON files
-            try:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    content = f.read()
-                    
-                if content_type == 'application/json':
-                    # Validate and format JSON
-                    try:
-                        parsed = json.loads(content)
-                        return jsonify(parsed)
-                    except json.JSONDecodeError:
-                        return jsonify({'error': 'Invalid JSON file'}), 400
-                else:
-                    # Return text content with proper content type
-                    return content, 200, {'Content-Type': content_type}
-            except Exception as e:
-                return jsonify({'error': f'Error reading file: {str(e)}'}), 500
-
-        else:
-            # For binary files, return with proper content type
-            try:
-                return send_file(
-                    file_path,
-                    mimetype=content_type,
-                    as_attachment=True,
-                    download_name=os.path.basename(file_path)
-                )
-            except Exception as e:
-                return jsonify({'error': f'Error sending file: {str(e)}'}), 500
-
-    except requests.exceptions.RequestException as e:
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/commands', methods=['POST', 'OPTIONS'])
