@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   Box, Typography, Paper, Grid, Card, CardContent,
   IconButton, Collapse, List, ListItem, ListItemText,
-  TextField, Button
+  TextField, Button, Alert, Snackbar
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -13,12 +13,16 @@ export default function ClientDetails({ client, onSendCommand }) {
   const [ipHistoryExpanded, setIpHistoryExpanded] = useState(false);
   const [commandData, setCommandData] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSendCommand = async () => {
     setIsLoading(true);
+    setError(null);
     try {
       await onSendCommand(commandData);
       setCommandData('');
+    } catch (err) {
+      setError(err.message || 'Failed to send command');
     } finally {
       setIsLoading(false);
     }
@@ -157,6 +161,8 @@ export default function ClientDetails({ client, onSendCommand }) {
               onChange={(e) => setCommandData(e.target.value)}
               placeholder="Enter command in JSON format"
               sx={{ mb: 2 }}
+              error={!!error}
+              helperText={error || 'Command will be sent in base64 format'}
             />
             <LoadingButton
               loading={isLoading}
