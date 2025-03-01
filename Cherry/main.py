@@ -7,8 +7,8 @@ from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 from datetime import datetime, timezone
 from typing import List
-from pydantic import BaseModel
 
+from protocol import ClientConnection, DetailedClientInfo, ClientInfo
 import products
 from database import Database
 from models import Client, ClientIP
@@ -29,22 +29,6 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-
-
-class ClientConnection(BaseModel):
-    client_id: int
-    ip: str
-
-class ClientInfo(BaseModel):
-    client_id: int
-    last_connection: datetime
-    current_ip: str
-
-class DetailedClientInfo(BaseModel):
-    client_id: int
-    last_connection: datetime
-    ip_history: List[dict]
-    products: List[str]
 
 
 @app.post("/client-connected")
