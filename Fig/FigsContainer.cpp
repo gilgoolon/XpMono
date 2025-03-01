@@ -1,13 +1,13 @@
-﻿#include "LoadedFigs.hpp"
+﻿#include "FigsContainer.hpp"
 
 #include "Exception.hpp"
 
-LoadedFigs::LoadedFigs():
+FigsContainer::FigsContainer():
 	m_loaded_figs{}
 {
 }
 
-void LoadedFigs::load(const Fig::FigId id, const Buffer& buffer)
+void FigsContainer::load(const Fig::FigId id, const Buffer& buffer)
 {
 	if (m_loaded_figs.contains(id))
 	{
@@ -16,7 +16,7 @@ void LoadedFigs::load(const Fig::FigId id, const Buffer& buffer)
 	m_loaded_figs.insert_or_assign(id, std::make_unique<FigModule>(id, buffer));
 }
 
-void LoadedFigs::unload(const Fig::FigId id)
+void FigsContainer::unload(const Fig::FigId id)
 {
 	if (m_loaded_figs.contains(id))
 	{

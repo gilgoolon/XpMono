@@ -1,11 +1,11 @@
 ﻿#pragma once
+#include "FigsContainer.hpp"
 #include "ICommandHandler.hpp"
-#include "LoadedFigs.hpp"
 
 class LoadFigHandler final : public ICommandHandler
 {
 public:
-	explicit LoadFigHandler(std::shared_ptr<LoadedFigs> figs);
+	explicit LoadFigHandler(std::shared_ptr<FigsContainer> figs);
 	~LoadFigHandler() override = default;
 	LoadFigHandler(const LoadFigHandler&) = delete;
 	LoadFigHandler& operator=(const LoadFigHandler&) = delete;
@@ -15,5 +15,5 @@ public:
 	[[nodiscard]] std::vector<IProduct::Ptr> do_handle(const ICommand::Ptr& command) override;
 
 private:
-	std::shared_ptr<LoadedFigs> m_figs;
+	std::shared_ptr<FigsContainer> m_figs;
 };

@@ -27,9 +27,10 @@ void WmiQuerySingleOperationHandler::run()
 		const std::wstring value = result.has_value() ? result.value() : UNKNOWN_VALUE;
 		std::wstring formatted_result = Strings::concat(
 			field,
-			FIELD_VALUE_SEPARATOR,
+			std::wstring{FIELD_VALUE_SEPARATOR},
 			value,
-			PAIR_SUFFIX);
+			std::wstring{PAIR_SUFFIX}
+		);
 		const Buffer data = Strings::to_buffer(formatted_result);
 		append(data);
 	}

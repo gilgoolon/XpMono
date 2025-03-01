@@ -2,7 +2,7 @@
 
 #include "Commands/UnloadFigCommand.hpp"
 
-UnloadFigHandler::UnloadFigHandler(std::shared_ptr<LoadedFigs> figs):
+UnloadFigHandler::UnloadFigHandler(std::shared_ptr<FigsContainer> figs):
 	m_figs(std::move(figs))
 {
 }

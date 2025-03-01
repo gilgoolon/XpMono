@@ -63,7 +63,7 @@
     <ClCompile Include="Handlers\UnloadFigHandler.cpp" />
     <ClCompile Include="Include\Communicators\Protocol\ReturnProductsRequest.cpp" />
     <ClCompile Include="Handlers\LoadFigHandler.cpp" />
-    <ClCompile Include="Include\LiverInstance.cpp" />
+    <ClCompile Include="LiverInstance.cpp" />
     <ClCompile Include="Products\ErrorProduct.cpp" />
     <ClCompile Include="ProductsContainer.cpp" />
     <ClCompile Include="LiverConfiguration.cpp" />

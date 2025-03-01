@@ -167,7 +167,7 @@
     <ClCompile Include="Include\Communicators\Protocol\ReturnProductsRequest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Include\LiverInstance.cpp">
+    <ClCompile Include="LiverInstance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Commands\UnloadDllCommand.cpp">
