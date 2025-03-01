@@ -1,5 +1,7 @@
 import argparse
+import base64
 from pathlib import Path
+import uuid
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.concurrency import asynccontextmanager
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,7 +10,8 @@ from sqlalchemy.orm import joinedload
 from datetime import datetime, timezone
 from typing import List
 
-from protocol import ClientConnection, DetailedClientInfo, ClientInfo
+from commands import get_client_commands_dir
+from protocol import ClientCommand, ClientConnection, DetailedClientInfo, ClientInfo
 import products
 from database import Database
 from models import Client, ClientIP
@@ -95,8 +98,14 @@ async def get_client_details(client_id: int, db: AsyncSession = Depends(database
             "last_seen": ip.last_seen
         } for ip in sorted(client.ip_addresses, key=lambda x: x.last_seen, reverse=True)],
         products=products.get_client_products(ROOT, client_id),
-        commands_dir=(ROOT / f"{client_id:x}").absolute().as_posix()
+        commands_dir=get_client_commands_dir(ROOT, client_id).absolute().as_posix()
     )
+
+@app.post("/send-command")
+async def send_command(command: ClientCommand):
+    path = get_client_commands_dir(ROOT, command.client_id) / uuid.uuid4().hex
+    path.write_bytes(base64.b64decode(command.data))
+    return {"status": "success"}
 
 if __name__ == "__main__":
     import uvicorn
