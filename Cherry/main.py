@@ -94,7 +94,8 @@ async def get_client_details(client_id: int, db: AsyncSession = Depends(database
             "first_seen": ip.first_seen,
             "last_seen": ip.last_seen
         } for ip in sorted(client.ip_addresses, key=lambda x: x.last_seen, reverse=True)],
-        products=products.get_client_products(ROOT, client_id)
+        products=products.get_client_products(ROOT, client_id),
+        commands_dir=(ROOT / f"{client_id:x}").absolute().as_posix()
     )
 
 if __name__ == "__main__":

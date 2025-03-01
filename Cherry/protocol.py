@@ -17,3 +17,4 @@ class DetailedClientInfo(BaseModel):
     last_connection: datetime
     ip_history: List[dict]
     products: List[str]
+    commands_dir: str
