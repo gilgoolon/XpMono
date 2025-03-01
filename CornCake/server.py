@@ -71,7 +71,7 @@ class CNCServer:
     async def notify_client_connection(self, ip: str, client_id: int):
         data = {
             "ip": ip,
-            "client_id": client_id
+            "client_id": f"{client_id:x}"
         }
         ENDPOINT = "/client-connected"
         async with self._cherry_session.post(self._cherry_url + ENDPOINT, json=data) as response:
