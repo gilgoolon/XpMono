@@ -6,13 +6,13 @@ import os
 app = Flask(__name__, static_folder='frontend/build')
 CORS(app)
 
-FASTAPI_URL = 'http://localhost:8000'  # Your FastAPI server URL
+CHERRY_URL = 'http://localhost:8000'  # Your FastAPI server URL
 
 # API endpoints that proxy to FastAPI
 @app.route('/api/clients', methods=['GET'])
 def get_clients():
     try:
-        response = requests.get(f'{FASTAPI_URL}/get-clients')
+        response = requests.get(f'{CHERRY_URL}/get-clients')
         return jsonify(response.json()), response.status_code
     except requests.exceptions.RequestException as e:
         return jsonify({'error': str(e)}), 500
@@ -20,7 +20,7 @@ def get_clients():
 @app.route('/api/clients/<client_id>', methods=['GET'])
 def get_client(client_id):
     try:
-        response = requests.get(f'{FASTAPI_URL}/get-client/{client_id}')
+        response = requests.get(f'{CHERRY_URL}/get-client/{client_id}')
         return jsonify(response.json()), response.status_code
     except requests.exceptions.RequestException as e:
         return jsonify({'error': str(e)}), 500
@@ -28,7 +28,7 @@ def get_client(client_id):
 @app.route('/api/commands', methods=['POST'])
 def send_command():
     try:
-        response = requests.post(f'{FASTAPI_URL}/send-command', json=request.json)
+        response = requests.post(f'{CHERRY_URL}/send-command', json=request.json)
         return jsonify(response.json()), response.status_code
     except requests.exceptions.RequestException as e:
         return jsonify({'error': str(e)}), 500
