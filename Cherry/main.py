@@ -36,15 +36,16 @@ app = FastAPI(lifespan=lifespan)
 
 @app.post("/client-connected")
 async def client_connected(connection: ClientConnection, db: AsyncSession = Depends(database.get_db)):
+    client_id = int(connection.client_id, 16)
     # Get or create client
-    client = await db.get(Client, connection.client_id)
+    client = await db.get(Client, client_id)
     if not client:
-        client = Client(client_id=connection.client_id)
+        client = Client(client_id=client_id)
         db.add(client)
     
     # Update or create IP address
     stmt = select(ClientIP).where(
-        ClientIP.client_id == connection.client_id,
+        ClientIP.client_id == client_id,
         ClientIP.ip_address == connection.ip
     )
     result = await db.execute(stmt)
@@ -52,7 +53,7 @@ async def client_connected(connection: ClientConnection, db: AsyncSession = Depe
     
     if not ip_record:
         ip_record = ClientIP(
-            client_id=connection.client_id,
+            client_id=client_id,
             ip_address=connection.ip
         )
         db.add(ip_record)
@@ -72,15 +73,15 @@ async def get_clients(db: AsyncSession = Depends(database.get_db)):
     
     return [
         ClientInfo(
-            client_id=client.client_id,
+            client_id=f"{client.client_id:x}",
             last_connection=client.last_connection,
             current_ip=client.ip_addresses[-1].ip_address if client.ip_addresses else None
         ) for client in clients
     ]
 
 @app.get("/get-client/{client_id}", response_model=DetailedClientInfo)
-async def get_client_details(client_id: int, db: AsyncSession = Depends(database.get_db)):
-    stmt = select(Client).where(Client.client_id == client_id).options(
+async def get_client_details(client_id: str, db: AsyncSession = Depends(database.get_db)):
+    stmt = select(Client).where(Client.client_id == int(client_id, 16)).options(
         joinedload(Client.ip_addresses)
     )
     result = await db.execute(stmt)
@@ -90,7 +91,7 @@ async def get_client_details(client_id: int, db: AsyncSession = Depends(database
         raise HTTPException(status_code=404, detail="Client not found")
     
     return DetailedClientInfo(
-        client_id=client.client_id,
+        client_id=f"{client.client_id:x}",
         last_connection=client.last_connection,
         ip_history=[{
             "ip": ip.ip_address,
