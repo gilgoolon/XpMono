@@ -21,13 +21,3 @@ class ClientIP(Base):
     first_seen = Column(DateTime(timezone=True), server_default=func.now())
     last_seen = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     client = relationship("Client", back_populates="ip_addresses")
-
-class ClientProduct(Base):
-    __tablename__ = "client_products"
-    
-    id = Column(Integer, primary_key=True)
-    client_id = Column(Integer, ForeignKey("clients.client_id"))
-    product_id = Column(Integer)
-    command_id = Column(Integer)
-    product_type = Column(Integer)
-    client = relationship("Client", back_populates="products")

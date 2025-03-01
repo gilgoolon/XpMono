@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.concurrency import asynccontextmanager
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
@@ -7,7 +8,7 @@ from typing import List
 from pydantic import BaseModel
 
 from database import get_db, init_db
-from models import Client, ClientIP, ClientProduct
+from models import Client, ClientIP
 
 app = FastAPI()
 
@@ -32,9 +33,10 @@ class DetailedClientInfo(BaseModel):
     ip_history: List[dict]
     products: List[ProductInfo]
 
-@app.on_event("startup")
-async def startup():
+@asynccontextmanager
+async def lifespan():
     await init_db()
+    yield
 
 @app.post("/client-connected")
 async def client_connected(connection: ClientConnection, db: AsyncSession = Depends(get_db)):
