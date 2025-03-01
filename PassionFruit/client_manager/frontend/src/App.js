@@ -135,7 +135,7 @@ function App() {
             position: 'relative'
           }}>
             <Typography variant="h4" component="h1" sx={{ flex: 1 }}>
-              {selectedClient ? 'Client Details' : 'Client Manager'}
+            PassionFruit
             </Typography>
             <Box sx={{ 
               position: 'absolute',
@@ -177,7 +177,7 @@ function App() {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Client ID</TableCell>
+                      <TableCell>Liver ID</TableCell>
                       <TableCell>Last Connection</TableCell>
                       <TableCell>Current IP</TableCell>
                       <TableCell>Actions</TableCell>

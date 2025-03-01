@@ -57,12 +57,12 @@ export default function ClientDetails({ client, onSendCommand }) {
       {/* Top Section - Client Overview */}
       <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
         <Typography variant="h5" gutterBottom>
-          Client Details
+          Liver Details
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>
             <Typography variant="subtitle2" color="text.secondary">
-              Client ID
+              Liver ID
             </Typography>
             <Typography variant="body1" gutterBottom>
               {client.client_id}
