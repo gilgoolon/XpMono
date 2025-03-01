@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import {
   Box, Typography, Paper, Grid, Card, CardContent,
   IconButton, Collapse, List, ListItem, ListItemText,
-  TextField, Button, Alert, Snackbar
+  TextField, Button, Alert, Snackbar, Dialog, DialogContent
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import SendIcon from '@mui/icons-material/Send';
+import ProductViewer from './ProductViewer';
 
 export default function ClientDetails({ client, onSendCommand }) {
   const [ipHistoryExpanded, setIpHistoryExpanded] = useState(false);
   const [commandData, setCommandData] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const handleSendCommand = async () => {
     setIsLoading(true);
@@ -133,7 +135,7 @@ export default function ClientDetails({ client, onSendCommand }) {
                         backgroundColor: 'action.hover'
                       }
                     }}
-                    onClick={() => window.open(`/products/${product}`, '_blank')}
+                    onClick={() => setSelectedProduct(product)}
                   >
                     <CardContent>
                       <Typography variant="subtitle2" noWrap>
@@ -177,6 +179,28 @@ export default function ClientDetails({ client, onSendCommand }) {
           </Paper>
         </Grid>
       </Grid>
+
+      {/* Product Viewer Dialog */}
+      <Dialog
+        open={!!selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogContent>
+          {selectedProduct && (
+            <Box>
+              <Typography variant="h6" gutterBottom>
+                {selectedProduct.split('/').pop()}
+              </Typography>
+              <ProductViewer 
+                product={client.parsed_products?.[selectedProduct]} 
+                productPath={selectedProduct}
+              />
+            </Box>
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 }
