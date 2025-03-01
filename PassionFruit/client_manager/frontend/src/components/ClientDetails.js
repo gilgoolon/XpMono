@@ -107,7 +107,7 @@ export default function ClientDetails({ client, onSendCommand }) {
                 <ListItem key={index}>
                   <ListItemText
                     primary={entry.ip}
-                    secondary={formatDate(entry.timestamp)}
+                    secondary={formatDate(entry.last_seen)}
                   />
                 </ListItem>
               ))}
