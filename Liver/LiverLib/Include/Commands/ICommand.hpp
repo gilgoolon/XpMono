@@ -8,6 +8,7 @@ public:
 	enum class Type: uint32_t
 	{
 		LOAD_DLL = 0,
+		UNLOAD_DLL,
 	};
 
 	using Ptr = std::shared_ptr<ICommand>;
