@@ -14,6 +14,8 @@ public:
 
 	[[nodiscard]] Type type() const override;
 
+	friend class UnloadDllHandler;
+
 private:
 	LibrariesContainer::LibraryId m_library_id;
 };
