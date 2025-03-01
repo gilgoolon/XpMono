@@ -14,6 +14,7 @@
     <ClInclude Include="Api\Include\LiverApi.hpp" />
     <ClInclude Include="Include\CommandFactories\JsonCommandFactory.hpp" />
     <ClInclude Include="Include\Commands\LoadDllCommand.hpp" />
+    <ClInclude Include="Include\Commands\UnloadDllCommand.hpp" />
     <ClInclude Include="Include\Communicators\ICommunicator.hpp" />
     <ClInclude Include="Include\Communicators\Protocol\Command.hpp" />
     <ClInclude Include="Include\Communicators\Protocol\ExecuteCommandsResponse.hpp" />
@@ -50,6 +51,7 @@
     <ClCompile Include="Communicators\Protocol\SendRandomResponse.cpp" />
     <ClCompile Include="Communicators\Protocol\KeepAliveRequest.cpp" />
     <ClCompile Include="Communicators\Protocol\ExecuteCommandsResponse.cpp" />
+    <ClCompile Include="Commands\UnloadDllCommand.cpp" />
     <ClCompile Include="Include\Communicators\Protocol\ReturnProductsRequest.cpp" />
     <ClCompile Include="Include\LiverInstance.cpp" />
     <ClCompile Include="Products\ErrorProduct.cpp" />
