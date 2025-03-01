@@ -31,7 +31,7 @@ int WINAPI wWinMain([[maybe_unused]] HINSTANCE hInstance,
 			ex.code(),
 			" and ApricotCode ",
 			static_cast<uint32_t>(ex.apricot_code())
-		)
+		);
 	}
 	catch ([[maybe_unused]] const FigException& ex)
 	{
@@ -42,7 +42,7 @@ int WINAPI wWinMain([[maybe_unused]] HINSTANCE hInstance,
 			static_cast<uint32_t>(ex.fig_code()),
 			" and FigSpecificCode ",
 			ex.fig_specific_code()
-		)
+		);
 	}
 	CATCH_AND_TRACE()
 
