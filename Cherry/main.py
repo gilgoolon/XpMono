@@ -43,6 +43,8 @@ async def client_connected(connection: ClientConnection, db: AsyncSession = Depe
         client = Client(client_id=client_id)
         db.add(client)
     
+    client.last_connection = datetime.now(timezone.utc)
+
     # Update or create IP address
     stmt = select(ClientIP).where(
         ClientIP.client_id == client_id,
@@ -104,7 +106,8 @@ async def get_client_details(client_id: str, db: AsyncSession = Depends(database
 
 @app.post("/send-command")
 async def send_command(command: ClientCommand):
-    path = get_client_commands_dir(ROOT, command.client_id) / uuid.uuid4().hex
+    path = get_client_commands_dir(ROOT, command.client_id) / f"{uuid.uuid4().hex}.cmd"
+    path.parent.mkdir(exist_ok=True)
     path.write_bytes(base64.b64decode(command.data))
     return {"status": "success"}
 
