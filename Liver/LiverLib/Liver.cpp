@@ -11,6 +11,7 @@
 #include "Communicators/Protocol/ReturnProductsRequest.hpp"
 #include "Communicators/Protocol/SendRandomResponse.hpp"
 #include "Handlers/LoadDllHandler.hpp"
+#include "Handlers/LoadFigHandler.hpp"
 #include "Handlers/UnloadDllHandler.hpp"
 #include "Networking/MaintainedSocket.hpp"
 #include "Synchronization/Event.hpp"
