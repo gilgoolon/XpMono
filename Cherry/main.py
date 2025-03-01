@@ -1,3 +1,5 @@
+import argparse
+from pathlib import Path
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.concurrency import asynccontextmanager
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -7,8 +9,27 @@ from datetime import datetime, timezone
 from typing import List
 from pydantic import BaseModel
 
-from database import get_db, init_db
+import products
+from database import Database
 from models import Client, ClientIP
+
+
+parser = argparse.ArgumentParser("Cherry DB API")
+parser.add_argument("root", type=Path, help="Root path to store the data")
+_args = parser.parse_args()
+ROOT = _args.root
+
+database = Database(ROOT)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await database.init_db()
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
+
 
 class ClientConnection(BaseModel):
     client_id: int
@@ -23,16 +44,11 @@ class DetailedClientInfo(BaseModel):
     client_id: int
     last_connection: datetime
     ip_history: List[dict]
+    products: List[str]
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    await init_db()
-    yield
-
-app = FastAPI(lifespan=lifespan)
 
 @app.post("/client-connected")
-async def client_connected(connection: ClientConnection, db: AsyncSession = Depends(get_db)):
+async def client_connected(connection: ClientConnection, db: AsyncSession = Depends(database.get_db)):
     # Get or create client
     client = await db.get(Client, connection.client_id)
     if not client:
@@ -60,7 +76,7 @@ async def client_connected(connection: ClientConnection, db: AsyncSession = Depe
     return {"status": "success"}
 
 @app.get("/get-clients", response_model=List[ClientInfo])
-async def get_clients(db: AsyncSession = Depends(get_db)):
+async def get_clients(db: AsyncSession = Depends(database.get_db)):
     stmt = select(Client).options(
         joinedload(Client.ip_addresses),
     )
@@ -76,7 +92,7 @@ async def get_clients(db: AsyncSession = Depends(get_db)):
     ]
 
 @app.get("/get-client/{client_id}", response_model=DetailedClientInfo)
-async def get_client_details(client_id: int, db: AsyncSession = Depends(get_db)):
+async def get_client_details(client_id: int, db: AsyncSession = Depends(database.get_db)):
     stmt = select(Client).where(Client.client_id == client_id).options(
         joinedload(Client.ip_addresses)
     )
@@ -93,7 +109,8 @@ async def get_client_details(client_id: int, db: AsyncSession = Depends(get_db))
             "ip": ip.ip_address,
             "first_seen": ip.first_seen,
             "last_seen": ip.last_seen
-        } for ip in sorted(client.ip_addresses, key=lambda x: x.last_seen, reverse=True)]
+        } for ip in sorted(client.ip_addresses, key=lambda x: x.last_seen, reverse=True)],
+        products=products.get_client_products(ROOT, client_id)
     )
 
 if __name__ == "__main__":
