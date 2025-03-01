@@ -43,6 +43,8 @@ async def client_connected(connection: ClientConnection, db: AsyncSession = Depe
         client = Client(client_id=client_id)
         db.add(client)
     
+    client.last_connection = datetime.now(timezone.utc)
+
     # Update or create IP address
     stmt = select(ClientIP).where(
         ClientIP.client_id == client_id,
