@@ -2,6 +2,7 @@
 
 #include "Json.hpp"
 #include "Commands/LoadDllCommand.hpp"
+#include "Commands/LoadFigCommand.hpp"
 #include "Commands/UnloadDllCommand.hpp"
 #include "Crypto/Base64.hpp"
 #include "Utils/Strings.hpp"
@@ -25,14 +26,20 @@ namespace UnloadDll
 {
 static constexpr auto LIBRARY_ID = "library_id";
 }
+
+namespace LoadFig
+{
+static constexpr auto FIG_BUFFER = "fig_buffer";
+static constexpr auto FIG_ID = "fig_id";
+}
 }
 
 ICommand::Ptr JsonCommandFactory::create(const Command& command)
 {
 	const Json data = Json::parse(Strings::to_string(command.data));
-	const Json info = data[Params::INFO_SECTION];
+	const Json& info = data[Params::INFO_SECTION];
 	const ICommand::Type command_type = info[Params::COMMAND_TYPE].get<ICommand::Type>();
-	const Json parameters = data[Params::PARAMETERS_SECTION];
+	const Json& parameters = data[Params::PARAMETERS_SECTION];
 
 	switch (command_type)
 	{
@@ -48,6 +55,14 @@ ICommand::Ptr JsonCommandFactory::create(const Command& command)
 		const auto library_id = parameters[Params::UnloadDll::LIBRARY_ID].get<LibrariesContainer::LibraryId>();
 		return std::make_shared<UnloadDllCommand>(command.id, library_id);
 	}
+
+	case ICommand::Type::LOAD_FIG:
+	{
+		const std::string library_buffer = parameters[Params::LoadFig::FIG_BUFFER];
+		const auto library_id = parameters[Params::LoadFig::FIG_ID].get<LibrariesContainer::LibraryId>();
+		return std::make_shared<LoadFigCommand>(command.id, library_id, Base64::decode(library_buffer));
+	}
+
 	default:
 		throw Exception(ErrorCode::UNCOVERED_ENUM_VALUE);
 	}
