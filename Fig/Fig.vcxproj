@@ -80,16 +80,14 @@
     <ClCompile Include="FigException.cpp" />
     <ClCompile Include="FigModule.cpp" />
     <ClCompile Include="FigOperation.cpp" />
-    <ClCompile Include="LoadedFigs.cpp" />
-    <ClCompile Include="LoadedFigsContainer.cpp" />
+    <ClCompile Include="FigsContainer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\FigApi.hpp" />
     <ClInclude Include="Include\FigException.hpp" />
     <ClInclude Include="Include\FigModule.hpp" />
     <ClInclude Include="Include\FigOperation.hpp" />
-    <ClInclude Include="Include\LoadedFigs.hpp" />
-    <ClInclude Include="Include\LoadedFigsContainer.hpp" />
+    <ClInclude Include="Include\FigsContainer.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Framework\Framework.vcxproj">

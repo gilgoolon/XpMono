@@ -2,7 +2,7 @@
 
 #include "Commands/LoadFigCommand.hpp"
 
-LoadFigHandler::LoadFigHandler(std::shared_ptr<LoadedFigs> figs):
+LoadFigHandler::LoadFigHandler(std::shared_ptr<FigsContainer> figs):
 	m_figs(std::move(figs))
 {
 }
