@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Api\Include\LiverApi.hpp" />
+    <ClInclude Include="Include\Handlers\LoadFigHandler.hpp" />
     <ClInclude Include="Include\Handlers\UnloadDllHandler.hpp" />
     <ClInclude Include="Include\CommandFactories\JsonCommandFactory.hpp" />
     <ClInclude Include="Include\Commands\LoadDllCommand.hpp" />
@@ -55,6 +56,7 @@
     <ClCompile Include="Commands\UnloadDllCommand.cpp" />
     <ClCompile Include="Handlers\UnloadDllHandler.cpp" />
     <ClCompile Include="Include\Communicators\Protocol\ReturnProductsRequest.cpp" />
+    <ClCompile Include="Include\Handlers\LoadFigHandler.cpp" />
     <ClCompile Include="Include\LiverInstance.cpp" />
     <ClCompile Include="Products\ErrorProduct.cpp" />
     <ClCompile Include="ProductsContainer.cpp" />

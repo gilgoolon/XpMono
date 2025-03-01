@@ -149,6 +149,8 @@ void Liver::register_handlers()
 {
 	register_handler(ICommand::Type::LOAD_DLL, std::make_unique<LoadDllHandler>(m_libraries));
 	register_handler(ICommand::Type::UNLOAD_DLL, std::make_unique<UnloadDllHandler>(m_libraries));
+
+	register_handler(ICommand::Type::LOAD_FIG, std::make_unique<LoadFigHandler>(m_figs));
 }
 
 void Liver::register_handler(const ICommand::Type type, ICommandHandler::Ptr handler)

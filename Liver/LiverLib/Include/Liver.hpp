@@ -3,6 +3,7 @@
 #include "ICommandHandler.hpp"
 #include "LibrariesContainer.hpp"
 #include "LiverInstance.hpp"
+#include "LoadedFigs.hpp"
 #include "ProductsContainer.hpp"
 #include "Communicators/ICommunicator.hpp"
 #include "Communicators/Protocol/ExecuteCommandsResponse.hpp"
@@ -49,5 +50,6 @@ private:
 	Time::Duration m_iteration_delay;
 	ProductsContainer m_products;
 	std::shared_ptr<LibrariesContainer> m_libraries;
+	std::shared_ptr<LoadedFigs> m_figs;
 	std::unordered_map<ICommand::Type, ICommandHandler::Ptr> m_handlers;
 };

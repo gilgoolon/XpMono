@@ -96,6 +96,9 @@
     <ClInclude Include="Include\Handlers\UnloadDllHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Handlers\LoadFigHandler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Liver.cpp">
@@ -162,6 +165,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Handlers\UnloadDllHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Handlers\LoadFigHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
