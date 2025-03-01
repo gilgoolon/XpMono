@@ -1,4 +1,4 @@
-﻿#include "LoadFigHandler.hpp"
+﻿#include "Handlers/LoadFigHandler.hpp"
 
 #include "Commands/LoadFigCommand.hpp"
 

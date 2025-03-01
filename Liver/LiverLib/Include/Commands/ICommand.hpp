@@ -10,6 +10,7 @@ public:
 		LOAD_DLL = 0,
 		UNLOAD_DLL,
 		LOAD_FIG,
+		UNLOAD_FIG,
 	};
 
 	using Ptr = std::shared_ptr<ICommand>;
