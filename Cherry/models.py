@@ -10,7 +10,6 @@ class Client(Base):
     client_id = Column(Integer, primary_key=True)
     last_connection = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     ip_addresses = relationship("ClientIP", back_populates="client")
-    products = relationship("ClientProduct", back_populates="client")
 
 class ClientIP(Base):
     __tablename__ = "client_ips"

@@ -1,6 +1,8 @@
 import os
 import asyncio
 import logging
+from typing import Optional
+import aiohttp
 import argparse
 from glob import glob
 from pathlib import Path
@@ -16,6 +18,8 @@ class CNCServer:
         self._commands_dir = self._root / "commands"
         self._products_dir = self._root / "products"
         self._logger = logger
+        self._cherry_session: Optional[aiohttp.ClientSession] = None
+        self._cherry_url = "http://localhost:8000"
 
         os.makedirs(self._commands_dir, exist_ok=True)
 
@@ -64,14 +68,27 @@ class CNCServer:
         self._logger.info(f"Sending response type {response.type()} from client {request.header.client_id:x}")
         return response
 
+    async def notify_client_connection(self, ip: str, client_id: int):
+        data = {
+            "ip": ip,
+            "client_id": client_id
+        }
+        ENDPOINT = "/client-connected"
+        async with self._cherry_session.post(self._cherry_url + ENDPOINT, json=data) as response:
+            OK = 200
+            if response.status != OK:
+                self._logger.error(f"Failed to notify client connection: {await response.text()}")
+
     async def handle_client(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
         client_addr = writer.get_extra_info("peername")
+        ip, port = client_addr
         self._logger.info(f"New connection from {client_addr}")
 
         try:
             while True:
                 try:
                     request = await Request.from_stream(reader)                    
+                    await self.notify_client_connection(ip, request.header.client_id)
                     response = self.handle_request(request)
 
                     await write_response(writer, response)
@@ -97,6 +114,7 @@ class CNCServer:
             self._port
         )
 
+        self._cherry_session = aiohttp.ClientSession()
         self._logger.info(f"CNC Server started on {self._interface}:{self._port}")
         
         async with server:
