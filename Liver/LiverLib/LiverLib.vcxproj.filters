@@ -170,7 +170,7 @@
     <ClCompile Include="Handlers\UnloadDllHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Handlers\LoadFigHandler.cpp">
+    <ClCompile Include="Handlers\LoadFigHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Commands\LoadFigCommand.cpp">
