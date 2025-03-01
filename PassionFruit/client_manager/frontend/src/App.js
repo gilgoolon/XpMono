@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Container, Box, Typography, Paper, Table, TableBody,
   TableCell, TableContainer, TableHead, TableRow,
-  IconButton, useMediaQuery, Button
+  IconButton, useMediaQuery, Button, Skeleton, CircularProgress
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -21,6 +21,7 @@ function App() {
   const [clients, setClients] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
   const [loadingClient, setLoadingClient] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const theme = React.useMemo(
     () =>
@@ -51,11 +52,14 @@ function App() {
   }, []);
 
   const fetchClients = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(`${API_BASE_URL}/api/clients`);
       setClients(response.data);
     } catch (error) {
       console.error('Error fetching clients:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -79,6 +83,7 @@ function App() {
       });
     } catch (error) {
       console.error('Error sending command:', error);
+      throw error;
     }
   };
 
@@ -104,6 +109,19 @@ function App() {
     }
   };
 
+  const LoadingTable = () => (
+    <Box sx={{ width: '100%' }}>
+      {[...Array(5)].map((_, index) => (
+        <Box key={index} sx={{ display: 'flex', my: 2 }}>
+          <Skeleton variant="rectangular" width="25%" height={40} sx={{ mr: 1 }} />
+          <Skeleton variant="rectangular" width="25%" height={40} sx={{ mr: 1 }} />
+          <Skeleton variant="rectangular" width="25%" height={40} sx={{ mr: 1 }} />
+          <Skeleton variant="rectangular" width="20%" height={40} />
+        </Box>
+      ))}
+    </Box>
+  );
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -126,38 +144,54 @@ function App() {
           </Box>
 
           {!selectedClient ? (
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Client ID</TableCell>
-                    <TableCell>Last Connection</TableCell>
-                    <TableCell>Current IP</TableCell>
-                    <TableCell>Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {clients.map((client) => (
-                    <TableRow key={client.client_id}>
-                      <TableCell>{client.client_id}</TableCell>
-                      <TableCell>{formatDate(client.last_connection)}</TableCell>
-                      <TableCell>{client.current_ip}</TableCell>
-                      <TableCell>
-                        <LoadingButton
-                          loading={loadingClient === client.client_id}
-                          loadingPosition="start"
-                          startIcon={<VisibilityIcon />}
-                          variant="contained"
-                          onClick={() => fetchClientDetails(client.client_id)}
-                        >
-                          View Details
-                        </LoadingButton>
-                      </TableCell>
+            isLoading ? (
+              <Paper sx={{ p: 2 }}>
+                <LoadingTable />
+              </Paper>
+            ) : (
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Client ID</TableCell>
+                      <TableCell>Last Connection</TableCell>
+                      <TableCell>Current IP</TableCell>
+                      <TableCell>Actions</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                  </TableHead>
+                  <TableBody>
+                    {clients.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={4} align="center">
+                          <Typography variant="body1" color="text.secondary">
+                            No clients found
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      clients.map((client) => (
+                        <TableRow key={client.client_id}>
+                          <TableCell>{client.client_id}</TableCell>
+                          <TableCell>{formatDate(client.last_connection)}</TableCell>
+                          <TableCell>{client.current_ip}</TableCell>
+                          <TableCell>
+                            <LoadingButton
+                              loading={loadingClient === client.client_id}
+                              loadingPosition="start"
+                              startIcon={<VisibilityIcon />}
+                              variant="contained"
+                              onClick={() => fetchClientDetails(client.client_id)}
+                            >
+                              View Details
+                            </LoadingButton>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )
           ) : (
             <ClientDetails
               client={selectedClient}
