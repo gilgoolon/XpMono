@@ -37,9 +37,9 @@ static constexpr auto FIG_ID = "fig_id";
 ICommand::Ptr JsonCommandFactory::create(const Command& command)
 {
 	const Json data = Json::parse(Strings::to_string(command.data));
-	const Json info = data[Params::INFO_SECTION];
+	const Json& info = data[Params::INFO_SECTION];
 	const ICommand::Type command_type = info[Params::COMMAND_TYPE].get<ICommand::Type>();
-	const Json parameters = data[Params::PARAMETERS_SECTION];
+	const Json& parameters = data[Params::PARAMETERS_SECTION];
 
 	switch (command_type)
 	{
