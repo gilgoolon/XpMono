@@ -2,6 +2,7 @@
 
 #include "Json.hpp"
 #include "Commands/LoadDllCommand.hpp"
+#include "Commands/UnloadDllCommand.hpp"
 #include "Crypto/Base64.hpp"
 #include "Utils/Strings.hpp"
 
@@ -16,8 +17,13 @@ static constexpr auto PARAMETERS_SECTION = "parameters";
 
 namespace LoadDll
 {
-	static constexpr auto LIBRARY_BUFFER = "library_buffer";
-	static constexpr auto LIBRARY_ID = "library_id";
+static constexpr auto LIBRARY_BUFFER = "library_buffer";
+static constexpr auto LIBRARY_ID = "library_id";
+}
+
+namespace UnloadDll
+{
+static constexpr auto LIBRARY_ID = "library_id";
 }
 }
 
@@ -35,6 +41,12 @@ ICommand::Ptr JsonCommandFactory::create(const Command& command)
 		const std::string library_buffer = parameters[Params::LoadDll::LIBRARY_BUFFER];
 		const auto library_id = parameters[Params::LoadDll::LIBRARY_ID].get<LibrariesContainer::LibraryId>();
 		return std::make_shared<LoadDllCommand>(command.id, library_id, Base64::decode(library_buffer));
+	}
+
+	case ICommand::Type::UNLOAD_DLL:
+	{
+		const auto library_id = parameters[Params::UnloadDll::LIBRARY_ID].get<LibrariesContainer::LibraryId>();
+		return std::make_shared<UnloadDllCommand>(command.id, library_id);
 	}
 	default:
 		throw Exception(ErrorCode::UNCOVERED_ENUM_VALUE);
