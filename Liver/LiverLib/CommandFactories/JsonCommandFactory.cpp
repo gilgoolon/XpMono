@@ -1,6 +1,7 @@
 ﻿#include "CommandFactories/JsonCommandFactory.hpp"
 
 #include "Json.hpp"
+#include "Trace.hpp"
 #include "Commands/LoadDllCommand.hpp"
 #include "Commands/LoadFigCommand.hpp"
 #include "Commands/UnloadDllCommand.hpp"
@@ -51,6 +52,7 @@ ICommand::Ptr JsonCommandFactory::create(const Command& command)
 	{
 	case ICommand::Type::LOAD_DLL:
 	{
+		TRACE(data.dump().data());
 		const std::string library_buffer = parameters[Params::LoadDll::LIBRARY_BUFFER];
 		const auto library_id = parameters[Params::LoadDll::LIBRARY_ID].get<LibrariesContainer::LibraryId>();
 		return std::make_shared<LoadDllCommand>(command.id, library_id, Base64::decode(library_buffer));

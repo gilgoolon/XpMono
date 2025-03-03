@@ -23,6 +23,7 @@ export default function ClientDetails({ client, onSendCommand }) {
   const [ipHistoryExpanded, setIpHistoryExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [variables, setVariables] = useState({});
+  const [variableTypes, setVariableTypes] = useState({});
   const [files, setFiles] = useState([]);
 
   useEffect(() => {
@@ -39,23 +40,32 @@ export default function ClientDetails({ client, onSendCommand }) {
 
   useEffect(() => {
     const extractedVariables = {};
-    const regex = /{(\w+)}/g;
+    const extractedTypes = {};
+    const regex = /{{[\s]*(\w+)[\s]*}}/g;
     let match;
     while ((match = regex.exec(commandData)) !== null) {
       extractedVariables[match[1]] = variables[match[1]] || '';
+      extractedTypes[match[1]] = variableTypes[match[1]] || 'string';
     }
     setVariables(extractedVariables);
+    setVariableTypes(extractedTypes);
   }, [commandData]);
 
   const handleVariableChange = (name, value) => {
     setVariables((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleVariableTypeChange = (name, type) => {
+    setVariableTypes((prev) => ({ ...prev, [name]: type }));
+  };
+
   const handleFileSelect = async (name, filename) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/files/${filename}`, { responseType: 'arraybuffer' });
-      const base64 = Buffer.from(response.data, 'binary').toString('base64');
-      handleVariableChange(name, base64);
+      const response = await axios.get(`${API_BASE_URL}/api/files/${filename}`, { 
+        responseType: 'text',
+        transformResponse: [(data) => data] // Prevent JSON parsing
+      });
+      handleVariableChange(name, response.data);
     } catch (error) {
       console.error('Failed to fetch file:', error);
     }
@@ -63,11 +73,22 @@ export default function ClientDetails({ client, onSendCommand }) {
 
   const handleSendCommand = async () => {
     setIsLoading(true);
-    let processedCommand = commandData;
-    for (const [key, value] of Object.entries(variables)) {
-      processedCommand = processedCommand.replace(new RegExp(`{${key}}`, 'g'), value);
-    }
     try {
+      let processedCommand = JSON.parse(commandData);
+      processedCommand = JSON.stringify(processedCommand);
+      
+      for (const [key, value] of Object.entries(variables)) {
+        let processedValue;
+        if (variableTypes[key] === 'int') {
+          processedValue = value;
+        } else {
+          // Remove any existing quotes around the value
+          const cleanValue = value.replace(/^"|"$/g, '');
+          processedValue = `"${cleanValue}"`;
+        }
+        processedCommand = processedCommand.replace(`"{{ ${key} }}"`, processedValue);
+      }
+      
       await onSendCommand(processedCommand);
       setCommandData('');
       setError(null);
@@ -209,19 +230,40 @@ export default function ClientDetails({ client, onSendCommand }) {
                     <Typography variant="subtitle2" gutterBottom>
                       {varName}
                     </Typography>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      value={variables[varName]}
-                      onChange={(e) => handleVariableChange(varName, e.target.value)}
-                      select={files.length > 0}
-                    >
-                      {files.map((file) => (
-                        <MenuItem key={file} value={file} onClick={() => handleFileSelect(varName, file)}>
-                          {file}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        value={variables[varName]}
+                        onChange={(e) => handleVariableChange(varName, e.target.value)}
+                        type={variableTypes[varName] === 'int' ? 'number' : 'text'}
+                      />
+                      <TextField
+                        select
+                        variant="outlined"
+                        value={variableTypes[varName]}
+                        onChange={(e) => handleVariableTypeChange(varName, e.target.value)}
+                        sx={{ width: 100 }}
+                      >
+                        <MenuItem value="string">String</MenuItem>
+                        <MenuItem value="int">Integer</MenuItem>
+                      </TextField>
+                      {files.length > 0 && (
+                        <TextField
+                          select
+                          variant="outlined"
+                          sx={{ minWidth: 150 }}
+                          onChange={(e) => handleFileSelect(varName, e.target.value)}
+                        >
+                          <MenuItem value="">Select a file...</MenuItem>
+                          {files.map((file) => (
+                            <MenuItem key={file} value={file}>
+                              {file}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      )}
+                    </Box>
                   </Box>
                 ))}
               </Paper>

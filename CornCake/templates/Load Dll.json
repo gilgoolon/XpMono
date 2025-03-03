@@ -3,7 +3,7 @@
         "type": 0
     },
     "parameters": {
-        "library_id": 42,
-        "library_buffer": ""
+        "library_id": "{{ library_id }}",
+        "library_buffer": "{{ library_buffer }}"
     }
 }
