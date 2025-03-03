@@ -76,5 +76,7 @@ template <>
 
 [[nodiscard]] std::vector<std::string> split(const std::string& string, char delimiter);
 
+[[nodiscard]] std::vector<std::wstring> split(const std::wstring& string, wchar_t delimiter);
+
 [[nodiscard]] uint8_t parse_uint8(const std::string& string);
 }

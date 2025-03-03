@@ -153,6 +153,21 @@ std::vector<std::string> Strings::split(const std::string& string, const char de
 	return result;
 }
 
+std::vector<std::wstring> Strings::split(const std::wstring& string, const wchar_t delimiter)
+{
+	std::vector<std::wstring> result;
+	std::wstring::size_type start = 0;
+	std::wstring::size_type end;
+
+	while ((end = string.find(delimiter, start)) != std::wstring::npos)
+	{
+		result.emplace_back(string.substr(start, end - start));
+		start = end + 1;
+	}
+	result.emplace_back(string.substr(start));
+	return result;
+}
+
 uint8_t Strings::parse_uint8(const std::string& string)
 {
 	if (string.empty())

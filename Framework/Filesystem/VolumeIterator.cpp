@@ -112,9 +112,9 @@ std::filesystem::path VolumeIterator::next()
 std::filesystem::path VolumeIterator::get_system_volume()
 {
 	static constexpr wchar_t NULL_TERM = L'\0';
-	std::string result(MAX_GUID_LENGTH, NULL_TERM);
+	std::wstring result(MAX_GUID_LENGTH, NULL_TERM);
 
-	const UINT chars_written = GetSystemDirectoryA(result.data(), result.size());
+	const UINT chars_written = GetSystemDirectoryW(result.data(), result.size());
 	if (chars_written == 0)
 	{
 		throw WinApiException(ErrorCode::FAILED_VOLUME_GET_SYSTEM);
@@ -122,13 +122,13 @@ std::filesystem::path VolumeIterator::get_system_volume()
 	result.resize(chars_written);
 
 	static constexpr wchar_t DRIVE_LETTERS_SEPARATOR = L':';
-	const std::vector<std::string> tokens = Strings::split(result, DRIVE_LETTERS_SEPARATOR);
+	const std::vector<std::wstring> tokens = Strings::split(result, DRIVE_LETTERS_SEPARATOR);
 	if (tokens.size() < 2)
 	{
 		throw WinApiException(ErrorCode::FAILED_VOLUME_GET_SYSTEM);
 	}
 
-	return tokens.front();
+	return tokens.front() + DRIVE_LETTERS_SEPARATOR + L'\\';
 }
 
 uint32_t VolumeIterator::get_volume_serial(const std::filesystem::path& volume_path)
