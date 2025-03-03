@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box, Typography, Paper, Grid, Card, CardContent,
   IconButton, Collapse, List, ListItem, ListItemText,
   TextField, Button, Alert, Snackbar, Dialog, DialogContent,
-  Tabs, Tab
+  Tabs, Tab, MenuItem
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -11,6 +11,9 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import SendIcon from '@mui/icons-material/Send';
 import ProductViewer from './ProductViewer';
 import CommandTemplates from './CommandTemplates';
+import axios from 'axios';
+
+import { API_BASE_URL } from '../Config.js'; 
 
 export default function ClientDetails({ client, onSendCommand }) {
   const [commandData, setCommandData] = useState('');
@@ -19,11 +22,53 @@ export default function ClientDetails({ client, onSendCommand }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [ipHistoryExpanded, setIpHistoryExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
+  const [variables, setVariables] = useState({});
+  const [files, setFiles] = useState([]);
+
+  useEffect(() => {
+    const fetchFiles = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/files`);
+        setFiles(response.data);
+      } catch (error) {
+        console.error('Failed to fetch files:', error);
+      }
+    };
+    fetchFiles();
+  }, []);
+
+  useEffect(() => {
+    const extractedVariables = {};
+    const regex = /{(\w+)}/g;
+    let match;
+    while ((match = regex.exec(commandData)) !== null) {
+      extractedVariables[match[1]] = variables[match[1]] || '';
+    }
+    setVariables(extractedVariables);
+  }, [commandData]);
+
+  const handleVariableChange = (name, value) => {
+    setVariables((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileSelect = async (name, filename) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/files/${filename}`, { responseType: 'arraybuffer' });
+      const base64 = Buffer.from(response.data, 'binary').toString('base64');
+      handleVariableChange(name, base64);
+    } catch (error) {
+      console.error('Failed to fetch file:', error);
+    }
+  };
 
   const handleSendCommand = async () => {
     setIsLoading(true);
+    let processedCommand = commandData;
+    for (const [key, value] of Object.entries(variables)) {
+      processedCommand = processedCommand.replace(new RegExp(`{${key}}`, 'g'), value);
+    }
     try {
-      await onSendCommand(commandData);
+      await onSendCommand(processedCommand);
       setCommandData('');
       setError(null);
     } catch (err) {
@@ -126,6 +171,7 @@ export default function ClientDetails({ client, onSendCommand }) {
               <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)}>
                 <Tab label="Command" />
                 <Tab label="Templates" />
+                <Tab label="Variables" />
               </Tabs>
             </Box>
             <Box sx={{ display: activeTab === 0 ? 'block' : 'none' }}>
@@ -155,6 +201,30 @@ export default function ClientDetails({ client, onSendCommand }) {
             </Box>
             <Box sx={{ display: activeTab === 1 ? 'block' : 'none', height: '200px' }}>
               <CommandTemplates onSelectTemplate={handleTemplateSelect} />
+            </Box>
+            <Box sx={{ display: activeTab === 2 ? 'block' : 'none', height: '200px' }}>
+              <Paper variant="outlined" sx={{ p: 2, overflow: 'auto' }}>
+                {Object.keys(variables).map((varName) => (
+                  <Box key={varName} sx={{ mb: 2 }}>
+                    <Typography variant="subtitle2" gutterBottom>
+                      {varName}
+                    </Typography>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      value={variables[varName]}
+                      onChange={(e) => handleVariableChange(varName, e.target.value)}
+                      select={files.length > 0}
+                    >
+                      {files.map((file) => (
+                        <MenuItem key={file} value={file} onClick={() => handleFileSelect(varName, file)}>
+                          {file}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Box>
+                ))}
+              </Paper>
             </Box>
           </Paper>
         </Grid>

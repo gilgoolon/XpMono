@@ -154,6 +154,24 @@ def get_command_templates():
                 })
     return jsonify(templates)
 
+@app.route('/api/files', methods=['GET'])
+def list_files():
+    files_dir = os.path.join(os.path.dirname(__file__), 'files')
+    if not os.path.exists(files_dir):
+        return jsonify([])
+    files = [f for f in os.listdir(files_dir) if os.path.isfile(os.path.join(files_dir, f))]
+    return jsonify(files)
+
+@app.route('/api/files/<filename>', methods=['GET'])
+def get_file(filename):
+    files_dir = os.path.join(os.path.dirname(__file__), 'files')
+    file_path = os.path.join(files_dir, filename)
+    if not os.path.exists(file_path):
+        return jsonify({'error': 'File not found'}), 404
+    with open(file_path, 'rb') as file:
+        file_data = file.read()
+    return base64.b64encode(file_data).decode('utf-8')
+
 # Serve React App
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
