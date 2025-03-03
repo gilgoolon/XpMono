@@ -14,6 +14,8 @@ import {
   Paper
 } from '@mui/material';
 
+import { API_BASE_URL } from "../Config.js";
+
 export default function CommandTemplates({ onSelectTemplate }) {
   const [templates, setTemplates] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -24,7 +26,7 @@ export default function CommandTemplates({ onSelectTemplate }) {
   useEffect(() => {
     const fetchTemplates = async () => {
       try {
-        const response = await fetch('/api/command-templates');
+        const response = await fetch(`${API_BASE_URL}/api/command-templates`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

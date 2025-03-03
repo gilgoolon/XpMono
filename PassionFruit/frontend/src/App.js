@@ -12,8 +12,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ClientDetails from './components/ClientDetails';
 import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:5000';
+import { API_BASE_URL } from "./Config.js";
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');

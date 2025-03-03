@@ -152,7 +152,6 @@ def get_command_templates():
                     'name': os.path.splitext(filename)[0],
                     'content': template_data
                 })
-    
     return jsonify(templates)
 
 # Serve React App
