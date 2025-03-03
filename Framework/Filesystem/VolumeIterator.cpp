@@ -108,3 +108,54 @@ std::filesystem::path VolumeIterator::next()
 	try_retrieve_next();
 	return result;
 }
+
+std::filesystem::path VolumeIterator::get_system_volume()
+{
+	static constexpr wchar_t NULL_TERM = L'\0';
+	std::string result(MAX_GUID_LENGTH, NULL_TERM);
+
+	const UINT chars_written = GetSystemDirectoryA(result.data(), result.size());
+	if (chars_written == 0)
+	{
+		throw WinApiException(ErrorCode::FAILED_VOLUME_GET_SYSTEM);
+	}
+	result.resize(chars_written);
+
+	static constexpr wchar_t DRIVE_LETTERS_SEPARATOR = L':';
+	const std::vector<std::string> tokens = Strings::split(result, DRIVE_LETTERS_SEPARATOR);
+	if (tokens.size() < 2)
+	{
+		throw WinApiException(ErrorCode::FAILED_VOLUME_GET_SYSTEM);
+	}
+
+	return tokens.front();
+}
+
+uint32_t VolumeIterator::get_volume_serial(const std::filesystem::path& volume_path)
+{
+	static constexpr LPWSTR IGNORED_NAME = nullptr;
+	static constexpr DWORD IGNORED_NAME_SIZE = 0;
+	static constexpr LPDWORD IGNORED_MAX_COMPONENT_LENGTH = nullptr;
+	static constexpr LPDWORD DEFAULT_FLAGS = nullptr;
+	static constexpr LPWSTR IGNORED_FILESYSTEM_NAME = nullptr;
+	static constexpr DWORD IGNORED_FILESYSTEM_NAME_SIZE = 0;
+
+	DWORD serial_number = 0;
+	const BOOL result = GetVolumeInformationW(
+		volume_path.wstring().data(),
+		IGNORED_NAME,
+		IGNORED_NAME_SIZE,
+		&serial_number,
+		IGNORED_MAX_COMPONENT_LENGTH,
+		DEFAULT_FLAGS,
+		IGNORED_FILESYSTEM_NAME,
+		IGNORED_FILESYSTEM_NAME_SIZE
+	);
+
+	if (result == FALSE)
+	{
+		throw WinApiException(ErrorCode::FAILED_VOLUME_GET_SERIAL);
+	}
+
+	return serial_number;
+}

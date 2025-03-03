@@ -21,6 +21,9 @@ public:
 	[[nodiscard]] bool has_next() const;
 	[[nodiscard]] std::filesystem::path next();
 
+	[[nodiscard]] static std::filesystem::path get_system_volume();
+	[[nodiscard]] static uint32_t get_volume_serial(const std::filesystem::path& volume_path);
+
 private:
 	HANDLE m_find_handle;
 	bool m_finished_find;
