@@ -8,6 +8,7 @@ import magic
 import io
 from PIL import Image
 from pathlib import Path
+import json
 
 import products
 
@@ -136,6 +137,23 @@ def send_command():
         return jsonify(response.json()), response.status_code
     except requests.exceptions.RequestException as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/api/command-templates', methods=['GET'])
+def get_command_templates():
+    templates_dir = os.path.join(os.path.dirname(__file__), 'command-templates')
+    templates = []
+    
+    for filename in os.listdir(templates_dir):
+        if filename.endswith('.json'):
+            template_path = os.path.join(templates_dir, filename)
+            with open(template_path, 'r') as f:
+                template_data = json.load(f)
+                templates.append({
+                    'name': os.path.splitext(filename)[0],
+                    'content': template_data
+                })
+    
+    return jsonify(templates)
 
 # Serve React App
 @app.route('/', defaults={'path': ''})

@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import {
   Box, Typography, Paper, Grid, Card, CardContent,
   IconButton, Collapse, List, ListItem, ListItemText,
-  TextField, Button, Alert, Snackbar, Dialog, DialogContent
+  TextField, Button, Alert, Snackbar, Dialog, DialogContent,
+  Tabs, Tab
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import SendIcon from '@mui/icons-material/Send';
 import ProductViewer from './ProductViewer';
+import CommandTemplates from './CommandTemplates';
 
 export default function ClientDetails({ client, onSendCommand }) {
   const [commandData, setCommandData] = useState('');
@@ -16,6 +18,7 @@ export default function ClientDetails({ client, onSendCommand }) {
   const [error, setError] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [ipHistoryExpanded, setIpHistoryExpanded] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
 
   const handleSendCommand = async () => {
     setIsLoading(true);
@@ -30,25 +33,17 @@ export default function ClientDetails({ client, onSendCommand }) {
     }
   };
 
+  const handleTemplateSelect = (templateContent) => {
+    setCommandData(templateContent);
+    setActiveTab(0); // Switch back to command tab
+  };
+
   const formatDate = (dateStr) => {
     try {
       const utcDate = new Date(dateStr + 'Z');
-      if (isNaN(utcDate.getTime())) {
-        return 'Invalid Date';
-      }
-      
-      return new Intl.DateTimeFormat('en-GB', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-      }).format(utcDate).replace(/\//g, '-');
-    } catch (e) {
-      console.error('Error formatting date:', e, dateStr);
-      return 'Invalid Date';
+      return utcDate.toLocaleString();
+    } catch (err) {
+      return dateStr;
     }
   };
 
@@ -107,7 +102,7 @@ export default function ClientDetails({ client, onSendCommand }) {
           </Box>
           <Collapse in={ipHistoryExpanded}>
             <List dense>
-              {client.ip_history.map((entry, index) => (
+              {client.ip_history?.map((entry, index) => (
                 <ListItem key={index}>
                   <ListItemText
                     primary={entry.ip}
@@ -121,17 +116,60 @@ export default function ClientDetails({ client, onSendCommand }) {
       </Paper>
 
       <Grid container spacing={3}>
-        {/* Left Section - Products */}
-        <Grid item xs={12} md={6}>
-          <Paper elevation={2} sx={{ p: 3, height: '100%' }}>
+        {/* Command Section */}
+        <Grid item xs={12} md={8}>
+          <Paper sx={{ p: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              Send Command
+            </Typography>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
+              <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)}>
+                <Tab label="Command" />
+                <Tab label="Templates" />
+              </Tabs>
+            </Box>
+            <Box sx={{ display: activeTab === 0 ? 'block' : 'none' }}>
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={4}
+                  variant="outlined"
+                  placeholder="Enter command..."
+                  value={commandData}
+                  onChange={(e) => setCommandData(e.target.value)}
+                  error={!!error}
+                  helperText={error}
+                />
+                <LoadingButton
+                  variant="contained"
+                  onClick={handleSendCommand}
+                  loading={isLoading}
+                  disabled={!commandData}
+                  endIcon={<SendIcon />}
+                  sx={{ alignSelf: 'flex-start' }}
+                >
+                  Send
+                </LoadingButton>
+              </Box>
+            </Box>
+            <Box sx={{ display: activeTab === 1 ? 'block' : 'none', height: '200px' }}>
+              <CommandTemplates onSelectTemplate={handleTemplateSelect} />
+            </Box>
+          </Paper>
+        </Grid>
+
+        {/* Products Section */}
+        <Grid item xs={12} md={4}>
+          <Paper sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>
               Products
             </Typography>
             <Grid container spacing={2}>
-              {client.products.map((productId, index) => {
+              {client.products?.map((productId, index) => {
                 const product = client.parsed_products[productId];
                 return (
-                  <Grid item xs={12} sm={6} md={4} key={index}>
+                  <Grid item xs={12} key={index}>
                     <Card 
                       sx={{ 
                         cursor: 'pointer',
@@ -156,39 +194,9 @@ export default function ClientDetails({ client, onSendCommand }) {
             </Grid>
           </Paper>
         </Grid>
-
-        {/* Right Section - Command Interface */}
-        <Grid item xs={12} md={6}>
-          <Paper elevation={2} sx={{ p: 3, height: '100%' }}>
-            <Typography variant="h6" gutterBottom>
-              Send Command
-            </Typography>
-            <TextField
-              fullWidth
-              multiline
-              rows={4}
-              value={commandData}
-              onChange={(e) => setCommandData(e.target.value)}
-              placeholder="Enter command in JSON format"
-              sx={{ mb: 2 }}
-              error={!!error}
-              helperText={error || 'Command will be sent in base64 format'}
-            />
-            <LoadingButton
-              loading={isLoading}
-              loadingPosition="start"
-              startIcon={<SendIcon />}
-              variant="contained"
-              onClick={handleSendCommand}
-              disabled={!commandData.trim()}
-            >
-              Send Command
-            </LoadingButton>
-          </Paper>
-        </Grid>
       </Grid>
 
-      {/* Product Viewer Dialog */}
+      {/* Product Dialog */}
       <Dialog
         open={!!selectedProduct}
         onClose={() => setSelectedProduct(null)}
@@ -197,15 +205,10 @@ export default function ClientDetails({ client, onSendCommand }) {
       >
         <DialogContent>
           {selectedProduct && (
-            <Box>
-              <Typography variant="h6" gutterBottom>
-                {selectedProduct.split('/').pop()}
-              </Typography>
-              <ProductViewer 
-                product={client.parsed_products[selectedProduct]}
-                productPath={client.product_paths[selectedProduct]}
-              />
-            </Box>
+            <ProductViewer 
+              product={client.parsed_products[selectedProduct]}
+              productPath={client.product_paths[selectedProduct]}
+            />
           )}
         </DialogContent>
       </Dialog>
