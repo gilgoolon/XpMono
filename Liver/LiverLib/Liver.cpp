@@ -77,7 +77,7 @@ std::wstring Liver::quit_event_name()
 #ifdef _DEBUG
 		L"LiverEvent";
 #else
-		L"{1C954BE0-3357-4073-93AD-17E678A72CB5}"
+		L"{1C954BE0-3357-4073-93AD-17E678A72CB5}";
 #endif
 	return std::wstring{Event::GLOBAL_NAMESPACE} + QUIT_EVENT_NAME;
 }
