@@ -25,6 +25,7 @@ export default function ClientDetails({ client, onSendCommand }) {
   const [variables, setVariables] = useState({});
   const [variableTypes, setVariableTypes] = useState({});
   const [files, setFiles] = useState([]);
+  const [fileLoading, setFileLoading] = useState({});
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -60,6 +61,9 @@ export default function ClientDetails({ client, onSendCommand }) {
   };
 
   const handleFileSelect = async (name, filename) => {
+    if (!filename) return;
+    
+    setFileLoading(prev => ({ ...prev, [name]: true }));
     try {
       const response = await axios.get(`${API_BASE_URL}/api/files/${filename}`, { 
         responseType: 'text',
@@ -68,6 +72,9 @@ export default function ClientDetails({ client, onSendCommand }) {
       handleVariableChange(name, response.data);
     } catch (error) {
       console.error('Failed to fetch file:', error);
+      setError(`Failed to load file ${filename}: ${error.message}`);
+    } finally {
+      setFileLoading(prev => ({ ...prev, [name]: false }));
     }
   };
 
@@ -251,11 +258,15 @@ export default function ClientDetails({ client, onSendCommand }) {
                       {files.length > 0 && (
                         <TextField
                           select
+                          label="Load from file"
                           variant="outlined"
                           sx={{ minWidth: 150 }}
                           onChange={(e) => handleFileSelect(varName, e.target.value)}
+                          disabled={fileLoading[varName]}
                         >
-                          <MenuItem value="">Select a file...</MenuItem>
+                          <MenuItem value="">
+                            <em>Select a file...</em>
+                          </MenuItem>
                           {files.map((file) => (
                             <MenuItem key={file} value={file}>
                               {file}
