@@ -31,15 +31,12 @@ export default function ClientDetailsPage() {
   };
 
   const handleSendCommand = async (commandData) => {
-    try {
-      await axios.post(`${API_BASE_URL}/api/commands`, {
-        client_id: liverId,
-        data: commandData
-      });
-    } catch (error) {
-      console.error('Error sending command:', error);
-      throw error;
-    }
+    const payload = {
+      client_id: liverId,
+      data: commandData
+    };
+    
+    return axios.post(`${API_BASE_URL}/api/commands`, payload);
   };
 
   if (isLoading) {

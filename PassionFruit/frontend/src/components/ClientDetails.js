@@ -81,19 +81,14 @@ export default function ClientDetails({ client, onSendCommand }) {
   const handleSendCommand = async () => {
     setIsLoading(true);
     try {
-      let processedCommand = JSON.parse(commandData);
-      processedCommand = JSON.stringify(processedCommand);
+      let processedCommand = commandData;
       
-      for (const [key, value] of Object.entries(variables)) {
-        let processedValue;
-        if (variableTypes[key] === 'int') {
-          processedValue = value;
-        } else {
-          // Remove any existing quotes around the value
-          const cleanValue = value.replace(/^"|"$/g, '');
-          processedValue = `"${cleanValue}"`;
+      // Only process if there are variables to replace
+      if (Object.keys(variables).length > 0) {
+        for (const [key, value] of Object.entries(variables)) {
+          const processedValue = variableTypes[key] === 'int' ? value : `"${value.replace(/^"|"$/g, '')}"`;
+          processedCommand = processedCommand.replace(`"{{ ${key} }}"`, processedValue);
         }
-        processedCommand = processedCommand.replace(`"{{ ${key} }}"`, processedValue);
       }
       
       await onSendCommand(processedCommand);
