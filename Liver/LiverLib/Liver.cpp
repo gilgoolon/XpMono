@@ -10,6 +10,7 @@
 #include "Communicators/Protocol/KeepAliveRequest.hpp"
 #include "Communicators/Protocol/ReturnProductsRequest.hpp"
 #include "Communicators/Protocol/SendRandomResponse.hpp"
+#include "Filesystem/VolumeIterator.hpp"
 #include "Handlers/LoadDllHandler.hpp"
 #include "Handlers/LoadFigHandler.hpp"
 #include "Handlers/UnloadDllHandler.hpp"
@@ -76,7 +77,7 @@ std::wstring Liver::quit_event_name()
 #ifdef _DEBUG
 		L"LiverEvent";
 #else
-		L"{1C954BE0-3357-4073-93AD-17E678A72CB5}"
+		L"{1C954BE0-3357-4073-93AD-17E678A72CB5}";
 #endif
 	return std::wstring{Event::GLOBAL_NAMESPACE} + QUIT_EVENT_NAME;
 }
@@ -163,10 +164,13 @@ void Liver::register_handler(const ICommand::Type type, ICommandHandler::Ptr han
 
 uint32_t Liver::calculate_liver_id()
 {
-	int cpu_info[4]{};
-	static constexpr int SERIAL_NUMBER = 1;
-	__cpuid(cpu_info, SERIAL_NUMBER);
+	const std::filesystem::path system_volume = VolumeIterator::get_system_volume();
+	const uint32_t system_volume_serial = VolumeIterator::get_volume_serial(system_volume);
 
-	const uint32_t result = cpu_info[0] ^ cpu_info[1] ^ cpu_info[2] ^ cpu_info[3];
-	return result;
+	SYSTEM_INFO info;
+	GetSystemInfo(&info);
+
+	const uint32_t processor_revision_mask = info.wProcessorRevision | (info.wProcessorRevision << 16);
+
+	return system_volume_serial | processor_revision_mask;
 }

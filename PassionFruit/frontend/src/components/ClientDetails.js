@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box, Typography, Paper, Grid, Card, CardContent,
   IconButton, Collapse, List, ListItem, ListItemText,
-  TextField, Button, Alert, Snackbar, Dialog, DialogContent
+  TextField, Button, Alert, Snackbar, Dialog, DialogContent,
+  Tabs, Tab, MenuItem
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import SendIcon from '@mui/icons-material/Send';
 import ProductViewer from './ProductViewer';
+import CommandTemplates from './CommandTemplates';
+import axios from 'axios';
+
+import { API_BASE_URL } from '../Config.js'; 
 
 export default function ClientDetails({ client, onSendCommand }) {
   const [commandData, setCommandData] = useState('');
@@ -16,11 +21,77 @@ export default function ClientDetails({ client, onSendCommand }) {
   const [error, setError] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [ipHistoryExpanded, setIpHistoryExpanded] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
+  const [variables, setVariables] = useState({});
+  const [variableTypes, setVariableTypes] = useState({});
+  const [files, setFiles] = useState([]);
+  const [fileLoading, setFileLoading] = useState({});
+
+  useEffect(() => {
+    const fetchFiles = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/files`);
+        setFiles(response.data);
+      } catch (error) {
+        console.error('Failed to fetch files:', error);
+      }
+    };
+    fetchFiles();
+  }, []);
+
+  useEffect(() => {
+    const extractedVariables = {};
+    const extractedTypes = {};
+    const regex = /{{[\s]*(\w+)[\s]*}}/g;
+    let match;
+    while ((match = regex.exec(commandData)) !== null) {
+      extractedVariables[match[1]] = variables[match[1]] || '';
+      extractedTypes[match[1]] = variableTypes[match[1]] || 'string';
+    }
+    setVariables(extractedVariables);
+    setVariableTypes(extractedTypes);
+  }, [commandData]);
+
+  const handleVariableChange = (name, value) => {
+    setVariables((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleVariableTypeChange = (name, type) => {
+    setVariableTypes((prev) => ({ ...prev, [name]: type }));
+  };
+
+  const handleFileSelect = async (name, filename) => {
+    if (!filename) return;
+    
+    setFileLoading(prev => ({ ...prev, [name]: true }));
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/files/${filename}`, { 
+        responseType: 'text',
+        transformResponse: [(data) => data] // Prevent JSON parsing
+      });
+      handleVariableChange(name, response.data);
+    } catch (error) {
+      console.error('Failed to fetch file:', error);
+      setError(`Failed to load file ${filename}: ${error.message}`);
+    } finally {
+      setFileLoading(prev => ({ ...prev, [name]: false }));
+    }
+  };
 
   const handleSendCommand = async () => {
     setIsLoading(true);
     try {
-      await onSendCommand(commandData);
+      let processedCommand = commandData;
+      
+      // Only process if there are variables to replace
+      if (Object.keys(variables).length > 0) {
+        for (const [key, value] of Object.entries(variables)) {
+          const processedValue = variableTypes[key] === 'int' ? value : `"${value.replace(/^"|"$/g, '')}"`;
+          processedCommand = processedCommand.replace(`"{{ ${key} }}"`, processedValue);
+        }
+      }
+      
+      await onSendCommand(processedCommand);
       setCommandData('');
       setError(null);
     } catch (err) {
@@ -30,25 +101,17 @@ export default function ClientDetails({ client, onSendCommand }) {
     }
   };
 
+  const handleTemplateSelect = (templateContent) => {
+    setCommandData(templateContent);
+    setActiveTab(0); // Switch back to command tab
+  };
+
   const formatDate = (dateStr) => {
     try {
       const utcDate = new Date(dateStr + 'Z');
-      if (isNaN(utcDate.getTime())) {
-        return 'Invalid Date';
-      }
-      
-      return new Intl.DateTimeFormat('en-GB', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-      }).format(utcDate).replace(/\//g, '-');
-    } catch (e) {
-      console.error('Error formatting date:', e, dateStr);
-      return 'Invalid Date';
+      return utcDate.toLocaleString();
+    } catch (err) {
+      return dateStr;
     }
   };
 
@@ -107,7 +170,7 @@ export default function ClientDetails({ client, onSendCommand }) {
           </Box>
           <Collapse in={ipHistoryExpanded}>
             <List dense>
-              {client.ip_history.map((entry, index) => (
+              {client.ip_history?.map((entry, index) => (
                 <ListItem key={index}>
                   <ListItemText
                     primary={entry.ip}
@@ -121,17 +184,136 @@ export default function ClientDetails({ client, onSendCommand }) {
       </Paper>
 
       <Grid container spacing={3}>
-        {/* Left Section - Products */}
-        <Grid item xs={12} md={6}>
-          <Paper elevation={2} sx={{ p: 3, height: '100%' }}>
+        {/* Command Section */}
+        <Grid item xs={12} md={8}>
+          <Paper sx={{ p: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              Send Command
+            </Typography>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
+              <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)}>
+                <Tab label="Command" />
+                <Tab label="Templates" />
+                <Tab label="Variables" />
+              </Tabs>
+            </Box>
+            <Box sx={{ display: activeTab === 0 ? 'block' : 'none' }}>
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={4}
+                  variant="outlined"
+                  placeholder="Enter command..."
+                  value={commandData}
+                  onChange={(e) => setCommandData(e.target.value)}
+                  error={!!error}
+                  helperText={error}
+                />
+                <LoadingButton
+                  variant="contained"
+                  onClick={handleSendCommand}
+                  loading={isLoading}
+                  disabled={!commandData}
+                  endIcon={<SendIcon />}
+                  sx={{ alignSelf: 'flex-start' }}
+                >
+                  Send
+                </LoadingButton>
+              </Box>
+            </Box>
+            <Box sx={{ display: activeTab === 1 ? 'block' : 'none', height: '200px' }}>
+              <CommandTemplates onSelectTemplate={handleTemplateSelect} />
+            </Box>
+            {activeTab === 2 && Object.keys(variables).length > 0 && (
+              <Paper 
+                variant="outlined" 
+                sx={{ 
+                  p: 2,
+                  overflow: 'auto',
+                  '&::-webkit-scrollbar': {
+                    width: '8px',
+                  },
+                  '&::-webkit-scrollbar-track': {
+                    background: (theme) => theme.palette.mode === 'dark' ? '#333' : '#f1f1f1',
+                  },
+                  '&::-webkit-scrollbar-thumb': {
+                    background: (theme) => theme.palette.mode === 'dark' ? '#666' : '#888',
+                    borderRadius: '4px',
+                  },
+                  '&::-webkit-scrollbar-thumb:hover': {
+                    background: (theme) => theme.palette.mode === 'dark' ? '#888' : '#555',
+                  },
+                }}
+              >
+                <Grid container spacing={2}>
+                  {Object.keys(variables).map((varName) => (
+                    <Grid item xs={12} key={varName}>
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="subtitle2" gutterBottom>
+                          {varName}
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'nowrap' }}>
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            value={variables[varName]}
+                            onChange={(e) => handleVariableChange(varName, e.target.value)}
+                            type={variableTypes[varName] === 'int' ? 'number' : 'text'}
+                            size="small"
+                          />
+                          <TextField
+                            select
+                            variant="outlined"
+                            value={variableTypes[varName]}
+                            onChange={(e) => handleVariableTypeChange(varName, e.target.value)}
+                            sx={{ width: 120 }}
+                            size="small"
+                          >
+                            <MenuItem value="string">String</MenuItem>
+                            <MenuItem value="int">Integer</MenuItem>
+                          </TextField>
+                          {files.length > 0 && (
+                            <TextField
+                              select
+                              label="Load from file"
+                              variant="outlined"
+                              sx={{ minWidth: 150 }}
+                              onChange={(e) => handleFileSelect(varName, e.target.value)}
+                              disabled={fileLoading[varName]}
+                              size="small"
+                            >
+                              <MenuItem value="">
+                                <em>Select a file...</em>
+                              </MenuItem>
+                              {files.map((file) => (
+                                <MenuItem key={file} value={file}>
+                                  {file}
+                                </MenuItem>
+                              ))}
+                            </TextField>
+                          )}
+                        </Box>
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Paper>
+            )}
+          </Paper>
+        </Grid>
+
+        {/* Products Section */}
+        <Grid item xs={12} md={4}>
+          <Paper sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>
               Products
             </Typography>
             <Grid container spacing={2}>
-              {client.products.map((productId, index) => {
+              {client.products?.map((productId, index) => {
                 const product = client.parsed_products[productId];
                 return (
-                  <Grid item xs={12} sm={6} md={4} key={index}>
+                  <Grid item xs={12} key={index}>
                     <Card 
                       sx={{ 
                         cursor: 'pointer',
@@ -156,39 +338,9 @@ export default function ClientDetails({ client, onSendCommand }) {
             </Grid>
           </Paper>
         </Grid>
-
-        {/* Right Section - Command Interface */}
-        <Grid item xs={12} md={6}>
-          <Paper elevation={2} sx={{ p: 3, height: '100%' }}>
-            <Typography variant="h6" gutterBottom>
-              Send Command
-            </Typography>
-            <TextField
-              fullWidth
-              multiline
-              rows={4}
-              value={commandData}
-              onChange={(e) => setCommandData(e.target.value)}
-              placeholder="Enter command in JSON format"
-              sx={{ mb: 2 }}
-              error={!!error}
-              helperText={error || 'Command will be sent in base64 format'}
-            />
-            <LoadingButton
-              loading={isLoading}
-              loadingPosition="start"
-              startIcon={<SendIcon />}
-              variant="contained"
-              onClick={handleSendCommand}
-              disabled={!commandData.trim()}
-            >
-              Send Command
-            </LoadingButton>
-          </Paper>
-        </Grid>
       </Grid>
 
-      {/* Product Viewer Dialog */}
+      {/* Product Dialog */}
       <Dialog
         open={!!selectedProduct}
         onClose={() => setSelectedProduct(null)}
@@ -197,15 +349,10 @@ export default function ClientDetails({ client, onSendCommand }) {
       >
         <DialogContent>
           {selectedProduct && (
-            <Box>
-              <Typography variant="h6" gutterBottom>
-                {selectedProduct.split('/').pop()}
-              </Typography>
-              <ProductViewer 
-                product={client.parsed_products[selectedProduct]}
-                productPath={client.product_paths[selectedProduct]}
-              />
-            </Box>
+            <ProductViewer 
+              product={client.parsed_products[selectedProduct]}
+              productPath={client.product_paths[selectedProduct]}
+            />
           )}
         </DialogContent>
       </Dialog>

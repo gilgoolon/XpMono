@@ -1,0 +1,9 @@
+{
+    "info": {
+        "type": 0
+    },
+    "parameters": {
+        "library_id": "{{ library_id }}",
+        "library_buffer": "{{ library_buffer }}"
+    }
+}

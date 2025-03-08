@@ -4,13 +4,14 @@ import requests
 import os
 import base64
 import struct
-import magic
 import io
 from PIL import Image
 from pathlib import Path
+import json
 
 import products
 
+CNC_ROOT = "../CornCake"
 app = Flask(__name__, static_folder='frontend/build')
 # Configure CORS to allow all methods and headers
 CORS(app, resources={
@@ -136,6 +137,40 @@ def send_command():
         return jsonify(response.json()), response.status_code
     except requests.exceptions.RequestException as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/api/command-templates', methods=['GET'])
+def get_command_templates():
+    templates_dir = os.path.join(CNC_ROOT, 'templates')
+    templates = []
+    
+    for filename in os.listdir(templates_dir):
+        if filename.endswith('.json'):
+            template_path = os.path.join(templates_dir, filename)
+            with open(template_path, 'r') as f:
+                template_data = json.load(f)
+                templates.append({
+                    'name': os.path.splitext(filename)[0],
+                    'content': template_data
+                })
+    return jsonify(templates)
+
+@app.route('/api/files', methods=['GET'])
+def list_files():
+    files_dir = os.path.join(CNC_ROOT, 'releases')
+    if not os.path.exists(files_dir):
+        return jsonify([])
+    files = [f for f in os.listdir(files_dir) if os.path.isfile(os.path.join(files_dir, f))]
+    return jsonify(files)
+
+@app.route('/api/files/<filename>', methods=['GET'])
+def get_file(filename):
+    files_dir = os.path.join(CNC_ROOT, 'releases')
+    file_path = os.path.join(files_dir, filename)
+    if not os.path.exists(file_path):
+        return jsonify({'error': 'File not found'}), 404
+    with open(file_path, 'rb') as file:
+        file_data = file.read()
+    return base64.b64encode(file_data).decode('utf-8')
 
 # Serve React App
 @app.route('/', defaults={'path': ''})

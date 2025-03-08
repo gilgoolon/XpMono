@@ -28,9 +28,8 @@ DirlistHandler::DirlistHandler(std::unique_ptr<Event> operation_event, const Buf
 void DirlistHandler::run()
 {
 	static constexpr auto SUFFIX = L"\n";
-	const Buffer suffix = Strings::to_buffer(SUFFIX);
-	// todo: make IFileIterator interface and use arguments
-	std::unique_ptr<IFileIterator> iterator = make_iterator(m_path, m_depth);
+	const Buffer suffix = Strings::to_buffer(std::wstring{SUFFIX});
+	const std::unique_ptr<IFileIterator> iterator = make_iterator(m_path, m_depth);
 	while (iterator->has_next())
 	{
 		const std::unique_ptr<FileEntry> file = iterator->next();
