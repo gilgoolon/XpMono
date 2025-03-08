@@ -225,55 +225,81 @@ export default function ClientDetails({ client, onSendCommand }) {
             <Box sx={{ display: activeTab === 1 ? 'block' : 'none', height: '200px' }}>
               <CommandTemplates onSelectTemplate={handleTemplateSelect} />
             </Box>
-            <Box sx={{ display: activeTab === 2 ? 'block' : 'none', height: '200px' }}>
-              <Paper variant="outlined" sx={{ p: 2, overflow: 'auto' }}>
-                {Object.keys(variables).map((varName) => (
-                  <Box key={varName} sx={{ mb: 2 }}>
-                    <Typography variant="subtitle2" gutterBottom>
-                      {varName}
-                    </Typography>
-                    <Box sx={{ display: 'flex', gap: 1 }}>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        value={variables[varName]}
-                        onChange={(e) => handleVariableChange(varName, e.target.value)}
-                        type={variableTypes[varName] === 'int' ? 'number' : 'text'}
-                      />
-                      <TextField
-                        select
-                        variant="outlined"
-                        value={variableTypes[varName]}
-                        onChange={(e) => handleVariableTypeChange(varName, e.target.value)}
-                        sx={{ width: 100 }}
-                      >
-                        <MenuItem value="string">String</MenuItem>
-                        <MenuItem value="int">Integer</MenuItem>
-                      </TextField>
-                      {files.length > 0 && (
-                        <TextField
-                          select
-                          label="Load from file"
-                          variant="outlined"
-                          sx={{ minWidth: 150 }}
-                          onChange={(e) => handleFileSelect(varName, e.target.value)}
-                          disabled={fileLoading[varName]}
-                        >
-                          <MenuItem value="">
-                            <em>Select a file...</em>
-                          </MenuItem>
-                          {files.map((file) => (
-                            <MenuItem key={file} value={file}>
-                              {file}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      )}
-                    </Box>
-                  </Box>
-                ))}
+            {activeTab === 2 && Object.keys(variables).length > 0 && (
+              <Paper 
+                variant="outlined" 
+                sx={{ 
+                  p: 2,
+                  overflow: 'auto',
+                  '&::-webkit-scrollbar': {
+                    width: '8px',
+                  },
+                  '&::-webkit-scrollbar-track': {
+                    background: (theme) => theme.palette.mode === 'dark' ? '#333' : '#f1f1f1',
+                  },
+                  '&::-webkit-scrollbar-thumb': {
+                    background: (theme) => theme.palette.mode === 'dark' ? '#666' : '#888',
+                    borderRadius: '4px',
+                  },
+                  '&::-webkit-scrollbar-thumb:hover': {
+                    background: (theme) => theme.palette.mode === 'dark' ? '#888' : '#555',
+                  },
+                }}
+              >
+                <Grid container spacing={2}>
+                  {Object.keys(variables).map((varName) => (
+                    <Grid item xs={12} key={varName}>
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="subtitle2" gutterBottom>
+                          {varName}
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'nowrap' }}>
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            value={variables[varName]}
+                            onChange={(e) => handleVariableChange(varName, e.target.value)}
+                            type={variableTypes[varName] === 'int' ? 'number' : 'text'}
+                            size="small"
+                          />
+                          <TextField
+                            select
+                            variant="outlined"
+                            value={variableTypes[varName]}
+                            onChange={(e) => handleVariableTypeChange(varName, e.target.value)}
+                            sx={{ width: 120 }}
+                            size="small"
+                          >
+                            <MenuItem value="string">String</MenuItem>
+                            <MenuItem value="int">Integer</MenuItem>
+                          </TextField>
+                          {files.length > 0 && (
+                            <TextField
+                              select
+                              label="Load from file"
+                              variant="outlined"
+                              sx={{ minWidth: 150 }}
+                              onChange={(e) => handleFileSelect(varName, e.target.value)}
+                              disabled={fileLoading[varName]}
+                              size="small"
+                            >
+                              <MenuItem value="">
+                                <em>Select a file...</em>
+                              </MenuItem>
+                              {files.map((file) => (
+                                <MenuItem key={file} value={file}>
+                                  {file}
+                                </MenuItem>
+                              ))}
+                            </TextField>
+                          )}
+                        </Box>
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
               </Paper>
-            </Box>
+            )}
           </Paper>
         </Grid>
 
