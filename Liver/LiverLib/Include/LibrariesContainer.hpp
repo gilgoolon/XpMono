@@ -23,7 +23,9 @@ public:
 
 	using GenericFunctionProto = uint32_t (__cdecl *)(const uint8_t*, uint32_t, uint8_t*, uint32_t*);
 	static constexpr uint32_t GENERIC_FUNCTION_SUCCESS = FALSE;
+
 	[[nodiscard]] Buffer call(LibraryId library_id, uint16_t ordinal, const Buffer& arguments);
+	void call(LibraryId library_id, uint16_t ordinal);
 
 private:
 	CriticalSection m_loader_lock;

@@ -2,6 +2,7 @@
 
 #include "Json.hpp"
 #include "Trace.hpp"
+#include "Commands/CallDllProcedureCommand.hpp"
 #include "Commands/LoadDllCommand.hpp"
 #include "Commands/LoadFigCommand.hpp"
 #include "Commands/UnloadDllCommand.hpp"
@@ -39,6 +40,12 @@ namespace UnloadFig
 {
 static constexpr auto FIG_ID = "fig_id";
 }
+
+namespace CallDllProcedure
+{
+static constexpr auto LIBRARY_ID = "library_id";
+static constexpr auto ORDINAL = "ordinal";
+}
 }
 
 ICommand::Ptr JsonCommandFactory::create(const Command& command)
@@ -75,6 +82,13 @@ ICommand::Ptr JsonCommandFactory::create(const Command& command)
 	{
 		const auto fig_id = parameters[Params::UnloadFig::FIG_ID].get<Fig::FigId>();
 		return std::make_shared<UnloadFigCommand>(command.id, fig_id);
+	}
+
+	case ICommand::Type::CALL_DLL_PROCEDURE:
+	{
+		const auto library_id = parameters[Params::CallDllProcedure::LIBRARY_ID].get<uint32_t>();
+		const auto ordinal = parameters[Params::CallDllProcedure::ORDINAL].get<uint16_t>();
+		return std::make_shared<CallDllProcedureCommand>(command.id, library_id, ordinal);
 	}
 
 	default:

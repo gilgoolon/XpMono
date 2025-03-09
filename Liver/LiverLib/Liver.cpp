@@ -11,6 +11,7 @@
 #include "Communicators/Protocol/ReturnProductsRequest.hpp"
 #include "Communicators/Protocol/SendRandomResponse.hpp"
 #include "Filesystem/VolumeIterator.hpp"
+#include "Handlers/CallDllProcedureHandler.hpp"
 #include "Handlers/LoadDllHandler.hpp"
 #include "Handlers/LoadFigHandler.hpp"
 #include "Handlers/UnloadDllHandler.hpp"
@@ -152,6 +153,7 @@ void Liver::register_handlers()
 {
 	register_handler(ICommand::Type::LOAD_DLL, std::make_unique<LoadDllHandler>(m_libraries));
 	register_handler(ICommand::Type::UNLOAD_DLL, std::make_unique<UnloadDllHandler>(m_libraries));
+	register_handler(ICommand::Type::CALL_DLL_PROCEDURE, std::make_unique<CallDllProcedureHandler>(m_libraries));
 
 	register_handler(ICommand::Type::LOAD_FIG, std::make_unique<LoadFigHandler>(m_figs));
 	register_handler(ICommand::Type::UNLOAD_FIG, std::make_unique<UnloadFigHandler>(m_figs));

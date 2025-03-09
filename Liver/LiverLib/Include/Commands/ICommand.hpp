@@ -11,6 +11,7 @@ public:
 		UNLOAD_DLL,
 		LOAD_FIG,
 		UNLOAD_FIG,
+		CALL_DLL_PROCEDURE,
 	};
 
 	using Ptr = std::shared_ptr<ICommand>;
