@@ -42,6 +42,16 @@ def parse_product_content(product_id: str, product_type: products.ProductType, c
             'binary': f'0b{value:032b}'  # Binary representation
         }
         
+    if product_type == products.ProductType.RAW:
+        SHOWING_BYTES = 16
+        displayed_bytes = content[:SHOWING_BYTES].ljust(SHOWING_BYTES, b'\0')
+        return {
+            **base_result,
+            'type': 'Raw',
+            f'value (first {SHOWING_BYTES} bytes)': f'0x{hex(displayed_bytes)}',
+            'hex': f'0x{value:08X}',
+        }
+        
     elif product_type == products.ProductType.IMAGE_PNG:
         try:
             # Verify it's a valid PNG

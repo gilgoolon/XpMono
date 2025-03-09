@@ -12,6 +12,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Api\Include\LiverApi.hpp" />
+    <ClInclude Include="Include\Handlers\CallDllGenericProcedureHandler.hpp" />
+    <ClInclude Include="Include\Commands\CallDllGenericProcedureCommand.hpp" />
+    <ClInclude Include="Include\Handlers\CallDllProcedureHandler.hpp" />
+    <ClInclude Include="Include\Commands\CallDllProcedureCommand.hpp" />
     <ClInclude Include="Include\Commands\UnloadFigCommand.hpp" />
     <ClInclude Include="Include\Handlers\UnloadFigHandler.hpp" />
     <ClInclude Include="Include\Commands\LoadFigCommand.hpp" />
@@ -42,14 +46,18 @@
     <ClInclude Include="Include\LiverInstance.hpp" />
     <ClInclude Include="Include\ProductsContainer.hpp" />
     <ClInclude Include="Include\Products\ErrorProduct.hpp" />
+    <ClInclude Include="Include\Products\RawProduct.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Api\LiverApi.cpp" />
+    <ClCompile Include="Commands\CallDllProcedureCommand.cpp" />
     <ClCompile Include="Commands\ICommand.cpp" />
     <ClCompile Include="Commands\LoadDllCommand.cpp" />
     <ClCompile Include="Commands\LoadFigCommand.cpp" />
     <ClCompile Include="Commands\UnloadFigCommand.cpp" />
     <ClCompile Include="Communicators\Protocol\IRequest.cpp" />
+    <ClCompile Include="Handlers\CallDllGenericProcedureHandler.cpp" />
+    <ClCompile Include="Handlers\CallDllProcedureHandler.cpp" />
     <ClCompile Include="Handlers\ICommandHandler.cpp" />
     <ClCompile Include="Handlers\LoadDllHandler.cpp" />
     <ClCompile Include="CommandFactories\JsonCommandFactory.cpp" />
@@ -61,8 +69,10 @@
     <ClCompile Include="Commands\UnloadDllCommand.cpp" />
     <ClCompile Include="Handlers\UnloadDllHandler.cpp" />
     <ClCompile Include="Handlers\UnloadFigHandler.cpp" />
+    <ClCompile Include="Commands\CallDllGenericProcedureCommand.cpp" />
     <ClCompile Include="Include\Communicators\Protocol\ReturnProductsRequest.cpp" />
     <ClCompile Include="Handlers\LoadFigHandler.cpp" />
+    <ClCompile Include="Include\Products\RawProduct.cpp" />
     <ClCompile Include="LiverInstance.cpp" />
     <ClCompile Include="Products\ErrorProduct.cpp" />
     <ClCompile Include="ProductsContainer.cpp" />

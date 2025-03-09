@@ -39,3 +39,11 @@ Buffer LibrariesContainer::call(const LibraryId library_id, const uint16_t ordin
 	output.resize(output_size);
 	return output;
 }
+
+void LibrariesContainer::call(const LibraryId library_id, const uint16_t ordinal)
+{
+	CriticalSection::Acquired acquired = m_loader_lock.acquire();
+
+	using SimpleCallable = void(__cdecl *)();
+	m_libraries.at(library_id)->call<SimpleCallable>(ordinal);
+}
