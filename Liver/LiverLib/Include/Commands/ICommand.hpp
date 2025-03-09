@@ -13,6 +13,7 @@ public:
 		CALL_DLL_GENERIC_PROCEDURE,
 		LOAD_FIG,
 		UNLOAD_FIG,
+		EXECUTE_FIG_OPERATION,
 	};
 
 	using Ptr = std::shared_ptr<ICommand>;
