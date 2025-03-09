@@ -9,9 +9,9 @@ public:
 	{
 		LOAD_DLL = 0,
 		UNLOAD_DLL,
+		CALL_DLL_PROCEDURE,
 		LOAD_FIG,
 		UNLOAD_FIG,
-		CALL_DLL_PROCEDURE,
 	};
 
 	using Ptr = std::shared_ptr<ICommand>;
