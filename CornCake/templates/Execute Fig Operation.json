@@ -1,0 +1,10 @@
+{
+    "info": {
+        "type": 6
+    },
+    "parameters": {
+        "fig_id": "{{ fig_id }}",
+        "operation_type": "{{ operation_type }}",
+        "parameters": "{{ parameters }}"
+    }
+}
