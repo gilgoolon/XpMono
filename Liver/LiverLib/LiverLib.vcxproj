@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Api\Include\LiverApi.hpp" />
+    <ClInclude Include="Include\Commands\CallDllGenericProcedureCommand.hpp" />
     <ClInclude Include="Include\Handlers\CallDllProcedureHandler.hpp" />
     <ClInclude Include="Include\Commands\CallDllProcedureCommand.hpp" />
     <ClInclude Include="Include\Commands\UnloadFigCommand.hpp" />
@@ -47,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Api\LiverApi.cpp" />
-    <ClCompile Include="CallDllProcedureCommand.cpp" />
+    <ClCompile Include="Commands\CallDllProcedureCommand.cpp" />
     <ClCompile Include="Commands\ICommand.cpp" />
     <ClCompile Include="Commands\LoadDllCommand.cpp" />
     <ClCompile Include="Commands\LoadFigCommand.cpp" />
@@ -65,6 +66,7 @@
     <ClCompile Include="Commands\UnloadDllCommand.cpp" />
     <ClCompile Include="Handlers\UnloadDllHandler.cpp" />
     <ClCompile Include="Handlers\UnloadFigHandler.cpp" />
+    <ClCompile Include="Commands\CallDllGenericProcedureCommand.cpp" />
     <ClCompile Include="Include\Communicators\Protocol\ReturnProductsRequest.cpp" />
     <ClCompile Include="Handlers\LoadFigHandler.cpp" />
     <ClCompile Include="LiverInstance.cpp" />

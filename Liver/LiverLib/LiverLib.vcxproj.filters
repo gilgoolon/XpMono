@@ -114,6 +114,9 @@
     <ClInclude Include="Include\Handlers\CallDllProcedureHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Commands\CallDllGenericProcedureCommand.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Liver.cpp">
@@ -194,10 +197,13 @@
     <ClCompile Include="Commands\UnloadFigCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CallDllProcedureCommand.cpp">
+    <ClCompile Include="Commands\CallDllProcedureCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Handlers\CallDllProcedureHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Commands\CallDllGenericProcedureCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
