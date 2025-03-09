@@ -1,6 +1,6 @@
 ﻿#include "Commands/CallDllGenericProcedureCommand.hpp"
 
-CallDllGenericProcedureCommand::CallDllGenericProcedureCommand(Id command_id,
+CallDllGenericProcedureCommand::CallDllGenericProcedureCommand(const Id command_id,
                                                                const uint32_t library_id,
                                                                const uint16_t ordinal,
                                                                Buffer parameters):
