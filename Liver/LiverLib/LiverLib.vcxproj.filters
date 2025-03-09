@@ -123,6 +123,9 @@
     <ClInclude Include="Include\Products\RawProduct.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Commands\ExecuteFigOperationCommand.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Liver.cpp">
@@ -216,6 +219,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Include\Products\RawProduct.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Commands\ExecuteFigOperationCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

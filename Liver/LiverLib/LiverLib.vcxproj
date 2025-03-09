@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Api\Include\LiverApi.hpp" />
+    <ClInclude Include="Include\Commands\ExecuteFigOperationCommand.hpp" />
     <ClInclude Include="Include\Handlers\CallDllGenericProcedureHandler.hpp" />
     <ClInclude Include="Include\Commands\CallDllGenericProcedureCommand.hpp" />
     <ClInclude Include="Include\Handlers\CallDllProcedureHandler.hpp" />
@@ -51,6 +52,7 @@
   <ItemGroup>
     <ClCompile Include="Api\LiverApi.cpp" />
     <ClCompile Include="Commands\CallDllProcedureCommand.cpp" />
+    <ClCompile Include="Commands\ExecuteFigOperationCommand.cpp" />
     <ClCompile Include="Commands\ICommand.cpp" />
     <ClCompile Include="Commands\LoadDllCommand.cpp" />
     <ClCompile Include="Commands\LoadFigCommand.cpp" />
