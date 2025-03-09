@@ -3,11 +3,13 @@ import enum
 
 class ProductType(enum.IntEnum):
     COMMAND_ERROR = 0
-    IMAGE_PNG = 1
+    RAW = 1
+    IMAGE_PNG = 2
 
 
 format_product_type = {
     ProductType.COMMAND_ERROR: 'Command Error',
+    ProductType.RAW: 'Raw',
     ProductType.IMAGE_PNG: 'Image (PNG)'
 }
 
