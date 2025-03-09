@@ -1,0 +1,10 @@
+{
+    "info": {
+        "type": 3
+    },
+    "parameters": {
+        "library_id": "{{ library_id }}",
+        "ordinal": "{{ ordinal }}",
+        "parameters": "{{ parameters }}"
+    }
+}
