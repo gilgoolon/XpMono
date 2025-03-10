@@ -17,6 +17,7 @@ public:
 
 	explicit Event(const std::wstring& name);
 	explicit Event(const std::wstring& name, Type type);
+	explicit Event(Type type);
 	~Event() override = default;
 	Event(const Event&) = delete;
 	Event& operator=(const Event&) = delete;
