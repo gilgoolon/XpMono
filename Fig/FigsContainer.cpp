@@ -28,14 +28,15 @@ void FigsContainer::unload(const Fig::FigId id)
 	m_loaded_figs.erase(id);
 }
 
-void FigsContainer::execute(const Fig::FigId id,
-                            const Fig::OperationType operation_type,
-                            const Buffer& operation_parameters)
+std::unique_ptr<FigOperation> FigsContainer::execute(const Fig::FigId id,
+                                                     const Fig::OperationType operation_type,
+                                                     const Buffer& operation_parameters)
 {
 	auto acquired = m_lock.acquire();
 	if (!m_loaded_figs.contains(id))
 	{
 		throw Exception(ErrorCode::FIG_NOT_LOADED);
 	}
-	m_loaded_figs[id]->execute(operation_type, operation_parameters);
+
+	return m_loaded_figs[id]->execute(operation_type, operation_parameters);
 }

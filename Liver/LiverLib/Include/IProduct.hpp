@@ -14,6 +14,7 @@ public:
 	{
 		ERROR_PRODUCT = 0,
 		RAW_PRODUCT,
+		FIG_ERROR_PRODUCT,
 	};
 
 private:

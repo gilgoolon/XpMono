@@ -12,6 +12,11 @@ Event::Event(const std::wstring& name, const Type type):
 {
 }
 
+Event::Event(const Type type):
+	Event(L"", type)
+{
+}
+
 HANDLE Event::handle() const
 {
 	return m_handle.get();
