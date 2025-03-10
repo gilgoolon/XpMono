@@ -33,4 +33,15 @@ public:
 	[[nodiscard]] WaitStatus wait(Time::Duration timeout) const;
 
 	static void sleep(Time::Duration duration);
+
+	[[nodiscard]] static WaitResult wait_for_any(const std::vector<std::shared_ptr<IWaitable>>& objects,
+	                                             Time::Duration timeout);
+
+	[[nodiscard]] static WaitResult wait_for_all(const std::vector<std::shared_ptr<IWaitable>>& objects,
+	                                             Time::Duration timeout);
+
+private:
+	[[nodiscard]] static WaitResult wait_for_multiple(const std::vector<std::shared_ptr<IWaitable>>& objects,
+	                                                  Time::Duration timeout,
+	                                                  bool wait_all);
 };
