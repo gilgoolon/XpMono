@@ -2,7 +2,7 @@
 
 #include "Commands/ExecuteFigOperationCommand.hpp"
 
-ExecuteFigOperationHandler::ExecuteFigOperationHandler(std::unique_ptr<FigsContainer> figs,
+ExecuteFigOperationHandler::ExecuteFigOperationHandler(std::shared_ptr<FigsContainer> figs,
                                                        std::shared_ptr<FigOperationsFetcher> fig_operations_fetcher):
 	m_figs(std::move(figs)),
 	m_fig_operations_fetcher(std::move(fig_operations_fetcher))

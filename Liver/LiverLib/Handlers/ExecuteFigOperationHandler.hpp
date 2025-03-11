@@ -6,7 +6,7 @@
 class ExecuteFigOperationHandler final : public ICommandHandler
 {
 public:
-	explicit ExecuteFigOperationHandler(std::unique_ptr<FigsContainer> figs,
+	explicit ExecuteFigOperationHandler(std::shared_ptr<FigsContainer> figs,
 	                                    std::shared_ptr<FigOperationsFetcher> fig_operations_fetcher);
 	~ExecuteFigOperationHandler() override = default;
 	ExecuteFigOperationHandler(const ExecuteFigOperationHandler&) = delete;
@@ -17,6 +17,6 @@ public:
 	[[nodiscard]] std::vector<IProduct::Ptr> do_handle(const ICommand::Ptr& command) override;
 
 private:
-	std::unique_ptr<FigsContainer> m_figs;
+	std::shared_ptr<FigsContainer> m_figs;
 	std::shared_ptr<FigOperationsFetcher> m_fig_operations_fetcher;
 };

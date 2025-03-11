@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "FigOperationsFetcher.hpp"
 #include "FigsContainer.hpp"
 #include "ICommandFactory.hpp"
 #include "ICommandHandler.hpp"
@@ -48,8 +49,9 @@ private:
 	ICommandFactory::Ptr m_command_factory;
 	ICommunicator::Ptr m_communicator;
 	Time::Duration m_iteration_delay;
-	ProductsContainer m_products;
+	std::shared_ptr<ProductsContainer> m_products;
 	std::shared_ptr<LibrariesContainer> m_libraries;
 	std::shared_ptr<FigsContainer> m_figs;
+	std::shared_ptr<FigOperationsFetcher> m_operations_fetcher;
 	std::unordered_map<ICommand::Type, ICommandHandler::Ptr> m_handlers;
 };
