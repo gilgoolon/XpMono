@@ -2,7 +2,7 @@
 
 #include "Exception.hpp"
 #include "Products/ErrorProduct.hpp"
-#include "Products/FigErrorProduct.hpp"
+#include "Products/FigOperationErrorProduct.hpp"
 #include "Products/RawProduct.hpp"
 #include "Synchronization/Event.hpp"
 
@@ -89,7 +89,7 @@ void FigOperationsFetcher::perform_iteration()
 		{
 			std::vector<IProduct::Ptr> products;
 			products.push_back(
-				std::make_unique<FigErrorProduct>(
+				std::make_unique<FigOperationErrorProduct>(
 					operation.linked_command,
 					operation.fig_operation->m_id,
 					operation.fig_operation->m_module->id(),
