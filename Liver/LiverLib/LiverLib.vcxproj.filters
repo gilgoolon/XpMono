@@ -227,7 +227,7 @@
     <ClCompile Include="Handlers\CallDllGenericProcedureHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Products\RawProduct.cpp">
+    <ClCompile Include="Products\RawProduct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Commands\ExecuteFigOperationCommand.cpp">
@@ -239,7 +239,7 @@
     <ClCompile Include="FigOperationsFetcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Products\FigErrorProduct.cpp">
+    <ClCompile Include="Products\FigErrorProduct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

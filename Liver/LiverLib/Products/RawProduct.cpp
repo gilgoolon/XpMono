@@ -1,4 +1,4 @@
-﻿#include "RawProduct.hpp"
+﻿#include "Products/RawProduct.hpp"
 
 RawProduct::RawProduct(const ICommand::Ptr& command, Buffer data):
 	IProduct(command),
