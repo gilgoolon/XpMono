@@ -20,5 +20,9 @@ IProduct::Type FigErrorProduct::type() const
 
 Buffer FigErrorProduct::data() const
 {
-	return Strings::concat(ISerializable::serialize(m_fig_id), ISerializable::serialize(m_code));
+	return Strings::concat(
+		ISerializable::serialize(m_fig_id),
+		ISerializable::serialize(m_operation_id),
+		ISerializable::serialize(m_code)
+	);
 }
