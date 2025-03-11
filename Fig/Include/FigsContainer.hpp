@@ -25,5 +25,5 @@ public:
 
 private:
 	CriticalSection m_lock;
-	std::unordered_map<Fig::FigId, std::unique_ptr<FigModule>> m_loaded_figs;
+	std::unordered_map<Fig::FigId, std::shared_ptr<FigModule>> m_loaded_figs;
 };
