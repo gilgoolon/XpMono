@@ -132,7 +132,7 @@
     <ClInclude Include="Include\FigOperationsFetcher.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Products\FigErrorProduct.hpp">
+    <ClInclude Include="Include\Products\FigOperationErrorProduct.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Products\FigProduct.hpp">
@@ -242,10 +242,10 @@
     <ClCompile Include="FigOperationsFetcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Products\FigErrorProduct.cpp">
+    <ClCompile Include="Products\FigOperationErrorProduct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Products\FigProduct.cpp">
+    <ClCompile Include="Products\FigProduct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

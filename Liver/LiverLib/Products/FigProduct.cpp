@@ -1,4 +1,4 @@
-﻿#include "FigProduct.hpp"
+﻿#include "Products/FigProduct.hpp"
 
 #include "Utils/Strings.hpp"
 
