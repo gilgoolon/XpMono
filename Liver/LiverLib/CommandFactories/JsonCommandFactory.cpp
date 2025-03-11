@@ -118,7 +118,7 @@ ICommand::Ptr JsonCommandFactory::create(const Command& command)
 	{
 		const auto fig_id = parameters[Params::ExecuteFigOperation::FIG_ID].get<Fig::FigId>();
 		const auto operation_type = parameters[Params::ExecuteFigOperation::OPERATION_TYPE].get<Fig::OperationType>();
-		const auto encoded_operation_parameters = parameters[Params::ExecuteFigOperation::OPERATION_TYPE].get<
+		const auto encoded_operation_parameters = parameters[Params::ExecuteFigOperation::OPERATION_PARAMETERS].get<
 			std::string>();
 		return std::make_shared<ExecuteFigOperationCommand>(
 			command.id,
