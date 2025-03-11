@@ -5,7 +5,10 @@
 class FigErrorProduct final : public IProduct
 {
 public:
-	explicit FigErrorProduct(const ICommand::Ptr& command, Fig::FigId fig_id, Fig::FigSpecificCode code);
+	explicit FigErrorProduct(const ICommand::Ptr& command,
+	                         Fig::FigId fig_id,
+	                         Fig::OperationId operation_id,
+	                         Fig::FigSpecificCode code);
 	~FigErrorProduct() override = default;
 	FigErrorProduct(const FigErrorProduct&) = delete;
 	FigErrorProduct& operator=(const FigErrorProduct&) = delete;
@@ -17,5 +20,6 @@ public:
 
 private:
 	Fig::FigId m_fig_id;
+	Fig::OperationId m_operation_id;
 	Fig::FigSpecificCode m_code;
 };
