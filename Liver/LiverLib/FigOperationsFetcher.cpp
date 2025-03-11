@@ -88,6 +88,7 @@ void FigOperationsFetcher::perform_iteration()
 			products.push_back(
 				std::make_unique<FigErrorProduct>(
 					operation.linked_command,
+					operation.fig_operation->m_id,
 					operation.fig_operation->m_module->id(),
 					status.fig_specific_code
 				)
