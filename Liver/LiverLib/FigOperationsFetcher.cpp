@@ -1,5 +1,6 @@
 ﻿#include "FigOperationsFetcher.hpp"
 
+#include "Exception.hpp"
 #include "Products/ErrorProduct.hpp"
 #include "Products/FigErrorProduct.hpp"
 #include "Products/RawProduct.hpp"
@@ -79,6 +80,8 @@ void FigOperationsFetcher::perform_iteration()
 		switch (status.execution_status)
 		{
 		case Fig::ExecutionStatus::EXECUTING:
+			[[fallthrough]];
+		case Fig::ExecutionStatus::EXECUTING_CAN_TAKE:
 			++iterator;
 			continue;
 
@@ -98,22 +101,17 @@ void FigOperationsFetcher::perform_iteration()
 			continue;
 		}
 
-		default:
+		case Fig::ExecutionStatus::FINISHED:
 			break;
+
+		default:
+			throw Exception(ErrorCode::UNCOVERED_ENUM_VALUE);
 		}
 
 		std::vector<IProduct::Ptr> products;
 		products.push_back(std::make_unique<RawProduct>(operation.linked_command, operation.fig_operation->take()));
-		// TODO: make a FigProduct format
+		m_products->insert_all(std::move(products));
 
-		if (status.execution_status == Fig::ExecutionStatus::FINISHED)
-		{
-			m_operations.erase(iterator);
-			// TODO: add fig operation id to error product and create success product here
-		}
-		else
-		{
-			++iterator;
-		}
+		m_operations.erase(iterator);
 	}
 }
