@@ -79,8 +79,8 @@
     <ClCompile Include="Commands\CallDllGenericProcedureCommand.cpp" />
     <ClCompile Include="Include\Communicators\Protocol\ReturnProductsRequest.cpp" />
     <ClCompile Include="Handlers\LoadFigHandler.cpp" />
-    <ClCompile Include="Include\Products\FigErrorProduct.cpp" />
-    <ClCompile Include="Include\Products\RawProduct.cpp" />
+    <ClCompile Include="Products\FigErrorProduct.cpp" />
+    <ClCompile Include="Products\RawProduct.cpp" />
     <ClCompile Include="LiverInstance.cpp" />
     <ClCompile Include="Products\ErrorProduct.cpp" />
     <ClCompile Include="ProductsContainer.cpp" />
