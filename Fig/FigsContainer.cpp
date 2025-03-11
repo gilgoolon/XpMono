@@ -1,4 +1,4 @@
-﻿#include "FigsContainer.hpp"
+#include "FigsContainer.hpp"
 
 #include "Exception.hpp"
 
