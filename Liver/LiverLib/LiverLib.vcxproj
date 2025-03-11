@@ -50,6 +50,7 @@
     <ClInclude Include="Include\ProductsContainer.hpp" />
     <ClInclude Include="Include\Products\ErrorProduct.hpp" />
     <ClInclude Include="Include\Products\FigErrorProduct.hpp" />
+    <ClInclude Include="Include\Products\FigProduct.hpp" />
     <ClInclude Include="Include\Products\RawProduct.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +80,7 @@
     <ClCompile Include="Commands\CallDllGenericProcedureCommand.cpp" />
     <ClCompile Include="Include\Communicators\Protocol\ReturnProductsRequest.cpp" />
     <ClCompile Include="Handlers\LoadFigHandler.cpp" />
+    <ClCompile Include="Include\Products\FigProduct.cpp" />
     <ClCompile Include="Products\FigErrorProduct.cpp" />
     <ClCompile Include="Products\RawProduct.cpp" />
     <ClCompile Include="LiverInstance.cpp" />
