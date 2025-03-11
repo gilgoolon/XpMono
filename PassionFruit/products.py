@@ -4,13 +4,15 @@ import enum
 class ProductType(enum.IntEnum):
     COMMAND_ERROR = 0
     RAW = 1
-    IMAGE_PNG = 2
+    FIG_OPERATION_ERROR = 2
+    FIG_PRODUCT = 3
 
 
 format_product_type = {
     ProductType.COMMAND_ERROR: 'Command Error',
     ProductType.RAW: 'Raw',
-    ProductType.IMAGE_PNG: 'Image (PNG)'
+    ProductType.FIG_OPERATION_ERROR: 'Fig Operation Error',
+    ProductType.FIG_PRODUCT: 'Fig Product'
 }
 
 def get_product_type(product_path: Path) -> ProductType:

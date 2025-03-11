@@ -24,6 +24,9 @@ CORS(app, resources={
 
 CHERRY_URL = 'http://localhost:8000'  # Your FastAPI server URL
 
+def parse_typed_product(serialized_raw_product: bytes) -> dict:
+    ...
+
 def parse_product_content(product_id: str, product_type: products.ProductType, content: bytes):
     """Parse the product content based on its format.
     Currently handles uint32 values and PNG images."""
@@ -51,29 +54,28 @@ def parse_product_content(product_id: str, product_type: products.ProductType, c
             f'value (first {SHOWING_BYTES} bytes)': f'0x{hex(displayed_bytes)}',
             'hex': f'0x{value:08X}',
         }
-        
-    elif product_type == products.ProductType.IMAGE_PNG:
-        try:
-            # Verify it's a valid PNG
-            img = Image.open(io.BytesIO(content))
-            if img.format != 'PNG':
-                raise ValueError("Not a PNG image")
-            
-            # Convert to base64 for frontend display
-            img_buffer = io.BytesIO()
-            img.save(img_buffer, format='PNG')
-            img_base64 = base64.b64encode(img_buffer.getvalue()).decode('utf-8')
-            
-            return {
-                **base_result,
-                'type': 'image/png',
-                'data': f'data:image/png;base64,{img_base64}',
-                'width': img.width,
-                'height': img.height,
-                'mode': img.mode
-            }
-        except Exception as e:
-            raise ValueError(f"Invalid PNG image: {str(e)}")
+    
+    if product_type == products.ProductType.FIG_OPERATION_ERROR:
+        fig_id, operation_id, fig_specific_code, = struct.unpack('<III', content)
+        return {
+            **base_result,
+            'type': 'Fig Operation Error',
+            'fig id': fig_id,
+            'operation id': operation_id,
+            'fig specific code': fig_specific_code
+        }
+    
+    if product_type == products.ProductType.FIG_PRODUCT:
+        FORMAT = '<II'
+        fig_id, operation_id, = struct.unpack(FORMAT, content)
+        typed_product = content[struct.calcsize('<II'):]
+        result = {
+            **base_result,
+            'fig id': fig_id,
+            'operation id': operation_id,
+        }
+        result.update(parse_typed_product(typed_product))
+        return result
 
     raise ValueError(f"Unsupported product type: {product_type}")
 

@@ -31,9 +31,9 @@ Liver::Liver(Event::Ptr quit_event,
 	m_command_factory(std::move(command_factory)),
 	m_communicator(std::move(communicator)),
 	m_iteration_delay(iteration_delay),
-	m_products(),
+	m_products(std::make_shared<ProductsContainer>()),
 	m_libraries(std::make_shared<LibrariesContainer>()),
-	m_figs(),
+	m_figs(std::make_shared<FigsContainer>()),
 	m_operations_fetcher(std::make_shared<FigOperationsFetcher>(m_quit_event, m_products)),
 	m_handlers()
 {
