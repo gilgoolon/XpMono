@@ -29,6 +29,8 @@ private:
 	[[nodiscard]] std::vector<std::shared_ptr<IWaitable>> get_iteration_triggers(
 		const std::vector<FigOperationsContainer::CommandLinkedFigOperation>& operations) const;
 
-	void perform_iteration(
+	void fetch_operations(std::vector<FigOperationsContainer::CommandLinkedFigOperation>& operations);
+
+	void operations_handler(
 		std::vector<FigOperationsContainer::CommandLinkedFigOperation>& operations);
 };

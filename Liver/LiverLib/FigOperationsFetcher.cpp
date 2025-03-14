@@ -23,7 +23,7 @@ void FigOperationsFetcher::run()
 		m_operations->handle_operations(
 			[this](std::vector<FigOperationsContainer::CommandLinkedFigOperation>& operations)
 			{
-				this->perform_iteration(operations);
+				operations_handler(operations);
 			}
 		);
 	}
@@ -42,33 +42,8 @@ std::vector<std::shared_ptr<IWaitable>> FigOperationsFetcher::get_iteration_trig
 	return events;
 }
 
-void FigOperationsFetcher::perform_iteration(
-	std::vector<FigOperationsContainer::CommandLinkedFigOperation>& operations)
+void FigOperationsFetcher::fetch_operations(std::vector<FigOperationsContainer::CommandLinkedFigOperation>& operations)
 {
-	static constexpr Time::Duration ITERATION_DELAY = Time::Seconds(30);
-
-	const std::vector<std::shared_ptr<IWaitable>> triggers = get_iteration_triggers(operations);
-	const WaitResult wait_result = IWaitable::wait_for_any(triggers, ITERATION_DELAY);
-
-	if (wait_result.status == WaitStatus::TIMEOUT)
-	{
-		return;
-	}
-
-	if ((wait_result.status == WaitStatus::FINISHED && triggers[*wait_result.triggered_object].get() == m_quit_event
-			.get()) ||
-		wait_result.status != WaitStatus::FINISHED)
-	{
-		m_is_quit = true;
-		return;
-	}
-
-	if (triggers[*wait_result.triggered_object].get() == m_operations->m_notifier.get())
-	{
-		m_operations->m_notifier->unset();
-		return;
-	}
-
 	auto iterator = operations.begin();
 
 	while (!operations.empty() && iterator != operations.end())
@@ -113,4 +88,34 @@ void FigOperationsFetcher::perform_iteration(
 
 		operations.erase(iterator);
 	}
+}
+
+void FigOperationsFetcher::operations_handler(
+	std::vector<FigOperationsContainer::CommandLinkedFigOperation>& operations)
+{
+	static constexpr Time::Duration ITERATION_DELAY = Time::Seconds(30);
+
+	const std::vector<std::shared_ptr<IWaitable>> triggers = get_iteration_triggers(operations);
+	const WaitResult wait_result = IWaitable::wait_for_any(triggers, ITERATION_DELAY);
+
+	if (wait_result.status == WaitStatus::TIMEOUT)
+	{
+		return;
+	}
+
+	if ((wait_result.status == WaitStatus::FINISHED && triggers[*wait_result.triggered_object].get() == m_quit_event
+			.get()) ||
+		wait_result.status != WaitStatus::FINISHED)
+	{
+		m_is_quit = true;
+		return;
+	}
+
+	if (triggers[*wait_result.triggered_object].get() == m_operations->m_notifier.get())
+	{
+		m_operations->m_notifier->unset();
+		return;
+	}
+
+	fetch_operations(operations);
 }
