@@ -30,6 +30,14 @@ void Event::set()
 	}
 }
 
+void Event::unset()
+{
+	if (ResetEvent(m_handle.get()) == FALSE)
+	{
+		throw WinApiException(ErrorCode::FAILED_EVENT_UNSET);
+	}
+}
+
 HANDLE Event::open_event(const std::wstring& name)
 {
 	static constexpr BOOL DONT_INHERIT = FALSE;

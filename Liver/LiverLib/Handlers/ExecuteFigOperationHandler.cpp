@@ -3,9 +3,10 @@
 #include "Commands/ExecuteFigOperationCommand.hpp"
 
 ExecuteFigOperationHandler::ExecuteFigOperationHandler(std::shared_ptr<FigsContainer> figs,
-                                                       std::shared_ptr<FigOperationsFetcher> fig_operations_fetcher):
+                                                       std::shared_ptr<FigOperationsContainer>
+                                                       fig_operations_container):
 	m_figs(std::move(figs)),
-	m_fig_operations_fetcher(std::move(fig_operations_fetcher))
+	m_fig_operations_container(std::move(fig_operations_container))
 {
 }
 
@@ -18,7 +19,7 @@ std::vector<IProduct::Ptr> ExecuteFigOperationHandler::do_handle(const ICommand:
 		execute_fig_operation_command->m_operation_parameters
 	);
 
-	m_fig_operations_fetcher->consume(std::move(operation), command);
+	m_fig_operations_container->consume(std::move(operation), command);
 
 	return {};
 }

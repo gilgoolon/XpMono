@@ -27,6 +27,7 @@ public:
 	[[nodiscard]] HANDLE handle() const override;
 
 	void set();
+	void unset();
 
 private:
 	[[nodiscard]] static HANDLE open_event(const std::wstring& name);

@@ -8,6 +8,7 @@
 #include "ProductsContainer.hpp"
 #include "Communicators/ICommunicator.hpp"
 #include "Communicators/Protocol/ExecuteCommandsResponse.hpp"
+#include "Processes/Thread.hpp"
 #include "Synchronization/Event.hpp"
 #include "Utils/Buffer.hpp"
 
@@ -52,6 +53,7 @@ private:
 	std::shared_ptr<ProductsContainer> m_products;
 	std::shared_ptr<LibrariesContainer> m_libraries;
 	std::shared_ptr<FigsContainer> m_figs;
-	std::shared_ptr<FigOperationsFetcher> m_operations_fetcher;
+	std::shared_ptr<FigOperationsContainer> m_operations;
+	Thread m_operations_fetcher_thread;
 	std::unordered_map<ICommand::Type, ICommandHandler::Ptr> m_handlers;
 };

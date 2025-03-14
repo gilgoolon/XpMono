@@ -6,75 +6,74 @@
 #include "Products/RawProduct.hpp"
 #include "Synchronization/Event.hpp"
 
-FigOperationsFetcher::FigOperationsFetcher(Event::Ptr quit_event, std::shared_ptr<ProductsContainer> products) :
-	m_lock(),
+FigOperationsFetcher::FigOperationsFetcher(Event::Ptr quit_event,
+                                           std::shared_ptr<ProductsContainer> products,
+                                           std::shared_ptr<FigOperationsContainer> operations_container):
 	m_quit_event(std::move(quit_event)),
-	m_operation_notifier(std::make_shared<Event>(Event::Type::AUTO_RESET)),
-	m_operations(),
+	m_is_quit(false),
+	m_operations(std::move(operations_container)),
 	m_products(std::move(products))
 {
 }
 
 void FigOperationsFetcher::run()
 {
-	static constexpr Time::Duration ITERATION_DELAY = Time::Seconds(30);
-
-	while (true)
+	while (!m_is_quit)
 	{
-		const auto acquired = m_lock.acquire();
-
-		const std::vector<std::shared_ptr<IWaitable>> triggers = get_iteration_triggers();
-		const WaitResult wait_result = IWaitable::wait_for_any(triggers, ITERATION_DELAY);
-
-		if (wait_result.status == WaitStatus::TIMEOUT)
-		{
-			continue;
-		}
-
-		if ((wait_result.status == WaitStatus::FINISHED && triggers[*wait_result.triggered_object].get() == m_quit_event
-				.get()) ||
-			wait_result.status != WaitStatus::FINISHED)
-		{
-			break;
-		}
-
-		if (triggers[*wait_result.triggered_object].get() == m_operation_notifier.get())
-		{
-			continue;
-		}
-
-		perform_iteration();
+		m_operations->handle_operations(
+			[this](std::vector<FigOperationsContainer::CommandLinkedFigOperation>& operations)
+			{
+				this->perform_iteration(operations);
+			}
+		);
 	}
 }
 
-void FigOperationsFetcher::consume(std::unique_ptr<FigOperation> operation, ICommand::Ptr command)
-{
-	m_operation_notifier->set();
-
-	const auto acquired = m_lock.acquire();
-
-	m_operations.emplace_back(std::move(operation), std::move(command));
-}
-
-std::vector<std::shared_ptr<IWaitable>> FigOperationsFetcher::get_iteration_triggers() const
+std::vector<std::shared_ptr<IWaitable>> FigOperationsFetcher::get_iteration_triggers(
+	const std::vector<FigOperationsContainer::CommandLinkedFigOperation>& operations) const
 {
 	std::vector<std::shared_ptr<IWaitable>> events;
 	events.push_back(m_quit_event);
-	events.push_back(m_operation_notifier);
-	for (const CommandLinkedFigOperation& operation : m_operations)
+	events.push_back(m_operations->m_notifier);
+	for (const FigOperationsContainer::CommandLinkedFigOperation& operation : operations)
 	{
 		events.push_back(operation.fig_operation->m_event);
 	}
 	return events;
 }
 
-void FigOperationsFetcher::perform_iteration()
+void FigOperationsFetcher::perform_iteration(
+	std::vector<FigOperationsContainer::CommandLinkedFigOperation>& operations)
 {
-	auto iterator = m_operations.begin();
+	static constexpr Time::Duration ITERATION_DELAY = Time::Seconds(30);
 
-	while (iterator != m_operations.end())
+	const std::vector<std::shared_ptr<IWaitable>> triggers = get_iteration_triggers(operations);
+	const WaitResult wait_result = IWaitable::wait_for_any(triggers, ITERATION_DELAY);
+
+	if (wait_result.status == WaitStatus::TIMEOUT)
 	{
-		const CommandLinkedFigOperation& operation = *iterator;
+		return;
+	}
+
+	if ((wait_result.status == WaitStatus::FINISHED && triggers[*wait_result.triggered_object].get() == m_quit_event
+			.get()) ||
+		wait_result.status != WaitStatus::FINISHED)
+	{
+		m_is_quit = true;
+		return;
+	}
+
+	if (triggers[*wait_result.triggered_object].get() == m_operations->m_notifier.get())
+	{
+		m_operations->m_notifier->unset();
+		return;
+	}
+
+	auto iterator = operations.begin();
+
+	while (!operations.empty() && iterator != operations.end())
+	{
+		const FigOperationsContainer::CommandLinkedFigOperation& operation = *iterator;
 
 		const FigModule::StatusResult status = operation.fig_operation->status();
 		switch (status.execution_status)
@@ -97,7 +96,7 @@ void FigOperationsFetcher::perform_iteration()
 				)
 			);
 			m_products->insert_all(std::move(products));
-			m_operations.erase(iterator);
+			operations.erase(iterator);
 			continue;
 		}
 
@@ -112,6 +111,6 @@ void FigOperationsFetcher::perform_iteration()
 		products.push_back(std::make_unique<RawProduct>(operation.linked_command, operation.fig_operation->take()));
 		m_products->insert_all(std::move(products));
 
-		m_operations.erase(iterator);
+		operations.erase(iterator);
 	}
 }
