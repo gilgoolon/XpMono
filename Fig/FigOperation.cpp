@@ -15,6 +15,19 @@ Buffer FigOperation::take()
 	return m_module->take(m_id);
 }
 
+Buffer FigOperation::take_all()
+{
+	Buffer result;
+	Buffer buffer;
+	do
+	{
+		buffer = take();
+		result.insert(result.end(), buffer.begin(), buffer.end());
+	}
+	while (!buffer.empty());
+	return result;
+}
+
 FigModule::StatusResult FigOperation::status() const
 {
 	return m_module->status(m_id);
