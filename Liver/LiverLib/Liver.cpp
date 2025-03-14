@@ -34,7 +34,10 @@ Liver::Liver(Event::Ptr quit_event,
 	m_products(std::make_shared<ProductsContainer>()),
 	m_libraries(std::make_shared<LibrariesContainer>()),
 	m_figs(std::make_shared<FigsContainer>()),
-	m_operations_fetcher(std::make_shared<FigOperationsFetcher>(m_quit_event, m_products)),
+	m_operations(std::make_shared<FigOperationsContainer>()),
+	m_operations_fetcher_thread(
+		std::make_unique<FigOperationsFetcher>(m_quit_event, m_products, m_operations)
+	),
 	m_handlers()
 {
 	register_handlers();
@@ -167,7 +170,7 @@ void Liver::register_handlers()
 	register_handler(ICommand::Type::UNLOAD_FIG, std::make_unique<UnloadFigHandler>(m_figs));
 	register_handler(
 		ICommand::Type::EXECUTE_FIG_OPERATION,
-		std::make_unique<ExecuteFigOperationHandler>(m_figs, m_operations_fetcher)
+		std::make_unique<ExecuteFigOperationHandler>(m_figs, m_operations)
 	);
 }
 

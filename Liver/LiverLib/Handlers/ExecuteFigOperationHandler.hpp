@@ -7,7 +7,7 @@ class ExecuteFigOperationHandler final : public ICommandHandler
 {
 public:
 	explicit ExecuteFigOperationHandler(std::shared_ptr<FigsContainer> figs,
-	                                    std::shared_ptr<FigOperationsFetcher> fig_operations_fetcher);
+	                                    std::shared_ptr<FigOperationsContainer> fig_operations_container);
 	~ExecuteFigOperationHandler() override = default;
 	ExecuteFigOperationHandler(const ExecuteFigOperationHandler&) = delete;
 	ExecuteFigOperationHandler& operator=(const ExecuteFigOperationHandler&) = delete;
@@ -18,5 +18,5 @@ public:
 
 private:
 	std::shared_ptr<FigsContainer> m_figs;
-	std::shared_ptr<FigOperationsFetcher> m_fig_operations_fetcher;
+	std::shared_ptr<FigOperationsContainer> m_fig_operations_container;
 };

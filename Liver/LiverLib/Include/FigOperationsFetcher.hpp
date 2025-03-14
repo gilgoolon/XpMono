@@ -1,13 +1,15 @@
 ﻿#pragma once
 #include "FigOperation.hpp"
+#include "FigOperationsContainer.hpp"
 #include "ProductsContainer.hpp"
 #include "Processes/IRunner.hpp"
-#include "Synchronization/CriticalSection.hpp"
 
 class FigOperationsFetcher final : public IRunner
 {
 public:
-	explicit FigOperationsFetcher(Event::Ptr quit_event, std::shared_ptr<ProductsContainer> products);
+	explicit FigOperationsFetcher(Event::Ptr quit_event,
+	                              std::shared_ptr<ProductsContainer> products,
+	                              std::shared_ptr<FigOperationsContainer> operations_container);
 	~FigOperationsFetcher() override = default;
 	FigOperationsFetcher(const FigOperationsFetcher&) = delete;
 	FigOperationsFetcher& operator=(const FigOperationsFetcher&) = delete;
@@ -16,24 +18,17 @@ public:
 
 	void run() override;
 
-	void consume(std::unique_ptr<FigOperation> operation, ICommand::Ptr command);
-
 	friend class FigsContainer;
 
 private:
-	struct CommandLinkedFigOperation final
-	{
-		std::unique_ptr<FigOperation> fig_operation;
-		ICommand::Ptr linked_command;
-	};
-
-	CriticalSection m_lock;
 	Event::Ptr m_quit_event;
-	Event::Ptr m_operation_notifier;
-	std::vector<CommandLinkedFigOperation> m_operations;
+	bool m_is_quit;
+	std::shared_ptr<FigOperationsContainer> m_operations;
 	std::shared_ptr<ProductsContainer> m_products;
 
-	[[nodiscard]] std::vector<std::shared_ptr<IWaitable>> get_iteration_triggers() const;
+	[[nodiscard]] std::vector<std::shared_ptr<IWaitable>> get_iteration_triggers(
+		const std::vector<FigOperationsContainer::CommandLinkedFigOperation>& operations) const;
 
-	void perform_iteration();
+	void perform_iteration(
+		std::vector<FigOperationsContainer::CommandLinkedFigOperation>& operations);
 };
