@@ -25,7 +25,28 @@ CORS(app, resources={
 CHERRY_URL = 'http://localhost:8000'  # Your FastAPI server URL
 
 def parse_typed_product(serialized_raw_product: bytes) -> dict:
-    ...
+    # elif product_type == products.ProductType.IMAGE_PNG:
+    try:
+        # Verify it's a valid PNG
+        img = Image.open(io.BytesIO(serialized_raw_product))
+        if img.format != 'PNG':
+            raise ValueError("Not a PNG image")
+        
+        # Convert to base64 for frontend display
+        img_buffer = io.BytesIO()
+        img.save(img_buffer, format='PNG')
+        img_base64 = base64.b64encode(img_buffer.getvalue()).decode('utf-8')
+        
+        return {
+            'type': 'image/png',
+            'data': f'data:image/png;base64,{img_base64}',
+            'width': img.width,
+            'height': img.height,
+            'mode': img.mode
+        }
+    except Exception as e:
+        raise ValueError(f"Invalid PNG image: {str(e)}")
+
 
 def parse_product_content(product_id: str, product_type: products.ProductType, content: bytes):
     """Parse the product content based on its format.
@@ -67,8 +88,8 @@ def parse_product_content(product_id: str, product_type: products.ProductType, c
     
     if product_type == products.ProductType.FIG_PRODUCT:
         FORMAT = '<II'
-        fig_id, operation_id, = struct.unpack(FORMAT, content)
-        typed_product = content[struct.calcsize('<II'):]
+        fig_id, operation_id, = struct.unpack(FORMAT, content[:struct.calcsize(FORMAT)])
+        typed_product = content[struct.calcsize(FORMAT):]
         result = {
             **base_result,
             'fig id': fig_id,

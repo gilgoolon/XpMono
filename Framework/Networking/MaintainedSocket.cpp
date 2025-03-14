@@ -27,12 +27,8 @@ void MaintainedSocket::write(const Buffer& data) const
 		}
 		m_socket->write(data);
 	}
-	catch (const WsaException& ex)
+	catch (const WsaException&)
 	{
-		if (ex.wsa_code() != WSAECONNABORTED)
-		{
-			throw;
-		}
 		maintain_connection();
 		m_socket->write(data);
 	}

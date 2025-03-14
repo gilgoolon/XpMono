@@ -3,6 +3,7 @@
 #include "Exception.hpp"
 #include "Products/ErrorProduct.hpp"
 #include "Products/FigOperationErrorProduct.hpp"
+#include "Products/FigProduct.hpp"
 #include "Products/RawProduct.hpp"
 #include "Synchronization/Event.hpp"
 
@@ -83,7 +84,14 @@ void FigOperationsFetcher::fetch_operations(std::vector<FigOperationsContainer::
 		}
 
 		std::vector<IProduct::Ptr> products;
-		products.push_back(std::make_unique<RawProduct>(operation.linked_command, operation.fig_operation->take()));
+		products.push_back(
+			std::make_unique<FigProduct>(
+				operation.linked_command,
+				operation.fig_operation->m_module->id(),
+				operation.fig_operation->m_id,
+				operation.fig_operation->take_all()
+			)
+		);
 		m_products->insert_all(std::move(products));
 
 		operations.erase(iterator);
@@ -93,7 +101,7 @@ void FigOperationsFetcher::fetch_operations(std::vector<FigOperationsContainer::
 void FigOperationsFetcher::operations_handler(
 	std::vector<FigOperationsContainer::CommandLinkedFigOperation>& operations)
 {
-	static constexpr Time::Duration ITERATION_DELAY = Time::Seconds(30);
+	static constexpr Time::Duration ITERATION_DELAY = Time::Seconds(5);
 
 	const std::vector<std::shared_ptr<IWaitable>> triggers = get_iteration_triggers(operations);
 	const WaitResult wait_result = IWaitable::wait_for_any(triggers, ITERATION_DELAY);
