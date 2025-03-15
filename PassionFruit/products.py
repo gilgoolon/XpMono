@@ -1,7 +1,7 @@
 from pathlib import Path
 import enum
 
-class ProductType(enum.IntEnum):
+class ProductType(enum.Enum):
     COMMAND_ERROR = 0
     RAW = 1
     FIG_OPERATION_ERROR = 2
