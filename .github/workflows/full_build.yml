@@ -38,7 +38,6 @@ jobs:
       - name: Build Solution
         shell: pwsh
         run: |
-          $ErrorActionPreference = "Stop"
           Write-Host "🔧 Building solution: ${{ matrix.solution }}"
           msbuild ${{ matrix.solution }} /t:Build /p:Configuration=Release /m
       - name: Upload Artifacts
