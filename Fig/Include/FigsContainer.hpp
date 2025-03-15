@@ -13,7 +13,7 @@ public:
 	FigsContainer(FigsContainer&&) = delete;
 	FigsContainer& operator=(FigsContainer&&) = delete;
 
-	void load(Fig::FigId id, const Buffer& buffer);
+	void load(Fig::FigId id, std::unique_ptr<ILibrary> fig);
 
 	void unload(Fig::FigId id);
 

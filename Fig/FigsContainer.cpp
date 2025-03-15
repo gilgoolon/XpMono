@@ -7,13 +7,13 @@ FigsContainer::FigsContainer():
 {
 }
 
-void FigsContainer::load(const Fig::FigId id, const Buffer& buffer)
+void FigsContainer::load(const Fig::FigId id, std::unique_ptr<ILibrary> fig)
 {
 	if (m_loaded_figs.contains(id))
 	{
 		throw Exception(ErrorCode::FIG_ALREADY_LOADED);
 	}
-	m_loaded_figs.insert_or_assign(id, std::make_unique<FigModule>(id, buffer));
+	m_loaded_figs.insert_or_assign(id, std::make_unique<FigModule>(id, std::move(fig)));
 }
 
 void FigsContainer::unload(const Fig::FigId id)

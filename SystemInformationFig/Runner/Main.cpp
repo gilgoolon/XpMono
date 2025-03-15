@@ -7,8 +7,6 @@
 #include "Filesystem/File.hpp"
 #include "Protections/ProgramProtector.hpp"
 
-#include <ApricotException.hpp>
-
 #include <Windows.h>
 
 static void main_logic();
@@ -23,15 +21,6 @@ int WINAPI wWinMain([[maybe_unused]] HINSTANCE hInstance,
 		Protections::ProgramProtector protector;
 		main_logic();
 		return EXIT_SUCCESS;
-	}
-	catch ([[maybe_unused]] const ApricotException& ex)
-	{
-		TRACE(
-			"uncaught ApricotException with code ",
-			ex.code(),
-			" and ApricotCode ",
-			static_cast<uint32_t>(ex.apricot_code())
-		);
 	}
 	catch ([[maybe_unused]] const FigException& ex)
 	{
@@ -59,12 +48,7 @@ static void main_logic()
 		"Release"
 #endif
 		"/SystemInformationFig.dll";
-#ifndef _DEBUG
-	const Buffer fig_buffer = File(path, File::Mode::READ, File::Disposition::OPEN).read();
-	const auto fig = std::make_shared<FigModule>(FIG_ID, fig_buffer);
-#else
 	const auto fig = std::make_shared<FigModule>(FIG_ID, path);
-#endif
 	TRACE("fig id: ", fig->id(), " fig version: ", fig->major(), ".", fig->minor());
 	const std::unique_ptr<FigOperation> fig_operation = fig->execute(4, {});
 	bool is_over = false;
