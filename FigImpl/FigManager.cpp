@@ -21,7 +21,7 @@ Fig::FigCode FigManager::initialize(HANDLE unmanaged_quit_event,
 	{
 		Protections::EntryPointProtector protector;
 		*information = g_information;
-		*interfaces = {execute, status, take};
+		*interfaces = {execute, status, take, free_buffer};
 		g_quit_event = std::make_shared<UnmanagedEvent>(unmanaged_quit_event);
 		g_operations_lock = std::make_unique<CriticalSection>();
 		return Fig::FigCode::SUCCESS;
@@ -105,7 +105,7 @@ Fig::FigCode FigManager::status(const Fig::OperationId id,
 	return Fig::FigCode::FAILED_UNKNOWN;
 }
 
-Fig::FigCode FigManager::take(const Fig::OperationId id, uint8_t* const buffer, uint32_t* const buffer_size)
+Fig::FigCode FigManager::take(const Fig::OperationId id, uint8_t** const buffer, uint32_t* const buffer_size)
 {
 	try
 	{
@@ -118,8 +118,31 @@ Fig::FigCode FigManager::take(const Fig::OperationId id, uint8_t* const buffer, 
 		}
 		const std::shared_ptr<IOperationHandler>& handler = found->second;
 		const Buffer result = handler->take(*buffer_size);
+
+		auto shared_result = std::make_unique<uint8_t[]>(result.size());
+		std::copy_n(result.data(), result.size(), shared_result.get());
+
 		*buffer_size = result.size();
-		std::copy_n(result.data(), result.size(), buffer);
+		*buffer = shared_result.release();
+
+		return Fig::FigCode::SUCCESS;
+	}
+	catch ([[maybe_unused]] const FigImplException& ex)
+	{
+		TRACE(L"failed with specific code: ", ex.specific_code());
+		return ex.code();
+	}
+	CATCH_AND_TRACE()
+
+	return Fig::FigCode::FAILED_UNKNOWN;
+}
+
+Fig::FigCode FigManager::free_buffer(uint8_t* buffer, [[maybe_unused]] uint32_t buffer_size)
+{
+	try
+	{
+		Protections::EntryPointProtector protector;
+		std::unique_ptr<uint8_t[]> releaser(buffer);
 		return Fig::FigCode::SUCCESS;
 	}
 	catch ([[maybe_unused]] const FigImplException& ex)
@@ -139,3 +162,7 @@ static_assert(
 static_assert(std::is_same_v<decltype(FigManager::execute), decltype(Fig::execute)>, "wrong execute definition");
 static_assert(std::is_same_v<decltype(FigManager::status), decltype(Fig::status)>, "wrong status definition");
 static_assert(std::is_same_v<decltype(FigManager::take), decltype(Fig::take)>, "wrong take definition");
+static_assert(
+	std::is_same_v<decltype(FigManager::free_buffer), decltype(Fig::free_buffer)>,
+	"wrong free_buffer definition"
+);

@@ -56,7 +56,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>$(SolutionDir)..\Apricot\Debug\ApricotLib.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)ApricotLib.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -73,7 +73,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>$(SolutionDir)..\Apricot\Release\ApricotLib.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)ApricotLib.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -90,6 +90,9 @@
     <ClInclude Include="Include\FigsContainer.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Apricot\ApricotLib\ApricotLib.vcxproj">
+      <Project>{19aff26b-7e9b-452b-84c1-82160dd6d399}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Framework\Framework.vcxproj">
       <Project>{5b5c1f35-e8a8-44e2-9133-38047262f449}</Project>
     </ProjectReference>

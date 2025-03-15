@@ -69,7 +69,7 @@
     <ClCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>Include/;$(SolutionDir)../Framework/Include/;$(SolutionDir)ApricotImpl/Include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include/;$(SolutionDir)../Framework/Include/;$(SolutionDir)../Apricot/ApricotImpl/Include/</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
@@ -86,7 +86,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>Include/;$(SolutionDir)../Framework/Include/;$(SolutionDir)ApricotImpl/Include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include/;$(SolutionDir)../Framework/Include/;$(SolutionDir)../Apricot/ApricotImpl/Include/</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>

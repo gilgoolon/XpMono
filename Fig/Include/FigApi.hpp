@@ -41,18 +41,22 @@ FigCode __cdecl execute(__in OperationType operation,
 
 FigCode __cdecl status(__in OperationId id, __out ExecutionStatus* status, __out FigSpecificCode* specific_code);
 
-FigCode __cdecl take(__in OperationId id, __out uint8_t* buffer, __inout uint32_t* buffer_size);
+FigCode __cdecl take(__in OperationId id, __out uint8_t** buffer, __out uint32_t* buffer_size);
+
+FigCode __cdecl free_buffer(__in uint8_t* buffer, __in uint32_t buffer_size);
 
 using InitializeFunction = decltype(initialize)*;
 using ExecuteFunction = decltype(execute)*;
 using StatusFunction = decltype(status)*;
 using TakeFunction = decltype(take)*;
+using FreeBufferFunction = decltype(free_buffer)*;
 
 struct FigInterfaces final
 {
-	ExecuteFunction exeute;
+	ExecuteFunction execute;
 	StatusFunction status;
 	TakeFunction take;
+	FreeBufferFunction free_buffer;
 };
 
 using FigId = uint32_t;
