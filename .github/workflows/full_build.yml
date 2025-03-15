@@ -8,7 +8,7 @@ on:
 
 jobs:
   solutions:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     outputs:
       files: ${{ steps.find_slns.outputs.sln_files }}
