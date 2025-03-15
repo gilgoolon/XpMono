@@ -12,7 +12,6 @@ class FigModule final : public std::enable_shared_from_this<FigModule>
 {
 public:
 	explicit FigModule(Fig::FigId fig_id, std::unique_ptr<ILibrary> library);
-	explicit FigModule(Fig::FigId fig_id, const Buffer& data);
 	explicit FigModule(Fig::FigId fig_id, const std::filesystem::path& path);
 	~FigModule() = default;
 	FigModule(const FigModule&) = delete;

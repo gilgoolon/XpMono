@@ -7,28 +7,56 @@ on:
     branches: [main]
 
 jobs:
+  solutions:
+    runs-on: ubuntu-latest
+
+    outputs:
+      files: ${{ steps.find_slns.outputs.sln_files }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Find Solution Files
+        id: find_slns
+        run: echo "sln_files=$(find . -name '*.sln' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+
   build:
     runs-on: windows-latest
+    needs: solutions
+    strategy:
+      matrix:
+        solution: ${{ fromJson(needs.solutions.outputs.files) }}
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
-      - name: Find and Build All Solutions
+      - name: Build Solution
         shell: pwsh
         run: |
-          $ErrorActionPreference = "Stop"
-          Get-ChildItem -Path . -Filter *.sln -Recurse | ForEach-Object {
-            Write-Host "🔧 Building solution: $($_.FullName)"
-            msbuild $_.FullName /t:Build /p:Configuration=Release /m
-          }
-      - name: Upload build artifacts
+          Write-Host "🔧 Building solution: ${{ matrix.solution }}"
+          msbuild ${{ matrix.solution }} /t:Build /p:Configuration=Release /m
+
+      - name: Get Solution Name Without Extension
+        shell: pwsh
+        id: solution_name
+        run: |
+            # Extract solution file name without the extension
+            $solution = '${{ matrix.solution }}'
+            $solutionName = [System.IO.Path]::GetFileNameWithoutExtension($solution)
+            # Replace slashes with hyphens
+            $solutionName = $solutionName -replace '/', '-'
+            # Set the solution name for artifact upload
+            echo "::set-output name=solution_name::$solutionName"
+
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-            name: build-artifacts
+            name: '${{ steps.solution_name.outputs.solution_name }}_artifacts'
             path: |
               **/Release/*.exe
               **/Release/*.dll

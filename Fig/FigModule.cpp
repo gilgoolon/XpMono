@@ -4,8 +4,6 @@
 #include "FigOperation.hpp"
 #include "Processes/DynamicLibrary.hpp"
 
-#include <ApricotLibrary.hpp>
-
 FigModule::FigModule(const Fig::FigId fig_id, std::unique_ptr<ILibrary> library):
 	m_library(std::move(library)),
 	m_interfaces{},
@@ -22,11 +20,6 @@ FigModule::FigModule(const Fig::FigId fig_id, std::unique_ptr<ILibrary> library)
 	{
 		throw FigException(ErrorCode::FAILED_FIG_INITIALIZE, code);
 	}
-}
-
-FigModule::FigModule(const Fig::FigId fig_id, const Buffer& data):
-	FigModule(fig_id, std::make_unique<ApricotLibrary>(data))
-{
 }
 
 FigModule::FigModule(const Fig::FigId fig_id, const std::filesystem::path& path):
@@ -53,7 +46,7 @@ std::unique_ptr<FigOperation> FigModule::execute(const Fig::OperationType type, 
 {
 	Fig::OperationId operation_id = 0;
 	HANDLE operation_event = nullptr;
-	const Fig::FigCode code = m_interfaces.exeute(
+	const Fig::FigCode code = m_interfaces.execute(
 		type,
 		parameters.data(),
 		parameters.size(),
@@ -90,16 +83,16 @@ FigModule::StatusResult FigModule::status(const Fig::OperationId id) const
 
 std::vector<uint8_t> FigModule::take(const Fig::OperationId id)
 {
-	static constexpr uint32_t BUFFER_SIZE = 4096;
-	Buffer buffer(BUFFER_SIZE);
-	uint32_t size = buffer.size();
-	const Fig::FigCode code = m_interfaces.take(id, buffer.data(), &size);
+	uint8_t* buffer = nullptr;
+	uint32_t size = 0;
+	const Fig::FigCode code = m_interfaces.take(id, &buffer, &size);
 	if (code != Fig::FigCode::SUCCESS)
 	{
 		throw FigException(ErrorCode::FAILED_FIG_TAKE, code);
 	}
-	buffer.resize(size);
-	return buffer;
+	Buffer result = {buffer, buffer + size};
+	m_interfaces.free_buffer(buffer, size);
+	return result;
 }
 
 std::wstring FigModule::event_name(const Fig::FigId fig_id)

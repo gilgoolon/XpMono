@@ -37,6 +37,8 @@ extern std::unique_ptr<CriticalSection> g_operations_lock;
                                           __out Fig::FigSpecificCode* specific_code);
 
 [[nodiscard]] Fig::FigCode __cdecl take(__in Fig::OperationId id,
-                                        __out uint8_t* buffer,
-                                        __inout uint32_t* buffer_size);
+                                        __in uint8_t** buffer,
+                                        __in uint32_t* buffer_size);
+
+[[nodiscard]] Fig::FigCode __cdecl free_buffer(__in uint8_t* buffer,__in uint32_t buffer_size);
 };
