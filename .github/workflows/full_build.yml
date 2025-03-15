@@ -40,8 +40,7 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
           Write-Host "🔧 Building solution: ${{ matrix.solution }}"
-            msbuild ${{ matrix.solution }} /t:Build /p:Configuration=Release /m
-          }
+          msbuild ${{ matrix.solution }} /t:Build /p:Configuration=Release /m
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
