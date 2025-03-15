@@ -40,10 +40,23 @@ jobs:
         run: |
           Write-Host "🔧 Building solution: ${{ matrix.solution }}"
           msbuild ${{ matrix.solution }} /t:Build /p:Configuration=Release /m
+
+      - name: Get Solution Name Without Extension
+        shell: pwsh
+        id: solution_name
+        run: |
+            # Extract solution file name without the extension
+            $solution = '${{ matrix.solution }}'
+            $solutionName = [System.IO.Path]::GetFileNameWithoutExtension($solution)
+            # Replace slashes with hyphens
+            $solutionName = $solutionName -replace '/', '-'
+            # Set the solution name for artifact upload
+            echo "::set-output name=solution_name::$solutionName"
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-            name: build-artifacts
+            name: '${{ steps.solution_name.outputs.solution_name }}_artifacts'
             path: |
               **/Release/*.exe
               **/Release/*.dll
