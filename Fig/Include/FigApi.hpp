@@ -50,7 +50,7 @@ using TakeFunction = decltype(take)*;
 
 struct FigInterfaces final
 {
-	ExecuteFunction exeute;
+	ExecuteFunction execute;
 	StatusFunction status;
 	TakeFunction take;
 };

@@ -53,7 +53,7 @@ std::unique_ptr<FigOperation> FigModule::execute(const Fig::OperationType type, 
 {
 	Fig::OperationId operation_id = 0;
 	HANDLE operation_event = nullptr;
-	const Fig::FigCode code = m_interfaces.exeute(
+	const Fig::FigCode code = m_interfaces.execute(
 		type,
 		parameters.data(),
 		parameters.size(),
