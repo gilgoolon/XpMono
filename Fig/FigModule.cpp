@@ -4,11 +4,11 @@
 #include "FigOperation.hpp"
 #include "Processes/DynamicLibrary.hpp"
 
-FigModule::FigModule(const Fig::FigId fig_id, std::unique_ptr<ILibrary> library):
+FigModule::FigModule(std::unique_ptr<ILibrary> library):
 	m_library(std::move(library)),
 	m_interfaces{},
 	m_information{},
-	m_fig_quit_event(event_name(fig_id), Event::Type::MANUAL_RESET)
+	m_fig_quit_event(Event::Type::MANUAL_RESET)
 {
 	const Fig::FigCode code = m_library->call<Fig::InitializeFunction>(
 		Fig::INITIALIZE_ORDINAL,
@@ -22,8 +22,8 @@ FigModule::FigModule(const Fig::FigId fig_id, std::unique_ptr<ILibrary> library)
 	}
 }
 
-FigModule::FigModule(const Fig::FigId fig_id, const std::filesystem::path& path):
-	FigModule(fig_id, std::make_unique<DynamicLibrary>(path))
+FigModule::FigModule(const std::filesystem::path& path):
+	FigModule(std::make_unique<DynamicLibrary>(path))
 {
 }
 
@@ -93,9 +93,4 @@ std::vector<uint8_t> FigModule::take(const Fig::OperationId id)
 	Buffer result = {buffer, buffer + size};
 	m_interfaces.free_buffer(buffer, size);
 	return result;
-}
-
-std::wstring FigModule::event_name(const Fig::FigId fig_id)
-{
-	return std::wstring{Event::GLOBAL_NAMESPACE} + EVENT_PREFIX + std::to_wstring(fig_id);
 }
