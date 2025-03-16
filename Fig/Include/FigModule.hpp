@@ -11,8 +11,8 @@ class FigOperation;
 class FigModule final : public std::enable_shared_from_this<FigModule>
 {
 public:
-	explicit FigModule(Fig::FigId fig_id, std::unique_ptr<ILibrary> library);
-	explicit FigModule(Fig::FigId fig_id, const std::filesystem::path& path);
+	explicit FigModule(std::unique_ptr<ILibrary> library);
+	explicit FigModule(const std::filesystem::path& path);
 	~FigModule() = default;
 	FigModule(const FigModule&) = delete;
 	FigModule& operator=(const FigModule&) = delete;
@@ -40,15 +40,6 @@ private:
 	[[nodiscard]] StatusResult status(Fig::OperationId id) const;
 
 	[[nodiscard]] std::vector<uint8_t> take(Fig::OperationId id);
-
-	static constexpr auto EVENT_PREFIX =
-#ifdef _DEBUG
-		L"FigEvent";
-#else
-		L"{D407EBA2-DBDA-4A72-8FF6-85C865BA920E}";
-#endif
-
-	[[nodiscard]] static std::wstring event_name(Fig::FigId fig_id);
 
 	friend class FigOperation;
 };

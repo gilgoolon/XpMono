@@ -42,7 +42,6 @@ static constexpr auto PARAMETERS = "parameters";
 namespace LoadFig
 {
 static constexpr auto FIG_BUFFER = "fig_buffer";
-static constexpr auto FIG_ID = "fig_id";
 }
 
 namespace UnloadFig
@@ -104,8 +103,7 @@ ICommand::Ptr JsonCommandFactory::create(const Command& command)
 	case ICommand::Type::LOAD_FIG:
 	{
 		const std::string library_buffer = parameters[Params::LoadFig::FIG_BUFFER];
-		const auto library_id = parameters[Params::LoadFig::FIG_ID].get<Fig::FigId>();
-		return std::make_shared<LoadFigCommand>(command.id, library_id, Base64::decode(library_buffer));
+		return std::make_shared<LoadFigCommand>(command.id, Base64::decode(library_buffer));
 	}
 
 	case ICommand::Type::UNLOAD_FIG:
