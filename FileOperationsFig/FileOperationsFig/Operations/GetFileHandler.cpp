@@ -2,6 +2,7 @@
 
 #include "Filesystem/File.hpp"
 #include "Filesystem/FileContentIterator.hpp"
+#include "Products/RawTypedProduct.hpp"
 #include "Utils/Strings.hpp"
 
 namespace Parameters
@@ -15,7 +16,7 @@ GetFileHandler::GetFileHandler(std::unique_ptr<Event> operation_event, const Jso
 {
 }
 
-GetFileHandler::GetFileHandler(std::unique_ptr<Event> operation_event, const Buffer &parameters) :
+GetFileHandler::GetFileHandler(std::unique_ptr<Event> operation_event, const Buffer& parameters) :
 	GetFileHandler(std::move(operation_event), Json::parse(Strings::to_string(parameters)))
 {
 }
@@ -23,9 +24,12 @@ GetFileHandler::GetFileHandler(std::unique_ptr<Event> operation_event, const Buf
 void GetFileHandler::run()
 {
 	FileContentIterator iterator(File(m_path, File::Mode::READ, File::Disposition::OPEN));
+	Buffer result;
 	while (iterator.has_next())
 	{
-		append(iterator.next());
+		const Buffer contents = iterator.next();
+		result.insert(result.end(), contents.begin(), contents.end());
 	}
+	append(std::make_unique<RawTypedProduct>(std::move(result)));
 	finished();
 }
