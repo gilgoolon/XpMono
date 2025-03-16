@@ -1,5 +1,6 @@
 ﻿#include "Handlers/WmiQuerySingleOperationHandler.hpp"
 
+#include "Products/TextTypedProduct.hpp"
 #include "Utils/Strings.hpp"
 #include "Wmi/WmiConnection.hpp"
 
@@ -21,6 +22,8 @@ void WmiQuerySingleOperationHandler::run()
 	static constexpr auto PAIR_SUFFIX = L"\n";
 	static constexpr auto FIELD_VALUE_SEPARATOR = L": ";
 	static constexpr auto UNKNOWN_VALUE = L"?";
+
+	std::wstring product;
 	for (const std::wstring& field : m_fields)
 	{
 		const std::optional<std::wstring> result = os.get_formatted_property(field);
@@ -31,8 +34,8 @@ void WmiQuerySingleOperationHandler::run()
 			value,
 			std::wstring{PAIR_SUFFIX}
 		);
-		const Buffer data = Strings::to_buffer(formatted_result);
-		append(data);
+		product.append(formatted_result);
 	}
+	append(std::make_unique<TextTypedProduct>(std::move(product)));
 	finished();
 }

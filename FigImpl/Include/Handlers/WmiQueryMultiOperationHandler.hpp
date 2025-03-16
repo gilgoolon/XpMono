@@ -5,8 +5,8 @@ class WmiQueryMultiOperationHandler : public IOperationHandler
 {
 public:
 	explicit WmiQueryMultiOperationHandler(std::unique_ptr<Event> operation_event,
-	                                       const std::wstring& class_name,
-	                                       std::vector<std::wstring>&& fields);
+	                                       std::wstring class_name,
+	                                       std::vector<std::wstring> fields);
 	~WmiQueryMultiOperationHandler() override = default;
 	WmiQueryMultiOperationHandler(const WmiQueryMultiOperationHandler&) = delete;
 	WmiQueryMultiOperationHandler& operator=(const WmiQueryMultiOperationHandler&) = delete;
