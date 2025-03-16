@@ -49,7 +49,7 @@ static void main_logic()
 		"Release"
 #endif
 		"/FileOperationsFig.dll";
-	const auto fig = std::make_shared<FigModule>(FIG_ID, path);
+	const auto fig = std::make_shared<FigModule>(path);
 	TRACE("fig id: ", fig->id(), " fig version: ", fig->major(), ".", fig->minor());
 	const Json parameters = {
 		{"path", R"(C:\Users\alper\OneDrive\Documents\new file.txt)"}

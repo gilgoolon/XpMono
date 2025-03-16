@@ -49,7 +49,7 @@ static void main_logic()
 		"Release"
 #endif
 		"/ScreenSaverFig.dll";
-	const auto fig = std::make_shared<FigModule>(FIG_ID, path);
+	const auto fig = std::make_shared<FigModule>(path);
 	TRACE("fig id: ", fig->id(), " fig version: ", fig->major(), ".", fig->minor());
 	const std::unique_ptr<FigOperation> fig_operation = fig->execute(1, {});
 	bool is_over = false;
