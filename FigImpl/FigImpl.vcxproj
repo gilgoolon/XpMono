@@ -18,6 +18,7 @@
     <ClCompile Include="Handlers\WmiQueryMultiOperationHandler.cpp" />
     <ClCompile Include="Handlers\WmiQuerySingleOperationHandler.cpp" />
     <ClCompile Include="Products\RawTypedProduct.cpp" />
+    <ClCompile Include="Products\TextTypedProduct.cpp" />
     <ClCompile Include="Products\TypedProduct.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -29,6 +30,7 @@
     <ClInclude Include="Include\Handlers\WmiQuerySingleOperationHandler.hpp" />
     <ClInclude Include="Include\Products\RawTypedProduct.hpp" />
     <ClInclude Include="Include\Products\TypedProduct.hpp" />
+    <ClInclude Include="Include\Products\TextTypedProduct.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
