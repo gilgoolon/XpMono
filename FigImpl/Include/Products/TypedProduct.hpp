@@ -25,5 +25,5 @@ public:
 	[[nodiscard]] virtual Type type() const = 0;
 	[[nodiscard]] virtual Buffer data() const = 0;
 
-	[[nodiscard]] Buffer serialize() const override;
+	[[nodiscard]] Buffer serialize() const final;
 };

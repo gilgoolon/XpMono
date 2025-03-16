@@ -36,6 +36,9 @@
     <ClCompile Include="Products\TypedProduct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Products\RawTypedProduct.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\FigManager.hpp">
@@ -57,6 +60,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Products\TypedProduct.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Products\RawTypedProduct.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
