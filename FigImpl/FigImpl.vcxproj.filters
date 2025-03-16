@@ -33,7 +33,7 @@
     <ClCompile Include="Handlers\WmiQueryMultiOperationHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TypedProduct.cpp">
+    <ClCompile Include="Products\TypedProduct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,7 +56,7 @@
     <ClInclude Include="Include\Handlers\WmiQueryMultiOperationHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\TypedProduct.hpp">
+    <ClInclude Include="Include\Products\TypedProduct.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

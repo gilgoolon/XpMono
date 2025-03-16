@@ -17,7 +17,7 @@
     <ClCompile Include="Handlers\IOperationHandler.cpp" />
     <ClCompile Include="Handlers\WmiQueryMultiOperationHandler.cpp" />
     <ClCompile Include="Handlers\WmiQuerySingleOperationHandler.cpp" />
-    <ClCompile Include="TypedProduct.cpp" />
+    <ClCompile Include="Products\TypedProduct.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Handlers\WmiQueryMultiOperationHandler.hpp" />
@@ -26,7 +26,7 @@
     <ClInclude Include="Include\HandlerRunner.hpp" />
     <ClInclude Include="Include\Handlers\IOperationHandler.hpp" />
     <ClInclude Include="Include\Handlers\WmiQuerySingleOperationHandler.hpp" />
-    <ClInclude Include="Include\TypedProduct.hpp" />
+    <ClInclude Include="Include\Products\TypedProduct.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

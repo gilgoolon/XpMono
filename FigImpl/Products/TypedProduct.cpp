@@ -1,4 +1,4 @@
-﻿#include "TypedProduct.hpp"
+﻿#include "Products/TypedProduct.hpp"
 
 #include "Utils/Strings.hpp"
 
