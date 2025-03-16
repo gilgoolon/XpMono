@@ -89,7 +89,7 @@ void FigOperationsFetcher::fetch_operations(std::vector<FigOperationsContainer::
 				operation.linked_command,
 				operation.fig_operation->m_module->id(),
 				operation.fig_operation->m_id,
-				operation.fig_operation->take_all()
+				operation.fig_operation->take()
 			)
 		);
 		m_products->insert_all(std::move(products));

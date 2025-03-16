@@ -32,28 +32,30 @@ class TypedProductType(enum.Enum):
     RESERVED = 0,
     TEXT = 1
     RAW = 2
-    PICTURE_PNG = 3
-    PICTURE_BMP = 4
+    IMAGE_BMP = 3
+    IMAGE_PNG = 4
 
 def parse_typed_product(serialized_raw_product: bytes) -> dict:
-    # elif product_type == products.ProductType.IMAGE_PNG:
-    FORMAT = "<I"
-    product_type, = struct.unpack(FORMAT, serialized_raw_product[:struct.calcsize(FORMAT)])
+    FORMAT = "<II"
+    product_type, content_length = struct.unpack(FORMAT, serialized_raw_product[:struct.calcsize(FORMAT)])
     content = serialized_raw_product[struct.calcsize(FORMAT):]
 
+    product_type = TypedProductType(product_type)
+
+    print(f'got TypedProduct with type: {product_type}')
     if product_type == TypedProductType.RESERVED:
         return {
             'type': 'Reserved',
             'data': ''
         }
     
-    elif product_type == TypedProductType.TEXT:
+    if product_type == TypedProductType.TEXT:
         return {
             'type': 'Text',
             'data': content.decode('utf-8')
         }
     
-    elif product_type == TypedProductType.RAW:
+    if product_type == TypedProductType.RAW:
         SHOWING_BYTES = 16
         displayed_bytes = content[:SHOWING_BYTES].ljust(SHOWING_BYTES, b'\0')
         return {
@@ -62,10 +64,10 @@ def parse_typed_product(serialized_raw_product: bytes) -> dict:
             'hex': f'0x{displayed_bytes:08X}',
         }
     
-    elif product_type == TypedProductType.PICTURE_BMP:
+    if product_type == TypedProductType.IMAGE_BMP:
         try:
             # Verify it's a valid BMP
-            img = Image.open(io.BytesIO(serialized_raw_product))
+            img = Image.open(io.BytesIO(content))
             if img.format != 'BMP':
                 raise ValueError("Not a BMP image")
             
@@ -84,10 +86,10 @@ def parse_typed_product(serialized_raw_product: bytes) -> dict:
         except Exception as e:
             raise ValueError(f"Invalid BMP image: {str(e)}")
     
-    elif product_type == TypedProductType.PICTURE_PNG:
+    if product_type == TypedProductType.IMAGE_PNG:
         try:
             # Verify it's a valid PNG
-            img = Image.open(io.BytesIO(serialized_raw_product))
+            img = Image.open(io.BytesIO(content))
             if img.format != 'PNG':
                 raise ValueError("Not a PNG image")
             
@@ -105,7 +107,8 @@ def parse_typed_product(serialized_raw_product: bytes) -> dict:
             }
         except Exception as e:
             raise ValueError(f"Invalid PNG image: {str(e)}")
-    return {}
+    
+    raise ValueError(f"Invalid TypedProduct type: {product_type}")
     
 
 
