@@ -18,7 +18,6 @@ public:
 	FigOperation& operator=(FigOperation&&) = delete;
 
 	[[nodiscard]] Buffer take();
-	[[nodiscard]] Buffer take_all();
 	[[nodiscard]] FigModule::StatusResult status() const;
 	[[nodiscard]] FigModule::StatusResult wait() const;
 

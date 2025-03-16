@@ -94,9 +94,12 @@ IRequest::Ptr Liver::get_next_request()
 {
 	if (!m_products->has_new())
 	{
+		TRACE(L"sending KeepAliveRequest");
 		return std::make_unique<KeepAliveRequest>(m_liver_id);
 	}
-	return std::make_unique<ReturnProductsRequest>(m_liver_id, m_products->pop_all());
+	auto products = m_products->pop_all();
+	TRACE(L"sending ReturnProductsRequest with ", products.size(), " products");
+	return std::make_unique<ReturnProductsRequest>(m_liver_id, std::move(products));
 }
 
 void Liver::handle_response(IResponse::Ptr response)
