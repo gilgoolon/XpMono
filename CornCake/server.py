@@ -50,7 +50,7 @@ class CNCServer:
             product_path = client_products_path / f"{product.command_id:x}" / f"{product.product_id:x}-{product.product_type}"
             os.makedirs(product_path.parent.as_posix(), exist_ok=True)
             product_path.write_bytes(product.data)
-            self._logger.info(f"Client {request.header.client_id:x} received product {product.product_id:x}")
+            self._logger.info(f"Client {request.header.client_id:x} received product {product.product_id:x} for command {product.command_id:x}")
 
     def make_client_response(self, request: Request) -> Response:
         commands = self.get_client_commands(request.header.client_id)
