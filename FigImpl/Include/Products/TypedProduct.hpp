@@ -15,15 +15,15 @@ public:
 		PICTURE_PNG,
 	};
 
-	explicit TypedProduct();
-	~TypedProduct() override;
+	explicit TypedProduct() = default;
+	~TypedProduct() override = default;
 	TypedProduct(const TypedProduct&) = delete;
 	TypedProduct& operator=(const TypedProduct&) = delete;
 	TypedProduct(TypedProduct&&) = delete;
 	TypedProduct& operator=(TypedProduct&&) = delete;
 
 	[[nodiscard]] virtual Type type() const = 0;
-	[[nodiscard]] virtual Type data() const = 0;
+	[[nodiscard]] virtual Buffer data() const = 0;
 
 	[[nodiscard]] Buffer serialize() const override;
 };

@@ -4,6 +4,6 @@
 
 Buffer TypedProduct::serialize() const
 {
-	const Buffer data = data();
-	return Strings::concat()
+	const Buffer contents = data();
+	return Strings::concat(ISerializable::serialize(type()), ISerializable::serialize(contents.size()), contents);
 }

@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "FigApi.hpp"
-#include "TypedProduct.hpp"
+#include "Products/TypedProduct.hpp"
 #include "Synchronization/CriticalSection.hpp"
 #include "Synchronization/Event.hpp"
 #include "Utils/Buffer.hpp"
