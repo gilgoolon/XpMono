@@ -1,0 +1,8 @@
+{
+    "info": {
+        "type": 5
+    },
+    "parameters": {
+        "fig_id": "{{ fig_id }}"
+    }
+}

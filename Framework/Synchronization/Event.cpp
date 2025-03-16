@@ -12,6 +12,11 @@ Event::Event(const std::wstring& name, const Type type):
 {
 }
 
+Event::Event(const Type type):
+	Event(L"", type)
+{
+}
+
 HANDLE Event::handle() const
 {
 	return m_handle.get();
@@ -22,6 +27,14 @@ void Event::set()
 	if (SetEvent(m_handle.get()) == FALSE)
 	{
 		throw WinApiException(ErrorCode::FAILED_EVENT_SET);
+	}
+}
+
+void Event::unset()
+{
+	if (ResetEvent(m_handle.get()) == FALSE)
+	{
+		throw WinApiException(ErrorCode::FAILED_EVENT_UNSET);
 	}
 }
 

@@ -17,6 +17,7 @@ public:
 
 	explicit Event(const std::wstring& name);
 	explicit Event(const std::wstring& name, Type type);
+	explicit Event(Type type);
 	~Event() override = default;
 	Event(const Event&) = delete;
 	Event& operator=(const Event&) = delete;
@@ -26,6 +27,7 @@ public:
 	[[nodiscard]] HANDLE handle() const override;
 
 	void set();
+	void unset();
 
 private:
 	[[nodiscard]] static HANDLE open_event(const std::wstring& name);

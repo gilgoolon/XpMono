@@ -1,5 +1,7 @@
 ﻿#pragma once
 #include "FigModule.hpp"
+#include "FigOperation.hpp"
+#include "Synchronization/CriticalSection.hpp"
 
 #include <unordered_map>
 
@@ -17,6 +19,11 @@ public:
 
 	void unload(Fig::FigId id);
 
+	[[nodiscard]] std::unique_ptr<FigOperation> execute(Fig::FigId id,
+	                                                    Fig::OperationType operation_type,
+	                                                    const Buffer& operation_parameters);
+
 private:
-	std::unordered_map<Fig::FigId, std::unique_ptr<FigModule>> m_loaded_figs;
+	CriticalSection m_lock;
+	std::unordered_map<Fig::FigId, std::shared_ptr<FigModule>> m_loaded_figs;
 };

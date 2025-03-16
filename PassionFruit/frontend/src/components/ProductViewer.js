@@ -39,85 +39,104 @@ export default function ProductViewer({ product, productPath }) {
 
   console.log('Rendering product data:', product);
 
-  // Handle image display
-  if (product.type === 'image/png') {
+  // Function to render a specific field based on its key and value
+  const renderField = (key, value) => {
+    // Skip rendering these fields as they are handled separately
+    if (key === 'id') return null;
+    
+    // Handle special case for data field that might contain image data
+    if (key === 'data' && typeof value === 'string' && value.startsWith('data:image/')) {
+      return (
+        <TableRow key={key}>
+          <TableCell component="th" scope="row" colSpan={2}>
+            <Typography variant="subtitle2" gutterBottom>Image Preview</Typography>
+            <CardMedia
+              component="img"
+              image={value}
+              alt="Product Image"
+              sx={{ 
+                maxHeight: '400px',
+                objectFit: 'contain',
+                backgroundColor: 'background.paper'
+              }}
+            />
+          </TableCell>
+        </TableRow>
+      );
+    }
+    
+    // Handle special case for text data
+    if (key === 'data' && typeof value === 'string' && product.type === 'Text') {
+      return (
+        <TableRow key={key}>
+          <TableCell component="th" scope="row" colSpan={2}>
+            <Typography variant="subtitle2" gutterBottom>Text Content</Typography>
+            <Paper 
+              variant="outlined" 
+              sx={{ 
+                p: 2, 
+                backgroundColor: 'background.default',
+                fontFamily: 'monospace',
+                whiteSpace: 'pre-wrap',
+                overflowWrap: 'break-word'
+              }}
+            >
+              {value}
+            </Paper>
+          </TableCell>
+        </TableRow>
+      );
+    }
+    
+    // For all other fields, render as a standard table row
     return (
-      <Box sx={{ width: '100%' }}>
-        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-          ID: {product.id}
-        </Typography>
-        <Card>
-          <CardMedia
-            component="img"
-            image={product.data}
-            alt="Product Image"
-            sx={{ 
-              maxHeight: '500px',
-              objectFit: 'contain',
-              backgroundColor: 'background.paper'
-            }}
-          />
-          <CardContent>
-            <Table size="small">
+      <TableRow key={key}>
+        <TableCell component="th" scope="row">
+          {/* Convert key to title case for display */}
+          {key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+        </TableCell>
+        <TableCell sx={{ 
+          wordBreak: 'break-all',
+          fontFamily: typeof value === 'number' || key.includes('hex') || key.includes('binary') ? 'monospace' : 'inherit'
+        }}>
+          {typeof value === 'object' ? JSON.stringify(value) : String(value)}
+        </TableCell>
+      </TableRow>
+    );
+  };
+
+  return (
+    <Box sx={{ width: '100%' }}>
+      <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+        ID: {product.id}
+      </Typography>
+      
+      <Card>
+        <CardContent>
+          <TableContainer component={Paper} variant="outlined">
+            <Table>
               <TableBody>
+                {/* Always show type first */}
                 <TableRow>
                   <TableCell component="th" scope="row">Type</TableCell>
-                  <TableCell>{product.formatted_type}</TableCell>
+                  <TableCell>{product.formatted_type || product.type}</TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">Dimensions</TableCell>
-                  <TableCell>{product.width} × {product.height}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">Mode</TableCell>
-                  <TableCell>{product.mode}</TableCell>
-                </TableRow>
+                
+                {/* Render all other fields */}
+                {Object.entries(product).map(([key, value]) => 
+                  renderField(key, value)
+                )}
+                
+                {/* Always show path last */}
                 <TableRow>
                   <TableCell component="th" scope="row">Path</TableCell>
                   <TableCell sx={{ wordBreak: 'break-all' }}>{productPath}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
-          </CardContent>
-        </Card>
-      </Box>
-    );
-  }
-
-  // Handle uint32 display
-  return (
-    <Box sx={{ width: '100%' }}>
-      <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-        ID: {product.id}
-      </Typography>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableBody>
-            <TableRow>
-              <TableCell component="th" scope="row">Type</TableCell>
-              <TableCell>{product.formatted_type}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell component="th" scope="row">Decimal</TableCell>
-              <TableCell>{product.value}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell component="th" scope="row">Hexadecimal</TableCell>
-              <TableCell>{product.hex}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell component="th" scope="row">Binary</TableCell>
-              <TableCell sx={{ fontFamily: 'monospace', wordBreak: 'break-all' }}>
-                {product.binary}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell component="th" scope="row">Path</TableCell>
-              <TableCell sx={{ wordBreak: 'break-all' }}>{productPath}</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
+          </TableContainer>
+        </CardContent>
+      </Card>
     </Box>
   );
 }

@@ -3,6 +3,7 @@
 #include "Filesystem/FileIterator.hpp"
 #include "Filesystem/FullFilesystemIterator.hpp"
 #include "Filesystem/RecursiveFileIterator.hpp"
+#include "Products/TextTypedProduct.hpp"
 #include "Utils/Strings.hpp"
 
 #include <filesystem>
@@ -28,13 +29,14 @@ DirlistHandler::DirlistHandler(std::unique_ptr<Event> operation_event, const Buf
 void DirlistHandler::run()
 {
 	static constexpr auto SUFFIX = L"\n";
-	const Buffer suffix = Strings::to_buffer(std::wstring{SUFFIX});
 	const std::unique_ptr<IFileIterator> iterator = make_iterator(m_path, m_depth);
+	std::wstring product;
 	while (iterator->has_next())
 	{
 		const std::unique_ptr<FileEntry> file = iterator->next();
-		append(Strings::concat(file->serialize(), suffix));
+		product.append(Strings::concat(Strings::to_wstring(file->serialize()), std::wstring_view{SUFFIX}));
 	}
+	append(std::make_unique<TextTypedProduct>(product));
 	finished();
 }
 

@@ -21,10 +21,11 @@ public:
 	[[nodiscard]] FigModule::StatusResult status() const;
 	[[nodiscard]] FigModule::StatusResult wait() const;
 
+	friend FigModule;
+	friend class FigOperationsFetcher;
+
 private:
 	std::shared_ptr<FigModule> m_module;
 	Fig::OperationId m_id;
-	UnmanagedEvent m_event;
-
-	friend FigModule;
+	std::shared_ptr<UnmanagedEvent> m_event;
 };

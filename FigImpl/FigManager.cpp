@@ -117,13 +117,15 @@ Fig::FigCode FigManager::take(const Fig::OperationId id, uint8_t** const buffer,
 			return Fig::FigCode::FAILED_INVALID_OPERATION_ID;
 		}
 		const std::shared_ptr<IOperationHandler>& handler = found->second;
-		const Buffer result = handler->take(*buffer_size);
+		const Buffer result = handler->take();
 
 		auto shared_result = std::make_unique<uint8_t[]>(result.size());
 		std::copy_n(result.data(), result.size(), shared_result.get());
 
 		*buffer_size = result.size();
-		*buffer = shared_result.release();
+		*buffer = shared_result.get();
+
+		shared_result.release();
 
 		return Fig::FigCode::SUCCESS;
 	}

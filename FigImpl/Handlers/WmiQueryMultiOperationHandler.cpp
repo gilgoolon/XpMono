@@ -1,14 +1,15 @@
 ﻿#include "Handlers/WmiQueryMultiOperationHandler.hpp"
 
+#include "Products/TextTypedProduct.hpp"
 #include "Utils/Strings.hpp"
 #include "Wmi/WmiConnection.hpp"
 
 WmiQueryMultiOperationHandler::WmiQueryMultiOperationHandler(std::unique_ptr<Event> operation_event,
-                                                             const std::wstring& class_name,
-                                                             std::vector<std::wstring>&& fields):
+                                                             std::wstring class_name,
+                                                             std::vector<std::wstring> fields):
 	IOperationHandler(std::move(operation_event)),
-	m_class_name(class_name),
-	m_fields(fields)
+	m_class_name(std::move(class_name)),
+	m_fields(std::move(fields))
 {
 }
 
@@ -21,9 +22,11 @@ void WmiQueryMultiOperationHandler::run()
 	static constexpr auto UNKNOWN_VALUE = L"?";
 	static constexpr auto FIELD_PREFIX = L"- ";
 	uint32_t i = 1;
+
+	std::wstring product;
 	for (const std::unique_ptr<WmiResult>& entry : connection.query(query))
 	{
-		append(Strings::to_buffer(m_class_name + std::to_wstring(i++) + PAIR_SUFFIX));
+		product.append(m_class_name + std::to_wstring(i++) + PAIR_SUFFIX);
 		for (const std::wstring& field : m_fields)
 		{
 			const std::optional<std::wstring> result = entry->get_formatted_property(field);
@@ -35,9 +38,9 @@ void WmiQueryMultiOperationHandler::run()
 				value,
 				std::wstring{PAIR_SUFFIX}
 			);
-			const Buffer data = Strings::to_buffer(formatted_result);
-			append(data);
+			product.append(formatted_result);
 		}
 	}
+	append(std::make_unique<TextTypedProduct>(product));
 	finished();
 }

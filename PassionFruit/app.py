@@ -49,31 +49,32 @@ def parse_product_content(product_id: str, product_type: products.ProductType, c
             **base_result,
             'type': 'Raw',
             f'value (first {SHOWING_BYTES} bytes)': f'0x{hex(displayed_bytes)}',
-            'hex': f'0x{value:08X}',
+            'hex': f'0x{displayed_bytes:08X}',
         }
-        
-    elif product_type == products.ProductType.IMAGE_PNG:
-        try:
-            # Verify it's a valid PNG
-            img = Image.open(io.BytesIO(content))
-            if img.format != 'PNG':
-                raise ValueError("Not a PNG image")
-            
-            # Convert to base64 for frontend display
-            img_buffer = io.BytesIO()
-            img.save(img_buffer, format='PNG')
-            img_base64 = base64.b64encode(img_buffer.getvalue()).decode('utf-8')
-            
-            return {
-                **base_result,
-                'type': 'image/png',
-                'data': f'data:image/png;base64,{img_base64}',
-                'width': img.width,
-                'height': img.height,
-                'mode': img.mode
-            }
-        except Exception as e:
-            raise ValueError(f"Invalid PNG image: {str(e)}")
+    
+    if product_type == products.ProductType.FIG_OPERATION_ERROR:
+        fig_id, operation_id, fig_specific_code, = struct.unpack('<III', content)
+        return {
+            **base_result,
+            'type': 'Fig Operation Error',
+            'fig id': fig_id,
+            'operation id': operation_id,
+            'fig specific code': fig_specific_code
+        }
+    
+    if product_type == products.ProductType.FIG_PRODUCT:
+        FORMAT = '<II'
+        fig_id, operation_id, = struct.unpack(FORMAT, content[:struct.calcsize(FORMAT)])
+        typed_product = content[struct.calcsize(FORMAT):]
+        result = {
+            **base_result,
+            'fig id': fig_id,
+            'operation id': operation_id,
+        }
+        result.update(products.parse_typed_product(typed_product))
+        if 'type_suffix' in result:
+            result['formatted_type'] += result['type_suffix']
+        return result
 
     raise ValueError(f"Unsupported product type: {product_type}")
 
@@ -194,4 +195,4 @@ def serve(path):
         return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)

