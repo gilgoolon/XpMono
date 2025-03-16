@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "TypedProduct.hpp"
 
-class RawTypedProduct final : public TypedProduct
+class RawTypedProduct : public TypedProduct
 {
 public:
 	explicit RawTypedProduct(Buffer data);

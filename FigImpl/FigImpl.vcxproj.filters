@@ -42,6 +42,9 @@
     <ClCompile Include="Products\TextTypedProduct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Products\ImageBmpTypedProduct.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\FigManager.hpp">
@@ -69,6 +72,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Products\TextTypedProduct.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Products\ImageBmpTypedProduct.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
