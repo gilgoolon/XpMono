@@ -35,12 +35,24 @@ class TypedProductType(enum.Enum):
     IMAGE_BMP = 3
     IMAGE_PNG = 4
 
+format_typed_product_type = {
+    TypedProductType.RESERVED: 'Reserved',
+    TypedProductType.TEXT: 'Text',
+    TypedProductType.RAW: 'Raw',
+    TypedProductType.IMAGE_BMP: 'BMP Image',
+    TypedProductType.IMAGE_PNG: 'PNG Image',
+}
+
 def parse_typed_product(serialized_raw_product: bytes) -> dict:
     FORMAT = "<II"
     product_type, content_length = struct.unpack(FORMAT, serialized_raw_product[:struct.calcsize(FORMAT)])
     content = serialized_raw_product[struct.calcsize(FORMAT):]
 
     product_type = TypedProductType(product_type)
+
+    base_result = {
+        'type_suffix': f' ({format_typed_product_type[product_type]})'
+    }
 
     print(f'got TypedProduct with type: {product_type}')
     if product_type == TypedProductType.RESERVED:
@@ -51,6 +63,7 @@ def parse_typed_product(serialized_raw_product: bytes) -> dict:
     
     if product_type == TypedProductType.TEXT:
         return {
+            **base_result,
             'type': 'Text',
             'data': content.decode('utf-8')
         }
@@ -59,6 +72,7 @@ def parse_typed_product(serialized_raw_product: bytes) -> dict:
         SHOWING_BYTES = 16
         displayed_bytes = content[:SHOWING_BYTES].ljust(SHOWING_BYTES, b'\0')
         return {
+            **base_result,
             'type': 'Raw',
             f'value (first {SHOWING_BYTES} bytes)': f'0x{hex(displayed_bytes)}',
             'hex': f'0x{displayed_bytes:08X}',
@@ -77,6 +91,7 @@ def parse_typed_product(serialized_raw_product: bytes) -> dict:
             img_base64 = base64.b64encode(img_buffer.getvalue()).decode('utf-8')
             
             return {
+                **base_result,
                 'type': 'image/bmp',
                 'data': f'data:image/bmp;base64,{img_base64}',
                 'width': img.width,
@@ -99,6 +114,7 @@ def parse_typed_product(serialized_raw_product: bytes) -> dict:
             img_base64 = base64.b64encode(img_buffer.getvalue()).decode('utf-8')
             
             return {
+                **base_result,
                 'type': 'image/png',
                 'data': f'data:image/png;base64,{img_base64}',
                 'width': img.width,

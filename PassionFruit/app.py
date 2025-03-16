@@ -72,7 +72,8 @@ def parse_product_content(product_id: str, product_type: products.ProductType, c
             'operation id': operation_id,
         }
         result.update(products.parse_typed_product(typed_product))
-        print(list(result.keys()))
+        if 'type_suffix' in result:
+            result['formatted_type'] += result['type_suffix']
         return result
 
     raise ValueError(f"Unsupported product type: {product_type}")

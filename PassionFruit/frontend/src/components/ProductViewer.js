@@ -39,61 +39,38 @@ export default function ProductViewer({ product, productPath }) {
 
   console.log('Rendering product data:', product);
 
-  // Handle image display (PNG or BMP)
-  if (product.type === 'image/png' || product.type === 'image/bmp') {
-    return (
-      <Box sx={{ width: '100%' }}>
-        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-          ID: {product.id}
-        </Typography>
-        <Card>
-          <CardMedia
-            component="img"
-            image={product.data}
-            alt="Product Image"
-            sx={{ 
-              maxHeight: '500px',
-              objectFit: 'contain',
-              backgroundColor: 'background.paper'
-            }}
-          />
-          <CardContent>
-            <Table size="small">
-              <TableBody>
-                <TableRow>
-                  <TableCell component="th" scope="row">Type</TableCell>
-                  <TableCell>{product.formatted_type}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">Dimensions</TableCell>
-                  <TableCell>{product.width} × {product.height}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">Mode</TableCell>
-                  <TableCell>{product.mode}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">Path</TableCell>
-                  <TableCell sx={{ wordBreak: 'break-all' }}>{productPath}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </Box>
-    );
-  }
-
-  // Handle Text display
-  if (product.type === 'Text') {
-    return (
-      <Box sx={{ width: '100%' }}>
-        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-          ID: {product.id}
-        </Typography>
-        <Card>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>Text Content</Typography>
+  // Function to render a specific field based on its key and value
+  const renderField = (key, value) => {
+    // Skip rendering these fields as they are handled separately
+    if (key === 'id') return null;
+    
+    // Handle special case for data field that might contain image data
+    if (key === 'data' && typeof value === 'string' && value.startsWith('data:image/')) {
+      return (
+        <TableRow key={key}>
+          <TableCell component="th" scope="row" colSpan={2}>
+            <Typography variant="subtitle2" gutterBottom>Image Preview</Typography>
+            <CardMedia
+              component="img"
+              image={value}
+              alt="Product Image"
+              sx={{ 
+                maxHeight: '400px',
+                objectFit: 'contain',
+                backgroundColor: 'background.paper'
+              }}
+            />
+          </TableCell>
+        </TableRow>
+      );
+    }
+    
+    // Handle special case for text data
+    if (key === 'data' && typeof value === 'string' && product.type === 'Text') {
+      return (
+        <TableRow key={key}>
+          <TableCell component="th" scope="row" colSpan={2}>
+            <Typography variant="subtitle2" gutterBottom>Text Content</Typography>
             <Paper 
               variant="outlined" 
               sx={{ 
@@ -104,131 +81,62 @@ export default function ProductViewer({ product, productPath }) {
                 overflowWrap: 'break-word'
               }}
             >
-              {product.data}
+              {value}
             </Paper>
-            <Table size="small" sx={{ mt: 2 }}>
-              <TableBody>
-                <TableRow>
-                  <TableCell component="th" scope="row">Type</TableCell>
-                  <TableCell>{product.formatted_type}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">Path</TableCell>
-                  <TableCell sx={{ wordBreak: 'break-all' }}>{productPath}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </Box>
-    );
-  }
-
-  // Handle Reserved type
-  if (product.type === 'Reserved') {
+          </TableCell>
+        </TableRow>
+      );
+    }
+    
+    // For all other fields, render as a standard table row
     return (
-      <Box sx={{ width: '100%' }}>
-        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-          ID: {product.id}
-        </Typography>
-        <Card>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>Reserved Product</Typography>
-            <Table size="small">
-              <TableBody>
-                <TableRow>
-                  <TableCell component="th" scope="row">Type</TableCell>
-                  <TableCell>{product.formatted_type}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">Path</TableCell>
-                  <TableCell sx={{ wordBreak: 'break-all' }}>{productPath}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </Box>
+      <TableRow key={key}>
+        <TableCell component="th" scope="row">
+          {/* Convert key to title case for display */}
+          {key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+        </TableCell>
+        <TableCell sx={{ 
+          wordBreak: 'break-all',
+          fontFamily: typeof value === 'number' || key.includes('hex') || key.includes('binary') ? 'monospace' : 'inherit'
+        }}>
+          {typeof value === 'object' ? JSON.stringify(value) : String(value)}
+        </TableCell>
+      </TableRow>
     );
-  }
+  };
 
-  // Handle Raw type
-  if (product.type === 'Raw') {
-    return (
-      <Box sx={{ width: '100%' }}>
-        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-          ID: {product.id}
-        </Typography>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableBody>
-              <TableRow>
-                <TableCell component="th" scope="row">Type</TableCell>
-                <TableCell>{product.formatted_type}</TableCell>
-              </TableRow>
-              {product.value && (
-                <TableRow>
-                  <TableCell component="th" scope="row">Value</TableCell>
-                  <TableCell>{product.value}</TableCell>
-                </TableRow>
-              )}
-              {product.hex && (
-                <TableRow>
-                  <TableCell component="th" scope="row">Hexadecimal</TableCell>
-                  <TableCell>{product.hex}</TableCell>
-                </TableRow>
-              )}
-              {product.binary && (
-                <TableRow>
-                  <TableCell component="th" scope="row">Binary</TableCell>
-                  <TableCell sx={{ fontFamily: 'monospace', wordBreak: 'break-all' }}>
-                    {product.binary}
-                  </TableCell>
-                </TableRow>
-              )}
-              <TableRow>
-                <TableCell component="th" scope="row">Path</TableCell>
-                <TableCell sx={{ wordBreak: 'break-all' }}>{productPath}</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
-    );
-  }
-
-  // Default fallback for other types
   return (
     <Box sx={{ width: '100%' }}>
       <Typography variant="subtitle2" color="text.secondary" gutterBottom>
         ID: {product.id}
       </Typography>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableBody>
-            <TableRow>
-              <TableCell component="th" scope="row">Type</TableCell>
-              <TableCell>{product.formatted_type || product.type}</TableCell>
-            </TableRow>
-            {Object.entries(product).map(([key, value]) => {
-              if (key !== 'id' && key !== 'type' && key !== 'formatted_type' && 
-                  key !== 'data' && typeof value !== 'object') {
-                return (
-                  <TableRow key={key}>
-                    <TableCell component="th" scope="row">{key}</TableCell>
-                    <TableCell sx={{ wordBreak: 'break-all' }}>{String(value)}</TableCell>
-                  </TableRow>
-                );
-              }
-              return null;
-            })}
-            <TableRow>
-              <TableCell component="th" scope="row">Path</TableCell>
-              <TableCell sx={{ wordBreak: 'break-all' }}>{productPath}</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
+      
+      <Card>
+        <CardContent>
+          <TableContainer component={Paper} variant="outlined">
+            <Table>
+              <TableBody>
+                {/* Always show type first */}
+                <TableRow>
+                  <TableCell component="th" scope="row">Type</TableCell>
+                  <TableCell>{product.formatted_type || product.type}</TableCell>
+                </TableRow>
+                
+                {/* Render all other fields */}
+                {Object.entries(product).map(([key, value]) => 
+                  renderField(key, value)
+                )}
+                
+                {/* Always show path last */}
+                <TableRow>
+                  <TableCell component="th" scope="row">Path</TableCell>
+                  <TableCell sx={{ wordBreak: 'break-all' }}>{productPath}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </CardContent>
+      </Card>
     </Box>
   );
 }
