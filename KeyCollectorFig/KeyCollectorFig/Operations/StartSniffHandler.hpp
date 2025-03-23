@@ -14,7 +14,7 @@ public:
 	void run() override;
 
 private:
-	void callback(int key_code);
+	void callback(int action_type, WPARAM message_type, LPARAM message_data);
 
-	std::vector<uint8_t> m_keys;
+	std::vector<KeyboardEvent> m_keys;
 };

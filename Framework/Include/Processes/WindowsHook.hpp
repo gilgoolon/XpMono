@@ -13,7 +13,7 @@ public:
 		KEYBOARD = WH_KEYBOARD_LL,
 	};
 
-	using Callback = std::function<void(int)>;
+	using Callback = std::function<void(int, WPARAM, LPARAM)>;
 
 	explicit WindowsHook(Type type, Callback callback);
 	~WindowsHook();

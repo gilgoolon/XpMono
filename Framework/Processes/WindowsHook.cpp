@@ -41,7 +41,7 @@ LRESULT WindowsHook::hook(const int code, const WPARAM w_param, const LPARAM l_p
 	{
 		try
 		{
-			ActiveWindowsHook::g_active_hook->m_callback(code);
+			ActiveWindowsHook::g_active_hook->m_callback(code, w_param, l_param);
 		}
 		catch (...)
 		{
