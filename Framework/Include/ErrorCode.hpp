@@ -119,6 +119,9 @@ enum class ErrorCode : uint32_t
 	// Mutex
 	FAILED_MUTEX_CREATE,
 	FAILED_MUTEX_ACQUIRE,
+
+	// Hooks
+	FAILED_WINDOWS_HOOK_REGISTER,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);
