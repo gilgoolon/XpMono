@@ -2,9 +2,13 @@
 #include "Exception.hpp"
 #include "FigImplException.hpp"
 #include "FigManager.hpp"
+#include "Json.hpp"
 #include "Trace.hpp"
+#include "Operations/SniffTimeHandler.hpp"
 #include "Operations/StartSniffHandler.hpp"
+#include "Operations/StopSniffHandler.hpp"
 #include "Protections/LibraryProtector.hpp"
+#include "Utils/Strings.hpp"
 
 #include <Windows.h>
 
@@ -27,7 +31,10 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 	case static_cast<Fig::OperationType>(Api::OperationType::STOP_SNIFF):
 		return std::make_shared<StopSniffHandler>(std::move(operation_event));
 	case static_cast<Fig::OperationType>(Api::OperationType::SNIFF_TIME):
-		return std::make_shared<SniffTimeHandled>(std::move(operation_event), operation_parameters);
+		const Json parameters = Strings::to_string(operation_parameters);
+		static constexpr auto DURATION_FIELD = "duration";
+		Time::Duration duration = Time::Seconds(parameters[DURATION_FIELD].get<Time::Seconds::rep>());
+		return std::make_shared<SniffTimeHandler>(duration, g_quit_event, std::move(operation_event));
 	default:
 		throw FigImplException(Fig::FigCode::FAILED_UNSUPPORTED_OPERATION);
 	}
