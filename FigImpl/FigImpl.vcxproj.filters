@@ -83,5 +83,8 @@
     <ClInclude Include="Include\Products\KeyboardEventsTypedProduct.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Products\KeyboardEvent.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

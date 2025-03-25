@@ -2,6 +2,8 @@
 
 #include "Processes/ActiveWindowsHook.hpp"
 
+KeyboardEvents ActiveKeySniff::g_keyboard_events;
+
 void ActiveKeySniff::start()
 {
 	g_keyboard_events.clear();

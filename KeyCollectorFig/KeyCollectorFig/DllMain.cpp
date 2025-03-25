@@ -31,10 +31,12 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 	case static_cast<Fig::OperationType>(Api::OperationType::STOP_SNIFF):
 		return std::make_shared<StopSniffHandler>(std::move(operation_event));
 	case static_cast<Fig::OperationType>(Api::OperationType::SNIFF_TIME):
+	{
 		const Json parameters = Strings::to_string(operation_parameters);
 		static constexpr auto DURATION_FIELD = "duration";
 		Time::Duration duration = Time::Seconds(parameters[DURATION_FIELD].get<Time::Seconds::rep>());
 		return std::make_shared<SniffTimeHandler>(duration, g_quit_event, std::move(operation_event));
+	}
 	default:
 		throw FigImplException(Fig::FigCode::FAILED_UNSUPPORTED_OPERATION);
 	}

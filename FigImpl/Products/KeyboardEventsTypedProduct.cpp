@@ -1,4 +1,4 @@
-﻿#include "KeyboardEventsTypedProduct.hpp"
+﻿#include "Products/KeyboardEventsTypedProduct.hpp"
 
 KeyboardEventsTypedProduct::KeyboardEventsTypedProduct(KeyboardEvents keyboard_events):
 	m_keyboard_events(std::move(keyboard_events))

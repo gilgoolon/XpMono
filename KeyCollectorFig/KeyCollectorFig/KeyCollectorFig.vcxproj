@@ -97,7 +97,6 @@
   <ItemGroup>
     <ClInclude Include="Api.hpp" />
     <ClInclude Include="Operations\ActiveKeySniff.hpp" />
-    <ClInclude Include="Operations\KeyboardEvent.hpp" />
     <ClInclude Include="Operations\SniffTimeHandler.hpp" />
     <ClInclude Include="Operations\StartSniffHandler.hpp" />
     <ClInclude Include="Operations\StopSniffHandler.hpp" />

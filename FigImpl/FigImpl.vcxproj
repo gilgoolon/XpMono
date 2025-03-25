@@ -31,6 +31,7 @@
     <ClInclude Include="Include\Handlers\IOperationHandler.hpp" />
     <ClInclude Include="Include\Handlers\WmiQuerySingleOperationHandler.hpp" />
     <ClInclude Include="Include\Products\ImageBmpTypedProduct.hpp" />
+    <ClInclude Include="Include\Products\KeyboardEvent.hpp" />
     <ClInclude Include="Include\Products\KeyboardEventsTypedProduct.hpp" />
     <ClInclude Include="Include\Products\RawTypedProduct.hpp" />
     <ClInclude Include="Include\Products\TypedProduct.hpp" />

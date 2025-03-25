@@ -1,5 +1,9 @@
 ﻿#include "Processes/ActiveWindowsHook.hpp"
 
+std::unique_ptr<WindowsHook> ActiveWindowsHook::g_active_hook;
+CriticalSection ActiveWindowsHook::g_critical_section;
+CriticalSection::Acquired ActiveWindowsHook::g_active_lock;
+
 void ActiveWindowsHook::register_hook(WindowsHook::Type type, WindowsHook::Callback callback)
 {
 	g_active_lock = g_critical_section.acquire();

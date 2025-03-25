@@ -2,6 +2,7 @@
 
 #include "ActiveKeySniff.hpp"
 #include "Exception.hpp"
+#include "Products/KeyboardEventsTypedProduct.hpp"
 
 SniffTimeHandler::SniffTimeHandler(const Time::Duration duration,
                                    std::shared_ptr<IWaitable> quit_event,
@@ -35,6 +36,6 @@ void SniffTimeHandler::run()
 
 	ActiveKeySniff::stop();
 
-	append(std::make_unique<KeyboardEventsProduct>(std::move(ActiveKeySniff::g_keyboard_events)));
+	append(std::make_unique<KeyboardEventsTypedProduct>(std::move(ActiveKeySniff::g_keyboard_events)));
 	finished();
 }

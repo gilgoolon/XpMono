@@ -1,6 +1,6 @@
 ﻿#pragma once
+#include "KeyboardEvent.hpp"
 #include "TypedProduct.hpp"
-#include "../../../KeyCollectorFig/KeyCollectorFig/Operations/KeyboardEvent.hpp"
 
 class KeyboardEventsTypedProduct final : public TypedProduct
 {
