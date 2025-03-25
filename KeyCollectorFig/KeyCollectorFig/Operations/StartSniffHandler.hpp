@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "KeyboardEvent.hpp"
 #include "Handlers/IOperationHandler.hpp"
 
 class StartSniffHandler final : public IOperationHandler

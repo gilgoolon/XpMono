@@ -34,5 +34,8 @@
     <ClInclude Include="Operations\StartSniffHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Operations\KeyboardEvent.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
