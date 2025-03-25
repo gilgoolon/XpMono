@@ -78,7 +78,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
+    <ClCompile Include="Operations\ActiveKeySniff.cpp" />
     <ClCompile Include="Operations\StartSniffHandler.cpp" />
+    <ClCompile Include="Operations\StopSniffHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FigImpl\FigImpl.vcxproj">
@@ -93,8 +95,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Api.hpp" />
+    <ClInclude Include="Operations\ActiveKeySniff.hpp" />
     <ClInclude Include="Operations\KeyboardEvent.hpp" />
     <ClInclude Include="Operations\StartSniffHandler.hpp" />
+    <ClInclude Include="Operations\StopSniffHandler.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

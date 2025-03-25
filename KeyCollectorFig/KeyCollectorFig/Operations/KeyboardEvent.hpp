@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <cstdint>
+#include <vector>
 
 struct KeyboardEvent
 {
@@ -12,3 +13,5 @@ struct KeyboardEvent
 	Type type;
 	uint32_t key_code;
 };
+
+using KeyboardEvents = std::vector<KeyboardEvent>;
