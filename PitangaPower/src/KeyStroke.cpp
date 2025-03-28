@@ -35,7 +35,7 @@ void KeyStroke::send_report(const std::vector<KeyCode> &key_codes)
 
     uint8_t pressed_keys[MAX_KEYS_PER_STROKE] = {0};
     static constexpr void *COPY_FAILED = nullptr;
-    if (memcpy(pressed_keys, key_codes.data(), MAX_KEYS_PER_STROKE) == COPY_FAILED)
+    if (memcpy(pressed_keys, key_codes.data(), key_codes.size()) == COPY_FAILED)
     {
         throw std::runtime_error("failed to send hid keyboard report");
     }
