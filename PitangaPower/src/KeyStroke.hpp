@@ -42,6 +42,7 @@ public:
     enum class SpecialKeyBinding : uint8_t
     {
         WIN_PLUS_R = 0,
+        ALT_F4,
     };
 
     [[nodiscard]] static std::vector<KeyStroke> from_special_binding(SpecialKeyBinding binding);

