@@ -42,8 +42,6 @@ void loop()
 {
     const std::vector<IPayloadAction::Ptr> payload = make_payload();
 
-    flash_led();
-
     for (const IPayloadAction::Ptr &action : payload)
     {
         action->run();
