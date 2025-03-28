@@ -5,6 +5,7 @@
 
 #include <stdexcept>
 #include <unordered_map>
+#include <unordered_set>
 
 KeyStroke::KeyStroke(std::vector<KeyCode> key_codes) : m_key_codes(std::move(key_codes))
 {
@@ -47,7 +48,21 @@ void KeyStroke::send_report(const std::vector<KeyCode> &key_codes)
     }
 }
 
-std::vector < std::unique_ptr<KeyStroke>> KeyStroke::from_string(const std::string &string)
+static uint32_t shortest_unique_prefix_length(const std::string &string)
+{
+    std::unordered_set<char> set;
+    for (uint32_t i = 0; i < string.size(); ++i)
+    {
+        if (set.contains(string[i]))
+        {
+            return i;
+        }
+        set.insert(string[i]);
+    }
+    return string.size();
+}
+
+    std::vector<std::unique_ptr<KeyStroke>> KeyStroke::from_string(const std::string &string)
 {
     std::vector<std::unique_ptr<KeyStroke>> result;
 
@@ -56,7 +71,7 @@ std::vector < std::unique_ptr<KeyStroke>> KeyStroke::from_string(const std::stri
     while (!characters_left.empty())
     {
         static constexpr uint32_t FROM_START = 0;
-        const std::string string_to_send = characters_left.substr(FROM_START, (std::min)(MAX_KEYS_PER_STROKE, static_cast<uint32_t>(characters_left.size())));
+        const std::string string_to_send = characters_left.substr(FROM_START, (std::min)(MAX_KEYS_PER_STROKE, shortest_unique_prefix_length(characters_left)));
         std::vector<KeyCode> key_codes;
         for (const char ch : string_to_send)
         {
