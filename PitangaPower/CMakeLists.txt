@@ -22,8 +22,8 @@ set(FAMILY rp2040)
 set(BOARD pico_sdk)
 
 
-file(GLOB_RECURSE SOURCES "src/*.cpp")
-file(GLOB_RECURSE HEADERS "src/*.hpp")
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c")
+file(GLOB_RECURSE HEADERS "src/*.hpp" "src/*.h")
 
 add_executable(pitanga_power_firmware)
 
