@@ -143,6 +143,7 @@ ModifiedKey KeyStroke::from_char(const char ch)
         {'[', {HID_KEY_BRACKET_LEFT, NO_MODIFIER}},
         {']', {HID_KEY_BRACKET_RIGHT, NO_MODIFIER}},
         {'\\', {HID_KEY_BACKSLASH, NO_MODIFIER}},
+        {'\n', {HID_KEY_ENTER, NO_MODIFIER}},
 
         {'!', {HID_KEY_1, SHIFT_MODIFIER}},
         {'@', {HID_KEY_2, SHIFT_MODIFIER}},
@@ -169,15 +170,21 @@ ModifiedKey KeyStroke::from_char(const char ch)
     return CHAR_TO_KEY_CODE.at(ch);
 }
 
-KeyStroke KeyStroke::from_special_binding(SpecialKeyBinding binding)
+std::vector<KeyStroke> KeyStroke::from_special_binding(SpecialKeyBinding binding)
 {
     switch (binding)
     {
     case SpecialKeyBinding::WIN_PLUS_R:
+    {
         static constexpr KeyModifier WIN_KEY = KEYBOARD_MODIFIER_LEFTGUI;
-        return KeyStroke({HID_KEY_R}, WIN_KEY);
-    
+        std::vector<KeyStroke> result;
+        result.push_back(KeyStroke({HID_KEY_R}, WIN_KEY));
+        return result;
+    }
+
     default:
+    {
         throw std::invalid_argument("invalid/unhandled special key binding");
+    }
     }
 }

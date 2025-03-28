@@ -4,10 +4,9 @@
 
 #include "KeyStroke.hpp"
 #include "BoardRuntime.hpp"
+#include "Utils.hpp"
 
-void send_keystroke(uint8_t key);
-
-void flash_led()
+void flash_led(uint32_t cooldown_millis = 1000)
 {
     board_led_write(true);
     board_delay(1000);
@@ -17,9 +16,10 @@ void flash_led()
 
 void loop()
 {
-    std::vector <KeyStroke> payload = KeyStroke::from_string("Hello World!");
+    const std::vector<KeyStroke> payload = Utils::concat(KeyStroke::from_special_binding(KeyStroke::SpecialKeyBinding::WIN_PLUS_R), KeyStroke::from_string("cmd\n"));
 
     flash_led();
+
     for (const KeyStroke &keystroke : payload)
     {
         tud_task();
@@ -28,6 +28,7 @@ void loop()
         keystroke.release();
         board_delay(50);
     }
+    
     flash_led();
 }
 

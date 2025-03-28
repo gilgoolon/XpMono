@@ -44,5 +44,5 @@ public:
         WIN_PLUS_R = 0,
     };
 
-    [[nodiscard]] static KeyStroke from_special_binding(SpecialKeyBinding binding);
+    [[nodiscard]] static std::vector<KeyStroke> from_special_binding(SpecialKeyBinding binding);
 };
