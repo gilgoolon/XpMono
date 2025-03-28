@@ -5,23 +5,25 @@
 
 #include <stdexcept>
 #include <unordered_map>
-#include <unordered_set>
 
-KeyStroke::KeyStroke(std::vector<KeyCode> key_codes) : m_key_codes(std::move(key_codes))
+KeyStroke::KeyStroke(std::vector<KeyCode> key_codes, KeyModifier key_modifier)
+    : m_key_codes(std::move(key_codes)),
+      m_key_modifier(key_modifier)
 {
 }
 
 void KeyStroke::press() const
 {
-    send_report(m_key_codes);
+    send_report(m_key_codes, m_key_modifier);
 }
 
 void KeyStroke::release() const
 {
-    send_report({});
+    static constexpr uint8_t NO_MODIFIERS = 0;
+    send_report({}, NO_MODIFIERS);
 }
 
-void KeyStroke::send_report(const std::vector<KeyCode> &key_codes)
+void KeyStroke::send_report(const std::vector<KeyCode> &key_codes, KeyModifier key_modifier)
 {
     if (key_codes.size() > MAX_KEYS_PER_STROKE)
     {
@@ -40,56 +42,31 @@ void KeyStroke::send_report(const std::vector<KeyCode> &key_codes)
         throw std::runtime_error("failed to send hid keyboard report");
     }
 
-    static constexpr uint8_t NO_MODIFIER = 0;
-    static constexpr uint8_t* RELEASE_KEYS = nullptr;
-    if (!tud_hid_keyboard_report(REPORT_ID_KEYBOARD, NO_MODIFIER, key_codes.empty() ? RELEASE_KEYS : pressed_keys))
+    static constexpr uint8_t *RELEASE_KEYS = nullptr;
+    if (!tud_hid_keyboard_report(REPORT_ID_KEYBOARD, key_modifier, key_codes.empty() ? RELEASE_KEYS : pressed_keys))
     {
         throw std::runtime_error("failed to send hid keyboard report");
     }
 }
 
-static uint32_t shortest_unique_prefix_length(const std::string &string)
+std::vector<KeyStroke> KeyStroke::from_string(const std::string &string)
 {
-    std::unordered_set<char> set;
-    for (uint32_t i = 0; i < string.size(); ++i)
+    std::vector<KeyStroke> result;
+
+    for (const char ch : string)
     {
-        if (set.contains(string[i]))
-        {
-            return i;
-        }
-        set.insert(string[i]);
-    }
-    return string.size();
-}
-
-    std::vector<std::unique_ptr<KeyStroke>> KeyStroke::from_string(const std::string &string)
-{
-    std::vector<std::unique_ptr<KeyStroke>> result;
-
-    std::string characters_left = string;
-
-    while (!characters_left.empty())
-    {
-        static constexpr uint32_t FROM_START = 0;
-        const std::string string_to_send = characters_left.substr(FROM_START, (std::min)(MAX_KEYS_PER_STROKE, shortest_unique_prefix_length(characters_left)));
-        std::vector<KeyCode> key_codes;
-        for (const char ch : string_to_send)
-        {
-            key_codes.push_back(from_char(ch));
-        }
-        result.emplace_back(std::make_unique<KeyStroke>(std::move(key_codes)));
-
-        characters_left = characters_left.substr(string_to_send.size());
+        const ModifiedKey key = KeyStroke::from_char(ch);
+        result.push_back(KeyStroke{std::vector<KeyCode>{key.code}, key.modifier});
     }
 
     return result;
 }
 
-KeyCode KeyStroke::from_char(const char ch)
+ModifiedKey KeyStroke::from_char(const char ch)
 {
     static constexpr uint8_t NO_MODIFIER = 0;
     static constexpr uint8_t SHIFT_MODIFIER = KEYBOARD_MODIFIER_LEFTSHIFT;
-    static const std::unordered_map<char, KeyCode> CHAR_TO_KEY_CODE = {
+    static const std::unordered_map<char, ModifiedKey> CHAR_TO_KEY_CODE = {
         {'a', {HID_KEY_A, NO_MODIFIER}},
         {'b', {HID_KEY_B, NO_MODIFIER}},
         {'c', {HID_KEY_C, NO_MODIFIER}},

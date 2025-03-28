@@ -17,17 +17,18 @@ void flash_led()
 
 void loop()
 {
-    std::vector <std::unique_ptr<KeyStroke>> payload = KeyStroke::from_string("aaaaa");
+    std::vector <KeyStroke> payload = KeyStroke::from_string("Hello World!");
 
-    tud_task();
-    for (const std::unique_ptr<KeyStroke>&keystroke : payload)
+    flash_led();
+    for (const KeyStroke &keystroke : payload)
     {
-        keystroke->press();
+        tud_task();
+        keystroke.press();
         board_delay(50);
-        keystroke->release();
+        keystroke.release();
         board_delay(50);
-        flash_led();
     }
+    flash_led();
 }
 
 int main(void)
