@@ -38,7 +38,7 @@ static std::vector<IPayloadAction::Ptr> make_payload()
     return result;
 }
 
-void loop()
+void main_logic()
 {
     const std::vector<IPayloadAction::Ptr> payload = make_payload();
 
@@ -56,7 +56,7 @@ int main(void)
     {
         BoardRuntime runtime;
         flash_led();
-        loop();
+        main_logic();
         flash_led();
     }
     catch (...)
