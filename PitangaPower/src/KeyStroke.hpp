@@ -37,4 +37,12 @@ private:
 public:
     [[nodiscard]] static std::vector<KeyStroke> from_string(const std::string &string);
     [[nodiscard]] static ModifiedKey from_char(const char ch);
+
+public:
+    enum class SpecialKeyBinding : uint8_t
+    {
+        WIN_PLUS_R = 0,
+    };
+
+    [[nodiscard]] static KeyStroke from_special_binding(SpecialKeyBinding binding);
 };
