@@ -1,20 +1,34 @@
 cmake_minimum_required(VERSION 3.13)
-include($ENV{PICO_SDK_PATH}/external/pico_sdk_import.cmake)
+
+set(PICO_SDK_PATH $ENV{PICO_SDK_PATH})
+include(${PICO_SDK_PATH}/pico_sdk_init.cmake)
 
 project(PitangaPower C CXX ASM)
-
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 20)
 
 pico_sdk_init()
 
-add_executable(PitangaPower
-    main.c
-)
+add_compile_options(-Wall
+        -Wno-format
+        -Wno-unused-function
+        )
 
-pico_enable_stdio_usb(PitangaPower 1)
-pico_enable_stdio_uart(PitangaPower 0)
+if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    add_compile_options(-Wno-maybe-uninitialized)
+endif()
 
-target_link_libraries(PitangaPower pico_stdlib tinyusb_device tinyusb_board)
+set(FAMILY rp2040)
+set(BOARD pico_sdk)
 
-pico_add_extra_outputs(PitangaPower)
+
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE HEADERS "src/*.hpp")
+
+add_executable(pitanga_power_firmware)
+
+target_sources(pitanga_power_firmware PUBLIC ${SOURCES} ${HEADERS})
+target_include_directories(pitanga_power_firmware PUBLIC src src/config)
+target_link_libraries(pitanga_power_firmware PUBLIC pico_stdlib pico_unique_id tinyusb_device tinyusb_board)
+
+pico_add_extra_outputs(pitanga_power_firmware)
