@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 struct KeyCode final
 {
@@ -17,8 +18,8 @@ public:
     virtual ~KeyStroke() = default;
     KeyStroke(const KeyStroke&) = delete;
     KeyStroke& operator=(const KeyStroke&) = delete;
-    KeyStroke(KeyStroke&&) = default;
-    KeyStroke& operator=(KeyStroke&&) = default;
+    KeyStroke(KeyStroke&&) = delete;
+    KeyStroke& operator=(KeyStroke&&) = delete;
 
 public:
     void press() const;
@@ -32,6 +33,6 @@ private:
     std::vector<KeyCode> m_key_codes;
 
 public:
-    [[nodiscard]] static std::vector<KeyStroke> from_string(const std::string& string);
+    [[nodiscard]] static std::vector<std::unique_ptr<KeyStroke>> from_string(const std::string &string);
     [[nodiscard]] static KeyCode from_char(const char ch);
 };

@@ -7,24 +7,26 @@
 
 void send_keystroke(uint8_t key);
 
+void flash_led()
+{
+    board_led_write(true);
+    board_delay(1000);
+    board_led_write(false);
+    board_delay(1000);
+}
+
 void loop()
 {
-    std::vector<KeyStroke> payload = KeyStroke::from_string("hello world hello world hello world hello world hello world hello world");
+    std::vector <std::unique_ptr<KeyStroke>> payload = KeyStroke::from_string("aaaaa");
 
-    for (uint32_t i = 0; i < 5; ++i)
+    tud_task();
+    for (const std::unique_ptr<KeyStroke>&keystroke : payload)
     {
-        board_led_write(true);
-        board_delay(500);
-        board_led_write(false);
-        board_delay(500);
-    }
-    for (const KeyStroke& keystroke : payload)
-    {
-        tud_task();
-
-        keystroke.press();
+        keystroke->press();
         board_delay(50);
-        keystroke.release();
+        keystroke->release();
+        board_delay(50);
+        flash_led();
     }
 }
 
@@ -33,7 +35,9 @@ int main(void)
     try
     {
         BoardRuntime runtime;
+        flash_led();
         loop();
+        flash_led();
     }
     catch (...)
     {

@@ -32,7 +32,7 @@ void KeyStroke::send_report(const std::vector<KeyCode> &key_codes)
         return;
     }
 
-    uint8_t pressed_keys[MAX_KEYS_PER_STROKE] = {};
+    uint8_t pressed_keys[MAX_KEYS_PER_STROKE] = {0};
     static constexpr void *COPY_FAILED = nullptr;
     if (memcpy(pressed_keys, key_codes.data(), MAX_KEYS_PER_STROKE) == COPY_FAILED)
     {
@@ -40,16 +40,16 @@ void KeyStroke::send_report(const std::vector<KeyCode> &key_codes)
     }
 
     static constexpr uint8_t NO_MODIFIER = 0;
-    static constexpr uint8_t *RELEASE_KEYS = nullptr;
+    static constexpr uint8_t* RELEASE_KEYS = nullptr;
     if (!tud_hid_keyboard_report(REPORT_ID_KEYBOARD, NO_MODIFIER, key_codes.empty() ? RELEASE_KEYS : pressed_keys))
     {
         throw std::runtime_error("failed to send hid keyboard report");
     }
 }
 
-std::vector<KeyStroke> KeyStroke::from_string(const std::string &string)
+std::vector < std::unique_ptr<KeyStroke>> KeyStroke::from_string(const std::string &string)
 {
-    std::vector<KeyStroke> result;
+    std::vector<std::unique_ptr<KeyStroke>> result;
 
     std::string characters_left = string;
 
@@ -62,7 +62,7 @@ std::vector<KeyStroke> KeyStroke::from_string(const std::string &string)
         {
             key_codes.push_back(from_char(ch));
         }
-        result.emplace_back(std::move(key_codes));
+        result.emplace_back(std::make_unique<KeyStroke>(std::move(key_codes)));
 
         characters_left = characters_left.substr(string_to_send.size());
     }
@@ -102,32 +102,32 @@ KeyCode KeyStroke::from_char(const char ch)
         {'y', {HID_KEY_Y, NO_MODIFIER}},
         {'z', {HID_KEY_Z, NO_MODIFIER}},
 
-        {'a', {HID_KEY_A, SHIFT_MODIFIER}},
-        {'b', {HID_KEY_B, SHIFT_MODIFIER}},
-        {'c', {HID_KEY_C, SHIFT_MODIFIER}},
-        {'d', {HID_KEY_D, SHIFT_MODIFIER}},
-        {'e', {HID_KEY_E, SHIFT_MODIFIER}},
-        {'f', {HID_KEY_F, SHIFT_MODIFIER}},
-        {'g', {HID_KEY_G, SHIFT_MODIFIER}},
-        {'h', {HID_KEY_H, SHIFT_MODIFIER}},
-        {'i', {HID_KEY_I, SHIFT_MODIFIER}},
-        {'j', {HID_KEY_J, SHIFT_MODIFIER}},
-        {'k', {HID_KEY_K, SHIFT_MODIFIER}},
-        {'l', {HID_KEY_L, SHIFT_MODIFIER}},
-        {'m', {HID_KEY_M, SHIFT_MODIFIER}},
-        {'n', {HID_KEY_N, SHIFT_MODIFIER}},
-        {'o', {HID_KEY_O, SHIFT_MODIFIER}},
-        {'p', {HID_KEY_P, SHIFT_MODIFIER}},
-        {'q', {HID_KEY_Q, SHIFT_MODIFIER}},
-        {'r', {HID_KEY_R, SHIFT_MODIFIER}},
-        {'s', {HID_KEY_S, SHIFT_MODIFIER}},
-        {'t', {HID_KEY_T, SHIFT_MODIFIER}},
-        {'u', {HID_KEY_U, SHIFT_MODIFIER}},
-        {'v', {HID_KEY_V, SHIFT_MODIFIER}},
-        {'w', {HID_KEY_W, SHIFT_MODIFIER}},
-        {'x', {HID_KEY_X, SHIFT_MODIFIER}},
-        {'y', {HID_KEY_Y, SHIFT_MODIFIER}},
-        {'z', {HID_KEY_Z, SHIFT_MODIFIER}},
+        {'A', {HID_KEY_A, SHIFT_MODIFIER}},
+        {'B', {HID_KEY_B, SHIFT_MODIFIER}},
+        {'C', {HID_KEY_C, SHIFT_MODIFIER}},
+        {'D', {HID_KEY_D, SHIFT_MODIFIER}},
+        {'E', {HID_KEY_E, SHIFT_MODIFIER}},
+        {'F', {HID_KEY_F, SHIFT_MODIFIER}},
+        {'G', {HID_KEY_G, SHIFT_MODIFIER}},
+        {'H', {HID_KEY_H, SHIFT_MODIFIER}},
+        {'I', {HID_KEY_I, SHIFT_MODIFIER}},
+        {'J', {HID_KEY_J, SHIFT_MODIFIER}},
+        {'K', {HID_KEY_K, SHIFT_MODIFIER}},
+        {'L', {HID_KEY_L, SHIFT_MODIFIER}},
+        {'M', {HID_KEY_M, SHIFT_MODIFIER}},
+        {'N', {HID_KEY_N, SHIFT_MODIFIER}},
+        {'O', {HID_KEY_O, SHIFT_MODIFIER}},
+        {'P', {HID_KEY_P, SHIFT_MODIFIER}},
+        {'Q', {HID_KEY_Q, SHIFT_MODIFIER}},
+        {'R', {HID_KEY_R, SHIFT_MODIFIER}},
+        {'S', {HID_KEY_S, SHIFT_MODIFIER}},
+        {'T', {HID_KEY_T, SHIFT_MODIFIER}},
+        {'U', {HID_KEY_U, SHIFT_MODIFIER}},
+        {'V', {HID_KEY_V, SHIFT_MODIFIER}},
+        {'W', {HID_KEY_W, SHIFT_MODIFIER}},
+        {'X', {HID_KEY_X, SHIFT_MODIFIER}},
+        {'Y', {HID_KEY_Y, SHIFT_MODIFIER}},
+        {'Z', {HID_KEY_Z, SHIFT_MODIFIER}},
 
         {'1', {HID_KEY_1, NO_MODIFIER}},
         {'2', {HID_KEY_2, NO_MODIFIER}},
@@ -151,6 +151,27 @@ KeyCode KeyStroke::from_char(const char ch)
         {'[', {HID_KEY_BRACKET_LEFT, NO_MODIFIER}},
         {']', {HID_KEY_BRACKET_RIGHT, NO_MODIFIER}},
         {'\\', {HID_KEY_BACKSLASH, NO_MODIFIER}},
+
+        {'!', {HID_KEY_1, SHIFT_MODIFIER}},
+        {'@', {HID_KEY_2, SHIFT_MODIFIER}},
+        {'#', {HID_KEY_3, SHIFT_MODIFIER}},
+        {'$', {HID_KEY_4, SHIFT_MODIFIER}},
+        {'%', {HID_KEY_5, SHIFT_MODIFIER}},
+        {'^', {HID_KEY_6, SHIFT_MODIFIER}},
+        {'&', {HID_KEY_7, SHIFT_MODIFIER}},
+        {'*', {HID_KEY_8, SHIFT_MODIFIER}},
+        {'(', {HID_KEY_9, SHIFT_MODIFIER}},
+        {')', {HID_KEY_0, SHIFT_MODIFIER}},
+
+        {'_', {HID_KEY_MINUS, SHIFT_MODIFIER}},
+        {'+', {HID_KEY_EQUAL, SHIFT_MODIFIER}},
+        {'{', {HID_KEY_BRACKET_LEFT, SHIFT_MODIFIER}},
+        {'}', {HID_KEY_BRACKET_RIGHT, SHIFT_MODIFIER}},
+        {'|', {HID_KEY_MINUS, SHIFT_MODIFIER}},
+        {'"', {HID_KEY_APOSTROPHE, SHIFT_MODIFIER}},
+        {'<', {HID_KEY_COMMA, SHIFT_MODIFIER}},
+        {'>', {HID_KEY_PERIOD, SHIFT_MODIFIER}},
+        {'?', {HID_KEY_SLASH, SHIFT_MODIFIER}},
     };
 
     return CHAR_TO_KEY_CODE.at(ch);
