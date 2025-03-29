@@ -31,7 +31,7 @@ file(GLOB_RECURSE HEADERS "src/*.hpp" "src/*.h")
 add_executable(pitanga_power_firmware)
 
 target_sources(pitanga_power_firmware PUBLIC ${SOURCES} ${HEADERS})
-target_include_directories(pitanga_power_firmware PUBLIC src src/config)
+target_include_directories(pitanga_power_firmware PUBLIC src src/Config)
 target_link_libraries(pitanga_power_firmware PUBLIC pico_stdlib pico_unique_id tinyusb_device tinyusb_board)
 
 pico_add_extra_outputs(pitanga_power_firmware)
