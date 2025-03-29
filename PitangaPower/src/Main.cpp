@@ -4,9 +4,9 @@
 
 #include "KeyStroke.hpp"
 #include "BoardRuntime.hpp"
-#include "IPayloadAction.hpp"
-#include "SendKeystrokesAction.hpp"
-#include "DelayAction.hpp"
+#include "Actions/IPayloadAction.hpp"
+#include "Actions/SendKeystrokesAction.hpp"
+#include "Actions/DelayAction.hpp"
 
 void flash_led(uint32_t cooldown_millis = 1000)
 {
