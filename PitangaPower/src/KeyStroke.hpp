@@ -46,4 +46,5 @@ public:
     };
 
     [[nodiscard]] static std::vector<KeyStroke> from_special_binding(SpecialKeyBinding binding);
+    [[nodiscard]] static std::vector<KeyStroke> from_special_binding(std::string binding);
 };

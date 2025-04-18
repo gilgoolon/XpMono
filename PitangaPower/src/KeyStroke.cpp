@@ -197,3 +197,13 @@ std::vector<KeyStroke> KeyStroke::from_special_binding(SpecialKeyBinding binding
     }
     }
 }
+
+std::vector<KeyStroke> KeyStroke::from_special_binding(std::string binding)
+{
+    static const std::unordered_map<std::string, SpecialKeyBinding> STRING_TO_BINDING = {
+        {"win+r", SpecialKeyBinding::WIN_PLUS_R},
+        {"alt+f4", SpecialKeyBinding::ALT_F4}
+    };
+
+    return KeyStroke::from_special_binding(STRING_TO_BINDING.at(std::move(binding)));
+}

