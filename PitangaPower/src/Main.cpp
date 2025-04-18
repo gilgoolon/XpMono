@@ -8,18 +8,13 @@
 #include "File.hpp"
 #include "Strings.hpp"
 #include "Config.hpp"
-
-void flash_led(uint32_t cooldown_millis = 1000)
-{
-    board_led_write(true);
-    board_delay(1000);
-    board_led_write(false);
-    board_delay(1000);
-}
+#include "Board.hpp"
 
 void main_logic()
 {
     const std::string raw_payload = Strings::as_string(File(Config::PAYLOAD_PATH).read_all()); 
+    const std::string raw_payload = File(Config::PAYLOAD_PATH).read_text();
+    Board::flash_led();
     const std::vector<IPayloadAction::Ptr> payload = PayloadActionFactory::make(raw_payload);
 
     for (const IPayloadAction::Ptr &action : payload)
@@ -27,7 +22,7 @@ void main_logic()
         action->run();
     }
 
-    flash_led();
+    Board::flash_led();
 }
 
 int main(void)
@@ -35,9 +30,9 @@ int main(void)
     try
     {
         BoardRuntime runtime;
-        flash_led();
+        Board::flash_led();
         main_logic();
-        flash_led();
+        Board::flash_led();
     }
     catch (...)
     {
