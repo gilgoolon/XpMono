@@ -1,0 +1,3 @@
+[submodule "PitangaPower/pico-vfs"]
+	path = PitangaPower/pico-vfs
+	url = https://github.com/oyama/pico-vfs
