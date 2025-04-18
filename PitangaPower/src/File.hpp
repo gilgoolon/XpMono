@@ -1,7 +1,6 @@
 #pragma once
 
 #include <filesystem>
-#include <vector>
 
 class File final
 {
@@ -14,7 +13,7 @@ public:
     File& operator=(File&&) = delete;
 
 public:
-    std::vector<uint8_t> read_all();
+    std::string read_text();
 
 private:
     std::filesystem::path _path;
