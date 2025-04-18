@@ -82,6 +82,7 @@
         "xutility": "cpp",
         "unordered_set": "cpp",
         "sendkeystrokesaction": "cpp",
-        "codecvt": "cpp"
+        "codecvt": "cpp",
+        "blockdevice.h": "c"
     }
 }
