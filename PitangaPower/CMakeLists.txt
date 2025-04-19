@@ -24,7 +24,7 @@ endif()
 set(FAMILY rp2040)
 set(BOARD pico_sdk)
 
-add_subdirectory(pico-vfs)
+add_subdirectory(external/pico-vfs)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c")
 file(GLOB_RECURSE HEADERS "src/*.hpp" "src/*.h")
@@ -32,7 +32,7 @@ file(GLOB_RECURSE HEADERS "src/*.hpp" "src/*.h")
 add_executable(pitanga_power_firmware)
 
 target_sources(pitanga_power_firmware PUBLIC ${SOURCES} ${HEADERS})
-target_include_directories(pitanga_power_firmware PUBLIC src src/Config external pico-vfs/include)
+target_include_directories(pitanga_power_firmware PUBLIC src src/Config external external/pico-vfs/include)
 target_link_libraries(pitanga_power_firmware PUBLIC
     pico_stdlib
     pico_unique_id
