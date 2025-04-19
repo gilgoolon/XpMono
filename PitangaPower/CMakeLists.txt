@@ -33,7 +33,16 @@ add_executable(pitanga_power_firmware)
 
 target_sources(pitanga_power_firmware PUBLIC ${SOURCES} ${HEADERS})
 target_include_directories(pitanga_power_firmware PUBLIC src src/Config external pico-vfs/include)
-target_link_libraries(pitanga_power_firmware PUBLIC pico_stdlib pico_unique_id tinyusb_device tinyusb_board)
-
+target_link_libraries(pitanga_power_firmware PUBLIC
+    pico_stdlib
+    pico_unique_id
+    tinyusb_device
+    tinyusb_board
+    blockdevice_flash
+    filesystem_fat
+    filesystem_littlefs
+    filesystem_vfs
+)
+pico_enable_stdio_usb(pitanga_power_firmware 1)
 pico_enable_filesystem(pitanga_power_firmware)
 pico_add_extra_outputs(pitanga_power_firmware)

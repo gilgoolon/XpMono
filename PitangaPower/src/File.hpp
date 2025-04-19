@@ -7,16 +7,19 @@ class File final
 {
 public:
     explicit File(std::filesystem::path path);
-    ~File() = default;
+    ~File();
     File(const File&) = delete;
     File& operator=(const File&) = delete;
     File(File&&) = delete;
     File& operator=(File&&) = delete;
 
+private:
+    int create_file(std::filesystem::path path);
+
 public:
     void write(const std::vector<uint8_t> &data);
-    std::string read_text() const;
+    std::vector<uint8_t> read_all() const;
 
 private:
-    std::filesystem::path m_path;
+    int m_fd;
 };

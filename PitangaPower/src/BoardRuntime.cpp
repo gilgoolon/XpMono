@@ -13,4 +13,6 @@ BoardRuntime::BoardRuntime()
     {
         throw std::runtime_error("failed to init filesystem");
     }
+
+    m_filesystem = std::make_shared<BoardFilesystem>();
 }

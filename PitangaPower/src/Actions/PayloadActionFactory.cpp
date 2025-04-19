@@ -2,19 +2,23 @@
 
 #include "DelayAction.hpp"
 #include "SendKeystrokesAction.hpp"
+#include "Board.hpp"
 
 #include <algorithm>
 
 std::vector<IPayloadAction::Ptr> PayloadActionFactory::make(const std::string& payload)
 {
-    const Json parsed_payload(payload);
-    static constexpr const char* ACTIONS_FIELD = "actions";
+    const Json parsed_payload = Json::parse(payload);
+    static constexpr const char *ACTIONS_FIELD = "actions";
     const Json actions = parsed_payload[ACTIONS_FIELD];
-    return std::accumulate(actions.begin(), actions.end(), std::vector<IPayloadAction::Ptr>{}, [](std::vector<IPayloadAction::Ptr> actions, const Json& payload)
-{
-    actions.push_back(make_action(payload));
-    return std::move(actions);
-});
+    
+    return std::accumulate(actions.begin(), actions.end(), std::vector<IPayloadAction::Ptr>{},
+        [](std::vector<IPayloadAction::Ptr> actions, const Json &action)
+        {
+            actions.push_back(make_action(action));
+            return std::move(actions);
+        }
+    );
 }
 
 IPayloadAction::Ptr PayloadActionFactory::make_action(const Json &payload)
