@@ -37,9 +37,9 @@ IPayloadAction::Ptr PayloadActionFactory::make_action(const Json &payload)
     if (type == "keystrokes")
     {
         const Json value = payload[VALUE_FIELD];
-        
-        std::string keystroke_type = payload[TYPE_FIELD];
-        std::string keystrokes = payload[VALUE_FIELD];
+
+        std::string keystroke_type = value[TYPE_FIELD];
+        std::string keystrokes = value[VALUE_FIELD];
 
         std::vector<KeyStroke> parsed_keystrokes;
         if (keystroke_type == "script")
@@ -62,7 +62,7 @@ IPayloadAction::Ptr PayloadActionFactory::make_action(const Json &payload)
         {
             parsed_keystrokes = KeyStroke::from_string(keystrokes);
         }
-        else if (keystroke_type == "binding")
+        else if (keystroke_type == "keybind")
         {
             parsed_keystrokes = KeyStroke::from_special_binding(keystrokes);
         }
