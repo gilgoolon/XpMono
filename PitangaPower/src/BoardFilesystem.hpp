@@ -16,8 +16,8 @@ public:
 
 private:
     BlockDevice m_flash_block_device;
-    BlockDevice m_flash_internal_device;
+    BlockDevice m_flash_block_device_end_marker;
     BlockFilesystem::Ptr m_internal_filesystem;
     BlockFilesystem::Ptr m_external_filesystem;
-    MountedBlockFilesystem m_internal_mount;
+    std::shared_ptr<MountedBlockFilesystem> m_internal_mount;
 };

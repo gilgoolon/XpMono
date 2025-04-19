@@ -1,10 +1,15 @@
 #pragma once
 
-#include <filesystem>
 #include "BlockFilesystem.hpp"
+
+#include <filesystem>
+#include <memory>
 
 class MountedBlockFilesystem
 {
+public:
+    using Ptr = std::shared_ptr<MountedBlockFilesystem>;
+
 public:
     explicit MountedBlockFilesystem(std::filesystem::path mount_point);
     ~MountedBlockFilesystem();

@@ -29,7 +29,7 @@ void BlockDevice::format(const BlockFilesystem::Ptr &filesystem)
     }
 }
 
-MountedBlockFilesystem BlockDevice::mount(std::filesystem::path mount_point, const BlockFilesystem::Ptr &filesystem)
+MountedBlockFilesystem::Ptr BlockDevice::mount(std::filesystem::path mount_point, const BlockFilesystem::Ptr &filesystem)
 {
     const int result = fs_mount(mount_point.string().c_str(), filesystem->handle(), m_blockdevice);
     static constexpr int MOUNT_FAILED = -1;
@@ -37,7 +37,7 @@ MountedBlockFilesystem BlockDevice::mount(std::filesystem::path mount_point, con
     {
         throw std::runtime_error("failed to mount filesystem");
     }
-    return MountedBlockFilesystem(std::move(mount_point));
+    return std::make_shared<MountedBlockFilesystem>(std::move(mount_point));
 }
 
 blockdevice_t *BlockDevice::create_block_device(const uint32_t start, const size_t size)

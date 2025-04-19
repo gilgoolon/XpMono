@@ -19,11 +19,6 @@ std::string File::read_text() const
 {
     std::ifstream file(m_path);
     std::string str;
-    std::string file_contents;
-    while (std::getline(file, str))
-    {
-        file_contents += str;
-        file_contents.push_back('\n');
-    }
-    return file_contents;
+    std::getline(file, str, (char)EOF);
+    return str;
 }

@@ -17,7 +17,7 @@ public:
 
 public:
     void format(const BlockFilesystem::Ptr &filesystem);
-    MountedBlockFilesystem mount(std::filesystem::path mount_point, const BlockFilesystem::Ptr &filesystem);
+    MountedBlockFilesystem::Ptr mount(std::filesystem::path mount_point, const BlockFilesystem::Ptr &filesystem);
 
 private:
     static blockdevice_t* create_block_device(const uint32_t start, const size_t size);
