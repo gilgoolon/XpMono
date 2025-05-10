@@ -8,7 +8,7 @@ $applicationFolders = @()
 
 # Check subdirectories
 foreach ($dir in $directories) {
-    $hasApplicationFiles = Get-ChildItem -Recurse -Depth 3 -Path $dir -File -Filter *.exe -ErrorAction SilentlyContinue | Select -First 1
+    $hasApplicationFiles = Get-ChildItem -Recurse -Depth 3 -Path $dir -File -Filter *.exe -ErrorAction SilentlyContinue | Select-Object -First 1
     if ($hasApplicationFiles) {
         $applicationFolders += $dir.replace($localAppData + "\", "")
     }
@@ -32,7 +32,7 @@ function Find-ReferenceFile {
     )
     
     # Search recursively for the reference file
-    return Get-ChildItem -Path $folder -Recurse -Depth 3 -Filter $referenceFileName -File | Select -First 1
+    return Get-ChildItem -Path $folder -Recurse -Depth 3 -Filter $referenceFileName -File | Select-Object -First 1
 }
 
 $mainApp = $response.main_app
