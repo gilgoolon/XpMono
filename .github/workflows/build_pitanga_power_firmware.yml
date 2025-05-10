@@ -1,0 +1,32 @@
+name: Build PitangaPower Firmware
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up CMake
+        uses: jwlawson/actions-setup-cmake@v1
+
+      - name: Install Ninja
+        run: sudo apt-get install ninja-build -y
+
+      - name: Configure with CMake
+        run: mkdir PitangaPower/build && cmake -S PitangaPower -B PitangaPower/build -G Ninja -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build with Ninja
+        run: cmake --build PitangaPower/build
+    
+    artifacts:
+      - PitangaPower/build/pitanga_power_firmware.uf2
+      - PitangaPower/build/pitanga_power_firmware.elf
+      - PitangaPower/payload.json
