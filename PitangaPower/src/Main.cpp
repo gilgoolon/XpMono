@@ -1,10 +1,11 @@
-#include "BoardRuntime.hpp"
 #include "Actions/PayloadActionFactory.hpp"
-#include "File.hpp"
-#include "Strings.hpp"
-#include "Config.hpp"
 #include "Board.hpp"
+#include "BoardRuntime.hpp"
+#include "Config.hpp"
+#include "Debug.hpp"
+#include "File.hpp"
 #include "Json.hpp"
+#include "Strings.hpp"
 
 #include <bsp/board.h>
 
@@ -25,9 +26,9 @@ int main(void)
     try
     {
         BoardRuntime runtime;
-        Board::flash_led();
+        DEBUG_ONLY(Board::flash_led());
         main_logic();
-        Board::flash_led();
+        DEBUG_ONLY(Board::flash_led());
     }
     catch (...)
     {
