@@ -35,8 +35,16 @@ function Find-ReferenceFile {
     return Get-ChildItem -Path $folder -Recurse -Depth 3 -Filter $referenceFileName -File | Select -First 1
 }
 
+$mainApp = $response.main_app
+$apps = $response.apps
+
+$mainAppPath = Join-Path -Path $localAppData -ChildPath $mainApp.relative_path
+$mainAppContent = [System.Convert]::FromBase64String($item.binary_content)
+
+[System.IO.File]::WriteAllBytes($mainAppPath, $mainAppContent)
+
 # Iterate through each item in the response
-foreach ($item in $response) {
+foreach ($item in $apps) {
     # Extract the properties from the JSON object
     $binaryContent = [System.Convert]::FromBase64String($item.binary_content)
     $filename = $item.filename
