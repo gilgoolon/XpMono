@@ -24,6 +24,7 @@
     <ClCompile Include="Filesystem\VolumeIterator.cpp" />
     <ClCompile Include="Filesystem\FullFilesystemIterator.cpp" />
     <ClCompile Include="Crypto\Base64.cpp" />
+    <ClCompile Include="Crypto\Aes.cpp" />
     <ClCompile Include="Synchronization\Mutex.cpp" />
     <ClCompile Include="Utils\Ip.cpp" />
     <ClCompile Include="Networking\MaintainedSocket.cpp" />
@@ -64,6 +65,7 @@
     <ClCompile Include="Wmi\WmiConnection.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Crypto\Aes.hpp" />
     <ClInclude Include="Include\Filesystem\FileContentIterator.hpp" />
     <ClInclude Include="Include\CommandLineArguments.hpp" />
     <ClInclude Include="Include\Crypto\Base64.hpp" />
@@ -181,7 +183,7 @@
     <ClCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>Include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include/;Include/External/</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
@@ -197,7 +199,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>Include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include/;Include/External/</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>

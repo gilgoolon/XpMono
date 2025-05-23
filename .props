@@ -18,8 +18,7 @@
 			<SubSystem>Windows</SubSystem>
 			<ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
 			<RandomizedBaseAddress>true</RandomizedBaseAddress>
-			<DataExecutionPrevention>false</DataExecutionPrevention>
-			<RuntimeLibrary>Multithreaded</RuntimeLibrary>
+			<DataExecutionPrevention>false</DataExecutionPrevention>			
 		</Link>
 	</ItemDefinitionGroup>
 
