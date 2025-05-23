@@ -136,6 +136,11 @@
     <ClInclude Include="Include\Media\Dimensions.hpp" />
     <ClInclude Include="Include\Synchronization\Mutex.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Include\External\cryptopp\cryptlib.vcxproj">
+      <Project>{c39f4b46-6e89-4074-902e-ca57073044d2}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
