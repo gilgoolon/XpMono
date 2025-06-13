@@ -24,6 +24,8 @@
     <ClCompile Include="Filesystem\VolumeIterator.cpp" />
     <ClCompile Include="Filesystem\FullFilesystemIterator.cpp" />
     <ClCompile Include="Crypto\Base64.cpp" />
+    <ClCompile Include="Processes\ActiveWindowsHook.cpp" />
+    <ClCompile Include="Processes\WindowsHook.cpp" />
     <ClCompile Include="Synchronization\Mutex.cpp" />
     <ClCompile Include="Utils\Ip.cpp" />
     <ClCompile Include="Networking\MaintainedSocket.cpp" />
@@ -91,6 +93,7 @@
     <ClInclude Include="Include\Media\BitmapFormat.hpp" />
     <ClInclude Include="Include\Media\DeviceContext.hpp" />
     <ClInclude Include="Include\Media\ScreenBitmap.hpp" />
+    <ClInclude Include="Include\Processes\ActiveWindowsHook.hpp" />
     <ClInclude Include="Include\Utils\Ip.hpp" />
     <ClInclude Include="Include\Networking\MaintainedSocket.hpp" />
     <ClInclude Include="Include\Networking\Socket.hpp" />
@@ -135,6 +138,7 @@
     <ClInclude Include="Include\Protections\UnhandledExceptionFilter.hpp" />
     <ClInclude Include="Include\Media\Dimensions.hpp" />
     <ClInclude Include="Include\Synchronization\Mutex.hpp" />
+    <ClInclude Include="Include\Processes\WindowsHook.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
