@@ -190,8 +190,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib</AdditionalDependencies>
+      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;SQLiteCpp.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Include/External/SQLiteCpp/build/Release/</AdditionalLibraryDirectories>
     </Lib>
+    <PreBuildEvent>
+      <Command>.\Scripts\build_dependencies.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -208,8 +212,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib</AdditionalDependencies>
+      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;SQLiteCpp.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Include/External/SQLiteCpp/build/Release/</AdditionalLibraryDirectories>
     </Lib>
+    <PreBuildEvent>
+      <Command>.\Scripts\build_dependencies.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
