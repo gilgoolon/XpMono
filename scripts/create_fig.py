@@ -82,3 +82,4 @@ if __name__ == "__main__":
     fig_name = args.name
     new_folder = repo_path / fig_name
     duplicate_solution(template_folder, new_folder, fig_name)
+ 

@@ -13,6 +13,7 @@ public:
 		RAW,
 		IMAGE_BMP,
 		IMAGE_PNG,
+		KEYBOARD_EVENTS,
 	};
 
 	explicit TypedProduct() = default;
