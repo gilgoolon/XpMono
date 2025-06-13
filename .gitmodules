@@ -4,3 +4,6 @@
 [submodule "Framework/Include/External/cryptopp"]
 	path = Framework/Include/External/cryptopp
 	url = https://github.com/weidai11/cryptopp
+[submodule "Framework/Include/External/SQLiteCpp"]
+	path = Framework/Include/External/SQLiteCpp
+	url = https://github.com/SRombauts/SQLiteCpp
