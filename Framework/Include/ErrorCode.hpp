@@ -123,6 +123,9 @@ enum class ErrorCode : uint32_t
 	// Sqlite
 	FAILED_SQLITE_OPEN,
 	FAILED_SQLITE_DESERIALIZE,
+
+	// Crypto
+	FAILED_CRYPT_UNPROTECT_DATA,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);

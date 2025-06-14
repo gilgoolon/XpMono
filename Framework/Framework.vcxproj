@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CommandLineArguments.cpp" />
+    <ClCompile Include="Crypto\Protection.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="Errno.cpp" />
     <ClCompile Include="ErrorCode.cpp" />
@@ -26,7 +27,7 @@
     <ClCompile Include="Crypto\Base64.cpp" />
     <ClCompile Include="Crypto\Aes.cpp" />
     <ClCompile Include="Include\External\SQLiteCpp\sqlite3\sqlite3.c" />
-    <ClCompile Include="Include\Sql\SqliteRowIterator.cpp" />
+    <ClCompile Include="Sql\SqliteRowIterator.cpp" />
     <ClCompile Include="Sql\InMemorySqliteDatabase.cpp" />
     <ClCompile Include="Sql\SqliteRow.cpp" />
     <ClCompile Include="Sql\SqliteDatabase.cpp" />
@@ -70,6 +71,7 @@
     <ClCompile Include="Wmi\WmiConnection.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Crypto\Protection.hpp" />
     <ClInclude Include="Include\Crypto\Aes.hpp" />
     <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Assertion.h" />
     <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Backup.h" />
@@ -219,7 +221,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;SQLiteCpp.lib;sqlite3.lib</AdditionalDependencies>
+      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/sqlite3/$(Configuration);$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
     <PreBuildEvent>
@@ -245,7 +247,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;SQLiteCpp.lib;sqlite3.lib</AdditionalDependencies>
+      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/sqlite3/$(Configuration);$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
     <PreBuildEvent>

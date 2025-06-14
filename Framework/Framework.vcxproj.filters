@@ -183,7 +183,10 @@
     <ClCompile Include="Sql\SqliteRow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Sql\SqliteRowIterator.cpp">
+    <ClCompile Include="Sql\SqliteRowIterator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Crypto\Protection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -456,6 +459,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Sql\SqliteRowIterator.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Crypto\Protection.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
