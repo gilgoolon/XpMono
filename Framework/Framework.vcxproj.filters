@@ -171,6 +171,21 @@
     <ClCompile Include="Crypto\Aes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sql\SqliteDatabase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\External\SQLiteCpp\sqlite3\sqlite3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sql\InMemorySqliteDatabase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sql\SqliteRow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Sql\SqliteRowIterator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\CommandLineArguments.hpp">
@@ -387,6 +402,60 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Crypto\Aes.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sql\SqliteDatabase.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Assertion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Backup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Column.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Database.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Exception.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\ExecuteMany.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Savepoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\SQLiteCpp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\SQLiteCppExport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Statement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Transaction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\VariadicBind.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\External\SQLiteCpp\sqlite3\sqlite3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sql\InMemorySqliteDatabase.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sql\SqliteRow.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Sql\SqliteRowIterator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

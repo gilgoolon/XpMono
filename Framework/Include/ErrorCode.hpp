@@ -119,6 +119,10 @@ enum class ErrorCode : uint32_t
 	// Mutex
 	FAILED_MUTEX_CREATE,
 	FAILED_MUTEX_ACQUIRE,
+
+	// Sqlite
+	FAILED_SQLITE_OPEN,
+	FAILED_SQLITE_DESERIALIZE,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);
