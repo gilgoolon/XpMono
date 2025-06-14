@@ -1,6 +1,7 @@
 ﻿#include "Sql/SqliteRow.hpp"
 
 #include "SQLiteCpp/SQLiteCpp.h"
+#include "Utils/Strings.hpp"
 
 SqliteRow::SqliteRow(std::shared_ptr<SQLite::Statement> statement) :
 	m_statement(std::move(statement))
@@ -26,9 +27,17 @@ std::string SqliteRow::get<std::string>(const int index) const
 }
 
 template <>
-const char* SqliteRow::get<const char*>(const int index) const
+std::wstring SqliteRow::get<std::wstring>(const int index) const
 {
-	return m_statement->getColumn(index).getText();
+	return Strings::to_wstring(get<std::string>(index));
+}
+
+template <>
+Buffer SqliteRow::get<Buffer>(const int index) const
+{
+	const SQLite::Column column = m_statement->getColumn(index);
+	const auto data = static_cast<const uint8_t*>(column.getBlob());
+	return Buffer{data, data + column.getBytes()};
 }
 
 template <>
