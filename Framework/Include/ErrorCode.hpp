@@ -129,6 +129,9 @@ enum class ErrorCode : uint32_t
 	INVALID_CRYPTO_KEY,
 	INVALID_CRYPTO_DATA,
 	INVALID_CRYPTO_IV,
+
+	// Environment
+	FAILED_ENVIRONMENT_EXPAND,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);

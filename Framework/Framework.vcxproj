@@ -32,6 +32,7 @@
     <ClCompile Include="Sql\SqliteRow.cpp" />
     <ClCompile Include="Sql\SqliteDatabase.cpp" />
     <ClCompile Include="Synchronization\Mutex.cpp" />
+    <ClCompile Include="Utils\Environment.cpp" />
     <ClCompile Include="Utils\Formatting.cpp" />
     <ClCompile Include="Utils\Ip.cpp" />
     <ClCompile Include="Networking\MaintainedSocket.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Include\Media\Dimensions.hpp" />
     <ClInclude Include="Include\Synchronization\Mutex.hpp" />
     <ClInclude Include="Include\Sql\SqliteRow.hpp" />
+    <ClInclude Include="Include\Utils\Environment.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Include\External\cryptopp\cryptlib.vcxproj">
