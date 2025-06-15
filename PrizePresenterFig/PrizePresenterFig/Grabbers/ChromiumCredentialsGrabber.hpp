@@ -20,10 +20,10 @@ private:
 	[[nodiscard]] static std::tuple<Buffer, Buffer> parse_password(const Buffer& password);
 	[[nodiscard]] static std::optional<Time::Datetime> convert_datetime(int64_t webkit_datetime);
 
-	[[nodiscard]] static std::filesystem::path get_user_data_path(const std::filesystem::path& app_root);
-	[[nodiscard]] static std::filesystem::path get_local_state_path(const std::filesystem::path& app_root);
-	[[nodiscard]] static std::filesystem::path get_login_data_path(const std::filesystem::path& app_root,
-	                                                               const std::wstring& profile);
+	[[nodiscard]] virtual std::filesystem::path get_user_data_path(const std::filesystem::path& app_root) const;
+	[[nodiscard]] virtual std::filesystem::path get_local_state_path(const std::filesystem::path& app_root) const;
+	[[nodiscard]] virtual std::filesystem::path get_login_data_path(const std::filesystem::path& app_root,
+	                                                                const std::wstring& profile) const;
 
 	class LocalState final
 	{
@@ -38,7 +38,7 @@ private:
 		[[nodiscard]] std::vector<std::wstring> get_user_profiles() const;
 		[[nodiscard]] Buffer get_master_key() const;
 
-		[[nodiscard]] static LocalState from_app_root(const std::filesystem::path& app_root);
+		[[nodiscard]] static LocalState from_path(const std::filesystem::path& local_state_path);
 
 	private:
 		Json m_local_state;

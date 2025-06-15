@@ -154,7 +154,7 @@ HANDLE File::create_file(const std::filesystem::path& path, Mode mode, Dispositi
 	const HANDLE result = CreateFileW(
 		path.wstring().c_str(),
 		access,
-		FILE_SHARE_READ,
+		file_share,
 		DEFAULT_SECURITY,
 		creation_disposition,
 		REGULAR_FILE,
