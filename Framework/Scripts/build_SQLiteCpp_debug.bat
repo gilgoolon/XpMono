@@ -3,6 +3,12 @@ setlocal enabledelayedexpansion
 
 set "ORIGINAL_DIR=%cd%"
 set "SUBMODULE_DIR=.\Include\External\SQLiteCpp"
+set "TARGET_PATH=%SUBMODULE_DIR%\build\Debug\SQLiteCpp.lib"
+
+IF EXIST "%TARGET_PATH%" (
+    echo SQLiteCpp is already built, skipping...
+    EXIT /B
+)
 
 cd "%SUBMODULE_DIR%"
 
