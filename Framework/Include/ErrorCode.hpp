@@ -29,6 +29,9 @@ enum class ErrorCode : uint32_t
 	FAILED_FILE_GET_TIME,
 	FAILED_FILE_SET_TIME,
 	FAILED_FILE_GET_POSITION,
+	FAILED_FILE_GET_PATH,
+	FAILED_FILE_UNLINK,
+	FAILED_FILE_COPY,
 
 	// Volumes
 	FAILED_VOLUME_FIND_FIRST,
@@ -132,6 +135,8 @@ enum class ErrorCode : uint32_t
 
 	// Environment
 	FAILED_ENVIRONMENT_EXPAND,
+	FAILED_GET_TEMP_PATH,
+	FAILED_GENERATE_TEMP_PATH,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);

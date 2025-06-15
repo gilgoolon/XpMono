@@ -6,7 +6,7 @@
 #include <filesystem>
 #include <Windows.h>
 
-class File final : public IIOStream
+class File : public IIOStream
 {
 public:
 	enum class Mode : uint32_t
@@ -23,7 +23,13 @@ public:
 		OVERRIDE = CREATE_ALWAYS,
 	};
 
-	explicit File(const std::filesystem::path& path, Mode mode, Disposition disposition);
+	enum class Share : uint32_t
+	{
+		READABLE = FILE_SHARE_READ,
+		DELETABLE = FILE_SHARE_READ | FILE_SHARE_DELETE,
+	};
+
+	explicit File(const std::filesystem::path& path, Mode mode, Disposition disposition, Share share = Share::READABLE);
 	~File() override = default;
 	File(const File&) = delete;
 	File& operator=(const File&) = delete;
@@ -41,8 +47,16 @@ public:
 
 	void set_metadata_of(const File& file);
 
-private:
+	[[nodiscard]] std::filesystem::path path() const;
+
+	static void unlink(const std::filesystem::path& path);
+	static std::filesystem::path copy(const std::filesystem::path& source, const std::filesystem::path& destination);
+
+protected:
 	ScopedHandle m_handle;
 
-	[[nodiscard]] static HANDLE create_file(const std::filesystem::path& path, Mode mode, Disposition disposition);
+	[[nodiscard]] static HANDLE create_file(const std::filesystem::path& path,
+	                                        Mode mode,
+	                                        Disposition disposition,
+	                                        Share share);
 };

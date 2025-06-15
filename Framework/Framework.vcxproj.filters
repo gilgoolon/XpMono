@@ -195,6 +195,9 @@
     <ClCompile Include="Utils\Environment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Filesystem\TemporaryFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\CommandLineArguments.hpp">
@@ -471,6 +474,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Utils\Environment.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Filesystem\TemporaryFile.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
