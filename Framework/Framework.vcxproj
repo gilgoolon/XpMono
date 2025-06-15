@@ -32,6 +32,7 @@
     <ClCompile Include="Sql\SqliteRow.cpp" />
     <ClCompile Include="Sql\SqliteDatabase.cpp" />
     <ClCompile Include="Synchronization\Mutex.cpp" />
+    <ClCompile Include="Utils\Formatting.cpp" />
     <ClCompile Include="Utils\Ip.cpp" />
     <ClCompile Include="Networking\MaintainedSocket.cpp" />
     <ClCompile Include="Networking\WsaInstance.cpp" />

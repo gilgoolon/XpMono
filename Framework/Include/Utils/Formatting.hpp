@@ -1,6 +1,8 @@
 ﻿#pragma once
+#include <optional>
 #include <sstream>
 #include <string>
+#include <vector>
 
 namespace Formatting
 {
@@ -11,4 +13,8 @@ std::wstring format(Args... args)
 	((oss << args), ...);
 	return oss.str();
 }
+
+using Fields = std::vector<std::pair<std::wstring, std::optional<std::wstring>>>;
+
+std::wstring format_fields(const std::vector<std::pair<std::wstring, std::optional<std::wstring>>>& fields);
 }
