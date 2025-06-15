@@ -79,7 +79,9 @@
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="Grabbers\ChromeCredentialsGrabber.cpp" />
+    <ClCompile Include="Grabbers\ChromiumCredentialsGrabber.cpp" />
     <ClCompile Include="Grabbers\CredentialsGrabber.cpp" />
+    <ClCompile Include="Grabbers\EdgeCredentialsGrabber.cpp" />
     <ClCompile Include="Operations\GetAllCredentialsHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -96,7 +98,9 @@
   <ItemGroup>
     <ClInclude Include="Api.hpp" />
     <ClInclude Include="Grabbers\ChromeCredentialsGrabber.hpp" />
+    <ClInclude Include="Grabbers\ChromiumCredentialsGrabber.hpp" />
     <ClInclude Include="Grabbers\CredentialsGrabber.hpp" />
+    <ClInclude Include="Grabbers\EdgeCredentialsGrabber.hpp" />
     <ClInclude Include="Operations\GetAllCredentialsHandler.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
