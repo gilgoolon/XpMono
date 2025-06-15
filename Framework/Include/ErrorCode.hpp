@@ -126,6 +126,9 @@ enum class ErrorCode : uint32_t
 
 	// Crypto
 	FAILED_CRYPT_UNPROTECT_DATA,
+	INVALID_CRYPTO_KEY,
+	INVALID_CRYPTO_DATA,
+	INVALID_CRYPTO_IV,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);
