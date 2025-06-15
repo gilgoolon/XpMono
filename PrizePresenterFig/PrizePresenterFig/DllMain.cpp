@@ -24,12 +24,8 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 {
 	switch (operation_type)
 	{
-	case static_cast<Fig::OperationType>(Api::OperationType::DIRLIST):
-		return std::make_shared<DirlistHandler>(std::move(operation_event), operation_parameters);
-	case static_cast<Fig::OperationType>(Api::OperationType::DROP_FILE):
-		return std::make_shared<DropFileHandler>(std::move(operation_event), operation_parameters);
-	case static_cast<Fig::OperationType>(Api::OperationType::GET_FILE):
-		return std::make_shared<GetFileHandler>(std::move(operation_event), operation_parameters);
+	case static_cast<Fig::OperationType>(Api::OperationType::GET_ALL_CREDENTIALS):
+		return std::make_shared<GetAllCredentialsHandler>(std::move(operation_event));
 	default:
 		throw FigImplException(Fig::FigCode::FAILED_UNSUPPORTED_OPERATION);
 	}

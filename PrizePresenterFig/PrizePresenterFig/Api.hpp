@@ -10,8 +10,6 @@ static constexpr Fig::VersionMinor VERSION_MINOR = 0;
 enum class OperationType : Fig::OperationType
 {
 	RESERVED = 0,
-	DIRLIST,
-	DROP_FILE,
-	GET_FILE,
+	GET_ALL_CREDENTIALS,
 };
 }
