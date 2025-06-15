@@ -1,0 +1,36 @@
+build_all_solutions:
+  stage: build
+  tags:
+    - saas-windows-medium-amd64
+  variables:
+    GIT_STRATEGY: clone
+    BUILD_DIR: build_output
+    ARTIFACTS_DIR: artifacts
+  script:
+    - |
+      powershell -NoProfile -Command "& {
+        $$ErrorActionPreference = 'Stop';
+
+        New-Item -ItemType Directory -Path $$env:BUILD_DIR -Force | Out-Null;
+        New-Item -ItemType Directory -Path $$env:ARTIFACTS_DIR -Force | Out-Null;
+
+        $$solutions = Get-ChildItem -Recurse -Filter *.sln;
+        if (-not $$solutions) { throw 'No .sln files found.' };
+
+        foreach ($$sln in $$solutions) {
+          Write-Host 'Building:' $$sln.FullName;
+          & 'C:\Program Files\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\Bin\MSBuild.exe' $$sln.FullName /p:Configuration=Release /m;
+          if ($$LASTEXITCODE -ne 0) { throw 'Build failed' };
+        }
+
+        $$binaries = Get-ChildItem -Recurse -Include *.exe, *.dll -File;
+        foreach ($$bin in $$binaries) {
+          $$dest = Join-Path -Path $$env:ARTIFACTS_DIR -ChildPath $$bin.Name;
+          Copy-Item -Path $$bin.FullName -Destination $$dest -Force;
+        }
+      }"
+  artifacts:
+    paths:
+      - artifacts/*.exe
+      - artifacts/*.dll
+    expire_in: 1 week
