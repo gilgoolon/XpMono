@@ -9,9 +9,15 @@ SqliteRow::SqliteRow(std::shared_ptr<SQLite::Statement> statement) :
 }
 
 template <>
-int SqliteRow::get<int>(const int index) const
+int32_t SqliteRow::get<int32_t>(const int index) const
 {
 	return m_statement->getColumn(index).getInt();
+}
+
+template <>
+int64_t SqliteRow::get<int64_t>(const int index) const
+{
+	return m_statement->getColumn(index).getInt64();
 }
 
 template <>

