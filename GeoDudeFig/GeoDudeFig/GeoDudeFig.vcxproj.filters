@@ -18,22 +18,7 @@
     <ClCompile Include="DllMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Operations\GetAllCredentialsHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Grabbers\ChromiumCredentialsGrabber.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Grabbers\CredentialsGrabber.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Grabbers\ChromeCredentialsGrabber.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Grabbers\EdgeCredentialsGrabber.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Grabbers\OperaCredentialsGrabber.cpp">
+    <ClCompile Include="Operations\DiscoverNetworksHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -43,25 +28,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Operations\GetAllCredentialsHandler.hpp">
+    <ClInclude Include="Operations\DiscoverNetworksHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Api.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Grabbers\CredentialsGrabber.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Grabbers\ChromiumCredentialsGrabber.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Grabbers\ChromeCredentialsGrabber.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Grabbers\EdgeCredentialsGrabber.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Grabbers\OperaCredentialsGrabber.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

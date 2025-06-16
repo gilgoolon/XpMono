@@ -3,7 +3,7 @@
 #include "FigImplException.hpp"
 #include "FigManager.hpp"
 #include "Trace.hpp"
-#include "Operations/GetAllCredentialsHandler.hpp"
+#include "Operations/DiscoverNetworksHandler.hpp"
 #include "Protections/LibraryProtector.hpp"
 
 #include <Windows.h>
@@ -11,9 +11,10 @@
 Fig::FigInformation FigManager::g_information = {Api::FIG_ID, Api::VERSION_MAJOR, Api::VERSION_MINOR};
 std::wstring FigManager::g_name =
 #ifdef _DEBUG
-	L"PrizePresenterFig";
+	L"GeoDudeFig";
 #else
-	 L"{5FA9DFB7-8F16-4733-80EF-D9E074F9E897}";
+	L"{604A1228-8171-4FCA-BC32-86E9014C3544}";
+
 #endif
 
 std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::OperationType operation_type,
@@ -22,8 +23,8 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 {
 	switch (operation_type)
 	{
-	case static_cast<Fig::OperationType>(Api::OperationType::GET_ALL_CREDENTIALS):
-		return std::make_shared<GetAllCredentialsHandler>(std::move(operation_event));
+	case static_cast<Fig::OperationType>(Api::OperationType::DISCOVER_NETWORKS):
+		return std::make_shared<DiscoverNetworksHandler>(std::move(operation_event));
 	default:
 		throw FigImplException(Fig::FigCode::FAILED_UNSUPPORTED_OPERATION);
 	}

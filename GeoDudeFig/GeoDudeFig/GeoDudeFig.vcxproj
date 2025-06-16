@@ -78,12 +78,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
-    <ClCompile Include="Grabbers\ChromeCredentialsGrabber.cpp" />
-    <ClCompile Include="Grabbers\ChromiumCredentialsGrabber.cpp" />
-    <ClCompile Include="Grabbers\CredentialsGrabber.cpp" />
-    <ClCompile Include="Grabbers\EdgeCredentialsGrabber.cpp" />
-    <ClCompile Include="Grabbers\OperaCredentialsGrabber.cpp" />
-    <ClCompile Include="Operations\GetAllCredentialsHandler.cpp" />
+    <ClCompile Include="Operations\DiscoverNetworksHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FigImpl\FigImpl.vcxproj">
@@ -98,12 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Api.hpp" />
-    <ClInclude Include="Grabbers\ChromeCredentialsGrabber.hpp" />
-    <ClInclude Include="Grabbers\ChromiumCredentialsGrabber.hpp" />
-    <ClInclude Include="Grabbers\CredentialsGrabber.hpp" />
-    <ClInclude Include="Grabbers\EdgeCredentialsGrabber.hpp" />
-    <ClInclude Include="Grabbers\OperaCredentialsGrabber.hpp" />
-    <ClInclude Include="Operations\GetAllCredentialsHandler.hpp" />
+    <ClInclude Include="Operations\DiscoverNetworksHandler.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
