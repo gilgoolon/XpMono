@@ -1,5 +1,0 @@
-stages:
-  - build
-
-include:
-  - local: '.gitlab-ci/full_build.yml'
