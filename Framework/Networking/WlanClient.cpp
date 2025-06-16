@@ -13,6 +13,64 @@ const GUID* Wireless::Interface::get_guid() const
 	return reinterpret_cast<const GUID*>(guid.data());
 }
 
+std::wstring Wireless::to_wstring(const Band band)
+{
+	switch (band)
+	{
+	case Band::GHZ_2_4:
+		return L"2.4 GHz";
+	case Band::GHZ_5:
+		return L"5 GHz";
+	default:
+		throw Exception(ErrorCode::UNCOVERED_ENUM_VALUE);
+	}
+}
+
+std::wstring Wireless::to_wstring(const Authentication authentication)
+{
+	switch (authentication)
+	{
+	DEFINE_ENUM_FORMAT_CASE(Authentication::OPEN);
+	DEFINE_ENUM_FORMAT_CASE(Authentication::SHARED_KEY);
+	DEFINE_ENUM_FORMAT_CASE(Authentication::WPA);
+	DEFINE_ENUM_FORMAT_CASE(Authentication::WPA_PSK);
+	DEFINE_ENUM_FORMAT_CASE(Authentication::WPA_NONE);
+	DEFINE_ENUM_FORMAT_CASE(Authentication::RSNA);
+	DEFINE_ENUM_FORMAT_CASE(Authentication::RSNA_PSK);
+	DEFINE_ENUM_FORMAT_CASE(Authentication::WPA3);
+	DEFINE_ENUM_FORMAT_CASE(Authentication::WPA3_SAE);
+	DEFINE_ENUM_FORMAT_CASE(Authentication::OWE);
+	DEFINE_ENUM_FORMAT_CASE(Authentication::WPA3_ENT);
+	default:
+		throw Exception(ErrorCode::UNCOVERED_ENUM_VALUE);
+	}
+}
+
+std::wstring Wireless::to_wstring(const Encryption encryption)
+{
+	switch (encryption)
+	{
+	DEFINE_ENUM_FORMAT_CASE(Encryption::NONE);
+	DEFINE_ENUM_FORMAT_CASE(Encryption::WEP40);
+	DEFINE_ENUM_FORMAT_CASE(Encryption::TKIP);
+	DEFINE_ENUM_FORMAT_CASE(Encryption::CCMP);
+	DEFINE_ENUM_FORMAT_CASE(Encryption::WEP104);
+	DEFINE_ENUM_FORMAT_CASE(Encryption::BIP);
+	DEFINE_ENUM_FORMAT_CASE(Encryption::GCMP);
+	DEFINE_ENUM_FORMAT_CASE(Encryption::GCMP_256);
+	DEFINE_ENUM_FORMAT_CASE(Encryption::CCMP_256);
+	DEFINE_ENUM_FORMAT_CASE(Encryption::BIP_GMAC_128);
+	DEFINE_ENUM_FORMAT_CASE(Encryption::BIP_GMAC_256);
+	DEFINE_ENUM_FORMAT_CASE(Encryption::BIP_CMAC_256);
+	DEFINE_ENUM_FORMAT_CASE(Encryption::WPA_USE_GROUP);
+	DEFINE_ENUM_FORMAT_CASE(Encryption::WEP);
+	DEFINE_ENUM_FORMAT_CASE(Encryption::IHV_START);
+	DEFINE_ENUM_FORMAT_CASE(Encryption::IHV_END);
+	default:
+		throw Exception(ErrorCode::UNCOVERED_ENUM_VALUE);
+	}
+}
+
 Wireless::Band Wireless::frequency_to_band(const uint32_t frequency_mhz)
 {
 	static constexpr uint32_t MAX_2_4_FREQUENCY_MHZ = 3000;
@@ -23,9 +81,14 @@ Wireless::Band Wireless::frequency_to_band(const uint32_t frequency_mhz)
 std::wstring Wireless::ReducedNetwork::serialize() const
 {
 	const Formatting::Fields fields = {
-		{L"ssid", ssid},
+		{L"ssid", details.ssid},
+		{L"authentication", to_wstring(details.authentication)},
+		{L"encryption", to_wstring(details.encryption)},
 		{L"bssid", format_mac_address(station.bssid)},
-		{L"signal_strength", Strings::to_wstring(station.signal_strength_dbm)},
+		{L"signal_strength_dbm", Strings::to_wstring(station.signal_strength_dbm)},
+		{L"signal_strength_percentage", Strings::to_wstring(station.signal_strength_percentage)},
+		{L"frequency_mhz", Strings::to_wstring(station.frequency_mhz)},
+		{L"band", to_wstring(station.band)},
 	};
 
 	return Formatting::format_fields(fields);
@@ -40,7 +103,7 @@ std::vector<Wireless::ReducedNetwork> Wireless::reduce(const Network& network)
 			return station1.signal_strength_dbm < station2.signal_strength_dbm;
 		}
 	);
-	return {ReducedNetwork{.ssid = network.ssid, .station = std::move(closest_station)}};
+	return {ReducedNetwork{.details = network.details, .station = std::move(closest_station)}};
 }
 
 std::vector<Wireless::ReducedNetwork> Wireless::expand(const Network& network)
@@ -51,7 +114,7 @@ std::vector<Wireless::ReducedNetwork> Wireless::expand(const Network& network)
 		std::back_inserter(networks),
 		[network](const PhysicalStation& station)
 		{
-			return ReducedNetwork{.ssid = network.ssid, .station = station};
+			return ReducedNetwork{.details = network.details, .station = station};
 		}
 	);
 	return networks;
@@ -130,7 +193,7 @@ std::vector<Wireless::PhysicalStation> Wireless::WlanClient::enumerate_stations_
 		const int32_t signal_strength = static_cast<int32_t>(bssid_list->wlanBssEntries[i].lRssi);
 		const uint32_t signal_strength_percentage = bssid_list->wlanBssEntries[i].uLinkQuality;
 		const uint32_t frequency_mhz = bssid_list->wlanBssEntries[i].ulChCenterFrequency / 1000;
-		const Band band = frequency_to_band(bssid_list->wlanBssEntries[i].ulChCenterFrequency / 1000);
+		const Band band = frequency_to_band(frequency_mhz);
 
 		stations.emplace_back(std::move(bssid), signal_strength, signal_strength_percentage, frequency_mhz, band);
 	}
@@ -194,13 +257,15 @@ std::vector<Wireless::Network> Wireless::WlanClient::enumerate_networks_for_inte
 		WLAN_AVAILABLE_NETWORK& network = network_list->Network[i];
 
 		std::string ssid{network.dot11Ssid.ucSSID, network.dot11Ssid.ucSSID + network.dot11Ssid.uSSIDLength};
-		auto authentication = static_cast<Authentication>(network.dot11DefaultAuthAlgorithm);
-		auto encryption = static_cast<Encryption>(network.dot11DefaultCipherAlgorithm);
+		const auto authentication = static_cast<Authentication>(network.dot11DefaultAuthAlgorithm);
+		const auto encryption = static_cast<Encryption>(network.dot11DefaultCipherAlgorithm);
 
 		networks.emplace_back(
-			Strings::to_wstring(ssid),
-			authentication,
-			encryption,
+			NetworkDetails{
+				.ssid = Strings::to_wstring(ssid),
+				.authentication = authentication,
+				.encryption = encryption,
+			},
 			enumerate_stations_for_network(inter, &network.dot11Ssid, network.bSecurityEnabled)
 		);
 	}

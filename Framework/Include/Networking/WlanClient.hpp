@@ -22,6 +22,7 @@ enum class Band : uint8_t
 	GHZ_2_4,
 };
 
+[[nodiscard]] std::wstring to_wstring(Band band);
 [[nodiscard]] Band frequency_to_band(uint32_t frequency_mhz);
 
 struct PhysicalStation final
@@ -48,6 +49,8 @@ enum class Authentication
 	WPA3_ENT = DOT11_AUTH_ALGO_WPA3_ENT,
 };
 
+[[nodiscard]] std::wstring to_wstring(Authentication authentication);
+
 enum class Encryption
 {
 	NONE = DOT11_CIPHER_ALGO_NONE,
@@ -63,23 +66,29 @@ enum class Encryption
 	BIP_GMAC_256 = DOT11_CIPHER_ALGO_BIP_GMAC_256,
 	BIP_CMAC_256 = DOT11_CIPHER_ALGO_BIP_CMAC_256,
 	WPA_USE_GROUP = DOT11_CIPHER_ALGO_WPA_USE_GROUP,
-	RSN_USE_GROUP = DOT11_CIPHER_ALGO_RSN_USE_GROUP,
 	WEP = DOT11_CIPHER_ALGO_WEP,
 	IHV_START = DOT11_CIPHER_ALGO_IHV_START,
 	IHV_END = DOT11_CIPHER_ALGO_IHV_END,
 };
 
-struct Network final
+[[nodiscard]] std::wstring to_wstring(Encryption encryption);
+
+struct NetworkDetails final
 {
 	std::wstring ssid;
 	Authentication authentication;
 	Encryption encryption;
+};
+
+struct Network final
+{
+	NetworkDetails details;
 	std::vector<PhysicalStation> stations;
 };
 
 struct ReducedNetwork final
 {
-	std::wstring ssid;
+	NetworkDetails details;
 	PhysicalStation station;
 
 	[[nodiscard]] std::wstring serialize() const;
