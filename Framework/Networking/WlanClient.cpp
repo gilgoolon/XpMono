@@ -95,14 +95,14 @@ std::vector<Wireless::PhysicalStation> Wireless::WlanClient::enumerate_stations_
 	const BOOL security_enabled) const
 {
 	static constexpr PVOID RESERVED = nullptr;
-	static constexpr DOT11_BSS_TYPE ANY_BSSID = dot11_BSS_type_any;
+	static constexpr DOT11_BSS_TYPE STANDARD_NETWORKS = dot11_BSS_type_infrastructure;
 	PWLAN_BSS_LIST bssid_list = nullptr;
 
 	const DWORD result = WlanGetNetworkBssList(
 		m_handle,
 		inter.get_guid(),
 		ssid,
-		ANY_BSSID,
+		STANDARD_NETWORKS,
 		security_enabled,
 		RESERVED,
 		&bssid_list
@@ -117,7 +117,7 @@ std::vector<Wireless::PhysicalStation> Wireless::WlanClient::enumerate_stations_
 
 	std::vector<PhysicalStation> stations;
 
-	for (uint32_t i = 0; i < bssid_list->dwTotalSize; ++i)
+	for (uint32_t i = 0; i < bssid_list->dwNumberOfItems; ++i)
 	{
 		Buffer bssid = as_buffer(bssid_list->wlanBssEntries[i].dot11Bssid);
 		int32_t signal_strength = static_cast<int32_t>(bssid_list->wlanBssEntries[i].lRssi);

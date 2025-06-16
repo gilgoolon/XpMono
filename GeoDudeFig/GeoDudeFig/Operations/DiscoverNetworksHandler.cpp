@@ -31,7 +31,12 @@ DiscoverNetworksHandler::DiscoverNetworksHandler(std::unique_ptr<Event> operatio
 
 std::wstring DiscoverNetworksHandler::format_network(const Wireless::ReducedNetwork& network, const size_t index)
 {
-	return Strings::concat(std::wstring{L"#Network #"}, Strings::to_wstring(index), network.serialize());
+	return Strings::concat(
+		std::wstring{L"#"},
+		Strings::to_wstring(index),
+		std::wstring{L"\n"},
+		network.serialize()
+	);
 }
 
 void DiscoverNetworksHandler::run()

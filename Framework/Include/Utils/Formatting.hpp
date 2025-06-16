@@ -19,7 +19,7 @@ template <typename Integer>
 std::wstring format_hex(Integer value)
 {
 	std::wostringstream oss;
-	oss << std::uppercase << std::hex << std::setw(sizeof(Integer) / 2) << std::setfill(L'0') << value;
+	oss << std::hex << std::setw(sizeof(Integer) * 2ul) << std::setfill(L'0') << value;
 	return oss.str();
 }
 
