@@ -16,6 +16,15 @@ Time::Datetime Time::now()
 	return std::chrono::system_clock::now();
 }
 
+Time::Datetime Time::to_datetime(const int64_t file_time)
+{
+	static constexpr uint32_t BITS_IN_BYTE = 8;
+	FILETIME ft{};
+	ft.dwHighDateTime = static_cast<uint32_t>(file_time >> (sizeof(uint32_t) * BITS_IN_BYTE));
+	ft.dwLowDateTime = static_cast<uint32_t>(file_time);
+	return to_datetime(ft);
+}
+
 Time::Datetime Time::to_datetime(const FILETIME& ft)
 {
 	ULARGE_INTEGER ull{};
@@ -42,6 +51,14 @@ Time::Datetime Time::to_datetime(const SYSTEMTIME& st)
 		throw WinApiException(ErrorCode::FAILED_SYSTEM_TIME_CONVERSION);
 	}
 	return to_datetime(result);
+}
+
+Time::Datetime Time::from_webkit_time(const int64_t webkit_time)
+{
+	static constexpr int64_t MICRO_TO_100_NANO_INTERVALS = 10;
+	const int64_t file_time_epoch = webkit_time * MICRO_TO_100_NANO_INTERVALS;
+
+	return to_datetime(file_time_epoch);
 }
 
 std::string Time::to_string(const Datetime& dt)

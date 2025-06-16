@@ -1,0 +1,3 @@
+LIBRARY PrizePresenterFig
+EXPORTS
+	initialize @1 NONAME

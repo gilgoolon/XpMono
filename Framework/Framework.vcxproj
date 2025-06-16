@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CommandLineArguments.cpp" />
+    <ClCompile Include="Crypto\Protection.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="Errno.cpp" />
     <ClCompile Include="ErrorCode.cpp" />
@@ -24,7 +25,16 @@
     <ClCompile Include="Filesystem\VolumeIterator.cpp" />
     <ClCompile Include="Filesystem\FullFilesystemIterator.cpp" />
     <ClCompile Include="Crypto\Base64.cpp" />
+    <ClCompile Include="Crypto\Aes.cpp" />
+    <ClCompile Include="Include\External\SQLiteCpp\sqlite3\sqlite3.c" />
+    <ClCompile Include="Filesystem\TemporaryFile.cpp" />
+    <ClCompile Include="Sql\SqliteRowIterator.cpp" />
+    <ClCompile Include="Sql\InMemorySqliteDatabase.cpp" />
+    <ClCompile Include="Sql\SqliteRow.cpp" />
+    <ClCompile Include="Sql\SqliteDatabase.cpp" />
     <ClCompile Include="Synchronization\Mutex.cpp" />
+    <ClCompile Include="Utils\Environment.cpp" />
+    <ClCompile Include="Utils\Formatting.cpp" />
     <ClCompile Include="Utils\Ip.cpp" />
     <ClCompile Include="Networking\MaintainedSocket.cpp" />
     <ClCompile Include="Networking\WsaInstance.cpp" />
@@ -64,6 +74,22 @@
     <ClCompile Include="Wmi\WmiConnection.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Crypto\Protection.hpp" />
+    <ClInclude Include="Include\Crypto\Aes.hpp" />
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Assertion.h" />
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Backup.h" />
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Column.h" />
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Database.h" />
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Exception.h" />
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\ExecuteMany.h" />
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Savepoint.h" />
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\SQLiteCpp.h" />
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\SQLiteCppExport.h" />
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Statement.h" />
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Transaction.h" />
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Utils.h" />
+    <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\VariadicBind.h" />
+    <ClInclude Include="Include\External\SQLiteCpp\sqlite3\sqlite3.h" />
     <ClInclude Include="Include\Filesystem\FileContentIterator.hpp" />
     <ClInclude Include="Include\CommandLineArguments.hpp" />
     <ClInclude Include="Include\Crypto\Base64.hpp" />
@@ -80,6 +106,7 @@
     <ClInclude Include="Include\Filesystem\FullFilesystemIterator.hpp" />
     <ClInclude Include="Include\Filesystem\IFileIterator.hpp" />
     <ClInclude Include="Include\Filesystem\RecursiveFileIterator.hpp" />
+    <ClInclude Include="Include\Filesystem\TemporaryFile.hpp" />
     <ClInclude Include="Include\Filesystem\VolumeIterator.hpp" />
     <ClInclude Include="Include\Interfaces\IInputStream.hpp" />
     <ClInclude Include="Include\Interfaces\IIOStream.hpp" />
@@ -91,6 +118,9 @@
     <ClInclude Include="Include\Media\BitmapFormat.hpp" />
     <ClInclude Include="Include\Media\DeviceContext.hpp" />
     <ClInclude Include="Include\Media\ScreenBitmap.hpp" />
+    <ClInclude Include="Include\Sql\InMemorySqliteDatabase.hpp" />
+    <ClInclude Include="Include\Sql\SqliteDatabase.hpp" />
+    <ClInclude Include="Include\Sql\SqliteRowIterator.hpp" />
     <ClInclude Include="Include\Utils\Ip.hpp" />
     <ClInclude Include="Include\Networking\MaintainedSocket.hpp" />
     <ClInclude Include="Include\Networking\Socket.hpp" />
@@ -135,6 +165,13 @@
     <ClInclude Include="Include\Protections\UnhandledExceptionFilter.hpp" />
     <ClInclude Include="Include\Media\Dimensions.hpp" />
     <ClInclude Include="Include\Synchronization\Mutex.hpp" />
+    <ClInclude Include="Include\Sql\SqliteRow.hpp" />
+    <ClInclude Include="Include\Utils\Environment.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Include\External\cryptopp\cryptlib.vcxproj">
+      <Project>{c39f4b46-6e89-4074-902e-ca57073044d2}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -172,19 +209,33 @@
     <Import Project="$(SolutionDir)..\.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>Include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include/;Include/External/;Include/External/SQLiteCpp/include;Include/External/SQLiteCpp/sqlite3</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib</AdditionalDependencies>
+      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/sqlite3/$(Configuration);$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
+    <PreBuildEvent>
+      <Command>.\Scripts\build_dependencies_debug.bat</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -192,7 +243,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>Include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include/;Include/External/;Include/External/SQLiteCpp/include;Include/External/SQLiteCpp/sqlite3</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
@@ -201,8 +252,16 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib</AdditionalDependencies>
+      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/sqlite3/$(Configuration);$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
+    <PreBuildEvent>
+      <Command>.\Scripts\build_dependencies_release.bat</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

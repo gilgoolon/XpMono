@@ -1,3 +1,9 @@
 [submodule "PitangaPower/external/pico-vfs"]
 	path = PitangaPower/external/pico-vfs
 	url = https://github.com/oyama/pico-vfs
+[submodule "Framework/Include/External/cryptopp"]
+	path = Framework/Include/External/cryptopp
+	url = https://github.com/weidai11/cryptopp
+[submodule "Framework/Include/External/SQLiteCpp"]
+	path = Framework/Include/External/SQLiteCpp
+	url = https://github.com/SRombauts/SQLiteCpp
