@@ -46,10 +46,10 @@ static void main_logic()
 #else
 		"Release"
 #endif
-		"/PrizePresenterFig.dll";
+		"/GeoDudeFig.dll";
 	const auto fig = std::make_shared<FigModule>(path);
 	TRACE("fig id: ", fig->id(), " fig version: ", fig->major(), ".", fig->minor());
-	const std::unique_ptr<FigOperation> fig_operation = fig->execute(1, {});
+	const std::unique_ptr<FigOperation> fig_operation = fig->execute(1, Strings::to_buffer(Json::object().dump()));
 	bool is_over = false;
 	File output(
 		LR"(C:\Users\alper\OneDrive\Documents\more_output.txt)",

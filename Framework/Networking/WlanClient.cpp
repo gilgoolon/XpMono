@@ -18,7 +18,7 @@ std::wstring Wireless::ReducedNetwork::serialize() const
 	const Formatting::Fields fields = {
 		{L"ssid", ssid},
 		{L"bssid", format_mac_address(station.bssid)},
-		{L"bssid", Strings::to_wstring(station.signal_strength_db)},
+		{L"signal_strength", Strings::to_wstring(station.signal_strength_db)},
 	};
 
 	return Formatting::format_fields(fields);
