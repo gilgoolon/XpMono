@@ -13,7 +13,7 @@ public:
 	DiscoverNetworksHandler& operator=(DiscoverNetworksHandler&&) = delete;
 
 private:
-	[[nodiscard]] static std::wstring format_network(const Networking::Network& network, size_t index);
+	[[nodiscard]] static std::wstring format_network(const Wireless::Network& network, size_t index);
 
 public:
 	void run() override;

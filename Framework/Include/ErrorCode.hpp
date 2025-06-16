@@ -119,6 +119,11 @@ enum class ErrorCode : uint32_t
 	FAILED_SOCKET_SEND,
 	FAILED_SOCKET_PEEK,
 
+	// Wireless
+	FAILED_WLAN_CREATE_CLIENT,
+	FAILED_WLAN_ENUMERATE_INTERFACES,
+	FAILED_WLAN_ENUMERATE_NETWORKS,
+
 	// Mutex
 	FAILED_MUTEX_CREATE,
 	FAILED_MUTEX_ACQUIRE,
@@ -137,6 +142,7 @@ enum class ErrorCode : uint32_t
 	FAILED_ENVIRONMENT_EXPAND,
 	FAILED_GET_TEMP_PATH,
 	FAILED_GENERATE_TEMP_PATH,
+	FAILED_WLAN_ENUMERATE_BSSIDS,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);

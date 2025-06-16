@@ -20,8 +20,13 @@ bool Exception::operator==(const ErrorCode error_code) const
 }
 
 WinApiException::WinApiException(const ErrorCode code):
+	WinApiException(code, GetLastError())
+{
+}
+
+WinApiException::WinApiException(const ErrorCode code, const DWORD error):
 	Exception(code),
-	m_error(GetLastError())
+	m_error(error)
 {
 }
 

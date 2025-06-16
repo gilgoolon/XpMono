@@ -28,6 +28,9 @@
     <ClCompile Include="Crypto\Aes.cpp" />
     <ClCompile Include="Include\External\SQLiteCpp\sqlite3\sqlite3.c" />
     <ClCompile Include="Filesystem\TemporaryFile.cpp" />
+    <ClCompile Include="Networking\ScopedWlanMemory.cpp" />
+    <ClCompile Include="Networking\Wireless.cpp" />
+    <ClCompile Include="Networking\WlanClient.cpp" />
     <ClCompile Include="Sql\SqliteRowIterator.cpp" />
     <ClCompile Include="Sql\InMemorySqliteDatabase.cpp" />
     <ClCompile Include="Sql\SqliteRow.cpp" />
@@ -118,6 +121,7 @@
     <ClInclude Include="Include\Media\BitmapFormat.hpp" />
     <ClInclude Include="Include\Media\DeviceContext.hpp" />
     <ClInclude Include="Include\Media\ScreenBitmap.hpp" />
+    <ClInclude Include="Include\Networking\Wireless.hpp" />
     <ClInclude Include="Include\Sql\InMemorySqliteDatabase.hpp" />
     <ClInclude Include="Include\Sql\SqliteDatabase.hpp" />
     <ClInclude Include="Include\Sql\SqliteRowIterator.hpp" />
@@ -167,6 +171,8 @@
     <ClInclude Include="Include\Synchronization\Mutex.hpp" />
     <ClInclude Include="Include\Sql\SqliteRow.hpp" />
     <ClInclude Include="Include\Utils\Environment.hpp" />
+    <ClInclude Include="Include\Networking\WlanClient.hpp" />
+    <ClInclude Include="Include\Networking\ScopedWlanMemory.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Include\External\cryptopp\cryptlib.vcxproj">
@@ -226,7 +232,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
+      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;wlanapi.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/sqlite3/$(Configuration);$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
     <PreBuildEvent>
@@ -252,7 +258,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
+      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;wlanapi.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/sqlite3/$(Configuration);$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
     <PreBuildEvent>

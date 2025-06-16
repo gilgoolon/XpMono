@@ -13,7 +13,7 @@ void DiscoverNetworksHandler::run()
 	static constexpr auto SUFFIX = L"\n";
 	std::wstring product;
 
-	const std::vector<Networking::NetworkInfo> networks = Networking::enumerate_networks();
+	const std::vector<Wireless::NetworkInfo> networks = Wireless::enumerate_networks();
 	for (size_t i = 0; i < networks.size(); ++i)
 	{
 		product.append(format_network(networks[i], i) + SUFFIX);
