@@ -25,9 +25,13 @@ void sleep(Duration duration);
 
 [[nodiscard]] Datetime now();
 
+[[nodiscard]] Datetime to_datetime(int64_t file_time);
+
 [[nodiscard]] Datetime to_datetime(const FILETIME& ft);
 
 [[nodiscard]] Datetime to_datetime(const SYSTEMTIME& st);
+
+[[nodiscard]] Datetime from_webkit_time(int64_t webkit_time);
 
 [[nodiscard]] std::string to_string(const Datetime& dt);
 

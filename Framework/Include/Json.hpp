@@ -2,6 +2,7 @@
 #include "External/nlohmann/json.hpp"
 
 #include "Exception.hpp"
+#include "Utils/Strings.hpp"
 
 using Json = nlohmann::json;
 
@@ -20,4 +21,9 @@ std::optional<T> get_optional(const Json& j, const std::string& key)
 		}
 	}
 	return std::nullopt;
+}
+
+inline std::wstring get_wstring(const Json& j)
+{
+	return Strings::to_wstring(j.get<std::string>());
 }

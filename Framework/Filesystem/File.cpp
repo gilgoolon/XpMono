@@ -2,8 +2,11 @@
 
 #include "Exception.hpp"
 
-File::File(const std::filesystem::path& path, const Mode mode, const Disposition disposition):
-	m_handle(create_file(path, mode, disposition))
+File::File(const std::filesystem::path& path,
+           const Mode mode,
+           const Disposition disposition,
+           const Share share):
+	m_handle(create_file(path, mode, disposition, share))
 {
 }
 
@@ -107,17 +110,51 @@ void File::set_metadata_of(const File& file)
 	}
 }
 
-HANDLE File::create_file(const std::filesystem::path& path, Mode mode, Disposition disposition)
+std::filesystem::path File::path() const
+{
+	static constexpr wchar_t NULL_TERMINATOR = L'\0';
+	std::wstring path(MAX_PATH, NULL_TERMINATOR);
+	const DWORD result = GetFinalPathNameByHandleW(m_handle.get(), path.data(), path.size(), FILE_NAME_NORMALIZED);
+
+	if (result == FALSE)
+	{
+		throw WinApiException(ErrorCode::FAILED_FILE_GET_PATH);
+	}
+
+	path.resize(result);
+	return path;
+}
+
+void File::unlink(const std::filesystem::path& path)
+{
+	if (DeleteFileW(path.wstring().c_str()) == FALSE)
+	{
+		throw WinApiException(ErrorCode::FAILED_FILE_UNLINK);
+	}
+}
+
+std::filesystem::path File::copy(const std::filesystem::path& source, const std::filesystem::path& destination)
+{
+	static constexpr BOOL EXISTS_OK = FALSE;
+	if (CopyFileW(source.wstring().c_str(), destination.wstring().c_str(), EXISTS_OK) == FALSE)
+	{
+		throw WinApiException(ErrorCode::FAILED_FILE_COPY);
+	}
+	return destination;
+}
+
+HANDLE File::create_file(const std::filesystem::path& path, Mode mode, Disposition disposition, Share share)
 {
 	static constexpr LPSECURITY_ATTRIBUTES DEFAULT_SECURITY = nullptr;
 	static constexpr DWORD REGULAR_FILE = 0;
 	static constexpr HANDLE EMPTY_FILE = nullptr;
 	const DWORD creation_disposition = static_cast<DWORD>(disposition);
 	const DWORD access = static_cast<DWORD>(mode);
+	const DWORD file_share = static_cast<DWORD>(share);
 	const HANDLE result = CreateFileW(
 		path.wstring().c_str(),
 		access,
-		FILE_SHARE_READ,
+		file_share,
 		DEFAULT_SECURITY,
 		creation_disposition,
 		REGULAR_FILE,
