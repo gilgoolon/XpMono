@@ -13,12 +13,19 @@ const GUID* Wireless::Interface::get_guid() const
 	return reinterpret_cast<const GUID*>(guid.data());
 }
 
+Wireless::Band Wireless::frequency_to_band(const uint32_t frequency_mhz)
+{
+	static constexpr uint32_t MAX_2_4_FREQUENCY_MHZ = 3000;
+
+	return frequency_mhz < MAX_2_4_FREQUENCY_MHZ ? Band::GHZ_2_4 : Band::GHZ_5;
+}
+
 std::wstring Wireless::ReducedNetwork::serialize() const
 {
 	const Formatting::Fields fields = {
 		{L"ssid", ssid},
 		{L"bssid", format_mac_address(station.bssid)},
-		{L"signal_strength", Strings::to_wstring(station.signal_strength_db)},
+		{L"signal_strength", Strings::to_wstring(station.signal_strength_dbm)},
 	};
 
 	return Formatting::format_fields(fields);
@@ -30,7 +37,7 @@ std::vector<Wireless::ReducedNetwork> Wireless::reduce(const Network& network)
 		network.stations,
 		[](const PhysicalStation& station1, const PhysicalStation& station2)
 		{
-			return station1.signal_strength_db < station2.signal_strength_db;
+			return station1.signal_strength_dbm < station2.signal_strength_dbm;
 		}
 	);
 	return {ReducedNetwork{.ssid = network.ssid, .station = std::move(closest_station)}};
@@ -120,9 +127,12 @@ std::vector<Wireless::PhysicalStation> Wireless::WlanClient::enumerate_stations_
 	for (uint32_t i = 0; i < bssid_list->dwNumberOfItems; ++i)
 	{
 		Buffer bssid = as_buffer(bssid_list->wlanBssEntries[i].dot11Bssid);
-		int32_t signal_strength = static_cast<int32_t>(bssid_list->wlanBssEntries[i].lRssi);
+		const int32_t signal_strength = static_cast<int32_t>(bssid_list->wlanBssEntries[i].lRssi);
+		const uint32_t signal_strength_percentage = bssid_list->wlanBssEntries[i].uLinkQuality;
+		const uint32_t frequency_mhz = bssid_list->wlanBssEntries[i].ulChCenterFrequency / 1000;
+		const Band band = frequency_to_band(bssid_list->wlanBssEntries[i].ulChCenterFrequency / 1000);
 
-		stations.emplace_back(bssid, signal_strength);
+		stations.emplace_back(std::move(bssid), signal_strength, signal_strength_percentage, frequency_mhz, band);
 	}
 
 	return stations;
@@ -184,9 +194,13 @@ std::vector<Wireless::Network> Wireless::WlanClient::enumerate_networks_for_inte
 		WLAN_AVAILABLE_NETWORK& network = network_list->Network[i];
 
 		std::string ssid{network.dot11Ssid.ucSSID, network.dot11Ssid.ucSSID + network.dot11Ssid.uSSIDLength};
+		auto authentication = static_cast<Authentication>(network.dot11DefaultAuthAlgorithm);
+		auto encryption = static_cast<Encryption>(network.dot11DefaultCipherAlgorithm);
 
 		networks.emplace_back(
 			Strings::to_wstring(ssid),
+			authentication,
+			encryption,
 			enumerate_stations_for_network(inter, &network.dot11Ssid, network.bSecurityEnabled)
 		);
 	}
