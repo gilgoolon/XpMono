@@ -28,6 +28,17 @@ struct Network final
 	std::vector<PhysicalStation> stations;
 };
 
+struct ReducedNetwork final
+{
+	std::wstring ssid;
+	PhysicalStation station;
+
+	[[nodiscard]] std::wstring serialize() const;
+};
+
+std::vector<ReducedNetwork> reduce(const Network& network);
+std::vector<ReducedNetwork> expand(const Network& network);
+
 class WlanClient final
 {
 public:
@@ -53,4 +64,6 @@ public:
 private:
 	HANDLE m_handle;
 };
+
+[[nodiscard]] std::wstring format_mac_address(const Buffer& mac_address);
 }

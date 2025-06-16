@@ -24,7 +24,7 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 	switch (operation_type)
 	{
 	case static_cast<Fig::OperationType>(Api::OperationType::DISCOVER_NETWORKS):
-		return std::make_shared<DiscoverNetworksHandler>(std::move(operation_event));
+		return std::make_shared<DiscoverNetworksHandler>(std::move(operation_event), operation_parameters);
 	default:
 		throw FigImplException(Fig::FigCode::FAILED_UNSUPPORTED_OPERATION);
 	}

@@ -1,4 +1,4 @@
-﻿#include "ScopedWlanMemory.hpp"
+﻿#include "Networking/ScopedWlanMemory.hpp"
 
 #include "Trace.hpp"
 

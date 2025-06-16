@@ -5,11 +5,49 @@
 #include "Networking/ScopedWlanMemory.hpp"
 #include "Utils/Strings.hpp"
 
+#include <functional>
 #include <wlanapi.h>
 
 const GUID* Wireless::Interface::get_guid() const
 {
 	return reinterpret_cast<const GUID*>(guid.data());
+}
+
+std::wstring Wireless::ReducedNetwork::serialize() const
+{
+	const Formatting::Fields fields = {
+		{L"ssid", ssid},
+		{L"bssid", format_mac_address(station.bssid)},
+		{L"bssid", Strings::to_wstring(station.signal_strength_db)},
+	};
+
+	return Formatting::format_fields(fields);
+}
+
+std::vector<Wireless::ReducedNetwork> Wireless::reduce(const Network& network)
+{
+	PhysicalStation closest_station = *std::ranges::max_element(
+		network.stations,
+		[](const PhysicalStation& station1, const PhysicalStation& station2)
+		{
+			return station1.signal_strength_db < station2.signal_strength_db;
+		}
+	);
+	return {ReducedNetwork{.ssid = network.ssid, .station = std::move(closest_station)}};
+}
+
+std::vector<Wireless::ReducedNetwork> Wireless::expand(const Network& network)
+{
+	std::vector<ReducedNetwork> networks;
+	std::ranges::transform(
+		network.stations,
+		std::back_inserter(networks),
+		[network](const PhysicalStation& station)
+		{
+			return ReducedNetwork{.ssid = network.ssid, .station = station};
+		}
+	);
+	return networks;
 }
 
 Wireless::WlanClient::WlanClient():
@@ -154,4 +192,27 @@ std::vector<Wireless::Network> Wireless::WlanClient::enumerate_networks_for_inte
 	}
 
 	return networks;
+}
+
+static std::wstring format_hex_byte(const uint8_t value)
+{
+	return Formatting::format_hex(value);
+}
+
+std::wstring Wireless::format_mac_address(const Buffer& mac_address)
+{
+	static constexpr size_t EXPECTED_MAC_ADDRESS_SIZE = 6;
+
+	if (mac_address.size() != EXPECTED_MAC_ADDRESS_SIZE)
+	{
+		throw Exception(ErrorCode::INVALID_ARGUMENT);
+	}
+
+	std::vector<std::wstring> bytes;
+	std::ranges::transform(
+		mac_address,
+		std::back_inserter(bytes),
+		format_hex_byte
+	);
+	return Strings::join(bytes, L':');
 }
