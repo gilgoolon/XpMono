@@ -1,7 +1,7 @@
 from pathlib import Path
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
-from models import Base
+from Cherry.models import Base
 
 class Database:
     DATABASE_NAME = "cherry.db"

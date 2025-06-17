@@ -12,11 +12,11 @@ from sqlalchemy.orm import joinedload
 from datetime import datetime, timezone
 from typing import List
 
-from commands import get_client_commands_dir
-from protocol import ClientCommand, ClientConnection, DetailedClientInfo, ClientInfo
-import products
-from database import Database
-from models import Client, ClientIP
+from Cherry import analyzer
+from Cherry.commands import get_client_commands_dir
+from Cherry.protocol import ClientCommand, ClientConnection, DetailedClientInfo, ClientInfo
+from Cherry.database import Database
+from Cherry.models import Client, ClientIP
 
 
 parser = argparse.ArgumentParser("Cherry DB API")
@@ -31,7 +31,7 @@ logger = logging.getLogger("uvicorn.error")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await database.init_db()
-    asyncio.create_task(products.analyze_incoming_products(ROOT, logger))
+    asyncio.create_task(analyzer.analyze_incoming_products(ROOT, logger))
     yield
 
 
@@ -104,7 +104,7 @@ async def get_client_details(client_id: str, db: AsyncSession = Depends(database
             "first_seen": ip.first_seen,
             "last_seen": ip.last_seen
         } for ip in sorted(client.ip_addresses, key=lambda x: x.last_seen, reverse=True)],
-        products=products.get_client_products(ROOT, client_id),
+        products=analyzer.get_client_products(ROOT, client_id),
         commands_dir=get_client_commands_dir(ROOT, client_id).absolute().as_posix()
     )
 
@@ -114,7 +114,3 @@ async def send_command(command: ClientCommand):
     path.parent.mkdir(exist_ok=True)
     path.write_bytes(base64.b64decode(command.data))
     return {"status": "success"}
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
