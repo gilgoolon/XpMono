@@ -1,17 +1,16 @@
+from PoopBiter.products import PRODUCT_TYPE_TO_STRING, ProductInfo, ProductType, TypedProduct
 from flask import Flask, send_from_directory, request, jsonify
 from flask_cors import CORS
 import requests
 import os
 import base64
 import struct
-import io
-from PIL import Image
 from pathlib import Path
 import json
 
-import products
 
-CNC_ROOT = "../CornCake"
+CNC_ROOT = "CornCake"
+
 app = Flask(__name__, static_folder='frontend/build')
 # Configure CORS to allow all methods and headers
 CORS(app, resources={
@@ -24,15 +23,16 @@ CORS(app, resources={
 
 CHERRY_URL = 'http://localhost:8000'  # Your FastAPI server URL
 
-def parse_product_content(product_id: str, product_type: products.ProductType, content: bytes):
+
+def parse_product_content(product_id: str, product_type: ProductType, content: bytes):
     """Parse the product content based on its format.
     Currently handles uint32 values and PNG images."""
     base_result = {
         'id': product_id,
-        'formatted_type': products.format_product_type[product_type]
+        'formatted_type': PRODUCT_TYPE_TO_STRING[product_type]
     }
     
-    if product_type == products.ProductType.COMMAND_ERROR:
+    if product_type == ProductType.COMMAND_ERROR:
         value, = struct.unpack('<I', content)
         return {
             **base_result,
@@ -42,7 +42,7 @@ def parse_product_content(product_id: str, product_type: products.ProductType, c
             'binary': f'0b{value:032b}'  # Binary representation
         }
         
-    if product_type == products.ProductType.RAW:
+    if product_type == ProductType.RAW:
         SHOWING_BYTES = 16
         displayed_bytes = content[:SHOWING_BYTES].ljust(SHOWING_BYTES, b'\0')
         return {
@@ -52,7 +52,7 @@ def parse_product_content(product_id: str, product_type: products.ProductType, c
             'hex': f'0x{displayed_bytes:08X}',
         }
     
-    if product_type == products.ProductType.FIG_OPERATION_ERROR:
+    if product_type == ProductType.FIG_OPERATION_ERROR:
         fig_id, operation_id, fig_specific_code, = struct.unpack('<III', content)
         return {
             **base_result,
@@ -62,16 +62,17 @@ def parse_product_content(product_id: str, product_type: products.ProductType, c
             'fig specific code': fig_specific_code
         }
     
-    if product_type == products.ProductType.FIG_PRODUCT:
+    if product_type == ProductType.FIG_PRODUCT:
         FORMAT = '<II'
         fig_id, operation_id, = struct.unpack(FORMAT, content[:struct.calcsize(FORMAT)])
-        typed_product = content[struct.calcsize(FORMAT):]
+        raw_typed_product = content[struct.calcsize(FORMAT):]
         result = {
             **base_result,
             'fig id': fig_id,
             'operation id': operation_id,
         }
-        result.update(products.parse_typed_product(typed_product))
+        typed_product = TypedProduct.from_raw_bytes(raw_typed_product)
+        result.update(typed_product.displayable())
         if 'type_suffix' in result:
             result['formatted_type'] += result['type_suffix']
         return result
@@ -104,14 +105,15 @@ def get_client(client_id):
                 try:
                     path = Path(product_path)
                     data = path.read_bytes()
-                    product_type = products.get_product_type(path)
-                    product_id = products.get_product_id(path)
+                    product_info = ProductInfo.from_path(path)
                     
-                    parsed_products[product_id] = parse_product_content(product_id, product_type, data)
-                    product_paths[product_id] = product_path
+                    parsed_products[product_info.id] = parse_product_content(
+                        product_info.id, product_info.type, data)
+                    product_paths[product_info.id] = product_path
                 except Exception as e:
-                    print(f"Exception while processing product with type {product_type}: {str(e)}")  # Debug log
-                    parsed_products[product_id] = {
+                    print(
+                        f"Exception while processing product with type {product_info.type}: {str(e)}")
+                    parsed_products[product_info.id] = {
                         'type': 'error',
                         'error': f'Error processing product: {str(e)}'
                     }
@@ -193,6 +195,3 @@ def serve(path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
