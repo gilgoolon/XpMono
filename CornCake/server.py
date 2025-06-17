@@ -6,8 +6,9 @@ import aiohttp
 import argparse
 from glob import glob
 from pathlib import Path
-from logger import make_logger
-from protocol import Command, ExecuteCommandsResponse, KeepAliveResponse, ProtocolError, Request, RequestType, Response, write_response, generate_id
+
+from CornCake.logger import make_logger
+from CornCake.protocol import Command, ExecuteCommandsResponse, KeepAliveResponse, ProtocolError, Request, RequestType, Response, write_response, generate_id
 
 
 class CNCServer:
@@ -120,10 +121,13 @@ class CNCServer:
         async with server:
             await server.serve_forever()
 
-if __name__ == "__main__":
+
+def main() -> None:
     parser = argparse.ArgumentParser("Liver CNC Server")
-    parser.add_argument("--root", type=Path, default=Path(__file__).parent, help="Root folder of the cnc (commands, logs, etc...)")
-    parser.add_argument("--port", "-p", type=int, default=8888, help="Server port for clients")
+    parser.add_argument("--root", type=Path, default=Path(__file__).parent,
+                        help="Root folder of the cnc (commands, logs, etc...)")
+    parser.add_argument("--port", "-p", type=int,
+                        default=8888, help="Server port for clients")
 
     args = parser.parse_args()
 
@@ -131,7 +135,8 @@ if __name__ == "__main__":
     LOGFILENAME = "log.txt"
 
     logger = make_logger(args.root / LOGFILENAME)
-    server = CNCServer(interface=INTERFACE, port=args.port, root=args.root, logger=logger)
+    server = CNCServer(interface=INTERFACE, port=args.port,
+                       root=args.root, logger=logger)
 
     try:
         asyncio.run(server.start())
