@@ -1,4 +1,4 @@
-from PassionFruit.app import app
+from PassionFruit.backend.app import app
 
 
 app.run(host='0.0.0.0', port=5000, debug=True)
