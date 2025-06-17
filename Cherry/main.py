@@ -20,7 +20,8 @@ from Cherry.models import Client, ClientIP
 
 
 parser = argparse.ArgumentParser("Cherry DB API")
-parser.add_argument("root", type=Path, help="Root path to store the data")
+parser.add_argument("--root", type=Path, default=Path(
+    "CornCake"), help="Root path to store the data")
 _args = parser.parse_args()
 ROOT = _args.root
 
