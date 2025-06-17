@@ -29,17 +29,137 @@ PRODUCT_TYPE_TO_STRING = {
 class ProductInfo:
     id: str
     type: ProductType
-    
+
     @classmethod
     def from_filename(cls, filename: str) -> "ProductInfo":
         PRODUCT_TYPE_SEPARATOR = '-'
         tokens = filename.split(PRODUCT_TYPE_SEPARATOR)
         raw_id, raw_type = tokens
         return ProductInfo(int.from_bytes(bytes.fromhex(raw_id)), ProductType(int(raw_type)))
-    
+
     @classmethod
     def from_path(cls, path: Path) -> "ProductInfo":
         return cls.from_filename(path.stem)
+
+    def displayable(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+        }
+
+
+class Product(abc.ABC):
+    def __init__(self, info: ProductInfo) -> None:
+        super().__init__()
+        self._info = info
+
+    @property
+    def info(self) -> ProductInfo:
+        return self._info
+
+    @classmethod
+    def from_path(cls, path: Path) -> "Product":
+        product_info = ProductInfo.from_path(path)
+
+        products: Dict[ProductType, type] = {
+            ProductType.COMMAND_ERROR: CommandErrorProduct,
+            ProductType.RAW: RawProduct,
+            ProductType.FIG_OPERATION_ERROR: FigOperationErrorProduct,
+            ProductType.FIG_PRODUCT: FigProduct,
+        }
+
+        if product_info.type not in products:
+            raise ValueError(f"Unsupported product type: {product_info.type}")
+
+        content = path.read_bytes()
+        return products[product_info.type].from_data(product_info, content)
+
+    @classmethod
+    @abc.abstractmethod
+    def from_data(cls, info: ProductInfo, data: bytes) -> "Product":
+        pass
+
+    def displayable(self) -> dict[str, Any]:
+        base_properties = {
+            "id": self._info.id,
+            "formatted_type": self._formatted_type,
+            "type": self._display_type
+        }
+        return {
+            **base_properties,
+            **self._displayable_properties
+        }
+
+    @property
+    @abc.abstractmethod
+    def _displayable_properties(self) -> dict[str, Any]:
+        pass
+
+    @property
+    def _display_type(self) -> str:
+        return PRODUCT_TYPE_TO_STRING[self._info.type]
+
+    @property
+    def _formatted_type(self) -> str:
+        return PRODUCT_TYPE_TO_STRING[self._info.type]
+
+
+class CommandErrorProduct(Product):
+    def __init__(self, info: ProductInfo, error_code: int) -> None:
+        super().__init__(info)
+        self._error_code = error_code
+
+    @classmethod
+    def from_data(cls, info: ProductInfo, data: bytes):
+        value, = struct.unpack("<I", data)
+        return CommandErrorProduct(info, value)
+
+    @property
+    def _displayable_properties(self) -> Dict[str, Any]:
+        return {
+            "value": self._error_code,
+            "hex": f"0x{self._error_code:08X}",
+            "binary": f"0b{self._error_code:032b}"
+        }
+
+
+class RawProduct(Product):
+    def __init__(self, info: ProductInfo, error_code: int) -> None:
+        super().__init__(info)
+        self._error_code = error_code
+
+    @classmethod
+    def from_data(cls, info: ProductInfo, data: bytes):
+        return RawProduct(info, data)
+
+    @property
+    def _displayable_properties(self) -> Dict[str, Any]:
+        return {
+            "value": self._error_code,
+            "hex": f"0x{self._error_code:08X}",
+            "binary": f"0b{self._error_code:032b}"
+        }
+
+
+class FigOperationErrorProduct(Product):
+    def __init__(self, info: ProductInfo, fig_id: int, operation_id: int, fig_specific_code: int) -> None:
+        super().__init__(info)
+        self._fig_id = fig_id
+        self._operation_id = operation_id
+        self._fig_specific_code = fig_specific_code
+
+    @classmethod
+    def from_data(cls, info: ProductInfo, data: bytes):
+        fig_id, operation_id, fig_specific_code, = struct.unpack(
+            '<III', data)
+        return FigOperationErrorProduct(info, fig_id, operation_id, fig_specific_code)
+
+    @property
+    def _displayable_properties(self) -> Dict[str, Any]:
+        return {
+            'fig id': self._fig_id,
+            'operation id': self._operation_id,
+            'fig specific code': self._fig_specific_code
+        }
 
 
 class TypedProductType(enum.IntEnum):
@@ -69,9 +189,10 @@ class TypedProduct(abc.ABC):
         product_type, content_length = struct.unpack(
             FORMAT, data[:struct.calcsize(FORMAT)])
         product_type = TypedProductType(product_type)
+        print(product_type)
         content = data[struct.calcsize(FORMAT): struct.calcsize(FORMAT) + content_length]
         
-        products: Dict[TypedProductType, TypedProduct] = {
+        products: Dict[TypedProductType, type] = {
             TypedProductType.RAW: RawTypedProduct,
             TypedProductType.TEXT: TextTypedProduct,
             TypedProductType.IMAGE_BMP: ImageTypedProduct,
@@ -83,16 +204,6 @@ class TypedProduct(abc.ABC):
 
         return products[product_type].from_raw_bytes(content)
 
-    def displayable(self) -> dict[str, Any]:
-        base_properties = {
-            "type_suffix": f" ({TYPED_PRODUCT_TYPE_TO_STRING[self._type]})",
-            "type": self._display_type
-        }
-        return {
-            **base_properties,
-            **self._displayable_properties
-        }
-    
     @property
     @abc.abstractmethod
     def _displayable_properties(self) -> dict[str, Any]:
@@ -101,6 +212,10 @@ class TypedProduct(abc.ABC):
     @property
     def _display_type(self) -> str:
         return TYPED_PRODUCT_TYPE_TO_STRING[self._type]
+
+    @property
+    def _formatted_type(self) -> str:
+        return f"{super()._formatted_type()}({self._display_type})"
 
 
 class RawTypedProduct(TypedProduct):
@@ -145,7 +260,7 @@ class ImageTypedProduct(TypedProduct):
 
     @classmethod
     @abc.abstractmethod
-    def _image_type(cls) -> str:
+    def _image_format(cls) -> str:
         pass
 
     @property
@@ -163,20 +278,25 @@ class ImageTypedProduct(TypedProduct):
     
     @classmethod
     def from_raw_bytes(cls, data: bytes) -> "TypedProduct":
+        image_formats = {
+            BmpImageTypedProduct._image_format().upper(): BmpImageTypedProduct,
+            PngImageTypedProduct._image_format().upper(): PngImageTypedProduct,
+        }
+
         try:
             image = Image.open(io.BytesIO(data))
-            if image.format != BmpImageTypedProduct._image_type().upper():
-                return BmpImageTypedProduct(image)
-            if image.format != PngImageTypedProduct._image_type().upper():
-                return PngImageTypedProduct(image)
-            raise ValueError(
-                f"Unsupported image type: {BmpImageTypedProduct._image_type()}")
         except Exception as e:
-            raise ValueError(f"Invalid BMP image: {str(e)}")
+            raise ValueError(f"Failed to parse image: {e}")
+
+        if image.format not in image_formats:
+            raise ValueError(
+                f"Unsupported image format: {BmpImageTypedProduct._image_format()}")
+
+        return image_formats[image.format](image)
 
     @property
     def _display_type(self) -> str:
-        return f"image/{self._image_type()}"
+        return f"image/{self._image_format()}"
 
 
 class BmpImageTypedProduct(ImageTypedProduct):
@@ -184,7 +304,7 @@ class BmpImageTypedProduct(ImageTypedProduct):
         super().__init__(image, TypedProductType.IMAGE_BMP)
         
     @classmethod
-    def _image_type(cls) -> str:
+    def _image_format(cls) -> str:
         return "bmp"
 
 class PngImageTypedProduct(ImageTypedProduct):
@@ -192,5 +312,33 @@ class PngImageTypedProduct(ImageTypedProduct):
         super().__init__(image, TypedProductType.IMAGE_PNG)
         
     @classmethod
-    def _image_type(cls) -> str:
+    def _image_format(cls) -> str:
         return "png"
+
+
+class FigProduct(Product):
+    def __init__(self, info: ProductInfo, fig_id: int, operation_id: int, typed_product: TypedProduct) -> None:
+        super().__init__(info)
+        self._fig_id = fig_id,
+        self._operation_id = operation_id
+        self._typed_product = typed_product
+
+    @classmethod
+    def from_data(cls, info: ProductInfo, data: bytes):
+        FORMAT = "<II"
+        fig_header_size = struct.calcsize(FORMAT)
+        fig_id, operation_id, = struct.unpack(
+            FORMAT, data[:fig_header_size])
+        return FigProduct(info, fig_id, operation_id, TypedProduct.from_raw_bytes(data[fig_header_size:]))
+
+    @property
+    def _displayable_properties(self) -> Dict[str, Any]:
+        return {
+            **self._typed_product._displayable_properties,
+            "fig id": self._fig_id,
+            "operation id": self._operation_id,
+        }
+
+    @property
+    def _display_type(self) -> Dict[str, Any]:
+        return self._typed_product._display_type

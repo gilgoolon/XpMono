@@ -1,4 +1,4 @@
-from PoopBiter.products import PRODUCT_TYPE_TO_STRING, ProductInfo, ProductType, TypedProduct
+from PoopBiter.products import PRODUCT_TYPE_TO_STRING, Product, ProductInfo, ProductType, TypedProduct
 from flask import Flask, send_from_directory, request, jsonify
 from flask_cors import CORS
 import requests
@@ -24,62 +24,6 @@ CORS(app, resources={
 CHERRY_URL = 'http://localhost:8000'  # Your FastAPI server URL
 
 
-def parse_product_content(product_id: str, product_type: ProductType, content: bytes):
-    """Parse the product content based on its format.
-    Currently handles uint32 values and PNG images."""
-    base_result = {
-        'id': product_id,
-        'formatted_type': PRODUCT_TYPE_TO_STRING[product_type]
-    }
-    
-    if product_type == ProductType.COMMAND_ERROR:
-        value, = struct.unpack('<I', content)
-        return {
-            **base_result,
-            'type': 'Command Error (uint32)',
-            'value': value,
-            'hex': f'0x{value:08X}',  # Hexadecimal representation
-            'binary': f'0b{value:032b}'  # Binary representation
-        }
-        
-    if product_type == ProductType.RAW:
-        SHOWING_BYTES = 16
-        displayed_bytes = content[:SHOWING_BYTES].ljust(SHOWING_BYTES, b'\0')
-        return {
-            **base_result,
-            'type': 'Raw',
-            f'value (first {SHOWING_BYTES} bytes)': f'0x{hex(displayed_bytes)}',
-            'hex': f'0x{displayed_bytes:08X}',
-        }
-    
-    if product_type == ProductType.FIG_OPERATION_ERROR:
-        fig_id, operation_id, fig_specific_code, = struct.unpack('<III', content)
-        return {
-            **base_result,
-            'type': 'Fig Operation Error',
-            'fig id': fig_id,
-            'operation id': operation_id,
-            'fig specific code': fig_specific_code
-        }
-    
-    if product_type == ProductType.FIG_PRODUCT:
-        FORMAT = '<II'
-        fig_id, operation_id, = struct.unpack(FORMAT, content[:struct.calcsize(FORMAT)])
-        raw_typed_product = content[struct.calcsize(FORMAT):]
-        result = {
-            **base_result,
-            'fig id': fig_id,
-            'operation id': operation_id,
-        }
-        typed_product = TypedProduct.from_raw_bytes(raw_typed_product)
-        result.update(typed_product.displayable())
-        if 'type_suffix' in result:
-            result['formatted_type'] += result['type_suffix']
-        return result
-
-    raise ValueError(f"Unsupported product type: {product_type}")
-
-
 # API endpoints that proxy to FastAPI
 @app.route('/api/clients', methods=['GET'])
 def get_clients():
@@ -102,20 +46,25 @@ def get_client(client_id):
             
             # Handle products as a list
             for product_path in client_data['products']:
+                path = Path(product_path)
                 try:
-                    path = Path(product_path)
-                    data = path.read_bytes()
-                    product_info = ProductInfo.from_path(path)
-                    
-                    parsed_products[product_info.id] = parse_product_content(
-                        product_info.id, product_info.type, data)
-                    product_paths[product_info.id] = product_path
+                    info = ProductInfo.from_path(path)
+                    product_paths[info.id] = product_path
                 except Exception as e:
                     print(
-                        f"Exception while processing product with type {product_info.type}: {str(e)}")
-                    parsed_products[product_info.id] = {
-                        'type': 'error',
-                        'error': f'Error processing product: {str(e)}'
+                        f"Failed to parse product info: {product_path}, skipping...")
+                    continue
+
+                try:
+                    product = Product.from_path(path)
+                    parsed_products[product.info.id] = product.displayable()
+                except Exception as e:
+                    print(
+                        f"Exception while processing product {info}: {str(e)}")
+                    parsed_products[info.id] = {
+                        **info.displayable(),
+                        f"formatted_type": f"{PRODUCT_TYPE_TO_STRING[info.type]} (Invalid)",
+                        f"error": f"Error processing product: {str(e)}"
                     }
             
             # Replace products list with IDs and add the mappings
