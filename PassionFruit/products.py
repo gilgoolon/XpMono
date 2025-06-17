@@ -65,7 +65,7 @@ def parse_typed_product(serialized_raw_product: bytes) -> dict:
         return {
             **base_result,
             'type': 'Text',
-            'data': content.decode('utf-8')
+            'data': content.decode('utf-16')
         }
     
     if product_type == TypedProductType.RAW:

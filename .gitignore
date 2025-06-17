@@ -353,6 +353,8 @@ MigrationBackup/
 log.txt
 *.db
 .qodo
+products/
+commands/
 
 # Testing
 SimpleDll/

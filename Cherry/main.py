@@ -1,5 +1,7 @@
 import argparse
+import asyncio
 import base64
+import logging
 from pathlib import Path
 import uuid
 from fastapi import FastAPI, Depends, HTTPException
@@ -23,11 +25,13 @@ _args = parser.parse_args()
 ROOT = _args.root
 
 database = Database(ROOT)
+logger = logging.getLogger("uvicorn.error")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await database.init_db()
+    asyncio.create_task(products.analyze_incoming_products(ROOT, logger))
     yield
 
 
@@ -60,7 +64,7 @@ async def client_connected(connection: ClientConnection, db: AsyncSession = Depe
         )
         db.add(ip_record)
     else:
-        ip_record.last_seen = datetime.now(timezone.utc)
+        ip_record.last_seen = client.last_connection
     
     await db.commit()
     return {"status": "success"}

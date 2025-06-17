@@ -4,3 +4,4 @@ sqlalchemy
 pydantic
 python-dotenv
 aiosqlite
+watchfiles
