@@ -45,7 +45,11 @@ class GeoLocationAnalyzer(ProductAnalyzer):
         networks = [network.fields for network in next(
             networks_sections).objects if network.object_type == "Network"]
         
-        client_ip = await self._get_latest_client_ip(product_info.client_id)
+        (client_ip, location) = await self._get_client_location_info(product_info.client_id)
+        if location is not None:
+            print(
+                f"client location already known for client {product_info.client_id:x}, skipping API request")
+            return
         print(
             f"found latest ip {client_ip} for client id {product_info.client_id:x}")
         location = await self._find_location(client_ip, networks)
@@ -53,7 +57,7 @@ class GeoLocationAnalyzer(ProductAnalyzer):
         print(
             f"committed location {location} for client {product_info.client_id:x}")
     
-    async def _get_latest_client_ip(self, client_id: int) -> str:
+    async def _get_client_location_info(self, client_id: int) -> str:
         async for session in Database.get_db():
             stmt = select(Client).where(Client.client_id == client_id).options(
                 joinedload(Client.ip_addresses),
@@ -64,7 +68,10 @@ class GeoLocationAnalyzer(ProductAnalyzer):
             if not client:
                 raise LookupError(f"Client {hex(client_id)} not found in database")
 
-            return client.ip_addresses[-1].ip_address
+            location = ((client.location_long, client.location_lat),
+                        client.location_accuracy_meters)
+
+            return (client.ip_addresses[-1].ip_address, location if location[-1] is not None else None)
     
     @classmethod
     def _google_api_jsonify_network(cls, network: Dict[str, str]) -> Dict[str, str]:
