@@ -1,0 +1,70 @@
+from typing import Dict, List, Tuple
+from sqlalchemy import select
+from sqlalchemy.orm import joinedload
+from Cherry.analyzers.analyzer import ProductAnalyzer
+from Cherry.database import Database
+from Cherry.models import Client
+from PoopBiter.products import FigProduct, Product, ProductInfo, ProductType, TypedProductType, TextTypedProduct
+from PoopBiter.parsing import parse_structured_product
+
+class GeoLocationAnalyzer(ProductAnalyzer):
+    def should_analyze_info(self, product_info: ProductInfo) -> bool:
+        return product_info.product_type == ProductType.FIG_PRODUCT
+
+    def should_analyze_product(self, product_info: ProductInfo, product: Product) -> bool:
+        # in the future will be generated into an accessible python enum with nice formatting
+        GEO_DUDE_FIG_ID = 5
+        # GEO_DUDE_DISCOVER_NETWORKS_OPERATION_ID = 1  # should find a way to enforce this
+        return (
+            isinstance(product, FigProduct) and
+            product.fig_id == GEO_DUDE_FIG_ID
+        )
+
+    async def analyze(self, product_info: ProductInfo, product: Product) -> None:
+        product: FigProduct = product
+        
+        typed_product = product.product
+        
+        if typed_product.type != TypedProductType.TEXT:
+            raise ValueError(
+                f"Unexpected GeoDude::DiscoverNetworks product type: {typed_product.type}")
+        
+        typed_product: TextTypedProduct = typed_product
+        
+        sections = parse_structured_product(typed_product.text)
+        networks_sections = filter(lambda section: section.name == "Networks", sections)
+        networks = [network.fields for network in next(
+            networks_sections).objects if network.object_type == "Network"]
+        
+        client_ip = await self._get_latest_client_ip(product_info.client_id)
+        print(
+            f"found latest ip {client_ip} for client id {product_info.client_id:x}")
+        location = await self._find_location(client_ip, networks)
+        await self._commit_location(product_info.client_id, location)
+        print(
+            f"committed location {location} for client {product_info.client_id:x}")
+    
+    async def _get_latest_client_ip(self, client_id: int) -> str:
+        async for session in Database.get_db():
+            stmt = select(Client).where(Client.client_id == client_id).options(
+                joinedload(Client.ip_addresses),
+            )
+            result = await session.execute(stmt)
+            client = result.unique().scalar_one_or_none()
+
+            if not client:
+                raise LookupError(f"Client {hex(client_id)} not found in database")
+
+            return client.ip_addresses[-1].ip_address
+    
+    async def _find_location(self, ip_address: str, networks: List[Dict[str, str]]) -> Tuple[float, float]:
+        return (32.1234, -32.69420)
+    
+    async def _commit_location(self, client_id: int, location: Tuple[float, float]) -> None:
+        location_lat, location_long = location
+        async for session in Database.get_db():
+            result = await session.execute(select(Client).where(Client.client_id == client_id))
+            obj = result.scalar_one()
+
+            obj.location_lat = location_lat
+            obj.location_long = location_long
