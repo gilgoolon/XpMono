@@ -28,6 +28,6 @@ class ClientIP(Base):
 class Location(Base):
     __tablename__ = "locations"
 
-    location_lat = Column(Float, None, primary_key=True)
-    location_long = Column(Float, None, primary_key=True)
+    latitude = Column(Float, None, primary_key=True)
+    longitude = Column(Float, None, primary_key=True)
     label = Column(Text, None)

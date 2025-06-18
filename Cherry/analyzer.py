@@ -9,6 +9,7 @@ from watchfiles import awatch, Change
 
 from Cherry.analyzers.analyzer import ProductAnalyzer
 from Cherry.analyzers.geolocation import GeoLocationAnalyzer
+from Cherry.analyzers.location_formatting import LocationFormattingAnalyzer
 from PoopBiter.products import Product, ProductInfo
 
 def get_client_products(root: Path, client_id: str) -> List[str]:
@@ -17,7 +18,8 @@ def get_client_products(root: Path, client_id: str) -> List[str]:
 
 
 async def analyze_product(product: Path) -> None:
-    analyzers: List[ProductAnalyzer] = [GeoLocationAnalyzer()]
+    analyzers: List[ProductAnalyzer] = [
+        GeoLocationAnalyzer(), LocationFormattingAnalyzer()]
 
     info = ProductInfo.from_path(product)
     parsed_product: Optional[Product] = None
@@ -33,7 +35,7 @@ async def analyze_product(product: Path) -> None:
             continue
 
         try:
-            asyncio.create_task(analyzer.analyze(info, parsed_product))
+            await analyzer.analyze(info, parsed_product)
         except Exception as ex:
             print(f"Failed to analyze product {info}: {ex}")
 

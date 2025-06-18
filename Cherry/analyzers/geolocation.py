@@ -48,7 +48,7 @@ class GeoLocationAnalyzer(ProductAnalyzer):
         (client_ip, location) = await self._get_client_location_info(product_info.client_id)
         if location is not None:
             print(
-                f"client location already known for client {product_info.client_id:x}, skipping API request")
+                f"client location already known for client {product_info.client_id:x}, skipping API request for geolocation")
             return
         print(
             f"found latest ip {client_ip} for client id {product_info.client_id:x}")
@@ -86,11 +86,10 @@ class GeoLocationAnalyzer(ProductAnalyzer):
             "considerIp": "false",
             "wifiAccessPoints": [self._google_api_jsonify_network(network) for network in networks]
         }
-        print(google_api_request_body)
         response = requests.post(self._api_url, json=google_api_request_body)
         if response.status_code != 200:
             raise LookupError(
-                f"Failed to find location, api responded with {response.content}")
+                f"Failed to find location, api responded with {response.status_code}: {response.content}")
         data = response.json()
         location = data["location"]
         location_lat = location["lat"]

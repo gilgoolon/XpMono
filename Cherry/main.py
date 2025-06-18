@@ -90,13 +90,13 @@ async def get_clients(db: AsyncSession = Depends(Database.get_db)):
     ]
 
 
-async def _format_location_location(latitude: float, longitude: float, db: AsyncSession) -> str:
-    stmt = select(Location).where(Location.location_long ==
-                                  longitude and Location.location_lat == latitude)
+async def _get_formatted_location(latitude: float, longitude: float, db: AsyncSession) -> str:
+    stmt = select(Location).where(Location.longitude ==
+                                  longitude and Location.latitude == latitude)
     result = await db.execute(stmt)
     formatted = result.unique().scalar_one_or_none()
 
-    return formatted if formatted is not None else f"({latitude}, {longitude})"
+    return formatted.label if formatted is not None else f"({latitude}, {longitude})"
 
 
 @app.get("/get-client/{client_id}", response_model=DetailedClientInfo)
@@ -110,7 +110,7 @@ async def get_client_details(client_id: str, db: AsyncSession = Depends(Database
     if not client:
         raise HTTPException(status_code=404, detail="Client not found")
     
-    location = await _format_location_location(
+    location = await _get_formatted_location(
         client.location_lat, client.location_long, db) if client.location_accuracy_meters is not None else None
 
     return DetailedClientInfo(

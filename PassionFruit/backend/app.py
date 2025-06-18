@@ -39,7 +39,7 @@ def get_client(client_id):
         response = requests.get(f'{CHERRY_URL}/get-client/{client_id}')
         client_data = response.json()
         
-        if 'location' not in client_data:
+        if 'location' not in client_data or client_data['location'] is None:
             client_data['location'] = "Unknown"
 
         # Parse each product's content
