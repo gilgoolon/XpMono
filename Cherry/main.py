@@ -17,7 +17,8 @@ from Cherry import analyzer
 from Cherry.commands import get_client_commands_dir
 from Cherry.protocol import ClientCommand, ClientConnection, DetailedClientInfo, ClientInfo
 from Cherry.database import Database
-from Cherry.models import Client, ClientIP
+from Cherry.models import Client, ClientIP, Location
+from PoopBiter.utils import unhex
 
 
 parser = argparse.ArgumentParser("Cherry DB API")
@@ -88,9 +89,19 @@ async def get_clients(db: AsyncSession = Depends(Database.get_db)):
         ) for client in clients
     ]
 
+
+async def _format_location_location(latitude: float, longitude: float, db: AsyncSession) -> str:
+    stmt = select(Location).where(Location.location_long ==
+                                  longitude and Location.location_lat == latitude)
+    result = await db.execute(stmt)
+    formatted = result.unique().scalar_one_or_none()
+
+    return formatted if formatted is not None else f"({latitude}, {longitude})"
+
+
 @app.get("/get-client/{client_id}", response_model=DetailedClientInfo)
 async def get_client_details(client_id: str, db: AsyncSession = Depends(Database.get_db)):
-    stmt = select(Client).where(Client.client_id == int(client_id, 16)).options(
+    stmt = select(Client).where(Client.client_id == unhex(client_id)).options(
         joinedload(Client.ip_addresses)
     )
     result = await db.execute(stmt)
@@ -99,6 +110,9 @@ async def get_client_details(client_id: str, db: AsyncSession = Depends(Database
     if not client:
         raise HTTPException(status_code=404, detail="Client not found")
     
+    location = await _format_location_location(
+        client.location_lat, client.location_long, db) if client.location_accuracy_meters is not None else None
+
     return DetailedClientInfo(
         client_id=f"{client.client_id:x}",
         last_connection=client.last_connection,
@@ -108,6 +122,7 @@ async def get_client_details(client_id: str, db: AsyncSession = Depends(Database
             "last_seen": ip.last_seen
         } for ip in sorted(client.ip_addresses, key=lambda x: x.last_seen, reverse=True)],
         products=analyzer.get_client_products(ROOT, client_id),
+        location=location,
         commands_dir=get_client_commands_dir(ROOT, client_id).absolute().as_posix()
     )
 

@@ -140,6 +140,14 @@ export default function ClientDetails({ client, onSendCommand }) {
             </Typography>
           </Grid>
           <Grid item xs={12} md={4}>
+            <Typography variant="subtitle2" color="text.secondary">
+              Location
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              {client.location}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={4}>
             <Box>
               <Typography variant="subtitle2" color="text.secondary">
                 Current IP
