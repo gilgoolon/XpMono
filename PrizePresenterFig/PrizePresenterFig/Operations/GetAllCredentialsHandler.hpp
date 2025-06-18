@@ -15,7 +15,7 @@ public:
 
 private:
 	[[nodiscard]] static std::wstring format_source(const std::wstring& source);
-	[[nodiscard]] static std::wstring format_credential(const Credential& credential, size_t index);
+	[[nodiscard]] static std::wstring format_credential(const Credential& credential);
 
 public:
 	void run() override;

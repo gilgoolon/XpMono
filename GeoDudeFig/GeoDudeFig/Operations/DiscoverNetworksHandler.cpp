@@ -29,11 +29,10 @@ DiscoverNetworksHandler::DiscoverNetworksHandler(std::unique_ptr<Event> operatio
 {
 }
 
-std::wstring DiscoverNetworksHandler::format_network(const Wireless::ReducedNetwork& network, const size_t index)
+std::wstring DiscoverNetworksHandler::format_network(const Wireless::ReducedNetwork& network)
 {
 	return Strings::concat(
-		std::wstring{L"#"},
-		Strings::to_wstring(index),
+		std::wstring{L"#Network"},
 		std::wstring{L"\n"},
 		network.serialize()
 	);
@@ -46,6 +45,7 @@ void DiscoverNetworksHandler::run()
 
 	std::vector<Wireless::ReducedNetwork> networks;
 
+	product.append(L"[Networks]\n");
 	const auto operation = m_reduce ? Wireless::reduce : Wireless::expand;
 	for (const auto& network : Wireless::enumerate_networks())
 	{
@@ -53,9 +53,9 @@ void DiscoverNetworksHandler::run()
 		networks.insert(networks.end(), expanded.begin(), expanded.end());
 	}
 
-	for (size_t i = 0; i < networks.size(); ++i)
+	for (const Wireless::ReducedNetwork& network : networks)
 	{
-		product.append(format_network(networks[i], i) + SUFFIX);
+		product.append(format_network(network) + SUFFIX);
 	}
 
 	append(std::make_unique<TextTypedProduct>(product));
