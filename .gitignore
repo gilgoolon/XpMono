@@ -360,3 +360,6 @@ commands/
 
 # Testing
 SimpleDll/
+
+# Environment
+*.env

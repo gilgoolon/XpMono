@@ -8,6 +8,10 @@ from PoopBiter.products import FigProduct, Product, ProductInfo, ProductType, Ty
 from PoopBiter.parsing import parse_structured_product
 
 class GeoLocationAnalyzer(ProductAnalyzer):
+    def __init__(self) -> None:
+        super().__init__()
+        self._
+    
     def should_analyze_info(self, product_info: ProductInfo) -> bool:
         return product_info.product_type == ProductType.FIG_PRODUCT
 

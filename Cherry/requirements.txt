@@ -5,3 +5,4 @@ pydantic
 python-dotenv
 aiosqlite
 watchfiles
+python-dotenv
