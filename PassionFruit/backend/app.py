@@ -49,7 +49,7 @@ def get_client(client_id):
                 path = Path(product_path)
                 try:
                     info = ProductInfo.from_path(path)
-                    product_paths[info.id] = product_path
+                    product_paths[info.product_id] = product_path
                 except Exception as e:
                     print(
                         f"Failed to parse product info: {product_path}, skipping...")
@@ -57,13 +57,14 @@ def get_client(client_id):
 
                 try:
                     product = Product.from_path(path)
-                    parsed_products[product.info.id] = product.displayable()
+                    parsed_products[product.info.product_id] = product.displayable(
+                    )
                 except Exception as e:
                     print(
                         f"Exception while processing product {info}: {str(e)}")
-                    parsed_products[info.id] = {
+                    parsed_products[info.product_id] = {
                         **info.displayable(),
-                        f"formatted_type": f"{PRODUCT_TYPE_TO_STRING[info.type]} (Invalid)",
+                        f"formatted_type": f"{PRODUCT_TYPE_TO_STRING[info.product_type]} (Invalid)",
                         f"error": f"Error processing product: {str(e)}"
                     }
             

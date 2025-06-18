@@ -40,7 +40,7 @@ app = FastAPI(lifespan=lifespan)
 
 
 @app.post("/client-connected")
-async def client_connected(connection: ClientConnection, db: AsyncSession = Depends(database.get_db)):
+async def client_connected(connection: ClientConnection, db: AsyncSession = Depends(Database.get_db)):
     client_id = int(connection.client_id, 16)
     # Get or create client
     client = await db.get(Client, client_id)
@@ -71,7 +71,7 @@ async def client_connected(connection: ClientConnection, db: AsyncSession = Depe
     return {"status": "success"}
 
 @app.get("/get-clients", response_model=List[ClientInfo])
-async def get_clients(db: AsyncSession = Depends(database.get_db)):
+async def get_clients(db: AsyncSession = Depends(Database.get_db)):
     stmt = select(Client).options(
         joinedload(Client.ip_addresses),
     )
@@ -87,7 +87,7 @@ async def get_clients(db: AsyncSession = Depends(database.get_db)):
     ]
 
 @app.get("/get-client/{client_id}", response_model=DetailedClientInfo)
-async def get_client_details(client_id: str, db: AsyncSession = Depends(database.get_db)):
+async def get_client_details(client_id: str, db: AsyncSession = Depends(Database.get_db)):
     stmt = select(Client).where(Client.client_id == int(client_id, 16)).options(
         joinedload(Client.ip_addresses)
     )

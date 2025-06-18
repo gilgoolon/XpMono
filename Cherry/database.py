@@ -1,9 +1,11 @@
 from pathlib import Path
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
+from PoopBiter.utils import SingletonMeta
 from Cherry.models import Base
 
-class Database:
+
+class Database(metaclass=SingletonMeta):
     DATABASE_NAME = "cherry.db"
     def __init__(self, root: Path):
         self._root = root
@@ -16,8 +18,9 @@ class Database:
         async with self._engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
 
-    async def get_db(self):
-        async with self._session() as session:
+    @classmethod
+    async def get_db(cls):
+        async with Database()._session() as session:
             try:
                 yield session
                 await session.commit()
