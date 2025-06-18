@@ -40,8 +40,8 @@ class ProductObject:
     
     @classmethod
     def _parse_field(cls, line: str) -> Tuple[str, str]:
-        matches = re.search(r"\- (.*?): (.*?)", line)
-        
+        matches = re.match(r"^\s*-\s*(.+?):\s*(.*)$", line)
+
         if not matches or len(matches.groups()) != 2:
             raise ValueError(f"Invalid field line: {line}")
         

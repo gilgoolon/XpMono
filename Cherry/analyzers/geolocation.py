@@ -79,15 +79,16 @@ class GeoLocationAnalyzer(ProductAnalyzer):
             "considerIp": "false",
             "wifiAccessPoints": [self._google_api_jsonify_network(network) for network in networks]
         }
+        print(google_api_request_body)
         response = requests.post(self._api_url, json=google_api_request_body)
         if response.status_code != 200:
             raise LookupError(
-                f"Failed to find location, api responded with {response}")
+                f"Failed to find location, api responded with {response.content}")
         data = response.json()
         location = data["location"]
         location_lat = location["lat"]
         location_long = location["lng"]
-        accuracy_meters = location["accuracy"]
+        accuracy_meters = data["accuracy"]
         return ((location_lat, location_long), accuracy_meters)
     
     async def _commit_location(self, client_id: int, location: Tuple[Tuple[float, float], int]) -> None:
