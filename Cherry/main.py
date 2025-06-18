@@ -4,6 +4,7 @@ import base64
 import logging
 from pathlib import Path
 import uuid
+from dotenv import load_dotenv
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.concurrency import asynccontextmanager
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -26,6 +27,7 @@ _args = parser.parse_args()
 ROOT = _args.root
 
 database = Database(ROOT)
+load_dotenv()
 logger = logging.getLogger("uvicorn.error")
 
 

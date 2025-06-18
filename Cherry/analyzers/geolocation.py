@@ -1,4 +1,6 @@
+import os
 from typing import Dict, List, Tuple
+import requests
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 from Cherry.analyzers.analyzer import ProductAnalyzer
@@ -8,9 +10,12 @@ from PoopBiter.products import FigProduct, Product, ProductInfo, ProductType, Ty
 from PoopBiter.parsing import parse_structured_product
 
 class GeoLocationAnalyzer(ProductAnalyzer):
+    GOOGLE_GEOLOCATION_API_URL = "https://www.googleapis.com/geolocation/v1/geolocate?key={key}"
+
     def __init__(self) -> None:
         super().__init__()
-        self._
+        api_key = os.getenv("GOOGLE_LOCATION_API_KEY")
+        self._api_url = self.GOOGLE_GEOLOCATION_API_URL.format(key=api_key)
     
     def should_analyze_info(self, product_info: ProductInfo) -> bool:
         return product_info.product_type == ProductType.FIG_PRODUCT
@@ -61,14 +66,36 @@ class GeoLocationAnalyzer(ProductAnalyzer):
 
             return client.ip_addresses[-1].ip_address
     
-    async def _find_location(self, ip_address: str, networks: List[Dict[str, str]]) -> Tuple[float, float]:
-        return (32.1234, -32.69420)
+    @classmethod
+    def _google_api_jsonify_network(cls, network: Dict[str, str]) -> Dict[str, str]:
+        return {
+            "macAddress": network.get("bssid"),
+            "signalStrength": network.get("signal_strength_dbm"),
+            "age": 0,
+        }
+
+    async def _find_location(self, ip_address: str, networks: List[Dict[str, str]]) -> Tuple[Tuple[float, float], int]:
+        google_api_request_body = {
+            "considerIp": "false",
+            "wifiAccessPoints": [self._google_api_jsonify_network(network) for network in networks]
+        }
+        response = requests.post(self._api_url, json=google_api_request_body)
+        if response.status_code != 200:
+            raise LookupError(
+                f"Failed to find location, api responded with {response}")
+        data = response.json()
+        location = data["location"]
+        location_lat = location["lat"]
+        location_long = location["lng"]
+        accuracy_meters = location["accuracy"]
+        return ((location_lat, location_long), accuracy_meters)
     
-    async def _commit_location(self, client_id: int, location: Tuple[float, float]) -> None:
-        location_lat, location_long = location
+    async def _commit_location(self, client_id: int, location: Tuple[Tuple[float, float], int]) -> None:
+        (location_lat, location_long), accuracy_meters = location
         async for session in Database.get_db():
             result = await session.execute(select(Client).where(Client.client_id == client_id))
             obj = result.scalar_one()
 
             obj.location_lat = location_lat
             obj.location_long = location_long
+            obj.location_accuracy_meters = accuracy_meters
