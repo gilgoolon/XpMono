@@ -10,6 +10,8 @@ from dataclasses import dataclass
 from PIL import Image
 from PIL.ImageFile import ImageFile
 
+from PoopBiter.utils import unhex
+
 
 class ProductType(enum.IntEnum):
     COMMAND_ERROR = 0
@@ -27,23 +29,23 @@ PRODUCT_TYPE_TO_STRING = {
 
 @dataclass
 class ProductInfo:
-    id: str
-    type: ProductType
-
-    @classmethod
-    def from_filename(cls, filename: str) -> "ProductInfo":
-        PRODUCT_TYPE_SEPARATOR = '-'
-        tokens = filename.split(PRODUCT_TYPE_SEPARATOR)
-        raw_id, raw_type = tokens
-        return ProductInfo(int.from_bytes(bytes.fromhex(raw_id)), ProductType(int(raw_type)))
+    client_id: int
+    command_id: int
+    product_id: int
+    product_type: ProductType
 
     @classmethod
     def from_path(cls, path: Path) -> "ProductInfo":
-        return cls.from_filename(path.stem)
+        PRODUCT_TYPE_SEPARATOR = '-'
+        raw_product_id, raw_product_type = path.stem.split(
+            PRODUCT_TYPE_SEPARATOR)
+        command_id = unhex(path.parent.stem)
+        client_id = unhex(path.parent.parent.stem)
+        return ProductInfo(client_id, command_id, unhex(raw_product_id), ProductType(int(raw_product_type)))
 
     def displayable(self) -> Dict[str, Any]:
         return {
-            "id": self.id,
+            "id": self.product_id,
         }
 
 
@@ -67,11 +69,12 @@ class Product(abc.ABC):
             ProductType.FIG_PRODUCT: FigProduct,
         }
 
-        if product_info.type not in products:
-            raise ValueError(f"Unsupported product type: {product_info.type}")
+        if product_info.product_type not in products:
+            raise ValueError(
+                f"Unsupported product type: {product_info.product_type}")
 
         content = path.read_bytes()
-        return products[product_info.type].from_data(product_info, content)
+        return products[product_info.product_type].from_data(product_info, content)
 
     @classmethod
     @abc.abstractmethod
@@ -80,7 +83,7 @@ class Product(abc.ABC):
 
     def displayable(self) -> dict[str, Any]:
         base_properties = {
-            "id": self._info.id,
+            "id": f"{self._info.product_id:x}",
             "formatted_type": self._formatted_type,
             "type": self._display_type
         }
@@ -96,11 +99,11 @@ class Product(abc.ABC):
 
     @property
     def _display_type(self) -> str:
-        return PRODUCT_TYPE_TO_STRING[self._info.type]
+        return PRODUCT_TYPE_TO_STRING[self._info.product_type]
 
     @property
     def _formatted_type(self) -> str:
-        return PRODUCT_TYPE_TO_STRING[self._info.type]
+        return PRODUCT_TYPE_TO_STRING[self._info.product_type]
 
 
 class CommandErrorProduct(Product):
@@ -182,14 +185,17 @@ class TypedProduct(abc.ABC):
     def __init__(self, type: TypedProductType) -> None:
         super().__init__()
         self._type = type
-    
+
+    @property
+    def type(self) -> None:
+        return self._type
+
     @classmethod
     def from_raw_bytes(cls, data: bytes) -> "TypedProduct":
         FORMAT = "<II"
         product_type, content_length = struct.unpack(
             FORMAT, data[:struct.calcsize(FORMAT)])
         product_type = TypedProductType(product_type)
-        print(product_type)
         content = data[struct.calcsize(FORMAT): struct.calcsize(FORMAT) + content_length]
         
         products: Dict[TypedProductType, type] = {
@@ -215,7 +221,7 @@ class TypedProduct(abc.ABC):
 
     @property
     def _formatted_type(self) -> str:
-        return f"{super()._formatted_type()}({self._display_type})"
+        return TYPED_PRODUCT_TYPE_TO_STRING[self._type]
 
 
 class RawTypedProduct(TypedProduct):
@@ -241,6 +247,10 @@ class TextTypedProduct(TypedProduct):
     def __init__(self, text: str) -> None:
         super().__init__(TypedProductType.TEXT)
         self._text = text
+
+    @property
+    def text(self) -> str:
+        return self._text
 
     @property
     def _displayable_properties(self):
@@ -319,12 +329,24 @@ class PngImageTypedProduct(ImageTypedProduct):
 class FigProduct(Product):
     def __init__(self, info: ProductInfo, fig_id: int, operation_id: int, typed_product: TypedProduct) -> None:
         super().__init__(info)
-        self._fig_id = fig_id,
+        self._fig_id = fig_id
         self._operation_id = operation_id
         self._typed_product = typed_product
 
+    @property
+    def product(self) -> TypedProduct:
+        return self._typed_product
+
+    @property
+    def fig_id(self) -> int:
+        return self._fig_id
+
+    @property
+    def fig_operation_id(self) -> int:
+        return self._operation_id
+
     @classmethod
-    def from_data(cls, info: ProductInfo, data: bytes):
+    def from_data(cls, info: ProductInfo, data: bytes) -> "FigProduct":
         FORMAT = "<II"
         fig_header_size = struct.calcsize(FORMAT)
         fig_id, operation_id, = struct.unpack(
@@ -340,5 +362,9 @@ class FigProduct(Product):
         }
 
     @property
-    def _display_type(self) -> Dict[str, Any]:
+    def _formatted_type(self) -> str:
+        return f"{PRODUCT_TYPE_TO_STRING[self._info.product_type]} ({self._typed_product._formatted_type})"
+
+    @property
+    def _display_type(self) -> str:
         return self._typed_product._display_type
