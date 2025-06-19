@@ -34,3 +34,7 @@ def now_filename(prefix: str = "", extension: Optional[str] = "log") -> str:
 
 def dump_pretty_json(object: Any) -> str:
     return json.dumps(object, indent=4)
+
+
+def format_exception(ex: BaseException) -> str:
+    return f"{ex.__class__.__name__}(\"{ex}\")"

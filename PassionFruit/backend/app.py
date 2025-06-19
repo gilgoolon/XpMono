@@ -1,12 +1,14 @@
-from PoopBiter.products import PRODUCT_TYPE_TO_STRING, Product, ProductInfo, ProductType, TypedProduct
+from PoopBiter import logger
+from PoopBiter.products import PRODUCT_TYPE_TO_STRING, Product, ProductInfo
 from flask import Flask, send_from_directory, request, jsonify
 from flask_cors import CORS
 import requests
 import os
 import base64
-import struct
 from pathlib import Path
 import json
+
+from PoopBiter.utils import format_exception
 
 
 CNC_ROOT = "CornCake"
@@ -21,10 +23,9 @@ CORS(app, resources={
     }
 })
 
-CHERRY_URL = 'http://localhost:8000'  # Your FastAPI server URL
+CHERRY_URL = 'http://localhost:8000'
 
 
-# API endpoints that proxy to FastAPI
 @app.route('/api/clients', methods=['GET'])
 def get_clients():
     try:
@@ -53,22 +54,22 @@ def get_client(client_id):
                 try:
                     info = ProductInfo.from_path(path)
                     product_paths[info.product_id] = product_path
-                except Exception as e:
-                    print(
-                        f"Failed to parse product info: {product_path}, skipping...")
+                except Exception as ex:
+                    logger.error(
+                        f"failed to parse product info '{product_path}': {format_exception(ex)}")
                     continue
 
                 try:
                     product = Product.from_path(path)
                     parsed_products[product.info.product_id] = product.displayable(
                     )
-                except Exception as e:
-                    print(
-                        f"Exception while processing product {info}: {str(e)}")
+                except Exception as ex:
+                    error_message = f"failed to parse product {info} at '{product_path}': {format_exception(ex)}"
+                    logger.error(error_message)
                     parsed_products[info.product_id] = {
                         **info.displayable(),
                         f"formatted_type": f"{PRODUCT_TYPE_TO_STRING[info.product_type]} (Invalid)",
-                        f"error": f"Error processing product: {str(e)}"
+                        f"error": error_message
                     }
             
             # Replace products list with IDs and add the mappings
@@ -77,9 +78,10 @@ def get_client(client_id):
             client_data['parsed_products'] = parsed_products
         
         return jsonify(client_data), response.status_code
-    except requests.exceptions.RequestException as e:
-        print(f"Request exception: {str(e)}")  # Debug log
-        return jsonify({'error': str(e)}), 500
+    except Exception as ex:
+        error_message = f"endpoint /api/get_client failed for client id {client_id}: {format_exception(ex)}"
+        logger.error(error_message)
+        return jsonify({"error": error_message}), 500
 
 @app.route('/api/commands', methods=['POST', 'OPTIONS'])
 def send_command():
@@ -89,11 +91,9 @@ def send_command():
     try:
         command_data = request.json.get('data', '')
         client_id = request.json.get('client_id', '')
-        
-        # Convert command data to base64
+
         encoded_data = base64.b64encode(command_data.encode()).decode()
-        
-        # Format the request body according to ClientCommand model
+
         payload = {
             'client_id': client_id,
             'data': encoded_data
@@ -101,8 +101,10 @@ def send_command():
         
         response = requests.post(f'{CHERRY_URL}/send-command', json=payload)
         return jsonify(response.json()), response.status_code
-    except requests.exceptions.RequestException as e:
-        return jsonify({'error': str(e)}), 500
+    except Exception as ex:
+        error_message = f"endpoint /api/commands failed: {format_exception(ex)}"
+        logger.error(error_message)
+        return jsonify({"error": error_message}), 500
 
 @app.route('/api/command-templates', methods=['GET'])
 def get_command_templates():
