@@ -6,7 +6,7 @@ from collections import OrderedDict
 from typing import Optional
 
 from PoopBiter.fig import FIGS_METADATA_PATH, RELEASES_PATH, Fig
-from PoopBiter.utils import dump_pretty_json, is_int
+from PoopBiter.utils import dump_pretty_json, is_int, to_snake_case
 
 
 def find_api_files(root: Path):
@@ -33,7 +33,7 @@ def parse_api_file(api_path: Path) -> Optional[Fig]:
 
     result = {
         "name": fig_name,
-        "dll_path": RELEASES_PATH / f"{fig_name}.dll"
+        "dll_path": str(RELEASES_PATH / f"{fig_name}.dll")
         }
 
     for var, regex in vars_regex.items():
@@ -75,7 +75,7 @@ def parse_api_file(api_path: Path) -> Optional[Fig]:
 
     result["operations"] = entries
 
-    return Fig(**result)
+    return Fig.from_dict(result)
 
 
 def parse_args() -> argparse.Namespace:
@@ -93,15 +93,18 @@ def parse_args() -> argparse.Namespace:
 def main():
     args = parse_args()
 
-    figs = map(parse_api_file, find_api_files(args.root))
+    figs = list(map(parse_api_file, find_api_files(args.root)))
     result = {
         "figs": [
             asdict(fig) for fig in figs if fig is not None
         ]
     }
 
-    output = dump_pretty_json(result)
-    args.output.write_text(output)
+    json_output = dump_pretty_json(result)
+    python_output = ''.join(
+        [f"{to_snake_case(fig.name).upper()}_ID = {fig.fig_id}\n" for fig in figs])
+    args.output.write_text(json_output)
+    args.output.with_suffix(".py").write_text(python_output)
     print(f"output written to '{args.output.absolute()}'")
 
 

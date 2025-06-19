@@ -2,12 +2,12 @@ from dataclasses import dataclass
 import json
 from pathlib import Path
 from typing import Dict, List, Optional
-from dacite import from_dict
+import dacite
 
 @dataclass
 class Fig:
     name: str
-    dll_path: Path
+    dll_path: str
     fig_id: int
     version_major: int
     version_minor: int
@@ -15,7 +15,7 @@ class Fig:
     
     @classmethod
     def from_dict(cls, data: dict) -> "Fig":
-        return from_dict(data_class=Fig, data=data)
+        return dacite.from_dict(data_class=Fig, data=data)
     
 
 FIGS_METADATA_PATH = Path(__file__).parent / "figs.json"

@@ -5,6 +5,8 @@ from sqlalchemy import select
 from Cherry.analyzers.analyzer import ProductAnalyzer
 from Cherry.database import Database
 from Cherry.models import Client, Location
+from PoopBiter.fig import get_fig
+from PoopBiter.figs import GEO_DUDE_FIG_ID
 from PoopBiter.products import FigProduct, Product, ProductInfo, ProductType, TypedProductType, TextTypedProduct
 from PoopBiter import logger
 
@@ -23,8 +25,6 @@ class LocationFormattingAnalyzer(ProductAnalyzer):
         return product_info.product_type == ProductType.FIG_PRODUCT
 
     def should_analyze_product(self, product_info: ProductInfo, product: Product) -> bool:
-        # in the future will be generated into an accessible python enum with nice formatting
-        GEO_DUDE_FIG_ID = 5
         # GEO_DUDE_DISCOVER_NETWORKS_OPERATION_ID = 1  # should find a way to enforce this
         return (
             isinstance(product, FigProduct) and

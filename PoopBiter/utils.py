@@ -1,6 +1,7 @@
 from datetime import datetime
 from functools import wraps
 import json
+import re
 from typing import Any, Optional
 
 
@@ -46,3 +47,7 @@ def is_int(value: Any) -> bool:
         return True
     except ValueError:
         return False
+
+
+def to_snake_case(camel_case_word: str) -> str:
+    return re.sub(r'(?<!^)(?=[A-Z])', '_', camel_case_word).lower()
