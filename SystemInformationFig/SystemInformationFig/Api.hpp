@@ -14,5 +14,6 @@ enum class OperationType : Fig::OperationType
 	USERS_INFO,
 	PHYSICAL_DRIVES_INFO,
 	BIOS_INFO,
+	NETWORK_INFO,
 };
 }
