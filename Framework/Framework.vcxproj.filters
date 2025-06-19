@@ -497,5 +497,8 @@
     <ClInclude Include="Include\Networking\ScopedWlanMemory.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\External\cpp-httplib\httplib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

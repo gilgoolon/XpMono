@@ -79,6 +79,7 @@
   <ItemGroup>
     <ClInclude Include="Include\Crypto\Protection.hpp" />
     <ClInclude Include="Include\Crypto\Aes.hpp" />
+    <ClInclude Include="Include\External\cpp-httplib\httplib.h" />
     <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Assertion.h" />
     <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Backup.h" />
     <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Column.h" />

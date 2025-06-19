@@ -49,7 +49,10 @@ static void main_logic()
 		"/GeoDudeFig.dll";
 	const auto fig = std::make_shared<FigModule>(path);
 	TRACE("fig id: ", fig->id(), " fig version: ", fig->major(), ".", fig->minor());
-	const std::unique_ptr<FigOperation> fig_operation = fig->execute(1, Strings::to_buffer(Json::object().dump()));
+	const std::unique_ptr<FigOperation> fig_operation = fig->execute(
+		2,
+		Strings::to_buffer(Json{{"api_key", "API_KEY_HERE"}}.dump())
+	);
 	bool is_over = false;
 	File output(
 		LR"(C:\Users\alper\OneDrive\Documents\more_output.txt)",

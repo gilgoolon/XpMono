@@ -4,6 +4,7 @@
 #include "FigManager.hpp"
 #include "Trace.hpp"
 #include "Operations/DiscoverNetworksHandler.hpp"
+#include "Operations/FetchGeoLocationHandler.hpp"
 #include "Protections/LibraryProtector.hpp"
 
 #include <Windows.h>
@@ -25,6 +26,8 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 	{
 	case static_cast<Fig::OperationType>(Api::OperationType::DISCOVER_NETWORKS):
 		return std::make_shared<DiscoverNetworksHandler>(std::move(operation_event), operation_parameters);
+	case static_cast<Fig::OperationType>(Api::OperationType::FETCH_GEO_LOCATION):
+		return std::make_shared<FetchGeoLocationHandler>(std::move(operation_event), operation_parameters);
 	default:
 		throw FigImplException(Fig::FigCode::FAILED_UNSUPPORTED_OPERATION);
 	}

@@ -24,6 +24,8 @@ template <typename String>
 
 [[nodiscard]] std::wstring to_wstring(const std::string& buffer);
 
+[[nodiscard]] std::wstring precise_to_wstring(double value, size_t precision = 10);
+
 template <typename Buffer, typename... Buffers>
 Buffer concat(const Buffer& first, const Buffers&... rest)
 {

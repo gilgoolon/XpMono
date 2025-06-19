@@ -143,6 +143,9 @@ enum class ErrorCode : uint32_t
 	FAILED_GET_TEMP_PATH,
 	FAILED_GENERATE_TEMP_PATH,
 	FAILED_WLAN_ENUMERATE_BSSIDS,
+
+	// Misc
+	FAILED_HTTP_POST,
 };
 
 std::wostringstream& operator<<(std::wostringstream& output, ErrorCode code);

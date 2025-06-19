@@ -11,5 +11,6 @@ enum class OperationType : Fig::OperationType
 {
 	RESERVED = 0,
 	DISCOVER_NETWORKS,
+	FETCH_GEO_LOCATION,
 };
 }
