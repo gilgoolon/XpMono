@@ -25,7 +25,10 @@ DiscoverNetworksHandler::DiscoverNetworksHandler(std::unique_ptr<Event> operatio
 }
 
 DiscoverNetworksHandler::DiscoverNetworksHandler(std::unique_ptr<Event> operation_event, const Buffer& raw_parameters):
-	DiscoverNetworksHandler(std::move(operation_event), Json::parse(Strings::to_string(raw_parameters)))
+	DiscoverNetworksHandler(
+		std::move(operation_event),
+		raw_parameters.empty() ? Json::object() : Json::parse(Strings::to_string(raw_parameters))
+	)
 {
 }
 
