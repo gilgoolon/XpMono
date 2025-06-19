@@ -35,6 +35,8 @@ async def analyze_product(product: Path) -> None:
             continue
 
         try:
+            logger.info(
+                f"{analyzer.__class__.__name__} analyzing product {info.product_id:x}")
             await analyzer.analyze(info, parsed_product)
         except Exception as ex:
             logger.error(f"Failed to analyze product {info}: {ex}")
