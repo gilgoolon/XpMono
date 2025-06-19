@@ -54,7 +54,7 @@ def get_fig(fig_id: int) -> Fig:
     return _FIGS[fig_id]
 
 
-def format_fig_name(fig_id: id) -> str:
+def format_fig_name(fig_id: int) -> str:
     return f"{get_fig(fig_id).name} ({fig_id})"
 
 

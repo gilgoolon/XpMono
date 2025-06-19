@@ -44,7 +44,8 @@
             "version_minor": 0,
             "operations": {
                 "0": "RESERVED",
-                "1": "DISCOVER_NETWORKS"
+                "1": "DISCOVER_NETWORKS",
+                "2": "FETCH_GEO_LOCATION"
             }
         },
         {

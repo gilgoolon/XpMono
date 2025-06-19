@@ -5,7 +5,6 @@ from sqlalchemy import select
 from Cherry.analyzers.analyzer import ProductAnalyzer
 from Cherry.database import Database
 from Cherry.models import Client, Location
-from PoopBiter.fig import get_fig
 from PoopBiter.figs import GEO_DUDE_FIG_ID
 from PoopBiter.products import FigProduct, Product, ProductInfo, ProductType, TypedProductType, TextTypedProduct
 from PoopBiter import logger

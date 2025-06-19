@@ -35,8 +35,8 @@ class GeoLocationImporterAnalyzer(ProductAnalyzer):
         sections = parse_structured_product(typed_product.text)
         geolocation_sections = filter(
             lambda section: section.name == "Geolocation", sections)
-        locations = [network.fields for network in next(
-            geolocation_sections).objects if network.object_type == "Location"]
+        locations = [location.fields for location in next(
+            geolocation_sections).objects if location.object_type == "Location"]
 
         if len(locations) == 0:
             raise ValueError(f"No locations found in Geolocation section")
