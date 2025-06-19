@@ -7,6 +7,7 @@ from Cherry.analyzers.analyzer import ProductAnalyzer
 from Cherry.database import Database
 from Cherry.models import Client
 from PoopBiter import logger
+from PoopBiter.figs import GEO_DUDE_FIG_ID
 from PoopBiter.products import FigProduct, Product, ProductInfo, ProductType, TypedProductType, TextTypedProduct
 from PoopBiter.parsing import parse_structured_product
 
@@ -22,12 +23,11 @@ class GeoLocationAnalyzer(ProductAnalyzer):
         return product_info.product_type == ProductType.FIG_PRODUCT
 
     def should_analyze_product(self, product_info: ProductInfo, product: Product) -> bool:
-        # in the future will be generated into an accessible python enum with nice formatting
-        GEO_DUDE_FIG_ID = 5
-        # GEO_DUDE_DISCOVER_NETWORKS_OPERATION_ID = 1  # should find a way to enforce this
+        GEO_DUDE_DISCOVER_NETWORKS_OPERATION_ID = 1
         return (
             isinstance(product, FigProduct) and
-            product.fig_id == GEO_DUDE_FIG_ID
+            product.fig_id == GEO_DUDE_FIG_ID and
+            product.fig_operation_type == GEO_DUDE_DISCOVER_NETWORKS_OPERATION_ID
         )
 
     async def analyze(self, product_info: ProductInfo, product: Product) -> None:
