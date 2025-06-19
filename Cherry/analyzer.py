@@ -8,7 +8,7 @@ from watchfiles import awatch, Change
 
 from PoopBiter import logger
 from Cherry.analyzers.analyzer import ProductAnalyzer
-from Cherry.analyzers.geolocation import GeoLocationAnalyzer
+from Cherry.analyzers.networks_geolocation import NetworksGeoLocationAnalyzer
 from Cherry.analyzers.location_formatting import LocationFormattingAnalyzer
 from PoopBiter.products import Product, ProductInfo
 
@@ -19,7 +19,7 @@ def get_client_products(root: Path, client_id: str) -> List[str]:
 
 async def analyze_product(product: Path) -> None:
     analyzers: List[ProductAnalyzer] = [
-        GeoLocationAnalyzer(), LocationFormattingAnalyzer()]
+        NetworksGeoLocationAnalyzer(), LocationFormattingAnalyzer()]
 
     info = ProductInfo.from_path(product)
     parsed_product: Optional[Product] = None

@@ -11,7 +11,8 @@ from PoopBiter.figs import GEO_DUDE_FIG_ID
 from PoopBiter.products import FigProduct, Product, ProductInfo, ProductType, TypedProductType, TextTypedProduct
 from PoopBiter.parsing import parse_structured_product
 
-class GeoLocationAnalyzer(ProductAnalyzer):
+
+class NetworksGeoLocationAnalyzer(ProductAnalyzer):
     GOOGLE_GEOLOCATION_API_URL = "https://www.googleapis.com/geolocation/v1/geolocate?key={key}"
 
     def __init__(self) -> None:
