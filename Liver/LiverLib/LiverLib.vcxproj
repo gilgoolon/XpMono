@@ -14,7 +14,7 @@
     <ClInclude Include="Api\Include\LiverApi.hpp" />
     <ClInclude Include="Include\FigOperationsContainer.hpp" />
     <ClInclude Include="Include\FigOperationsFetcher.hpp" />
-    <ClInclude Include="Handlers\ExecuteFigOperationHandler.hpp" />
+    <ClInclude Include="Include\Handlers\ExecuteFigOperationHandler.hpp" />
     <ClInclude Include="Include\Commands\ExecuteFigOperationCommand.hpp" />
     <ClInclude Include="Include\Handlers\CallDllGenericProcedureHandler.hpp" />
     <ClInclude Include="Include\Commands\CallDllGenericProcedureCommand.hpp" />
@@ -81,7 +81,7 @@
     <ClCompile Include="Commands\CallDllGenericProcedureCommand.cpp" />
     <ClCompile Include="Include\Communicators\Protocol\ReturnProductsRequest.cpp" />
     <ClCompile Include="Handlers\LoadFigHandler.cpp" />
-    <ClCompile Include="Include\FigOperationsContainer.cpp" />
+    <ClCompile Include="FigOperationsContainer.cpp" />
     <ClCompile Include="Products\FigProduct.cpp" />
     <ClCompile Include="Products\FigOperationErrorProduct.cpp" />
     <ClCompile Include="Products\RawProduct.cpp" />

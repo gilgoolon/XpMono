@@ -126,7 +126,7 @@
     <ClInclude Include="Include\Commands\ExecuteFigOperationCommand.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Handlers\ExecuteFigOperationHandler.hpp">
+    <ClInclude Include="Include\Handlers\ExecuteFigOperationHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\FigOperationsFetcher.hpp">
@@ -251,7 +251,7 @@
     <ClCompile Include="Products\FigProduct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Include\FigOperationsContainer.cpp">
+    <ClCompile Include="FigOperationsContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
