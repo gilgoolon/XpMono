@@ -47,14 +47,14 @@ class GeoLocationAnalyzer(ProductAnalyzer):
         
         (client_ip, location) = await self._get_client_location_info(product_info.client_id)
         if location is not None:
-            print(
+            logger.info(
                 f"client location already known for client {product_info.client_id:x}, skipping API request for geolocation")
             return
-        print(
+        logger.info(
             f"found latest ip {client_ip} for client id {product_info.client_id:x}")
         location = await self._find_location(client_ip, networks)
         await self._commit_location(product_info.client_id, location)
-        print(
+        logger.info(
             f"committed location {location} for client {product_info.client_id:x}")
     
     async def _get_client_location_info(self, client_id: int) -> str:

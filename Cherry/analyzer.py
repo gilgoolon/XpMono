@@ -11,6 +11,7 @@ from Cherry.analyzers.analyzer import ProductAnalyzer
 from Cherry.analyzers.geolocation import GeoLocationAnalyzer
 from Cherry.analyzers.location_formatting import LocationFormattingAnalyzer
 from PoopBiter.products import Product, ProductInfo
+from PoopBiter import logger
 
 def get_client_products(root: Path, client_id: str) -> List[str]:
     expression = root / "products" / client_id / "*" / "*"
@@ -37,7 +38,7 @@ async def analyze_product(product: Path) -> None:
         try:
             await analyzer.analyze(info, parsed_product)
         except Exception as ex:
-            print(f"Failed to analyze product {info}: {ex}")
+            logger.error(f"Failed to analyze product {info}: {ex}")
 
 
 async def analyze_products(products: List[Path]) -> None:

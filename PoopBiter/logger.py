@@ -1,20 +1,22 @@
 import sys
 import logging
-from inspect import stack
+import __main__
 
 
-_LOGGERS = {}
+_LOGGER = None
 
 
 def get():
-    caller_name = stack()[1].frame.f_globals.get("__name__", "default")
+    global _LOGGER
+    if _LOGGER:
+        return _LOGGER
 
-    if caller_name in _LOGGERS:
-        return _LOGGERS[caller_name]
+    logger_name = getattr(__main__, '__package__', None) or getattr(
+        __main__, '__name__', 'default')
 
-    logger = logging.getLogger(caller_name)
+    logger = logging.getLogger(logger_name)
     logger.setLevel(logging.DEBUG)
-    logger.propagate = False  # Avoid duplicate logs if root logger is configured
+    logger.propagate = False
 
     formatter = logging.Formatter(
         '[%(asctime)s] [%(levelname)s] [%(name)s]: %(message)s',
@@ -23,12 +25,34 @@ def get():
 
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setFormatter(formatter)
+    console_handler.setLevel(logging.INFO)
     logger.addHandler(console_handler)
 
-    log_filename = f"{caller_name}.log"
+    log_filename = f"{logger_name}.log"
     file_handler = logging.FileHandler(log_filename)
     file_handler.setFormatter(formatter)
+    file_handler.setLevel(logging.DEBUG)
     logger.addHandler(file_handler)
 
-    _LOGGERS[caller_name] = logger
+    _LOGGER = logger
     return logger
+
+
+def debug(*args, **kwargs):
+    return get().debug(*args, **kwargs)
+
+
+def info(*args, **kwargs):
+    return get().info(*args, **kwargs)
+
+
+def warning(*args, **kwargs):
+    return get().warning(*args, **kwargs)
+
+
+def error(*args, **kwargs):
+    return get().error(*args, **kwargs)
+
+
+def critical(*args, **kwargs):
+    return get().critical(*args, **kwargs)
