@@ -357,6 +357,8 @@ log.txt
 .qodo
 products/
 commands/
+logs/
+*.log
 
 # Testing
 SimpleDll/

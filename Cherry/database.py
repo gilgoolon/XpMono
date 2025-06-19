@@ -9,7 +9,8 @@ class Database(metaclass=SingletonMeta):
     DATABASE_NAME = "cherry.db"
     def __init__(self, root: Path):
         self._root = root
-        self._engine = create_async_engine(f"sqlite+aiosqlite:///{(self._root / self.DATABASE_NAME).as_posix()}", echo=True)
+        self._engine = create_async_engine(
+            f"sqlite+aiosqlite:///{(self._root / self.DATABASE_NAME).as_posix()}", echo=False)
         self._session = sessionmaker(
             self._engine, class_=AsyncSession, expire_on_commit=False
         )

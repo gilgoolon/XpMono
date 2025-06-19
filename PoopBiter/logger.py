@@ -14,6 +14,16 @@ _API_LOGS_FOLDER = _LOGS_FOLDER / "apis"
 _LOGGER = None
 
 
+class ExceptionContextFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        # If exc_info wasn't passed but we're inside an exception, attach the exception info
+        if record.exc_info is None:
+            exc_type, exc_value, exc_tb = sys.exc_info()
+            if exc_type is not None:
+                record.exc_info = (exc_type, exc_value, exc_tb)
+        return True
+
+
 def get():
     global _LOGGER
     if _LOGGER:
@@ -41,6 +51,7 @@ def get():
 
     file_handler = logging.FileHandler(log_path)
     file_handler.setFormatter(formatter)
+    file_handler.addFilter(ExceptionContextFilter())
     file_handler.setLevel(logging.DEBUG)
     logger.addHandler(file_handler)
 

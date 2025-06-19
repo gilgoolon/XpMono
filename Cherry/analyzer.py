@@ -48,7 +48,7 @@ async def analyze_products(products: List[Path]) -> None:
 async def analyze_incoming_products(root: Path) -> None:
     products_dir = root / "products"
     logger.info(
-        f"watching directory for products: {str(products_dir.absolute())}")
+        f"watching directory for products: {products_dir}")
 
     def only_new_files(change_type: Change, path: str):
         return change_type == Change.added and os.path.isfile(path)
