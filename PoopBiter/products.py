@@ -189,7 +189,7 @@ class FigOperationErrorProduct(Product):
     @property
     def _displayable_properties(self) -> Dict[str, Any]:
         return {
-            "fig": format_fig_name(self.fig_id),
+            "fig": format_fig_name(self._fig_id),
             "operation type": f"{format_operation_name(self._fig_id, self._operation_type)} ({self._operation_type})",
             "operation id": f"{self._operation_id:x}",
             "fig code": FigCode(self._fig_code).name,

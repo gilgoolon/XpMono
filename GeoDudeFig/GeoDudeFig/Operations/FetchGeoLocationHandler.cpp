@@ -97,7 +97,7 @@ Json FetchGeoLocationHandler::create_api_request_parameters(const std::vector<Wi
 	}
 
 	Json parameters = {
-		{"considerIp", "false"},
+		{"considerIp", "true"},
 		{"wifiAccessPoints", structured_networks}
 	};
 
