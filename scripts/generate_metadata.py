@@ -1,22 +1,12 @@
-import argparse
-from dataclasses import asdict, dataclass
-import os
 import re
-import json
+import argparse
+from dataclasses import asdict
 from pathlib import Path
 from collections import OrderedDict
-from typing import Dict, List, Optional
+from typing import Optional
 
+from PoopBiter.fig import FIGS_METADATA_PATH, RELEASES_PATH, Fig
 from PoopBiter.utils import dump_pretty_json, is_int
-
-
-@dataclass
-class Fig:
-    name: str
-    fig_id: int
-    version_major: int
-    version_minor: int
-    operations: Dict[int, str]
 
 
 def find_api_files(root: Path):
@@ -41,7 +31,10 @@ def parse_api_file(api_path: Path) -> Optional[Fig]:
         "version_minor": r'Fig::VersionMinor VERSION_MINOR\s*=\s*(\d+);',
     }
 
-    result = {"name": fig_name}
+    result = {
+        "name": fig_name,
+        "dll_path": RELEASES_PATH / f"{fig_name}.dll"
+        }
 
     for var, regex in vars_regex.items():
         match = re.search(regex, block)
@@ -91,7 +84,7 @@ def parse_args() -> argparse.Namespace:
 
     parser.add_argument("--root", type=Path, default=Path("."),
                         help="where to look for figs")
-    parser.add_argument("-o", "--output", type=Path, default=Path("PoopBiter") / "figs.json",
+    parser.add_argument("-o", "--output", type=Path, default=FIGS_METADATA_PATH,
                         help="where to look for figs")
 
     return parser.parse_args()
