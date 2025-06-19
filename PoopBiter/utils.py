@@ -1,4 +1,7 @@
+from datetime import datetime
 from functools import wraps
+import json
+from typing import Any, Optional
 
 
 def unhex(string: str) -> int:
@@ -21,3 +24,13 @@ class SingletonMeta(type):
                     raise TypeError(
                         f"{cls.__name__} singleton already initialized with different arguments")
         return cls._instances[cls]
+
+
+def now_filename(prefix: str = "", extension: Optional[str] = "log") -> str:
+    now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    name = f"{prefix}_{now}.{extension}"
+    return name if extension is None else f"{name}.{extension}"
+
+
+def dump_pretty_json(object: Any) -> str:
+    return json.dumps(object, indent=4)

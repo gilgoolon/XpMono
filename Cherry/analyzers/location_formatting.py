@@ -2,12 +2,11 @@ import os
 from typing import Optional, Tuple
 import requests
 from sqlalchemy import select
-from sqlalchemy.orm import joinedload
 from Cherry.analyzers.analyzer import ProductAnalyzer
 from Cherry.database import Database
 from Cherry.models import Client, Location
 from PoopBiter.products import FigProduct, Product, ProductInfo, ProductType, TypedProductType, TextTypedProduct
-from PoopBiter.parsing import parse_structured_product
+from PoopBiter import logger
 
 
 class LocationFormattingAnalyzer(ProductAnalyzer):
@@ -43,21 +42,21 @@ class LocationFormattingAnalyzer(ProductAnalyzer):
 
         location = await self._get_client_location_info(product_info.client_id)
         if location is None:
-            print(
+            logger.debug(
                 f"client location is unknown for client {product_info.client_id:x}, skipping API request for formatting")
             return
         
         existing_formatted_location = await self._get_location_formatting_info(location)
         
         if existing_formatted_location is not None:
-            print(
+            logger.debug(
                 f"client location is already formatted for client {product_info.client_id:x}: {existing_formatted_location}")
             return
         
         formatted_location = await self._format_location(location)
         await self._commit_location(location, formatted_location)
-        print(
-            f"committed location formatting {location} for client {product_info.client_id:x}")
+        logger.info(
+            f"committed location formatting {location} for location {location}")
 
     async def _get_client_location_info(self, client_id: int) -> Optional[Tuple[Tuple[float, float], float]]:
         async for session in Database.get_db():
@@ -101,12 +100,13 @@ class LocationFormattingAnalyzer(ProductAnalyzer):
             "latlng": f"{latitude},{longitude}",
         }
         response = requests.post(self._api_url, params=google_api_request_parameters)
+        logger.api(self._api_url, google_api_request_parameters, response)
+
         if response.status_code != 200:
             raise LookupError(
                 f"Failed to format location, api responded with {response.status_code}: {response.content}")
             
         data = response.json()
-        print(data)
         results = data["results"]
         if len(results) == 0:
             raise LookupError(f"Location API-lookup returned no matching results")

@@ -6,6 +6,7 @@ from sqlalchemy.orm import joinedload
 from Cherry.analyzers.analyzer import ProductAnalyzer
 from Cherry.database import Database
 from Cherry.models import Client
+from PoopBiter import logger
 from PoopBiter.products import FigProduct, Product, ProductInfo, ProductType, TypedProductType, TextTypedProduct
 from PoopBiter.parsing import parse_structured_product
 
@@ -47,10 +48,10 @@ class GeoLocationAnalyzer(ProductAnalyzer):
         
         (client_ip, location) = await self._get_client_location_info(product_info.client_id)
         if location is not None:
-            logger.info(
+            logger.debug(
                 f"client location already known for client {product_info.client_id:x}, skipping API request for geolocation")
             return
-        logger.info(
+        logger.debug(
             f"found latest ip {client_ip} for client id {product_info.client_id:x}")
         location = await self._find_location(client_ip, networks)
         await self._commit_location(product_info.client_id, location)
@@ -87,6 +88,8 @@ class GeoLocationAnalyzer(ProductAnalyzer):
             "wifiAccessPoints": [self._google_api_jsonify_network(network) for network in networks]
         }
         response = requests.post(self._api_url, json=google_api_request_body)
+        logger.api(self._api_url, google_api_request_body, response)
+
         if response.status_code != 200:
             raise LookupError(
                 f"Failed to find location, api responded with {response.status_code}: {response.content}")
