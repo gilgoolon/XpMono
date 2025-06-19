@@ -1,3 +1,4 @@
+from datetime import datetime
 import io
 import abc
 import enum
@@ -34,6 +35,7 @@ class ProductInfo:
     command_id: int
     product_id: int
     product_type: ProductType
+    creation_time: datetime
 
     @classmethod
     def from_path(cls, path: Path) -> "ProductInfo":
@@ -42,7 +44,8 @@ class ProductInfo:
             PRODUCT_TYPE_SEPARATOR)
         command_id = unhex(path.parent.stem)
         client_id = unhex(path.parent.parent.stem)
-        return ProductInfo(client_id, command_id, unhex(raw_product_id), ProductType(int(raw_product_type)))
+        creation_time = datetime.fromtimestamp(path.stat().st_ctime)
+        return ProductInfo(client_id, command_id, unhex(raw_product_id), ProductType(int(raw_product_type)), creation_time)
 
     def displayable(self) -> Dict[str, Any]:
         return {
@@ -85,6 +88,7 @@ class Product(abc.ABC):
     def displayable(self) -> dict[str, Any]:
         base_properties = {
             "id": f"{self._info.product_id:x}",
+            "creation_time": self._info.creation_time,
             "formatted_type": self._formatted_type,
             "type": self._display_type
         }

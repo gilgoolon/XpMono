@@ -335,9 +335,14 @@ export default function ClientDetails({ client, onSendCommand }) {
                         <Typography variant="subtitle2" noWrap>
                           {product?.formatted_type || 'Unknown Type'}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary" noWrap>
-                          {product?.id || 'Unknown ID'}
-                        </Typography>
+                        <Grid>
+                          <Typography variant="body2" color="text.secondary" noWrap>
+                            {product?.creation_time || 'Unknown Creation Time'}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary" noWrap>
+                            {product?.id || 'Unknown ID'}
+                          </Typography>
+                        </Grid>
                       </CardContent>
                     </Card>
                   </Grid>
