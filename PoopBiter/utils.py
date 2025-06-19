@@ -38,3 +38,11 @@ def dump_pretty_json(object: Any) -> str:
 
 def format_exception(ex: BaseException) -> str:
     return f"{ex.__class__.__name__}(\"{ex}\")"
+
+
+def is_int(value: Any) -> bool:
+    try:
+        int(value)
+        return True
+    except ValueError:
+        return False
