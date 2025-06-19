@@ -277,7 +277,7 @@ class ImageTypedProduct(TypedProduct):
     @property
     def _displayable_properties(self):
         raw_image = io.BytesIO()
-        self._image.save(raw_image)
+        self._image.save(raw_image, format=self._image_format().upper())
         encoded_image = base64.b64encode(raw_image.getvalue()).decode("utf-8")
 
         return {
