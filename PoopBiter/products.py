@@ -46,7 +46,7 @@ class ProductInfo:
 
     def displayable(self) -> Dict[str, Any]:
         return {
-            "id": self.product_id,
+            "id": f"{self.product_id:x}",
         }
 
 
@@ -363,14 +363,14 @@ class FigProduct(Product):
     def _displayable_properties(self) -> Dict[str, Any]:
         return {
             **self._typed_product._displayable_properties,
-            "fig": f"{self._fig_id} - {get_fig(self._fig_id).name}",
-            "operation type": f"{self._operation_type} - {format_operation_name(self._fig_id, self._operation_type)}",
-            "operation id": self._operation_id,
+            "fig": f"{get_fig(self._fig_id).name} ({self._fig_id})",
+            "operation type": f"{format_operation_name(self._fig_id, self._operation_type)} ({self._operation_type})",
+            "operation id": f"{self._operation_id:x}",
         }
 
     @property
     def _formatted_type(self) -> str:
-        return f"{PRODUCT_TYPE_TO_STRING[self._info.product_type]} ({self._typed_product._formatted_type})"
+        return f"{PRODUCT_TYPE_TO_STRING[self._info.product_type]} - {format_operation_name(self.fig_id, self.fig_operation_type)} ({self._typed_product._formatted_type})"
 
     @property
     def _display_type(self) -> str:
