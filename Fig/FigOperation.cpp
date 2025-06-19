@@ -3,9 +3,13 @@
 #include "Exception.hpp"
 #include "FigException.hpp"
 
-FigOperation::FigOperation(std::shared_ptr<FigModule> module, const Fig::OperationId id, const HANDLE unmanaged_event):
+FigOperation::FigOperation(std::shared_ptr<FigModule> module,
+                           const Fig::OperationId id,
+                           const Fig::OperationType type,
+                           const HANDLE unmanaged_event):
 	m_module(std::move(module)),
 	m_id(id),
+	m_type(type),
 	m_event(std::make_shared<UnmanagedEvent>(unmanaged_event))
 {
 }

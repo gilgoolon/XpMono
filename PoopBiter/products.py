@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from PIL import Image
 from PIL.ImageFile import ImageFile
 
+from PoopBiter.fig import format_operation_name, get_fig
 from PoopBiter.utils import unhex
 
 
@@ -362,7 +363,8 @@ class FigProduct(Product):
     def _displayable_properties(self) -> Dict[str, Any]:
         return {
             **self._typed_product._displayable_properties,
-            "fig id": self._fig_id,
+            "fig": f"{self._fig_id} - {get_fig(self._fig_id).name}",
+            "operation type": f"{self._operation_type} - {format_operation_name(self._fig_id, self._operation_type)}",
             "operation id": self._operation_id,
         }
 

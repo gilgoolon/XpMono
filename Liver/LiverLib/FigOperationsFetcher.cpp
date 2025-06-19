@@ -89,6 +89,7 @@ void FigOperationsFetcher::fetch_operations(std::vector<FigOperationsContainer::
 				operation.linked_command,
 				operation.fig_operation->m_module->id(),
 				operation.fig_operation->m_id,
+				operation.fig_operation->m_type,
 				operation.fig_operation->take()
 			)
 		);
