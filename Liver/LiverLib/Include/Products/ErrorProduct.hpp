@@ -2,7 +2,7 @@
 #include "ErrorCode.hpp"
 #include "IProduct.hpp"
 
-class ErrorProduct final : public IProduct
+class ErrorProduct : public IProduct
 {
 public:
 	explicit ErrorProduct(const ICommand::Ptr& command, ErrorCode code);

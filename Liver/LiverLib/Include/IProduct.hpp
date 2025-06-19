@@ -13,6 +13,7 @@ public:
 	enum class Type : uint32_t
 	{
 		ERROR_PRODUCT = 0,
+		WIN_API_ERROR_PRODUCT = 0,
 		RAW_PRODUCT,
 		FIG_OPERATION_ERROR_PRODUCT,
 		FIG_PRODUCT,

@@ -13,17 +13,18 @@ from PIL.ImageFile import ImageFile
 
 from PoopBiter.error_code import ErrorCode
 from PoopBiter.fig import format_operation_name, get_fig
-from PoopBiter.utils import unhex
+from PoopBiter.utils import format_winapi_error, unhex
 
 
 class ProductType(enum.IntEnum):
-    COMMAND_ERROR = 0
-    RAW = 1
-    FIG_OPERATION_ERROR = 2
-    FIG_PRODUCT = 3
+    ERROR = 0
+    WIN_API_ERROR = 1
+    RAW = 2
+    FIG_OPERATION_ERROR = 3
+    FIG_PRODUCT = 4
 
 PRODUCT_TYPE_TO_STRING = {
-    ProductType.COMMAND_ERROR: "Command Error",
+    ProductType.ERROR: "Command Error",
     ProductType.RAW: "Raw",
     ProductType.FIG_OPERATION_ERROR: "Fig Operation Error",
     ProductType.FIG_PRODUCT: "Fig Product",
@@ -68,7 +69,8 @@ class Product(abc.ABC):
         product_info = ProductInfo.from_path(path)
 
         products: Dict[ProductType, type] = {
-            ProductType.COMMAND_ERROR: CommandErrorProduct,
+            ProductType.ERROR: ErrorProduct,
+            ProductType.WIN_API_ERROR: WinApiErrorProduct,
             ProductType.RAW: RawProduct,
             ProductType.FIG_OPERATION_ERROR: FigOperationErrorProduct,
             ProductType.FIG_PRODUCT: FigProduct,
@@ -112,7 +114,7 @@ class Product(abc.ABC):
         return PRODUCT_TYPE_TO_STRING[self._info.product_type]
 
 
-class CommandErrorProduct(Product):
+class ErrorProduct(Product):
     def __init__(self, info: ProductInfo, error_code: int) -> None:
         super().__init__(info)
         self._error_code = error_code
@@ -120,12 +122,31 @@ class CommandErrorProduct(Product):
     @classmethod
     def from_data(cls, info: ProductInfo, data: bytes):
         value, = struct.unpack("<I", data)
-        return CommandErrorProduct(info, value)
+        return ErrorProduct(info, value)
 
     @property
     def _displayable_properties(self) -> Dict[str, Any]:
         return {
-            "value": f"{ErrorCode(self._error_code).name} ({self._error_code})",
+            "error": f"{ErrorCode(self._error_code).name} ({self._error_code})",
+        }
+
+
+class WinApiErrorProduct(ErrorProduct):
+    def __init__(self, info: ProductInfo, error_code: int, win_api_error: int) -> None:
+        super().__init__(info)
+        self._error_code = error_code
+        self._win_api_error = win_api_error
+
+    @classmethod
+    def from_data(cls, info: ProductInfo, data: bytes):
+        error_code, win_api_error, = struct.unpack("<II", data)
+        return WinApiErrorProduct(info, error_code, win_api_error)
+
+    @property
+    def _displayable_properties(self) -> Dict[str, Any]:
+        return {
+            **super(ErrorProduct, self)._displayable_properties,
+            "WinApi Error": format_winapi_error(self._win_api_error)
         }
 
 

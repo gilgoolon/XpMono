@@ -1,8 +1,12 @@
+from ctypes import wintypes
+import ctypes
 from datetime import datetime
 from functools import wraps
 import json
 import re
 from typing import Any, Optional
+
+from PoopBiter import logger
 
 
 def unhex(string: str) -> int:
@@ -51,3 +55,38 @@ def is_int(value: Any) -> bool:
 
 def to_snake_case(camel_case_word: str) -> str:
     return re.sub(r'(?<!^)(?=[A-Z])', '_', camel_case_word).lower()
+
+
+def format_winapi_error(error_code: int) -> str:
+    FORMAT_MESSAGE_ALLOCATE_BUFFER = 0x00000100
+    FORMAT_MESSAGE_FROM_SYSTEM = 0x00001000
+    FORMAT_MESSAGE_IGNORE_INSERTS = 0x00000200
+    FORMAT_MESSAGE_DEFAULT_LANGUAGE = 0x0
+
+    SOURCE_BUFFER_IGNORED = None
+    BUFFER_SIZE_IGNORED = 0
+    VARIABLE_ARGUMENTS_IGNORED = None
+
+    result_buffer = ctypes.c_wchar_p()
+
+    result = ctypes.windll.kernel32.FormatMessageW(
+        FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+        SOURCE_BUFFER_IGNORED,
+        error_code,
+        FORMAT_MESSAGE_DEFAULT_LANGUAGE,
+        ctypes.byref(result_buffer),
+        BUFFER_SIZE_IGNORED,
+        VARIABLE_ARGUMENTS_IGNORED
+    )
+
+    FAILURE = 0
+    if result == FAILURE or not result_buffer:
+        raise ValueError(f"failed to format winapi error code: {error_code}")
+
+    message = ctypes.wstring_at(result_buffer).strip()
+
+    if ctypes.windll.kernel32.LocalFree(result_buffer) == FAILURE:
+        logger.warning(
+            "failed to free dynamic buffer returned frokm FormatMessageW in format_winapi_error")
+
+    return message

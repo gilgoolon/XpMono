@@ -53,6 +53,7 @@
     <ClInclude Include="Include\Products\FigOperationErrorProduct.hpp" />
     <ClInclude Include="Include\Products\FigProduct.hpp" />
     <ClInclude Include="Include\Products\RawProduct.hpp" />
+    <ClInclude Include="Include\Products\WinApiErrorProduct.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Api\LiverApi.cpp" />
@@ -92,6 +93,7 @@
     <ClCompile Include="LibrariesContainer.cpp" />
     <ClCompile Include="IProduct.cpp" />
     <ClCompile Include="Liver.cpp" />
+    <ClCompile Include="Products\WinApiErrorProduct.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Apricot\ApricotImpl\ApricotImpl.vcxproj">
