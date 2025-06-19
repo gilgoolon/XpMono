@@ -12,7 +12,7 @@ from PIL import Image
 from PIL.ImageFile import ImageFile
 
 from PoopBiter.error_code import ErrorCode
-from PoopBiter.fig import format_operation_name, get_fig
+from PoopBiter.fig import format_fig_name, format_operation_name, get_fig
 from PoopBiter.utils import format_winapi_error, unhex
 
 
@@ -171,24 +171,28 @@ class RawProduct(Product):
 
 
 class FigOperationErrorProduct(Product):
-    def __init__(self, info: ProductInfo, fig_id: int, operation_id: int, fig_specific_code: int) -> None:
+    def __init__(self, info: ProductInfo, fig_id: int, operation_id: int, operation_type: int, fig_code: int, fig_specific_code: int) -> None:
         super().__init__(info)
         self._fig_id = fig_id
         self._operation_id = operation_id
+        self._operation_type = operation_type
+        self._fig_code = fig_code
         self._fig_specific_code = fig_specific_code
 
     @classmethod
     def from_data(cls, info: ProductInfo, data: bytes):
-        fig_id, operation_id, fig_specific_code, = struct.unpack(
-            '<III', data)
-        return FigOperationErrorProduct(info, fig_id, operation_id, fig_specific_code)
+        fig_id, operation_id, operation_type, fig_code, fig_specific_code, = struct.unpack(
+            '<IIIII', data)
+        return FigOperationErrorProduct(info, fig_id, operation_id, operation_type, fig_code, fig_specific_code)
 
     @property
     def _displayable_properties(self) -> Dict[str, Any]:
         return {
-            'fig id': self._fig_id,
-            'operation id': self._operation_id,
-            'fig specific code': self._fig_specific_code
+            "fig": format_fig_name(self.fig_id),
+            "operation type": f"{format_operation_name(self._fig_id, self._operation_type)} ({self._operation_type})",
+            "operation id": f"{self._operation_id:x}",
+            "fig code": FigCode(self._fig_code).name,
+            "error code": ErrorCode(self._fig_specific_code).name,
         }
 
 
@@ -389,7 +393,7 @@ class FigProduct(Product):
     def _displayable_properties(self) -> Dict[str, Any]:
         return {
             **self._typed_product._displayable_properties,
-            "fig": f"{get_fig(self._fig_id).name} ({self._fig_id})",
+            "fig": format_fig_name(self.fig_id),
             "operation type": f"{format_operation_name(self._fig_id, self._operation_type)} ({self._operation_type})",
             "operation id": f"{self._operation_id:x}",
         }

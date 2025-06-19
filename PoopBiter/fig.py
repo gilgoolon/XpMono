@@ -54,6 +54,10 @@ def get_fig(fig_id: int) -> Fig:
     return _FIGS[fig_id]
 
 
+def format_fig_name(fig_id: id) -> str:
+    return f"{get_fig(fig_id).name} ({fig_id})"
+
+
 def format_operation_name(fig_id: int, operation_type: int) -> str:
     global _FIGS
     return get_fig(fig_id).operations[operation_type]

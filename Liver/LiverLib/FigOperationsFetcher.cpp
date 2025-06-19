@@ -67,7 +67,9 @@ void FigOperationsFetcher::fetch_operations(std::vector<FigOperationsContainer::
 				std::make_unique<FigOperationErrorProduct>(
 					operation.linked_command,
 					operation.fig_operation->m_id,
+					operation.fig_operation->m_type,
 					operation.fig_operation->m_module->id(),
+					Fig::FigCode::FAILED_RUN,
 					status.fig_specific_code
 				)
 			);

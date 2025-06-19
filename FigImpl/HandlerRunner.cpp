@@ -16,17 +16,17 @@ void HandlerRunner::run()
 	}
 	catch (const FigImplException& ex)
 	{
-		m_handler->error(ex.specific_code());
+		m_handler->error(ex.code(), ex.specific_code());
 		throw;
 	}
 	catch (const Exception& ex)
 	{
-		m_handler->error(static_cast<Fig::FigSpecificCode>(ex.code()));
+		m_handler->error(Fig::FigCode::FAILED_RUN, static_cast<Fig::FigSpecificCode>(ex.code()));
 		throw;
 	}
 	catch (...)
 	{
-		m_handler->error(Fig::FIG_SPECIFIC_CODE_RESERVED);
+		m_handler->error(Fig::FigCode::FAILED_UNKNOWN, static_cast<Fig::FigSpecificCode>(ErrorCode::UNKNOWN_ERROR));
 		throw;
 	}
 }
