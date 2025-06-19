@@ -327,10 +327,11 @@ class PngImageTypedProduct(ImageTypedProduct):
 
 
 class FigProduct(Product):
-    def __init__(self, info: ProductInfo, fig_id: int, operation_id: int, typed_product: TypedProduct) -> None:
+    def __init__(self, info: ProductInfo, fig_id: int, operation_id: int, operation_type: int, typed_product: TypedProduct) -> None:
         super().__init__(info)
         self._fig_id = fig_id
         self._operation_id = operation_id
+        self._operation_type = operation_type
         self._typed_product = typed_product
 
     @property
@@ -345,13 +346,17 @@ class FigProduct(Product):
     def fig_operation_id(self) -> int:
         return self._operation_id
 
+    @property
+    def fig_operation_type(self) -> int:
+        return self._operation_type
+
     @classmethod
     def from_data(cls, info: ProductInfo, data: bytes) -> "FigProduct":
-        FORMAT = "<II"
+        FORMAT = "<III"
         fig_header_size = struct.calcsize(FORMAT)
-        fig_id, operation_id, = struct.unpack(
+        fig_id, operation_id, operation_type = struct.unpack(
             FORMAT, data[:fig_header_size])
-        return FigProduct(info, fig_id, operation_id, TypedProduct.from_raw_bytes(data[fig_header_size:]))
+        return FigProduct(info, fig_id, operation_id, operation_type, TypedProduct.from_raw_bytes(data[fig_header_size:]))
 
     @property
     def _displayable_properties(self) -> Dict[str, Any]:

@@ -8,7 +8,10 @@ class FigModule;
 
 class FigOperation
 {
-	explicit FigOperation(std::shared_ptr<FigModule> module, Fig::OperationId id, HANDLE unmanaged_event);
+	explicit FigOperation(std::shared_ptr<FigModule> module,
+	                      Fig::OperationId id,
+	                      Fig::OperationType type,
+	                      HANDLE unmanaged_event);
 
 public:
 	~FigOperation() = default;
@@ -16,6 +19,8 @@ public:
 	FigOperation& operator=(const FigOperation&) = delete;
 	FigOperation(FigOperation&&) = delete;
 	FigOperation& operator=(FigOperation&&) = delete;
+
+	[[nodiscard]] Fig::OperationType type() const;
 
 	[[nodiscard]] Buffer take();
 	[[nodiscard]] FigModule::StatusResult status() const;
@@ -27,5 +32,6 @@ public:
 private:
 	std::shared_ptr<FigModule> m_module;
 	Fig::OperationId m_id;
+	Fig::OperationType m_type;
 	std::shared_ptr<UnmanagedEvent> m_event;
 };

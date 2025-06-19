@@ -10,6 +10,11 @@ FigOperation::FigOperation(std::shared_ptr<FigModule> module, const Fig::Operati
 {
 }
 
+Fig::OperationType FigOperation::type() const
+{
+	return m_type;
+}
+
 Buffer FigOperation::take()
 {
 	return m_module->take(m_id);

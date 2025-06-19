@@ -25,7 +25,7 @@ class LocationFormattingAnalyzer(ProductAnalyzer):
         return product_info.product_type == ProductType.FIG_PRODUCT
 
     def should_analyze_product(self, product_info: ProductInfo, product: Product) -> bool:
-        # GEO_DUDE_DISCOVER_NETWORKS_OPERATION_ID = 1  # should find a way to enforce this
+        # GEO_DUDE_DISCOVER_NETWORKS_OPERATION_TYPE = 1  # should find a way to enforce this
         return (
             isinstance(product, FigProduct) and
             product.fig_id == GEO_DUDE_FIG_ID
