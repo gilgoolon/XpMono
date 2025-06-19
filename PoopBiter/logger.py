@@ -3,8 +3,8 @@ import logging
 import requests
 import __main__
 import urllib.parse
-from typing import Optional
 from pathlib import Path
+from typing import Optional
 
 from PoopBiter.utils import dump_pretty_json, now_filename
 

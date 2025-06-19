@@ -1,7 +1,7 @@
 import re
 import argparse
-from dataclasses import asdict
 from pathlib import Path
+from dataclasses import asdict
 from collections import OrderedDict
 from typing import Dict, Optional
 
@@ -10,6 +10,7 @@ from PoopBiter.utils import dump_pretty_json, format_exception, is_int, to_snake
 
 
 ERROR_CODE_FILENAME = "error_code.py"
+FIG_CODE_FILENAME = "fig_code.py"
 
 
 def find_api_files(root: Path):
@@ -20,6 +21,10 @@ def get_error_code_path(root: Path) -> Path:
     return root / "Framework" / "Include" / "ErrorCode.hpp"
 
 
+def get_fig_code_path(root: Path) -> Path:
+    return root / "Fig" / "Include" / "FigApi.hpp"
+
+
 def strip_comments(data: str) -> str:
     CPP_COMMENTED_LINE_PREFIX = "//"
     return "\n".join(line for line in data.splitlines() if not line.strip().startswith(CPP_COMMENTED_LINE_PREFIX))
@@ -27,7 +32,7 @@ def strip_comments(data: str) -> str:
 
 def parse_enum(block: str, enum_name: str) -> Dict[int, str]:
     enum_match = re.search(
-        rf'enum class {enum_name}'r'\s*:\s*.*\s*{(.*?)};', block, re.DOTALL)
+        rf'enum class {enum_name}'r'\s*:\s*.*?\s*{(.*?)};', block, re.DOTALL)
 
     if not enum_match:
         raise ValueError(f"failed to find enum {enum_name} in code block")
@@ -120,6 +125,7 @@ def main():
     figs_json_ouput = args.output / FIGS_METADATA_PATH.name
     figs_py_ouput = (args.output / FIGS_METADATA_PATH.name).with_suffix(".py")
     error_code_ouput = args.output / ERROR_CODE_FILENAME
+    fig_code_ouput = args.output / FIG_CODE_FILENAME
 
     figs = list(map(parse_api_file, find_api_files(args.root)))
     result = {
@@ -144,6 +150,13 @@ def main():
 
     error_code_ouput.write_text(error_code_python_output)
     print(f"error code python written to '{error_code_ouput}'")
+
+    FIG_CODE_ENUM_NAME = "FigCode"
+    error_code_python_output = format_python_enum(FIG_CODE_ENUM_NAME, parse_enum(
+        get_fig_code_path(args.root).read_text(), FIG_CODE_ENUM_NAME))
+
+    fig_code_ouput.write_text(error_code_python_output)
+    print(f"fig code python written to '{fig_code_ouput}'")
 
 
 if __name__ == "__main__":

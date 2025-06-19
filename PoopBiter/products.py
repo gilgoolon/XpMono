@@ -12,8 +12,9 @@ from PIL import Image
 from PIL.ImageFile import ImageFile
 
 from PoopBiter.error_code import ErrorCode
-from PoopBiter.fig import format_fig_name, format_operation_name, get_fig
+from PoopBiter.fig_code import FigCode
 from PoopBiter.utils import format_winapi_error, unhex
+from PoopBiter.fig import format_fig_name, format_operation_name
 
 
 class ProductType(enum.IntEnum):

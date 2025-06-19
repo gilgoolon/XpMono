@@ -1,12 +1,8 @@
-from ctypes import wintypes
+import re
+import json
 import ctypes
 from datetime import datetime
-from functools import wraps
-import json
-import re
 from typing import Any, Optional
-
-from PoopBiter import logger
 
 
 def unhex(string: str) -> int:
@@ -85,8 +81,6 @@ def format_winapi_error(error_code: int) -> str:
 
     message = ctypes.wstring_at(result_buffer).strip()
 
-    if ctypes.windll.kernel32.LocalFree(result_buffer) == FAILURE:
-        logger.warning(
-            "failed to free dynamic buffer returned frokm FormatMessageW in format_winapi_error")
+    ctypes.windll.kernel32.LocalFree(result_buffer)
 
     return message
