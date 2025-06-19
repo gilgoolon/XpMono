@@ -79,6 +79,7 @@
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="Operations\DiscoverNetworksHandler.cpp" />
+    <ClCompile Include="Operations\FetchGeoLocationHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FigImpl\FigImpl.vcxproj">
@@ -94,6 +95,7 @@
   <ItemGroup>
     <ClInclude Include="Api.hpp" />
     <ClInclude Include="Operations\DiscoverNetworksHandler.hpp" />
+    <ClInclude Include="Operations\FetchGeoLocationHandler.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -21,6 +21,9 @@
     <ClCompile Include="Operations\DiscoverNetworksHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Operations\FetchGeoLocationHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source.def">
@@ -32,6 +35,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Api.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Operations\FetchGeoLocationHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
