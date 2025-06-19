@@ -91,7 +91,7 @@ def parse_args() -> argparse.Namespace:
 
     parser.add_argument("--root", type=Path, default=Path("."),
                         help="where to look for figs")
-    parser.add_argument("-o", "--output", type=Path, default=Path("CornCake") / "figs.json",
+    parser.add_argument("-o", "--output", type=Path, default=Path("PoopBiter") / "figs.json",
                         help="where to look for figs")
 
     return parser.parse_args()
