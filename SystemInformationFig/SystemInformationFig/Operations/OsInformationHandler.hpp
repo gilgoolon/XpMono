@@ -1,11 +1,12 @@
 ﻿#pragma once
 #include "Handlers/IOperationHandler.hpp"
 #include "Handlers/WmiQuerySingleOperationHandler.hpp"
+#include "../Api.hpp"
 
 class OsInformationHandler final : public WmiQuerySingleOperationHandler
 {
 public:
-	static constexpr Fig::OperationType TYPE = 1;
+	static constexpr Fig::OperationType TYPE = static_cast<Fig::OperationType>(Api::OperationType::OS_INFO);
 
 	explicit OsInformationHandler(std::unique_ptr<Event> operation_event);
 	~OsInformationHandler() override = default;

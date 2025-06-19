@@ -8,6 +8,7 @@
 #include "Operations/PhysicalDrivesInformationHandler.hpp"
 #include "Operations/UsersInformationHandler.hpp"
 #include "Protections/LibraryProtector.hpp"
+#include "Operations/NetworkInformationHandler.hpp"
 
 #include <Windows.h>
 
@@ -27,12 +28,14 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 	{
 	case static_cast<Fig::OperationType>(Api::OperationType::OS_INFO):
 		return std::make_shared<OsInformationHandler>(std::move(operation_event));
+	case static_cast<Fig::OperationType>(Api::OperationType::USERS_INFO):
+		return std::make_shared<UsersInformationHandler>(std::move(operation_event));
 	case static_cast<Fig::OperationType>(Api::OperationType::PHYSICAL_DRIVES_INFO):
 		return std::make_shared<PhysicalDrivesInformationHandler>(std::move(operation_event));
 	case static_cast<Fig::OperationType>(Api::OperationType::BIOS_INFO):
 		return std::make_shared<BiosInformationHandler>(std::move(operation_event));
-	case static_cast<Fig::OperationType>(Api::OperationType::USERS_INFO):
-		return std::make_shared<UsersInformationHandler>(std::move(operation_event));
+	case static_cast<Fig::OperationType>(Api::OperationType::NETWORK_INFO):
+		return std::make_shared<NetworkInformationHandler>(std::move(operation_event));
 	default:
 		throw FigImplException(Fig::FigCode::FAILED_UNSUPPORTED_OPERATION);
 	}
