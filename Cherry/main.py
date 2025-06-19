@@ -1,7 +1,6 @@
 import argparse
 import asyncio
 import base64
-import logging
 from pathlib import Path
 import uuid
 from dotenv import load_dotenv
@@ -29,13 +28,12 @@ ROOT = _args.root
 
 database = Database(ROOT)
 load_dotenv()
-logger = logging.getLogger("uvicorn.error")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await database.init_db()
-    asyncio.create_task(analyzer.analyze_incoming_products(ROOT, logger))
+    asyncio.create_task(analyzer.analyze_incoming_products(ROOT))
     yield
 
 

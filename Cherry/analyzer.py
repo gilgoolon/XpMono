@@ -1,17 +1,16 @@
 import os
 import asyncio
-import logging
 from glob import glob
 from pathlib import Path
 from typing import List, Optional
 
 from watchfiles import awatch, Change
 
+from PoopBiter import logger
 from Cherry.analyzers.analyzer import ProductAnalyzer
 from Cherry.analyzers.geolocation import GeoLocationAnalyzer
 from Cherry.analyzers.location_formatting import LocationFormattingAnalyzer
 from PoopBiter.products import Product, ProductInfo
-from PoopBiter import logger
 
 def get_client_products(root: Path, client_id: str) -> List[str]:
     expression = root / "products" / client_id / "*" / "*"
@@ -46,7 +45,7 @@ async def analyze_products(products: List[Path]) -> None:
         asyncio.create_task(analyze_product(product))
 
 
-async def analyze_incoming_products(root: Path, logger: logging.Logger) -> None:
+async def analyze_incoming_products(root: Path) -> None:
     products_dir = root / "products"
     logger.info(
         f"watching directory for products: {str(products_dir.absolute())}")
@@ -61,4 +60,4 @@ async def analyze_incoming_products(root: Path, logger: logging.Logger) -> None:
             logger.info(f"incoming products: {new_products}")
             asyncio.create_task(analyze_products(new_products))
         except Exception as ex:
-            logger.exception(ex)
+            logger.error(ex)
