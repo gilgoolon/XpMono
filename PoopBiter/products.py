@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from PIL import Image
 from PIL.ImageFile import ImageFile
 
+from PoopBiter.error_code import ErrorCode
 from PoopBiter.fig import format_operation_name, get_fig
 from PoopBiter.utils import unhex
 
@@ -124,16 +125,14 @@ class CommandErrorProduct(Product):
     @property
     def _displayable_properties(self) -> Dict[str, Any]:
         return {
-            "value": self._error_code,
-            "hex": f"0x{self._error_code:08X}",
-            "binary": f"0b{self._error_code:032b}"
+            "value": f"{ErrorCode(self._error_code).name} ({self._error_code})",
         }
 
 
 class RawProduct(Product):
-    def __init__(self, info: ProductInfo, error_code: int) -> None:
+    def __init__(self, info: ProductInfo, data: bytes) -> None:
         super().__init__(info)
-        self._error_code = error_code
+        self._data = data
 
     @classmethod
     def from_data(cls, info: ProductInfo, data: bytes):
@@ -141,10 +140,12 @@ class RawProduct(Product):
 
     @property
     def _displayable_properties(self) -> Dict[str, Any]:
+        SHOWING_BYTES = 16
+        displayed_bytes = self._data[:SHOWING_BYTES].ljust(
+            SHOWING_BYTES, b'\0')
         return {
-            "value": self._error_code,
-            "hex": f"0x{self._error_code:08X}",
-            "binary": f"0b{self._error_code:032b}"
+            f"value (first {SHOWING_BYTES} bytes)": f"0x{hex(displayed_bytes)}",
+            "hex": f"0x{displayed_bytes:08X}",
         }
 
 
