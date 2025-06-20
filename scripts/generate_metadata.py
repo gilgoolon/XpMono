@@ -11,6 +11,7 @@ from PoopBiter.utils import dump_pretty_json, format_exception, is_int, to_snake
 
 ERROR_CODE_FILENAME = "error_code.py"
 FIG_CODE_FILENAME = "fig_code.py"
+COMMAND_TYPE_FILENAME = "command_type.py"
 
 
 def find_api_files(root: Path):
@@ -23,6 +24,10 @@ def get_error_code_path(root: Path) -> Path:
 
 def get_fig_code_path(root: Path) -> Path:
     return root / "Fig" / "Include" / "FigApi.hpp"
+
+
+def get_command_type_path(root: Path) -> Path:
+    return root / "Liver" / "LiverLib" / "Include" / "Commands" / "ICommand.hpp"
 
 
 def strip_comments(data: str) -> str:
@@ -126,6 +131,7 @@ def main():
     figs_py_ouput = (args.output / FIGS_METADATA_PATH.name).with_suffix(".py")
     error_code_ouput = args.output / ERROR_CODE_FILENAME
     fig_code_ouput = args.output / FIG_CODE_FILENAME
+    command_type_ouput = args.output / COMMAND_TYPE_FILENAME
 
     figs = list(map(parse_api_file, find_api_files(args.root)))
     result = {
@@ -157,6 +163,13 @@ def main():
 
     fig_code_ouput.write_text(error_code_python_output)
     print(f"fig code python written to '{fig_code_ouput}'")
+
+    COMMAND_TYPE_ENUM_NAME = "Type"
+    command_type_python_output = format_python_enum(COMMAND_TYPE_ENUM_NAME, parse_enum(
+        get_command_type_path(args.root).read_text(), COMMAND_TYPE_ENUM_NAME))
+
+    command_type_ouput.write_text(command_type_python_output)
+    print(f"fig code python written to '{command_type_ouput}'")
 
 
 if __name__ == "__main__":

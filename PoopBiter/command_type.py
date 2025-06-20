@@ -1,0 +1,11 @@
+import enum
+
+
+class Type(enum.Enum):
+	LOAD_DLL = 0
+	UNLOAD_DLL = 1
+	CALL_DLL_PROCEDURE = 2
+	CALL_DLL_GENERIC_PROCEDURE = 3
+	LOAD_FIG = 4
+	UNLOAD_FIG = 5
+	EXECUTE_FIG_OPERATION = 6
