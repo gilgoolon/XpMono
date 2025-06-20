@@ -162,7 +162,7 @@ export default function ClientDetails({ client, onSendCommand }) {
         <TextField
           select
           variant="outlined"
-          value={variableTypes[varName]}
+          value="fig"
           onChange={(e) => handleVariableTypeChange(varName, e.target.value)}
           sx={{ width: 120 }}
           size="small"
