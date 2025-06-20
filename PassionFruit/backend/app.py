@@ -77,7 +77,8 @@ def get_client(client_id):
                     }
             
             # Replace products list with IDs and add the mappings
-            client_data['products'] = list(parsed_products.keys())
+            client_data['products'] = [product[0] for product in sorted(
+                parsed_products.items(), key=lambda product: product[1]["creation_time"], reverse=True)]
             client_data['product_paths'] = product_paths
             client_data['parsed_products'] = parsed_products
         
