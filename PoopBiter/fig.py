@@ -26,8 +26,6 @@ class Fig:
 FIGS_METADATA_PATH = Path(__file__).parent / "figs.json"
 _FIGS: Optional[Dict[int, Fig]] = None
 
-RELEASES_PATH = Path("CornCake") / "releases"
-
 
 def read_metadata() -> None:
     global _FIGS

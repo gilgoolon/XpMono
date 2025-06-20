@@ -1,18 +1,15 @@
 
 import os
 from pathlib import Path
-from typing import Union
 
-from PoopBiter import command_type
-from PassionFruit.backend.transformer import CommandTransformer
+from PoopBiter import command_type, logger, releases
+from PassionFruit.backend.transformers.transformer import CommandTransformer
 
 
 class ReleasesEmbedderTransformer(CommandTransformer):
-    def __init__(self, releases_folder: Path) -> None:
+    def __init__(self) -> None:
         super().__init__()
-        self._releases = {
-            release: releases_folder / release for release in os.listdir(releases_folder)
-        }
+        self._releases = releases.list_releases()
     
     def transform(self, command_data: dict) -> None:
         if not self._should_transform(command_data):
@@ -32,6 +29,7 @@ class ReleasesEmbedderTransformer(CommandTransformer):
             parameters[name] = new_value
     
     def _should_transform(self, command_data: dict) -> bool:
+        logger.debug(command_data)
         return self._get_command_type(command_data) == command_type.Type.LOAD_FIG
 
     def _get_release_value(self, release_name: str) -> bytes:

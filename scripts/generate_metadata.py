@@ -5,7 +5,8 @@ from dataclasses import asdict
 from collections import OrderedDict
 from typing import Dict, Optional
 
-from PoopBiter.fig import FIGS_METADATA_PATH, RELEASES_PATH, Fig
+from PoopBiter.releases import RELEASES_PATH, get_release_path
+from PoopBiter.fig import FIGS_METADATA_PATH, Fig
 from PoopBiter.utils import dump_pretty_json, format_exception, is_int, to_snake_case
 
 
@@ -86,7 +87,7 @@ def parse_api_file(api_path: Path) -> Optional[Fig]:
 
     result = {
         "name": fig_name,
-        "dll_path": str(RELEASES_PATH / f"{fig_name}.dll")
+        "dll_path": str(get_release_path(fig_name))
     }
 
     for value, regex in vars_regex.items():

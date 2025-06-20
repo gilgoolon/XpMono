@@ -9,6 +9,8 @@ import base64
 from pathlib import Path
 import json
 
+from PoopBiter.releases import list_releases
+from PoopBiter.templates import list_templates
 from PoopBiter.utils import format_exception
 
 
@@ -91,7 +93,11 @@ def send_command():
     
     try:
         command_data = request.json.get('data', '')
-        transformer.transform_command(command_data)
+
+        parsed_command_data = json.loads(command_data)
+        transformer.transform_command(parsed_command_data)
+
+        command_data = json.dumps(parsed_command_data)
 
         client_id = request.json.get('client_id', '')
 
@@ -111,37 +117,20 @@ def send_command():
 
 @app.route('/api/command-templates', methods=['GET'])
 def get_command_templates():
-    templates_dir = os.path.join(CNC_ROOT, 'templates')
-    templates = []
-    
-    for filename in os.listdir(templates_dir):
-        if filename.endswith('.json'):
-            template_path = os.path.join(templates_dir, filename)
-            with open(template_path, 'r') as f:
-                template_data = json.load(f)
-                templates.append({
-                    'name': os.path.splitext(filename)[0],
-                    'content': template_data
-                })
+    templates = [
+        {
+            'name': path.stem,
+            'content': json.loads(path.read_text())
+        } for path in list_templates()
+    ]
+
     return jsonify(templates)
 
-@app.route('/api/files', methods=['GET'])
-def list_files():
-    files_dir = os.path.join(CNC_ROOT, 'releases')
-    if not os.path.exists(files_dir):
-        return jsonify([])
-    files = [f for f in os.listdir(files_dir) if os.path.isfile(os.path.join(files_dir, f))]
-    return jsonify(files)
 
-@app.route('/api/files/<filename>', methods=['GET'])
-def get_file(filename):
-    files_dir = os.path.join(CNC_ROOT, 'releases')
-    file_path = os.path.join(files_dir, filename)
-    if not os.path.exists(file_path):
-        return jsonify({'error': 'File not found'}), 404
-    with open(file_path, 'rb') as file:
-        file_data = file.read()
-    return base64.b64encode(file_data).decode('utf-8')
+@app.route('/api/releases', methods=['GET'])
+def endpoint_releases():
+    return jsonify(list(list_releases().keys()))
+
 
 # Serve React App
 @app.route('/', defaults={'path': ''})

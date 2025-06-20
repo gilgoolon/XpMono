@@ -24,16 +24,15 @@ export default function ClientDetails({ client, onSendCommand }) {
   const [activeTab, setActiveTab] = useState(0);
   const [variables, setVariables] = useState({});
   const [variableTypes, setVariableTypes] = useState({});
-  const [files, setFiles] = useState([]);
-  const [fileLoading, setFileLoading] = useState({});
+  const [releases, setReleases] = useState([]);
 
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/files`);
-        setFiles(response.data);
+        const response = await axios.get(`${API_BASE_URL}/api/releases`);
+        setReleases(response.data);
       } catch (error) {
-        console.error('Failed to fetch files:', error);
+        console.error('Failed to fetch releases:', error);
       }
     };
     fetchFiles();
@@ -60,24 +59,6 @@ export default function ClientDetails({ client, onSendCommand }) {
     setVariableTypes((prev) => ({ ...prev, [name]: type }));
   };
 
-  const handleFileSelect = async (name, filename) => {
-    if (!filename) return;
-    
-    setFileLoading(prev => ({ ...prev, [name]: true }));
-    try {
-      const response = await axios.get(`${API_BASE_URL}/api/files/${filename}`, { 
-        responseType: 'text',
-        transformResponse: [(data) => data] // Prevent JSON parsing
-      });
-      handleVariableChange(name, response.data);
-    } catch (error) {
-      console.error('Failed to fetch file:', error);
-      setError(`Failed to load file ${filename}: ${error.message}`);
-    } finally {
-      setFileLoading(prev => ({ ...prev, [name]: false }));
-    }
-  };
-
   const handleSendCommand = async () => {
     setIsLoading(true);
     try {
@@ -86,7 +67,14 @@ export default function ClientDetails({ client, onSendCommand }) {
       // Only process if there are variables to replace
       if (Object.keys(variables).length > 0) {
         for (const [key, value] of Object.entries(variables)) {
-          const processedValue = variableTypes[key] === 'int' ? value : `"${value.replace(/^"|"$/g, '')}"`;
+          const variableType = variableTypes[key]
+          var processedValue = null
+          if (variableType === 'int' || variableType === 'release') {
+            processedValue = value
+          }
+          else if (variableType === 'string') {
+            processedValue = `"${value.replace(/^"|"$/g, '')}"`
+          }
           processedCommand = processedCommand.replace(`"{{ ${key} }}"`, processedValue);
         }
       }
@@ -113,6 +101,50 @@ export default function ClientDetails({ client, onSendCommand }) {
     } catch (err) {
       return dateStr;
     }
+  };
+
+  const variableField = (varName) => {
+    return (
+      <>
+        {variableTypes[varName] === 'releases-dropdown' ? (
+          <TextField
+            select
+            fullWidth
+            variant="outlined"
+            onChange={(e) =>
+              handleVariableChange(varName, { type: 'release', value: e.target.value })
+            }
+            size="small"
+          >
+            {(releases || []).map((release) => (
+              <MenuItem key={release} value={release}>
+                {release}
+              </MenuItem>
+            ))}
+          </TextField>
+        ) : (
+          <TextField
+            fullWidth
+            variant="outlined"
+            onChange={(e) => handleVariableChange(varName, e.target.value)}
+            type={variableTypes[varName] === 'int' ? 'number' : 'text'}
+            size="small"
+          />
+        )}
+        <TextField
+          select
+          variant="outlined"
+          value={variableTypes[varName]}
+          onChange={(e) => handleVariableTypeChange(varName, e.target.value)}
+          sx={{ width: 120 }}
+          size="small"
+        >
+          <MenuItem value="string">String</MenuItem>
+          <MenuItem value="int">Integer</MenuItem>
+          <MenuItem value="releases-dropdown">Release</MenuItem>
+        </TextField>
+      </>
+    );
   };
 
   return (
@@ -262,45 +294,7 @@ export default function ClientDetails({ client, onSendCommand }) {
                           {varName}
                         </Typography>
                         <Box sx={{ display: 'flex', gap: 1, flexWrap: 'nowrap' }}>
-                          <TextField
-                            fullWidth
-                            variant="outlined"
-                            value={variables[varName]}
-                            onChange={(e) => handleVariableChange(varName, e.target.value)}
-                            type={variableTypes[varName] === 'int' ? 'number' : 'text'}
-                            size="small"
-                          />
-                          <TextField
-                            select
-                            variant="outlined"
-                            value={variableTypes[varName]}
-                            onChange={(e) => handleVariableTypeChange(varName, e.target.value)}
-                            sx={{ width: 120 }}
-                            size="small"
-                          >
-                            <MenuItem value="string">String</MenuItem>
-                            <MenuItem value="int">Integer</MenuItem>
-                          </TextField>
-                          {files.length > 0 && (
-                            <TextField
-                              select
-                              label="Load from file"
-                              variant="outlined"
-                              sx={{ minWidth: 150 }}
-                              onChange={(e) => handleFileSelect(varName, e.target.value)}
-                              disabled={fileLoading[varName]}
-                              size="small"
-                            >
-                              <MenuItem value="">
-                                <em>Select a file...</em>
-                              </MenuItem>
-                              {files.map((file) => (
-                                <MenuItem key={file} value={file}>
-                                  {file}
-                                </MenuItem>
-                              ))}
-                            </TextField>
-                          )}
+                          {variableField(varName)}
                         </Box>
                       </Box>
                     </Grid>
