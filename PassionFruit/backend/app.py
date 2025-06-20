@@ -1,3 +1,4 @@
+from PassionFruit.backend import transformer
 from PoopBiter import logger
 from PoopBiter.products import PRODUCT_TYPE_TO_STRING, Product, ProductInfo
 from flask import Flask, send_from_directory, request, jsonify
@@ -90,6 +91,8 @@ def send_command():
     
     try:
         command_data = request.json.get('data', '')
+        transformer.transform_command(command_data)
+
         client_id = request.json.get('client_id', '')
 
         encoded_data = base64.b64encode(command_data.encode()).decode()
