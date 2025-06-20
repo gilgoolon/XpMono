@@ -26,6 +26,7 @@ export default function ClientDetails({ client, onSendCommand }) {
   const [variableTypes, setVariableTypes] = useState({});
   const [releases, setReleases] = useState([]);
   const [figs, setFigs] = useState([]);
+  const [operation_types, setOperationTypes] = useState([]);
 
   useEffect(() => {
     const fetchReleases = async () => {
@@ -49,6 +50,18 @@ export default function ClientDetails({ client, onSendCommand }) {
       }
     };
     fetchFigs();
+  }, []);
+
+  useEffect(() => {
+    const fetchOperationTypes = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/operation-types`);
+        setOperationTypes(response.data);
+      } catch (error) {
+        console.error('Failed to fetch operation types:', error);
+      }
+    };
+    fetchOperationTypes();
   }, []);
 
   useEffect(() => {
@@ -151,6 +164,22 @@ export default function ClientDetails({ client, onSendCommand }) {
                   </MenuItem>
                 ))}
               </TextField>
+            ) : variableTypes[varName] === 'operation_type' ? (
+              <TextField
+                select
+                fullWidth
+                variant="outlined"
+                onChange={(e) =>
+                  handleVariableChange(varName, e.target.value)
+                }
+                size="small"
+              >
+                {(operation_types || []).map((operation_type) => (
+                  <MenuItem key={operation_type.name} value={operation_type.value}>
+                    {operation_type.name}
+                  </MenuItem>
+                ))}
+              </TextField>
             ) : (
                 <TextField
                   fullWidth
@@ -170,6 +199,7 @@ export default function ClientDetails({ client, onSendCommand }) {
           size="small"
         >
           <MenuItem value="fig">Fig</MenuItem>
+          <MenuItem value="operation_type">Operation Type</MenuItem>
           <MenuItem value="release">Release</MenuItem>
           <MenuItem value="string">String</MenuItem>
           <MenuItem value="int">Integer</MenuItem>

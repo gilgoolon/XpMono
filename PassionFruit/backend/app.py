@@ -139,10 +139,17 @@ def endpoint_figs():
     return jsonify([{"id": fig.fig_id, "name": fig.name} for fig in list_figs()])
 
 
-@app.route('/api/operation-types/<string:fig>', methods=['GET'])
-def endpoint_operation_types(fig: str):
-    selected_fig = get_fig(int(fig) if is_int(fig) else fig)
-    return jsonify(list(selected_fig.operations.values()))
+@app.route('/api/operation-types', methods=['GET'])
+def endpoint_operation_types():
+    operation_types = []
+    for fig in list_figs():
+        operation_types += [
+            {
+                "value": key,
+                "name": f"{value} ({fig.name})"
+            } for key, value in fig.operations.items() if value != "RESERVED"
+        ]
+    return jsonify(operation_types)
 
 
 # Serve React App

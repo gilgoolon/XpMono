@@ -51,7 +51,7 @@ static void main_logic()
 	TRACE("fig id: ", fig->id(), " fig version: ", fig->major(), ".", fig->minor());
 	const std::unique_ptr<FigOperation> fig_operation = fig->execute(
 		2,
-		Strings::to_buffer(Json{{"api_key", "API_KEY_HERE"}}.dump())
+		Strings::to_buffer(std::string{"{\"api_key\": \"AIzaSyBgPlbVWa3_yZ5qW9KL1n5b4lBzTx55RGQ\"}"})
 	);
 	bool is_over = false;
 	File output(
