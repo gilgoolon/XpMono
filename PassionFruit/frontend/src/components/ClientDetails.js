@@ -100,6 +100,19 @@ export default function ClientDetails({ client, onSendCommand }) {
             processedValue = JSON.stringify(value)
           }
 
+          if (variableType === 'operation_type') {
+            processedValue = JSON.parse(value).value
+          }
+
+          if (processedValue === "") {
+            if (typeof value === 'string') {
+              processedValue = "\"\""
+            }
+            else if (typeof value === 'object') {
+              processedValue = "{}"
+            }
+          }
+
           processedCommand = processedCommand.replace(`"{{ ${key} }}"`, processedValue);
         }
       }
@@ -175,7 +188,7 @@ export default function ClientDetails({ client, onSendCommand }) {
                 size="small"
               >
                 {(operation_types || []).map((operation_type) => (
-                  <MenuItem key={operation_type.name} value={operation_type.value}>
+                  <MenuItem key={operation_type.name} value={JSON.stringify({ type: operation_type.name, value: operation_type.value })}>
                     {operation_type.name}
                   </MenuItem>
                 ))}
