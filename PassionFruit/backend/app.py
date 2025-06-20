@@ -1,5 +1,6 @@
 from PassionFruit.backend import transformer
 from PoopBiter import logger
+from PoopBiter.fig import get_fig, list_figs
 from PoopBiter.products import PRODUCT_TYPE_TO_STRING, Product, ProductInfo
 from flask import Flask, send_from_directory, request, jsonify
 from flask_cors import CORS
@@ -11,7 +12,7 @@ import json
 
 from PoopBiter.releases import list_releases
 from PoopBiter.templates import list_templates
-from PoopBiter.utils import format_exception
+from PoopBiter.utils import format_exception, is_int
 
 
 CNC_ROOT = "CornCake"
@@ -130,6 +131,17 @@ def get_command_templates():
 @app.route('/api/releases', methods=['GET'])
 def endpoint_releases():
     return jsonify(list(list_releases().keys()))
+
+
+@app.route('/api/figs', methods=['GET'])
+def endpoint_figs():
+    return jsonify([{"id": fig.fig_id, "name": fig.name} for fig in list_figs()])
+
+
+@app.route('/api/operation-types/<string:fig>', methods=['GET'])
+def endpoint_operation_types(fig: str):
+    selected_fig = get_fig(int(fig) if is_int(fig) else fig)
+    return jsonify(list(selected_fig.operations.values()))
 
 
 # Serve React App

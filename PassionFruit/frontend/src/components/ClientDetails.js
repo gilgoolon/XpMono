@@ -25,9 +25,10 @@ export default function ClientDetails({ client, onSendCommand }) {
   const [variables, setVariables] = useState({});
   const [variableTypes, setVariableTypes] = useState({});
   const [releases, setReleases] = useState([]);
+  const [figs, setFigs] = useState([]);
 
   useEffect(() => {
-    const fetchFiles = async () => {
+    const fetchReleases = async () => {
       try {
         const response = await axios.get(`${API_BASE_URL}/api/releases`);
         setReleases(response.data);
@@ -35,7 +36,19 @@ export default function ClientDetails({ client, onSendCommand }) {
         console.error('Failed to fetch releases:', error);
       }
     };
-    fetchFiles();
+    fetchReleases();
+  }, []);
+
+  useEffect(() => {
+    const fetchFigs = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/figs`);
+        setFigs(response.data);
+      } catch (error) {
+        console.error('Failed to fetch figs:', error);
+      }
+    };
+    fetchFigs();
   }, []);
 
   useEffect(() => {
@@ -68,11 +81,8 @@ export default function ClientDetails({ client, onSendCommand }) {
       if (Object.keys(variables).length > 0) {
         for (const [key, value] of Object.entries(variables)) {
           const variableType = variableTypes[key]
-          var processedValue = null
-          if (variableType === 'int' || variableType === 'release') {
-            processedValue = value
-          }
-          else if (variableType === 'string') {
+          var processedValue = value
+          if (variableType === 'string') {
             processedValue = `"${value.replace(/^"|"$/g, '')}"`
           }
           processedCommand = processedCommand.replace(`"{{ ${key} }}"`, processedValue);
@@ -106,7 +116,7 @@ export default function ClientDetails({ client, onSendCommand }) {
   const variableField = (varName) => {
     return (
       <>
-        {variableTypes[varName] === 'releases-dropdown' ? (
+        {variableTypes[varName] === 'release' ? (
           <TextField
             select
             fullWidth
@@ -123,13 +133,31 @@ export default function ClientDetails({ client, onSendCommand }) {
             ))}
           </TextField>
         ) : (
-          <TextField
-            fullWidth
-            variant="outlined"
-            onChange={(e) => handleVariableChange(varName, e.target.value)}
-            type={variableTypes[varName] === 'int' ? 'number' : 'text'}
-            size="small"
-          />
+            variableTypes[varName] === 'fig' ? (
+              <TextField
+                select
+                fullWidth
+                variant="outlined"
+                onChange={(e) =>
+                  handleVariableChange(varName, e.target.value)
+                }
+                size="small"
+              >
+                {(figs || []).map((fig) => (
+                  <MenuItem key={fig.id} value={fig.id}>
+                    {fig.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            ) : (
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  onChange={(e) => handleVariableChange(varName, e.target.value)}
+                  type={variableTypes[varName] === 'int' ? 'number' : 'text'}
+                  size="small"
+                />
+              )
         )}
         <TextField
           select
@@ -139,9 +167,10 @@ export default function ClientDetails({ client, onSendCommand }) {
           sx={{ width: 120 }}
           size="small"
         >
+          <MenuItem value="fig">Fig</MenuItem>
+          <MenuItem value="release">Release</MenuItem>
           <MenuItem value="string">String</MenuItem>
           <MenuItem value="int">Integer</MenuItem>
-          <MenuItem value="releases-dropdown">Release</MenuItem>
         </TextField>
       </>
     );

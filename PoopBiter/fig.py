@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 import json
-import logging
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 import dacite
 
 @dataclass
@@ -45,11 +44,18 @@ def list_figs() -> List[Fig]:
     return _FIGS.values()
 
 
-def get_fig(fig_id: int) -> Fig:
+def get_fig(fig_id_or_name: Union[int, str]) -> Fig:
     global _FIGS
     read_metadata()
 
-    return _FIGS[fig_id]
+    if isinstance(fig_id_or_name, int):
+        return _FIGS[fig_id_or_name]
+
+    for fig in list_figs():
+        if fig.name == fig_id_or_name:
+            return fig
+
+    raise ValueError(f"failed to find fig {fig_id_or_name}")
 
 
 def format_fig_name(fig_id: int) -> str:

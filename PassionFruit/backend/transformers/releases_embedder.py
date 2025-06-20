@@ -29,7 +29,6 @@ class ReleasesEmbedderTransformer(CommandTransformer):
             parameters[name] = new_value
     
     def _should_transform(self, command_data: dict) -> bool:
-        logger.debug(command_data)
         return self._get_command_type(command_data) == command_type.Type.LOAD_FIG
 
     def _get_release_value(self, release_name: str) -> bytes:
