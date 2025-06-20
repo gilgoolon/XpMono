@@ -58,7 +58,7 @@ export default function ClientDetails({ client, onSendCommand }) {
     let match;
     while ((match = regex.exec(commandData)) !== null) {
       extractedVariables[match[1]] = variables[match[1]] || '';
-      extractedTypes[match[1]] = variableTypes[match[1]] || 'string';
+      extractedTypes[match[1]] = variableTypes[match[1]] || 'fig';
     }
     setVariables(extractedVariables);
     setVariableTypes(extractedTypes);
@@ -81,10 +81,12 @@ export default function ClientDetails({ client, onSendCommand }) {
       if (Object.keys(variables).length > 0) {
         for (const [key, value] of Object.entries(variables)) {
           const variableType = variableTypes[key]
-          var processedValue = value
-          if (variableType === 'string') {
-            processedValue = `"${value.replace(/^"|"$/g, '')}"`
+          let processedValue = value
+
+          if (variableType === 'string' || variableType === 'release') {
+            processedValue = JSON.stringify(value)
           }
+
           processedCommand = processedCommand.replace(`"{{ ${key} }}"`, processedValue);
         }
       }
@@ -162,7 +164,7 @@ export default function ClientDetails({ client, onSendCommand }) {
         <TextField
           select
           variant="outlined"
-          value="fig"
+          value={variableTypes[varName]}
           onChange={(e) => handleVariableTypeChange(varName, e.target.value)}
           sx={{ width: 120 }}
           size="small"

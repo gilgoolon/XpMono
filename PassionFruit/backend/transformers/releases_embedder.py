@@ -1,4 +1,5 @@
 
+from base64 import b64encode
 import os
 from pathlib import Path
 
@@ -26,7 +27,7 @@ class ReleasesEmbedderTransformer(CommandTransformer):
             
             release = value["value"]
             new_value = self._get_release_value(release)
-            parameters[name] = new_value
+            parameters[name] = b64encode(new_value).decode()
     
     def _should_transform(self, command_data: dict) -> bool:
         return self._get_command_type(command_data) == command_type.Type.LOAD_FIG

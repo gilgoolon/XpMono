@@ -2,13 +2,14 @@
 from functools import cache
 from typing import List
 
+from PassionFruit.backend.transformers.parameters_encoder import ParametersEncoderTransformer
 from PassionFruit.backend.transformers.releases_embedder import ReleasesEmbedderTransformer
 from PassionFruit.backend.transformers.transformer import CommandTransformer
 
 
 @cache
 def get_transformers() -> List[CommandTransformer]:
-    return [ReleasesEmbedderTransformer()]
+    return [ReleasesEmbedderTransformer(), ParametersEncoderTransformer()]
 
 
 def transform_command(command_data: dict) -> None:
