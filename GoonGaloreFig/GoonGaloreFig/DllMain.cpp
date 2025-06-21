@@ -4,7 +4,7 @@
 #include "FigManager.hpp"
 #include "Trace.hpp"
 #include "Operations/EnumerateMediaDevicesHandler.hpp"
-#include "Operations/TakeWebcamPictureHandler.hpp"
+#include "Operations/TakePictureHandler.hpp"
 #include "Protections/LibraryProtector.hpp"
 
 #include <Windows.h>
@@ -34,7 +34,7 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 			MediaFoundation::MediaType::Type::AUDIO
 		);
 	case static_cast<Fig::OperationType>(Api::OperationType::TAKE_WEBCAM_PICTURE):
-		return std::make_shared<TakeWebcamPictureHandler>(std::move(operation_event), operation_parameters);
+		return std::make_shared<TakePictureHandler>(std::move(operation_event), operation_parameters);
 	default:
 		throw FigImplException(Fig::FigCode::FAILED_UNSUPPORTED_OPERATION);
 	}

@@ -21,7 +21,7 @@
     <ClCompile Include="Operations\EnumerateMediaDevicesHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Operations\TakeWebcamPictureHandler.cpp">
+    <ClCompile Include="Operations\TakePictureHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -37,7 +37,7 @@
     <ClInclude Include="Operations\EnumerateMediaDevicesHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Operations\TakeWebcamPictureHandler.hpp">
+    <ClInclude Include="Operations\TakePictureHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

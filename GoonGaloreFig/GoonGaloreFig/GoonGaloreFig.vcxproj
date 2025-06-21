@@ -79,7 +79,7 @@
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="Operations\EnumerateMediaDevicesHandler.cpp" />
-    <ClCompile Include="Operations\TakeWebcamPictureHandler.cpp" />
+    <ClCompile Include="Operations\TakePictureHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FigImpl\FigImpl.vcxproj">
@@ -95,7 +95,7 @@
   <ItemGroup>
     <ClInclude Include="Api.hpp" />
     <ClInclude Include="Operations\EnumerateMediaDevicesHandler.hpp" />
-    <ClInclude Include="Operations\TakeWebcamPictureHandler.hpp" />
+    <ClInclude Include="Operations\TakePictureHandler.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
