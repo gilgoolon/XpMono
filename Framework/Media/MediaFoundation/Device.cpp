@@ -61,7 +61,7 @@ std::wstring MediaFoundation::Device::get_allocated_string(const GUID& property_
 
 std::wstring MediaFoundation::Device::type() const
 {
-	return L"MediaDevice";
+	return L"Media Device";
 }
 
 ISerializableStruct::Fields MediaFoundation::Device::fields() const
