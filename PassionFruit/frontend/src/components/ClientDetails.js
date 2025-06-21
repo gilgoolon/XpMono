@@ -149,7 +149,7 @@ export default function ClientDetails({ client, onSendCommand }) {
             select
             fullWidth
             variant="outlined"
-            value={variables[varName]}
+            value={variables[varName].value}
             onChange={(e) =>
               handleVariableChange(varName, { type: 'release', value: e.target.value })
             }

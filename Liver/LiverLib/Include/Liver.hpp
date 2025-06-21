@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include "CommandsContainer.hpp"
+#include "CommandsExecutor.hpp"
 #include "FigOperationsFetcher.hpp"
 #include "FigsContainer.hpp"
 #include "ICommandFactory.hpp"
@@ -32,7 +34,7 @@ private:
 	void handle_response(IResponse::Ptr response);
 
 	void handle_execute_commands(const ExecuteCommandsResponse& response);
-	void execute_commands(const std::vector<ICommand::Ptr>& commands);
+	void execute_command(const ICommand::Ptr& command);
 	void register_handlers();
 	void register_handler(ICommand::Type type, ICommandHandler::Ptr handler);
 	[[nodiscard]] static uint32_t calculate_liver_id();
@@ -50,10 +52,12 @@ private:
 	ICommandFactory::Ptr m_command_factory;
 	ICommunicator::Ptr m_communicator;
 	Time::Duration m_iteration_delay;
+	std::shared_ptr<CommandsContainer> m_commands;
 	std::shared_ptr<ProductsContainer> m_products;
 	std::shared_ptr<LibrariesContainer> m_libraries;
 	std::shared_ptr<FigsContainer> m_figs;
 	std::shared_ptr<FigOperationsContainer> m_operations;
+	Thread m_commands_executor_thread;
 	Thread m_operations_fetcher_thread;
 	std::unordered_map<ICommand::Type, ICommandHandler::Ptr> m_handlers;
 };

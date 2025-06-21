@@ -31,6 +31,7 @@ public:
 	[[nodiscard]] virtual HANDLE handle() const = 0;
 
 	[[nodiscard]] WaitStatus wait(Time::Duration timeout) const;
+	[[nodiscard]] WaitStatus checked_wait(Time::Duration timeout) const;
 
 	static void sleep(Time::Duration duration);
 

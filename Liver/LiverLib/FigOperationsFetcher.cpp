@@ -4,7 +4,6 @@
 #include "Products/ErrorProduct.hpp"
 #include "Products/FigOperationErrorProduct.hpp"
 #include "Products/FigProduct.hpp"
-#include "Products/RawProduct.hpp"
 #include "Synchronization/Event.hpp"
 
 FigOperationsFetcher::FigOperationsFetcher(Event::Ptr quit_event,
@@ -104,7 +103,7 @@ void FigOperationsFetcher::fetch_operations(std::vector<FigOperationsContainer::
 void FigOperationsFetcher::operations_handler(
 	std::vector<FigOperationsContainer::CommandLinkedFigOperation>& operations)
 {
-	static constexpr Time::Duration ITERATION_DELAY = Time::Seconds(5);
+	static constexpr auto ITERATION_DELAY = Time::Seconds(1);
 
 	const std::vector<std::shared_ptr<IWaitable>> triggers = get_iteration_triggers(operations);
 	const WaitResult wait_result = IWaitable::wait_for_any(triggers, ITERATION_DELAY);
@@ -125,7 +124,6 @@ void FigOperationsFetcher::operations_handler(
 	if (triggers[*wait_result.triggered_object].get() == m_operations->m_notifier.get())
 	{
 		m_operations->m_notifier->unset();
-		return;
 	}
 
 	fetch_operations(operations);

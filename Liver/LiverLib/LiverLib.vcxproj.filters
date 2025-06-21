@@ -144,6 +144,12 @@
     <ClInclude Include="Include\Products\WinApiErrorProduct.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\CommandsExecutor.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\CommandsContainer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Liver.cpp">
@@ -200,7 +206,7 @@
     <ClCompile Include="Products\ErrorProduct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Communicators\Protocol\ReturnProductsRequest.cpp">
+    <ClCompile Include="Communicators\Protocol\ReturnProductsRequest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LiverInstance.cpp">
@@ -258,6 +264,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Products\WinApiErrorProduct.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandsExecutor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\CommandsContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -11,11 +11,11 @@ FigOperationsContainer::FigOperationsContainer():
 
 void FigOperationsContainer::consume(std::unique_ptr<FigOperation> operation, ICommand::Ptr command)
 {
-	m_notifier->set();
-
 	const auto acquired = m_lock.acquire();
 
 	m_operations.emplace_back(std::move(operation), std::move(command));
+
+	m_notifier->set();
 }
 
 void FigOperationsContainer::handle_operations(const OperationsHandler& handler)

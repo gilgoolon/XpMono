@@ -1,4 +1,4 @@
-﻿#include "ReturnProductsRequest.hpp"
+﻿#include "Communicators/Protocol/ReturnProductsRequest.hpp"
 
 ReturnProductsRequest::ReturnProductsRequest(const uint32_t liver_id, std::vector<IProduct::Ptr> products):
 	IRequest(Type::SEND_PRODUCTS, liver_id),
