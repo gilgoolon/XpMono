@@ -28,6 +28,11 @@
     <ClCompile Include="Crypto\Aes.cpp" />
     <ClCompile Include="Include\External\SQLiteCpp\sqlite3\sqlite3.c" />
     <ClCompile Include="Filesystem\TemporaryFile.cpp" />
+    <ClCompile Include="Media\MediaFoundation\MediaBuffer.cpp" />
+    <ClCompile Include="Media\MediaFoundation\Sample.cpp" />
+    <ClCompile Include="Media\MediaFoundation\MediaType.cpp" />
+    <ClCompile Include="Media\MediaFoundation\SourceReader.cpp" />
+    <ClCompile Include="Media\MediaFoundation\MediaSource.cpp" />
     <ClCompile Include="Wmi\ComTaskMemoryReleaser.cpp" />
     <ClCompile Include="Media\MediaFoundation\Device.cpp" />
     <ClCompile Include="Media\MediaFoundation\Attributes.cpp" />
@@ -127,9 +132,14 @@
     <ClInclude Include="Include\Macros.hpp" />
     <ClInclude Include="Include\Media\BitmapFormat.hpp" />
     <ClInclude Include="Include\Media\DeviceContext.hpp" />
+    <ClInclude Include="Include\Media\MediaFoundation\MediaBuffer.hpp" />
+    <ClInclude Include="Include\Media\MediaFoundation\MediaSource.hpp" />
     <ClInclude Include="Include\Media\MediaFoundation\Attributes.hpp" />
     <ClInclude Include="Include\Media\MediaFoundation\Device.hpp" />
     <ClInclude Include="Include\Media\MediaFoundation\Instance.hpp" />
+    <ClInclude Include="Include\Media\MediaFoundation\MediaType.hpp" />
+    <ClInclude Include="Include\Media\MediaFoundation\Sample.hpp" />
+    <ClInclude Include="Include\Media\MediaFoundation\SourceReader.hpp" />
     <ClInclude Include="Include\Media\ScreenBitmap.hpp" />
     <ClInclude Include="Include\Networking\Wireless.hpp" />
     <ClInclude Include="Include\Sql\InMemorySqliteDatabase.hpp" />

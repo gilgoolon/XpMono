@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "MediaSource.hpp"
 #include "Wmi/WmiReleaser.hpp"
 
 #include <mfobjects.h>
@@ -17,6 +18,8 @@ public:
 	Device& operator=(Device&&) = default;
 
 	friend class Attributes;
+
+	[[nodiscard]] MediaSource activate();
 
 private:
 	WmiReleaser m_device;

@@ -2,10 +2,7 @@
 #include "Device.hpp"
 #include "Wmi/WmiReleaser.hpp"
 
-#include <mfapi.h>
-#include <mfidl.h>
 #include <mfobjects.h>
-#include <mfreadwrite.h>
 #include <vector>
 
 namespace MediaFoundation
