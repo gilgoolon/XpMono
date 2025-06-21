@@ -2,6 +2,8 @@
 
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
+		<VcpkgEnabled>true</VcpkgEnabled>
+	    <VcpkgUseStatic>true</VcpkgUseStatic>
 		<VcpkgTriplet>x86-windows-static</VcpkgTriplet>
 	</PropertyGroup>
 	<ItemDefinitionGroup>
@@ -28,7 +30,15 @@
 	<ItemDefinitionGroup Condition="'$(Configuration)'=='Release'" Label="Release Configuration">
 		<ClCompile>
 			<RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+			<LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+			<OptimizeReferences>true</OptimizeReferences>
+			<EnableCOMDATFolding>true</EnableCOMDATFolding>
+			<DebugInformationFormat>None</DebugInformationFormat>
+			<DebugInformationFormat>None</DebugInformationFormat>
 		</ClCompile>
+		<Link>
+			<WholeProgramOptimization>true</WholeProgramOptimization>
+		</Link>
 	</ItemDefinitionGroup>
 
 	<ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'" Label="Debug Configuration">
