@@ -1,3 +1,3 @@
-LIBRARY GeoDudeFig
+LIBRARY GoonGaloreFig
 EXPORTS
 	initialize @1 NONAME
