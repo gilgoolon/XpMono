@@ -12,6 +12,7 @@ public:
 	enum class Type : uint32_t
 	{
 		VIDEO = 0,
+		AUDIO,
 	};
 
 	enum class SubType : uint32_t

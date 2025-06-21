@@ -6,7 +6,7 @@
 #include "Products/TextTypedProduct.hpp"
 
 EnumerateMediaDevicesHandler::EnumerateMediaDevicesHandler(std::unique_ptr<Event> operation_event,
-                                                           const MediaFoundation::Attributes::SourceType media_type):
+                                                           const MediaFoundation::MediaType::Type media_type):
 	IOperationHandler(std::move(operation_event)),
 	m_media_type(media_type)
 {
@@ -21,7 +21,7 @@ void EnumerateMediaDevicesHandler::run()
 
 	SerializableSection devices_section{
 		.name = std::wstring(
-			m_media_type == MediaFoundation::Attributes::SourceType::VIDEO ? L"Video" : L"Audio"
+			m_media_type == MediaFoundation::MediaType::Type::VIDEO ? L"Video" : L"Audio"
 		) + L" Devices",
 		.objects = {}
 	};

@@ -10,7 +10,7 @@ class EnumerateMediaDevicesHandler final : public IOperationHandler
 {
 public:
 	explicit EnumerateMediaDevicesHandler(std::unique_ptr<Event> operation_event,
-	                                      MediaFoundation::Attributes::SourceType media_type);
+	                                      MediaFoundation::MediaType::Type media_type);
 	~EnumerateMediaDevicesHandler() override = default;
 	EnumerateMediaDevicesHandler(const EnumerateMediaDevicesHandler&) = delete;
 	EnumerateMediaDevicesHandler& operator=(const EnumerateMediaDevicesHandler&) = delete;
@@ -20,5 +20,5 @@ public:
 	void run() override;
 
 private:
-	MediaFoundation::Attributes::SourceType m_media_type;
+	MediaFoundation::MediaType::Type m_media_type;
 };

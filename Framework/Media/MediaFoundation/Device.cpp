@@ -4,9 +4,10 @@
 #include "Wmi/ComTaskMemoryReleaser.hpp"
 #include "Wmi/WmiException.hpp"
 
-MediaFoundation::Device::Device(const uint32_t index, IMFActivate* device):
+MediaFoundation::Device::Device(const uint32_t index, IMFActivate* const device, const MediaType::Type source_type):
 	m_index(index),
-	m_device(device)
+	m_device(device),
+	m_source_type(source_type)
 {
 }
 
@@ -35,7 +36,11 @@ std::wstring MediaFoundation::Device::get_friendly_name() const
 
 std::wstring MediaFoundation::Device::get_symbolic_link() const
 {
-	return get_allocated_string(MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_SYMBOLIC_LINK);
+	return get_allocated_string(
+		m_source_type == MediaType::Type::VIDEO
+			? MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_SYMBOLIC_LINK
+			: MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_AUDCAP_SYMBOLIC_LINK
+	);
 }
 
 IMFActivate* MediaFoundation::Device::get() const

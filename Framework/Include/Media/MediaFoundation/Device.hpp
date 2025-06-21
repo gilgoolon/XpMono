@@ -10,7 +10,7 @@ namespace MediaFoundation
 {
 class Device : public ISerializableStruct
 {
-	explicit Device(uint32_t index, IMFActivate* device);
+	explicit Device(uint32_t index, IMFActivate* device, MediaType::Type source_type);
 
 public:
 	~Device() override = default;
@@ -30,6 +30,7 @@ public:
 private:
 	uint32_t m_index;
 	WmiReleaser m_device;
+	MediaType::Type m_source_type;
 
 	[[nodiscard]] IMFActivate* get() const;
 

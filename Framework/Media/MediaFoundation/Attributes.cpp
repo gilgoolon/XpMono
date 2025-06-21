@@ -6,22 +6,23 @@
 #include <mfapi.h>
 
 MediaFoundation::Attributes::Attributes():
-	m_attributes(create_attributes())
+	m_attributes(create_attributes()),
+	m_source_type()
 {
 }
 
-void MediaFoundation::Attributes::set_source_type(const SourceType source_type)
+void MediaFoundation::Attributes::set_source_type(const MediaType::Type source_type)
 {
 	GUID selected_guid;
 
 	switch (source_type)
 	{
-	case SourceType::VIDEO:
+	case MediaType::Type::VIDEO:
 	{
 		selected_guid = MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_GUID;
 		break;
 	}
-	case SourceType::AUDIO:
+	case MediaType::Type::AUDIO:
 	{
 		selected_guid = MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_AUDCAP_GUID;
 		break;
@@ -37,6 +38,8 @@ void MediaFoundation::Attributes::set_source_type(const SourceType source_type)
 	{
 		throw WmiException(ErrorCode::FAILED_MEDIA_FOUNDATION_SET_SOURCE_TYPE, result);
 	}
+
+	m_source_type = source_type;
 }
 
 IMFAttributes* MediaFoundation::Attributes::get() const
@@ -75,8 +78,8 @@ std::vector<std::unique_ptr<MediaFoundation::Device>> MediaFoundation::Attribute
 
 	struct PublicDevice final : Device
 	{
-		explicit PublicDevice(const uint32_t index, IMFActivate* const device):
-			Device(index, device)
+		explicit PublicDevice(const uint32_t index, IMFActivate* const device, MediaType::Type source_type):
+			Device(index, device, source_type)
 		{
 		}
 	};
@@ -84,7 +87,7 @@ std::vector<std::unique_ptr<MediaFoundation::Device>> MediaFoundation::Attribute
 	result_devices.reserve(devices_count);
 	for (UINT32 i = 0; i < devices_count; ++i)
 	{
-		result_devices.emplace_back(std::make_unique<PublicDevice>(i, devices[i]));
+		result_devices.emplace_back(std::make_unique<PublicDevice>(i, devices[i], m_source_type));
 	}
 
 	return result_devices;

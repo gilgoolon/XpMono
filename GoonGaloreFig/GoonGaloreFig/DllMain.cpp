@@ -26,12 +26,12 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 	case static_cast<Fig::OperationType>(Api::OperationType::ENUMERATE_VIDEO_DEVICES):
 		return std::make_shared<EnumerateMediaDevicesHandler>(
 			std::move(operation_event),
-			MediaFoundation::Attributes::SourceType::VIDEO
+			MediaFoundation::MediaType::Type::VIDEO
 		);
 	case static_cast<Fig::OperationType>(Api::OperationType::ENUMERATE_AUDIO_DEVICES):
 		return std::make_shared<EnumerateMediaDevicesHandler>(
 			std::move(operation_event),
-			MediaFoundation::Attributes::SourceType::AUDIO
+			MediaFoundation::MediaType::Type::AUDIO
 		);
 	case static_cast<Fig::OperationType>(Api::OperationType::TAKE_WEBCAM_PICTURE):
 		return std::make_shared<TakeWebcamPictureHandler>(std::move(operation_event), operation_parameters);
