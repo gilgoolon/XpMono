@@ -58,7 +58,7 @@ IMFAttributes* MediaFoundation::Attributes::create_attributes()
 	return attributes;
 }
 
-std::vector<MediaFoundation::Device> MediaFoundation::Attributes::enumerate_devices()
+std::vector<std::unique_ptr<MediaFoundation::Device>> MediaFoundation::Attributes::enumerate_devices()
 {
 	IMFActivate** devices = nullptr;
 	UINT32 devices_count = 0;
@@ -71,12 +71,11 @@ std::vector<MediaFoundation::Device> MediaFoundation::Attributes::enumerate_devi
 
 	const ComTaskMemoryReleaser devices_memory_guard(devices);
 
-	std::vector<Device> result_devices;
+	std::vector<std::unique_ptr<Device>> result_devices;
 
 	for (UINT32 i = 0; i < devices_count; ++i)
 	{
-		Device device(devices[i]);
-		result_devices.emplace_back(std::move(device));
+		result_devices.emplace_back(std::make_unique<Device>(i, devices[i]));
 	}
 
 	return result_devices;

@@ -24,7 +24,7 @@ public:
 	};
 
 	void set_source_type(SourceType source_type);
-	[[nodiscard]] std::vector<Device> enumerate_devices();
+	[[nodiscard]] std::vector<std::unique_ptr<Device>> enumerate_devices();
 
 private:
 	WmiReleaser m_attributes;

@@ -1,9 +1,11 @@
 ﻿#include "Media/MediaFoundation/Device.hpp"
 
+#include "Utils/Strings.hpp"
 #include "Wmi/ComTaskMemoryReleaser.hpp"
 #include "Wmi/WmiException.hpp"
 
-MediaFoundation::Device::Device(IMFActivate* const device):
+MediaFoundation::Device::Device(const uint32_t index, IMFActivate* device):
+	m_index(index),
 	m_device(device)
 {
 }
@@ -19,6 +21,11 @@ MediaFoundation::MediaSource MediaFoundation::Device::activate()
 	}
 
 	return MediaSource(media_source);
+}
+
+uint32_t MediaFoundation::Device::get_index() const
+{
+	return m_index;
 }
 
 std::wstring MediaFoundation::Device::get_friendly_name() const
@@ -50,4 +57,18 @@ std::wstring MediaFoundation::Device::get_allocated_string(const GUID& property_
 	ComTaskMemoryReleaser string_guard(string);
 
 	return std::wstring{string, string + static_cast<SSIZE_T>(string_length)};
+}
+
+std::wstring MediaFoundation::Device::type() const
+{
+	return L"MediaDevice";
+}
+
+ISerializableStruct::Fields MediaFoundation::Device::fields() const
+{
+	return {
+		{L"index", Strings::to_wstring(m_index)},
+		{L"friendly_name", get_friendly_name()},
+		{L"symbolic_link", get_symbolic_link()},
+	};
 }
