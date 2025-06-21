@@ -134,7 +134,7 @@ def endpoint_releases():
     return jsonify(list(list_releases().keys()))
 
 
-@app.route('/api/figs', methods=['GET'])
+@app.route('/api/fig-ids', methods=['GET'])
 def endpoint_figs():
     return jsonify([{"id": fig.fig_id, "name": fig.name} for fig in list_figs()])
 

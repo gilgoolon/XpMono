@@ -25,7 +25,7 @@ export default function ClientDetails({ client, onSendCommand }) {
   const [variables, setVariables] = useState({});
   const [variableTypes, setVariableTypes] = useState({});
   const [releases, setReleases] = useState([]);
-  const [figs, setFigs] = useState([]);
+  const [fig_ids, setFigIds] = useState([]);
   const [operation_types, setOperationTypes] = useState([]);
 
   useEffect(() => {
@@ -41,15 +41,15 @@ export default function ClientDetails({ client, onSendCommand }) {
   }, []);
 
   useEffect(() => {
-    const fetchFigs = async () => {
+    const fetchFigIds = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/figs`);
-        setFigs(response.data);
+        const response = await axios.get(`${API_BASE_URL}/api/fig-ids`);
+        setFigIds(response.data);
       } catch (error) {
-        console.error('Failed to fetch figs:', error);
+        console.error('Failed to fetch fig ids:', error);
       }
     };
-    fetchFigs();
+    fetchFigIds();
   }, []);
 
   useEffect(() => {
@@ -71,7 +71,7 @@ export default function ClientDetails({ client, onSendCommand }) {
     let match;
     while ((match = regex.exec(commandData)) !== null) {
       extractedVariables[match[1]] = variables[match[1]] || '';
-      extractedTypes[match[1]] = variableTypes[match[1]] || 'fig';
+      extractedTypes[match[1]] = variableTypes[match[1]] || 'fig_id';
     }
     setVariables(extractedVariables);
     setVariableTypes(extractedTypes);
@@ -166,7 +166,7 @@ export default function ClientDetails({ client, onSendCommand }) {
             ))}
           </TextField>
         ) : (
-            variableTypes[varName] === 'fig' ? (
+            variableTypes[varName] === 'fig_id' ? (
               <TextField
                 select
                 fullWidth
@@ -177,9 +177,9 @@ export default function ClientDetails({ client, onSendCommand }) {
                 }
                 size="small"
               >
-                {(figs || []).map((fig) => (
-                  <MenuItem key={fig.id} value={fig.id}>
-                    {fig.name}
+                {(fig_ids || []).map((fig_id) => (
+                  <MenuItem key={fig_id.id} value={fig_id.id}>
+                    {fig_id.name}
                   </MenuItem>
                 ))}
               </TextField>
@@ -219,7 +219,7 @@ export default function ClientDetails({ client, onSendCommand }) {
           sx={{ width: 120 }}
           size="small"
         >
-          <MenuItem value="fig">Fig</MenuItem>
+          <MenuItem value="fig_id">Fig ID</MenuItem>
           <MenuItem value="operation_type">Operation Type</MenuItem>
           <MenuItem value="release">Release</MenuItem>
           <MenuItem value="string">String</MenuItem>
