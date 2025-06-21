@@ -149,6 +149,7 @@ export default function ClientDetails({ client, onSendCommand }) {
             select
             fullWidth
             variant="outlined"
+            value={variables[varName]}
             onChange={(e) =>
               handleVariableChange(varName, { type: 'release', value: e.target.value })
             }
@@ -166,6 +167,7 @@ export default function ClientDetails({ client, onSendCommand }) {
                 select
                 fullWidth
                 variant="outlined"
+                value={variables[varName]}
                 onChange={(e) =>
                   handleVariableChange(varName, e.target.value)
                 }
@@ -182,6 +184,7 @@ export default function ClientDetails({ client, onSendCommand }) {
                 select
                 fullWidth
                 variant="outlined"
+                  value={variables[varName]}
                 onChange={(e) =>
                   handleVariableChange(varName, e.target.value)
                 }
@@ -197,6 +200,7 @@ export default function ClientDetails({ client, onSendCommand }) {
                 <TextField
                   fullWidth
                   variant="outlined"
+                    value={variables[varName]}
                   onChange={(e) => handleVariableChange(varName, e.target.value)}
                   type={variableTypes[varName] === 'int' ? 'number' : 'text'}
                   size="small"
