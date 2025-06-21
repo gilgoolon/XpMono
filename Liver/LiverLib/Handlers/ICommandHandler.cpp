@@ -3,6 +3,7 @@
 #include "Exception.hpp"
 #include "Trace.hpp"
 #include "Products/ErrorProduct.hpp"
+#include "Products/WinApiErrorProduct.hpp"
 
 std::vector<IProduct::Ptr> ICommandHandler::handle(const ICommand::Ptr& command)
 {
@@ -10,6 +11,11 @@ std::vector<IProduct::Ptr> ICommandHandler::handle(const ICommand::Ptr& command)
 	try
 	{
 		result = do_handle(command);
+	}
+	catch (const WinApiException& ex)
+	{
+		TRACE(L"caught WinApiException with code ", ex.code(), " while handling, returning WinApiErrorProduct");
+		result.push_back(std::make_unique<WinApiErrorProduct>(command, ex.code(), ex.error()));
 	}
 	catch (const Exception& ex)
 	{

@@ -348,11 +348,20 @@ healthchecksdb
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
 
+# VSCode
+.vscode/
 
 # Liver Files
 log.txt
 *.db
 .qodo
+products/
+commands/
+logs/
+*.log
 
 # Testing
 SimpleDll/
+
+# Environment
+*.env

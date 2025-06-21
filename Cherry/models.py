@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, create_engine
+from sqlalchemy import Column, Float, Integer, String, DateTime, ForeignKey, Text
 from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy.sql import func
 
@@ -9,6 +9,9 @@ class Client(Base):
     
     client_id = Column(Integer, primary_key=True)
     last_connection = Column(DateTime(timezone=True), server_default=func.now())
+    location_lat = Column(Float, None)
+    location_long = Column(Float, None)
+    location_accuracy_meters = Column(Integer, None)
     ip_addresses = relationship("ClientIP", back_populates="client")
 
 class ClientIP(Base):
@@ -20,3 +23,11 @@ class ClientIP(Base):
     first_seen = Column(DateTime(timezone=True), server_default=func.now())
     last_seen = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     client = relationship("Client", back_populates="ip_addresses")
+
+
+class Location(Base):
+    __tablename__ = "locations"
+
+    latitude = Column(Float, None, primary_key=True)
+    longitude = Column(Float, None, primary_key=True)
+    label = Column(Text, None)
