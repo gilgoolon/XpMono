@@ -114,7 +114,7 @@
     <ClCompile Include="Protections\TerminationHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Wmi\SafeArrayAccess.cpp">
+    <ClCompile Include="Wmi\SafeArrayAccess.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Filesystem\FileIterator.cpp">
@@ -208,6 +208,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Interfaces\ISerializableStruct.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Media\MediaFoundation\Instance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Media\MediaFoundation\Attributes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Media\MediaFoundation\Device.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Wmi\ComTaskMemoryReleaser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -504,6 +516,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Trace.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Media\MediaFoundation\Instance.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Media\MediaFoundation\Attributes.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Media\MediaFoundation\Device.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Wmi\ComTaskMemoryReleaser.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

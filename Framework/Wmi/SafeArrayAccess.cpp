@@ -1,7 +1,7 @@
-﻿#include "SafeArrayAccess.hpp"
+﻿#include "Wmi/SafeArrayAccess.hpp"
 
 #include "Trace.hpp"
-#include "WmiException.hpp"
+#include "Wmi/WmiException.hpp"
 
 SafeArrayAccess::SafeArrayAccess(SAFEARRAY* safe_array):
 	m_safearray(safe_array),
