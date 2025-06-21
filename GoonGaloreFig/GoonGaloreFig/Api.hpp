@@ -10,7 +10,8 @@ static constexpr Fig::VersionMinor VERSION_MINOR = 0;
 enum class OperationType : Fig::OperationType
 {
 	RESERVED = 0,
-	ENUMERATE_MEDIA_DEVICES,
+	ENUMERATE_VIDEO_DEVICES,
+	ENUMERATE_AUDIO_DEVICES,
 	TAKE_WEBCAM_PICTURE,
 };
 }
