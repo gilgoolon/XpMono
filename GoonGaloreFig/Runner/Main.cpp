@@ -49,7 +49,7 @@ static void main_logic()
 		"/GoonGaloreFig.dll";
 	const auto fig = std::make_shared<FigModule>(path);
 	TRACE("fig id: ", fig->id(), " fig version: ", fig->major(), ".", fig->minor());
-	const std::unique_ptr<FigOperation> fig_operation = fig->execute(1, {});
+	const std::unique_ptr<FigOperation> fig_operation = fig->execute(2, {});
 	bool is_over = false;
 	File output(
 		LR"(C:\Users\alper\OneDrive\Documents\more_output.txt)",

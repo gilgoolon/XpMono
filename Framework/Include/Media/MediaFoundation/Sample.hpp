@@ -14,8 +14,8 @@ public:
 	~Sample() = default;
 	Sample(const Sample&) = delete;
 	Sample& operator=(const Sample&) = delete;
-	Sample(Sample&&) = delete;
-	Sample& operator=(Sample&&) = delete;
+	Sample(Sample&&) = default;
+	Sample& operator=(Sample&&) = default;
 
 	friend class SourceReader;
 

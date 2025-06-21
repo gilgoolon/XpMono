@@ -3,6 +3,9 @@
 #include "Sample.hpp"
 #include "Wmi/WmiReleaser.hpp"
 
+#include <mfapi.h>
+#include <mfidl.h>
+#include <mfobjects.h>
 #include <mfreadwrite.h>
 #include <optional>
 

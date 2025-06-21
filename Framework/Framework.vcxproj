@@ -253,7 +253,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;wlanapi.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
+      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;wlanapi.lib;mfplat.lib;mf.lib;mfreadwrite.lib;mfuuid.lib;shlwapi.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/sqlite3/$(Configuration);$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
     <PreBuildEvent>
@@ -279,7 +279,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;wlanapi.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
+      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;wlanapi.lib;mfplat.lib;mf.lib;mfreadwrite.lib;mfuuid.lib;shlwapi.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/sqlite3/$(Configuration);$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
     <PreBuildEvent>

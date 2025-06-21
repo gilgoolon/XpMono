@@ -30,9 +30,9 @@ void MediaFoundation::Attributes::set_source_type(const SourceType source_type)
 		throw Exception(ErrorCode::UNCOVERED_ENUM_VALUE);
 	}
 
-	static constexpr GUID SOURCE_TYPE_GUID = MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE;
+	const GUID source_type_guid = MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE;
 
-	const HRESULT result = get()->SetGUID(SOURCE_TYPE_GUID, selected_guid);
+	const HRESULT result = get()->SetGUID(source_type_guid, selected_guid);
 	if (FAILED(result))
 	{
 		throw WmiException(ErrorCode::FAILED_MEDIA_FOUNDATION_SET_SOURCE_TYPE, result);
@@ -73,9 +73,18 @@ std::vector<std::unique_ptr<MediaFoundation::Device>> MediaFoundation::Attribute
 
 	std::vector<std::unique_ptr<Device>> result_devices;
 
+	struct PublicDevice final : Device
+	{
+		explicit PublicDevice(const uint32_t index, IMFActivate* const device):
+			Device(index, device)
+		{
+		}
+	};
+
+	result_devices.reserve(devices_count);
 	for (UINT32 i = 0; i < devices_count; ++i)
 	{
-		result_devices.emplace_back(std::make_unique<Device>(i, devices[i]));
+		result_devices.emplace_back(std::make_unique<PublicDevice>(i, devices[i]));
 	}
 
 	return result_devices;

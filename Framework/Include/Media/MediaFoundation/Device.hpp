@@ -8,7 +8,7 @@
 
 namespace MediaFoundation
 {
-class Device final : public ISerializableStruct
+class Device : public ISerializableStruct
 {
 	explicit Device(uint32_t index, IMFActivate* device);
 

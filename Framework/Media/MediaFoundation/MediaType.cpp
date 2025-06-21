@@ -19,7 +19,7 @@ MediaFoundation::MediaType::Dimensions MediaFoundation::MediaType::get_dimension
 	const HRESULT result = MFGetAttributeSize(get(), MF_MT_FRAME_SIZE, &width, &height);
 	if (FAILED(result))
 	{
-		throw WmiException(ErrorCode::FAILED_MEDIA_FOUNDATION_GET_DEMENSIONS, result);
+		throw WmiException(ErrorCode::FAILED_MEDIA_FOUNDATION_GET_DIMENSIONS, result);
 	}
 
 	return Dimensions{.width = width, .height = height};

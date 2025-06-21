@@ -2,8 +2,6 @@
 
 #include "Wmi/WmiException.hpp"
 
-#include <mfapi.h>
-
 MediaFoundation::SourceReader::SourceReader(IMFSourceReader* const reader):
 	m_reader(reader)
 {
@@ -22,10 +20,10 @@ DWORD MediaFoundation::SourceReader::stream()
 void MediaFoundation::SourceReader::set_media_type(const MediaType& media_type)
 {
 	static constexpr DWORD* RESERVED = nullptr;
-	static constexpr DWORD FIRST_VIDEO_STREAM = stream();
+	const DWORD first_video_stream = stream();
 
 	const HRESULT result = get()->SetCurrentMediaType(
-		FIRST_VIDEO_STREAM,
+		first_video_stream,
 		RESERVED,
 		media_type.get()
 	);
@@ -58,5 +56,5 @@ std::optional<MediaFoundation::Sample> MediaFoundation::SourceReader::read_sampl
 
 	static constexpr IMFSample* WAITING_FOR_SAMPLE = nullptr;
 
-	return sample == WAITING_FOR_SAMPLE ? std::nullopt : Sample(sample);
+	return sample == WAITING_FOR_SAMPLE ? std::nullopt : std::optional{Sample(sample)};
 }
