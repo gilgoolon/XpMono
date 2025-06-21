@@ -7,6 +7,7 @@
 namespace Parameters
 {
 static constexpr auto DEVICE_INDEX = "device_index";
+static constexpr uint32_t DEVICE_INDEX_DEFAULT = 0;
 }
 
 TakePictureHandler::TakePictureHandler(std::unique_ptr<Event> operation_event,
@@ -17,7 +18,10 @@ TakePictureHandler::TakePictureHandler(std::unique_ptr<Event> operation_event,
 }
 
 TakePictureHandler::TakePictureHandler(std::unique_ptr<Event> operation_event, const Json& parameters) :
-	TakePictureHandler(std::move(operation_event), parameters[Parameters::DEVICE_INDEX].get<uint32_t>())
+	TakePictureHandler(
+		std::move(operation_event),
+		parameters.value(Parameters::DEVICE_INDEX, Parameters::DEVICE_INDEX_DEFAULT)
+	)
 {
 }
 
@@ -36,7 +40,7 @@ void TakePictureHandler::run()
 
 	std::vector<std::unique_ptr<MediaFoundation::Device>> devices = attributes.enumerate_devices();
 
-	if (m_device_index < devices.size())
+	if (m_device_index >= devices.size())
 	{
 		throw Exception(ErrorCode::INVALID_ARGUMENT);
 	}
