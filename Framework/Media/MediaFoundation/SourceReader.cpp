@@ -1,5 +1,6 @@
 ﻿#include "Media/MediaFoundation/SourceReader.hpp"
 
+#include "Trace.hpp"
 #include "Wmi/WmiException.hpp"
 
 MediaFoundation::SourceReader::SourceReader(IMFSourceReader* const reader):

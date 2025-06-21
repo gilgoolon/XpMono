@@ -50,12 +50,12 @@ void TakePictureHandler::run()
 	MediaFoundation::MediaSource source = device->activate();
 
 	MediaFoundation::SourceReader reader = source.create_reader();
-	reader.set_media_type(
+	/*reader.set_media_type(
 		MediaFoundation::MediaType(
 			MediaFoundation::MediaType::Type::VIDEO,
 			MediaFoundation::MediaType::SubType::VIDEO_FORMAT_RGB32
 		)
-	);
+	);*/
 
 	Buffer result_buffer;
 
