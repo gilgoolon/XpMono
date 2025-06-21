@@ -34,15 +34,21 @@ Fig::ExecutionStatus IOperationHandler::status()
 	return m_status;
 }
 
+Fig::FigCode IOperationHandler::fig_code()
+{
+	return m_fig_code;
+}
+
 Fig::FigSpecificCode IOperationHandler::specific_code()
 {
 	return m_specific_code;
 }
 
-void IOperationHandler::error(const Fig::FigSpecificCode specific_code)
+void IOperationHandler::error(const Fig::FigCode fig_code, const Fig::FigSpecificCode specific_code)
 {
 	const auto acquired = m_lock.acquire();
 	m_status = Fig::ExecutionStatus::FAILED;
+	m_fig_code = fig_code;
 	m_specific_code = specific_code;
 	m_event->set();
 }

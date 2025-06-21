@@ -126,7 +126,7 @@
     <ClInclude Include="Include\Commands\ExecuteFigOperationCommand.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Handlers\ExecuteFigOperationHandler.hpp">
+    <ClInclude Include="Include\Handlers\ExecuteFigOperationHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\FigOperationsFetcher.hpp">
@@ -139,6 +139,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\FigOperationsContainer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Products\WinApiErrorProduct.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\CommandsExecutor.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\CommandsContainer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -197,7 +206,7 @@
     <ClCompile Include="Products\ErrorProduct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Communicators\Protocol\ReturnProductsRequest.cpp">
+    <ClCompile Include="Communicators\Protocol\ReturnProductsRequest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LiverInstance.cpp">
@@ -251,7 +260,16 @@
     <ClCompile Include="Products\FigProduct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Include\FigOperationsContainer.cpp">
+    <ClCompile Include="FigOperationsContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Products\WinApiErrorProduct.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandsExecutor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandsContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

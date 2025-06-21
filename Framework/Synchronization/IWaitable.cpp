@@ -1,5 +1,7 @@
 ﻿#include "Synchronization/IWaitable.hpp"
 
+#include "Exception.hpp"
+
 static WaitStatus to_wait_status(const DWORD result)
 {
 	switch (result)
@@ -24,6 +26,18 @@ WaitStatus IWaitable::wait(const Time::Duration timeout) const
 {
 	const DWORD result = WaitForSingleObject(handle(), timeout.count());
 	return to_wait_status(result);
+}
+
+WaitStatus IWaitable::checked_wait(const Time::Duration timeout) const
+{
+	const WaitStatus result = wait(timeout);
+
+	if (result == WaitStatus::FAILED || result == WaitStatus::OBJECT_CLOSED)
+	{
+		throw WinApiException(ErrorCode::FAILED_WAIT);
+	}
+
+	return result;
 }
 
 void IWaitable::sleep(const Time::Duration duration)

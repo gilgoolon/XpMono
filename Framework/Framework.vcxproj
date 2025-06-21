@@ -28,6 +28,10 @@
     <ClCompile Include="Crypto\Aes.cpp" />
     <ClCompile Include="Include\External\SQLiteCpp\sqlite3\sqlite3.c" />
     <ClCompile Include="Filesystem\TemporaryFile.cpp" />
+    <ClCompile Include="Interfaces\ISerializableStruct.cpp" />
+    <ClCompile Include="Networking\ScopedWlanMemory.cpp" />
+    <ClCompile Include="Networking\Wireless.cpp" />
+    <ClCompile Include="Networking\WlanClient.cpp" />
     <ClCompile Include="Sql\SqliteRowIterator.cpp" />
     <ClCompile Include="Sql\InMemorySqliteDatabase.cpp" />
     <ClCompile Include="Sql\SqliteRow.cpp" />
@@ -76,6 +80,7 @@
   <ItemGroup>
     <ClInclude Include="Include\Crypto\Protection.hpp" />
     <ClInclude Include="Include\Crypto\Aes.hpp" />
+    <ClInclude Include="Include\External\cpp-httplib\httplib.h" />
     <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Assertion.h" />
     <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Backup.h" />
     <ClInclude Include="Include\External\SQLiteCpp\include\SQLiteCpp\Column.h" />
@@ -113,14 +118,17 @@
     <ClInclude Include="Include\Interfaces\IOutputStream.hpp" />
     <ClInclude Include="Include\Interfaces\ISerializable.hpp" />
     <ClInclude Include="Include\External\json.hpp" />
+    <ClInclude Include="Include\Interfaces\ISerializableStruct.hpp" />
     <ClInclude Include="Include\Json.hpp" />
     <ClInclude Include="Include\Macros.hpp" />
     <ClInclude Include="Include\Media\BitmapFormat.hpp" />
     <ClInclude Include="Include\Media\DeviceContext.hpp" />
     <ClInclude Include="Include\Media\ScreenBitmap.hpp" />
+    <ClInclude Include="Include\Networking\Wireless.hpp" />
     <ClInclude Include="Include\Sql\InMemorySqliteDatabase.hpp" />
     <ClInclude Include="Include\Sql\SqliteDatabase.hpp" />
     <ClInclude Include="Include\Sql\SqliteRowIterator.hpp" />
+    <ClInclude Include="Include\Trace.hpp" />
     <ClInclude Include="Include\Utils\Ip.hpp" />
     <ClInclude Include="Include\Networking\MaintainedSocket.hpp" />
     <ClInclude Include="Include\Networking\Socket.hpp" />
@@ -145,7 +153,6 @@
     <ClInclude Include="Include\Synchronization\CriticalSection.hpp" />
     <ClInclude Include="Include\Synchronization\Event.hpp" />
     <ClInclude Include="Include\Synchronization\UnmanagedEvent.hpp" />
-    <ClInclude Include="Include\Trace.hpp" />
     <ClInclude Include="Include\Utils\Buffer.hpp" />
     <ClInclude Include="Include\Utils\Formatting.hpp" />
     <ClInclude Include="Include\Utils\Random.hpp" />
@@ -167,6 +174,8 @@
     <ClInclude Include="Include\Synchronization\Mutex.hpp" />
     <ClInclude Include="Include\Sql\SqliteRow.hpp" />
     <ClInclude Include="Include\Utils\Environment.hpp" />
+    <ClInclude Include="Include\Networking\WlanClient.hpp" />
+    <ClInclude Include="Include\Networking\ScopedWlanMemory.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Include\External\cryptopp\cryptlib.vcxproj">
@@ -226,7 +235,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
+      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;wlanapi.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/sqlite3/$(Configuration);$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
     <PreBuildEvent>
@@ -252,7 +261,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
+      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;wlanapi.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/sqlite3/$(Configuration);$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
     <PreBuildEvent>

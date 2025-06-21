@@ -8,6 +8,7 @@ public:
 	explicit FigProduct(const ICommand::Ptr& command,
 	                    Fig::FigId fig_id,
 	                    Fig::OperationId operation_id,
+	                    Fig::OperationType operation_type,
 	                    Buffer data);
 	~FigProduct() override = default;
 	FigProduct(const FigProduct&) = delete;
@@ -21,5 +22,6 @@ public:
 private:
 	Fig::FigId m_fig_id;
 	Fig::OperationId m_operation_id;
+	Fig::OperationType m_operation_type;
 	Buffer m_data;
 };

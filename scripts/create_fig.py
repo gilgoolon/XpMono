@@ -7,7 +7,7 @@ import re
 import argparse
 
 
-FIG_TEMPLATE = "FileOperationsFig"
+FIG_TEMPLATE = "PrizePresenterFig"
 
 def generate_guid():
     return "{" + str(uuid.uuid4()).upper() + "}"

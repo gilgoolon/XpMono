@@ -7,3 +7,6 @@
 [submodule "Framework/Include/External/SQLiteCpp"]
 	path = Framework/Include/External/SQLiteCpp
 	url = https://github.com/SRombauts/SQLiteCpp
+[submodule "Framework/Include/External/cpp-httplib"]
+	path = Framework/Include/External/cpp-httplib
+	url = https://github.com/yhirose/cpp-httplib

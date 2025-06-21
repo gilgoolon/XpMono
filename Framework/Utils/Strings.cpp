@@ -98,7 +98,14 @@ std::wstring Strings::to_wstring(const std::string& str)
 	return utf16_str;
 }
 
-std::wstring Strings::join(const std::vector<std::wstring>& strings, wchar_t separator)
+std::wstring Strings::precise_to_wstring(const double value, const size_t precision)
+{
+	std::wostringstream stream;
+	stream << std::setprecision(precision) << value;
+	return stream.str();
+}
+
+std::wstring Strings::join(const std::vector<std::wstring>& strings, const wchar_t separator)
 {
 	if (strings.empty())
 	{

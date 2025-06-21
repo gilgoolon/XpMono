@@ -25,7 +25,7 @@ void FigsContainer::unload(const Fig::FigId id)
 {
 	auto acquired = m_lock.acquire();
 
-	if (m_loaded_figs.contains(id))
+	if (!m_loaded_figs.contains(id))
 	{
 		throw Exception(ErrorCode::FIG_NOT_LOADED);
 	}

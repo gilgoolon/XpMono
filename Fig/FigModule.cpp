@@ -61,12 +61,13 @@ std::unique_ptr<FigOperation> FigModule::execute(const Fig::OperationType type, 
 	{
 		explicit PublicFigOperation(std::shared_ptr<FigModule> module,
 		                            const Fig::OperationId id,
+		                            const Fig::OperationType type,
 		                            const HANDLE unmanaged_event) :
-			FigOperation(std::move(module), id, unmanaged_event)
+			FigOperation(std::move(module), id, type, unmanaged_event)
 		{
 		}
 	};
-	return std::make_unique<PublicFigOperation>(shared_from_this(), operation_id, operation_event);
+	return std::make_unique<PublicFigOperation>(shared_from_this(), operation_id, type, operation_event);
 }
 
 FigModule::StatusResult FigModule::status(const Fig::OperationId id) const

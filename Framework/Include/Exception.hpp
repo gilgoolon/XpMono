@@ -52,6 +52,7 @@ class WinApiException final : public Exception
 {
 public:
 	explicit WinApiException(ErrorCode code);
+	explicit WinApiException(ErrorCode code, DWORD error);
 	~WinApiException() override = default;
 	WinApiException(const WinApiException&) = delete;
 	WinApiException& operator=(const WinApiException&) = delete;

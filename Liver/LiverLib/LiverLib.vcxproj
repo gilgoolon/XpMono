@@ -12,9 +12,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Api\Include\LiverApi.hpp" />
+    <ClInclude Include="Include\CommandsContainer.hpp" />
+    <ClInclude Include="Include\CommandsExecutor.hpp" />
     <ClInclude Include="Include\FigOperationsContainer.hpp" />
     <ClInclude Include="Include\FigOperationsFetcher.hpp" />
-    <ClInclude Include="Handlers\ExecuteFigOperationHandler.hpp" />
+    <ClInclude Include="Include\Handlers\ExecuteFigOperationHandler.hpp" />
     <ClInclude Include="Include\Commands\ExecuteFigOperationCommand.hpp" />
     <ClInclude Include="Include\Handlers\CallDllGenericProcedureHandler.hpp" />
     <ClInclude Include="Include\Commands\CallDllGenericProcedureCommand.hpp" />
@@ -53,6 +55,7 @@
     <ClInclude Include="Include\Products\FigOperationErrorProduct.hpp" />
     <ClInclude Include="Include\Products\FigProduct.hpp" />
     <ClInclude Include="Include\Products\RawProduct.hpp" />
+    <ClInclude Include="Include\Products\WinApiErrorProduct.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Api\LiverApi.cpp" />
@@ -79,9 +82,11 @@
     <ClCompile Include="Handlers\UnloadDllHandler.cpp" />
     <ClCompile Include="Handlers\UnloadFigHandler.cpp" />
     <ClCompile Include="Commands\CallDllGenericProcedureCommand.cpp" />
-    <ClCompile Include="Include\Communicators\Protocol\ReturnProductsRequest.cpp" />
+    <ClCompile Include="Communicators\Protocol\ReturnProductsRequest.cpp" />
     <ClCompile Include="Handlers\LoadFigHandler.cpp" />
-    <ClCompile Include="Include\FigOperationsContainer.cpp" />
+    <ClCompile Include="FigOperationsContainer.cpp" />
+    <ClCompile Include="CommandsExecutor.cpp" />
+    <ClCompile Include="CommandsContainer.cpp" />
     <ClCompile Include="Products\FigProduct.cpp" />
     <ClCompile Include="Products\FigOperationErrorProduct.cpp" />
     <ClCompile Include="Products\RawProduct.cpp" />
@@ -92,6 +97,7 @@
     <ClCompile Include="LibrariesContainer.cpp" />
     <ClCompile Include="IProduct.cpp" />
     <ClCompile Include="Liver.cpp" />
+    <ClCompile Include="Products\WinApiErrorProduct.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Apricot\ApricotImpl\ApricotImpl.vcxproj">

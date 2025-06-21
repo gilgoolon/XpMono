@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
 
 
@@ -20,4 +20,5 @@ class DetailedClientInfo(BaseModel):
     client_id: str
     last_connection: datetime
     ip_history: List[dict]
+    location: Optional[str]
     products: List[str]
