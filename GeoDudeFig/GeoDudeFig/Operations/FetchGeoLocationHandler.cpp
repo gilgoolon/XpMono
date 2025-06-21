@@ -11,7 +11,7 @@
 
 namespace Parameters
 {
-static constexpr auto API_KEY = "api_key";
+static constexpr auto API_KEY = "google_api_key";
 }
 
 FetchGeoLocationHandler::FetchGeoLocationHandler(std::unique_ptr<Event> operation_event, std::string api_key):
