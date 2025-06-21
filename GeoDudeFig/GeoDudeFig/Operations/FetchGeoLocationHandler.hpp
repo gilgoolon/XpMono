@@ -22,16 +22,22 @@ public:
 	FetchGeoLocationHandler& operator=(FetchGeoLocationHandler&&) = delete;
 
 private:
-	struct Location final
+	struct Location final : ISerializableStruct
 	{
+		explicit Location(double latitude, double longitude, double accuracy);
+		~Location() override = default;
+		Location(const Location&) = delete;
+		Location& operator=(const Location&) = delete;
+		Location(Location&&) = delete;
+		Location& operator=(Location&&) = delete;
+
+		[[nodiscard]] std::wstring type() const override;
+		[[nodiscard]] Fields fields() const override;
+
 		double latitude;
 		double longitude;
 		double accuracy;
-
-		[[nodiscard]] std::wstring serialize() const;
 	};
-
-	[[nodiscard]] static std::wstring format_location(const Location& location);
 
 public:
 	void run() override;
@@ -42,7 +48,9 @@ private:
 
 	static constexpr auto GOOGLE_GEO_LOCATION_API_URL = "https://www.googleapis.com";
 	static constexpr auto GOOGLE_GEO_LOCATION_API_ENDPOINT = "/geolocation/v1/geolocate?key=";
-	[[nodiscard]] static Json create_api_request_parameters(const std::vector<Wireless::ReducedNetwork>& networks);
+	[[nodiscard]] static Json create_api_request_parameters(
+		const std::vector<std::unique_ptr<Wireless::ReducedNetwork>>& networks);
 
-	[[nodiscard]] Location call_api_get_geolocation(const std::vector<Wireless::ReducedNetwork>& networks);
+	[[nodiscard]] std::unique_ptr<Location> call_api_get_geolocation(
+		const std::vector<std::unique_ptr<Wireless::ReducedNetwork>>& networks);
 };

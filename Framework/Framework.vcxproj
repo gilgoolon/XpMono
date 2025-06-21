@@ -28,6 +28,7 @@
     <ClCompile Include="Crypto\Aes.cpp" />
     <ClCompile Include="Include\External\SQLiteCpp\sqlite3\sqlite3.c" />
     <ClCompile Include="Filesystem\TemporaryFile.cpp" />
+    <ClCompile Include="Interfaces\ISerializableStruct.cpp" />
     <ClCompile Include="Networking\ScopedWlanMemory.cpp" />
     <ClCompile Include="Networking\Wireless.cpp" />
     <ClCompile Include="Networking\WlanClient.cpp" />
@@ -117,6 +118,7 @@
     <ClInclude Include="Include\Interfaces\IOutputStream.hpp" />
     <ClInclude Include="Include\Interfaces\ISerializable.hpp" />
     <ClInclude Include="Include\External\json.hpp" />
+    <ClInclude Include="Include\Interfaces\ISerializableStruct.hpp" />
     <ClInclude Include="Include\Json.hpp" />
     <ClInclude Include="Include\Macros.hpp" />
     <ClInclude Include="Include\Media\BitmapFormat.hpp" />
@@ -126,6 +128,7 @@
     <ClInclude Include="Include\Sql\InMemorySqliteDatabase.hpp" />
     <ClInclude Include="Include\Sql\SqliteDatabase.hpp" />
     <ClInclude Include="Include\Sql\SqliteRowIterator.hpp" />
+    <ClInclude Include="Include\Trace.hpp" />
     <ClInclude Include="Include\Utils\Ip.hpp" />
     <ClInclude Include="Include\Networking\MaintainedSocket.hpp" />
     <ClInclude Include="Include\Networking\Socket.hpp" />
@@ -150,7 +153,6 @@
     <ClInclude Include="Include\Synchronization\CriticalSection.hpp" />
     <ClInclude Include="Include\Synchronization\Event.hpp" />
     <ClInclude Include="Include\Synchronization\UnmanagedEvent.hpp" />
-    <ClInclude Include="Include\Trace.hpp" />
     <ClInclude Include="Include\Utils\Buffer.hpp" />
     <ClInclude Include="Include\Utils\Formatting.hpp" />
     <ClInclude Include="Include\Utils\Random.hpp" />

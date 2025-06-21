@@ -17,6 +17,7 @@
     <ClCompile Include="Handlers\IOperationHandler.cpp" />
     <ClCompile Include="Handlers\WmiQueryMultiOperationHandler.cpp" />
     <ClCompile Include="Handlers\WmiQuerySingleOperationHandler.cpp" />
+    <ClCompile Include="SerializableSection.cpp" />
     <ClCompile Include="Products\ImageBmpTypedProduct.cpp" />
     <ClCompile Include="Products\RawTypedProduct.cpp" />
     <ClCompile Include="Products\TextTypedProduct.cpp" />
@@ -33,6 +34,7 @@
     <ClInclude Include="Include\Products\RawTypedProduct.hpp" />
     <ClInclude Include="Include\Products\TypedProduct.hpp" />
     <ClInclude Include="Include\Products\TextTypedProduct.hpp" />
+    <ClInclude Include="Include\SerializableSection.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

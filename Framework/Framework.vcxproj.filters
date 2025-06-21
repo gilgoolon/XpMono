@@ -207,6 +207,9 @@
     <ClCompile Include="Networking\ScopedWlanMemory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Interfaces\ISerializableStruct.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\CommandLineArguments.hpp">
@@ -258,9 +261,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Synchronization\Event.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Trace.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Utils\Buffer.hpp">
@@ -498,6 +498,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\External\cpp-httplib\httplib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Interfaces\ISerializableStruct.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Trace.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

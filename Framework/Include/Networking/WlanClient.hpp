@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "Interfaces/ISerializableStruct.hpp"
 #include "Utils/Buffer.hpp"
 
 #include <string>
@@ -86,16 +87,24 @@ struct Network final
 	std::vector<PhysicalStation> stations;
 };
 
-struct ReducedNetwork final
+struct ReducedNetwork final : ISerializableStruct
 {
+	explicit ReducedNetwork(NetworkDetails network_details, PhysicalStation physical_station);
+	~ReducedNetwork() override = default;
+	ReducedNetwork(const ReducedNetwork&) = delete;
+	ReducedNetwork& operator=(const ReducedNetwork&) = delete;
+	ReducedNetwork(ReducedNetwork&&) = delete;
+	ReducedNetwork& operator=(ReducedNetwork&&) = delete;
+
+	[[nodiscard]] std::wstring type() const override;
+	[[nodiscard]] Fields fields() const override;
+
 	NetworkDetails details;
 	PhysicalStation station;
-
-	[[nodiscard]] std::wstring serialize() const;
 };
 
-std::vector<ReducedNetwork> reduce(const Network& network);
-std::vector<ReducedNetwork> expand(const Network& network);
+std::vector<std::unique_ptr<ReducedNetwork>> reduce(const Network& network);
+std::vector<std::unique_ptr<ReducedNetwork>> expand(const Network& network);
 
 class WlanClient final
 {

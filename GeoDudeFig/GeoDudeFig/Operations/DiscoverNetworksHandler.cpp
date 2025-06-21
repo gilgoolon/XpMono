@@ -1,6 +1,6 @@
 ﻿#include "DiscoverNetworksHandler.hpp"
 
-#include "Trace.hpp"
+#include "SerializableSection.hpp"
 #include "Networking/Wireless.hpp"
 #include "Products/TextTypedProduct.hpp"
 
@@ -32,35 +32,28 @@ DiscoverNetworksHandler::DiscoverNetworksHandler(std::unique_ptr<Event> operatio
 {
 }
 
-std::wstring DiscoverNetworksHandler::format_network(const Wireless::ReducedNetwork& network)
-{
-	return Strings::concat(
-		std::wstring{L"#Network"},
-		std::wstring{L"\n"},
-		network.serialize()
-	);
-}
-
 void DiscoverNetworksHandler::run()
 {
-	static constexpr auto SUFFIX = L"\n";
-	std::wstring product;
+	std::vector<std::unique_ptr<Wireless::ReducedNetwork>> networks;
 
-	std::vector<Wireless::ReducedNetwork> networks;
+	SerializableSection networks_section{.name = L"Networks", .objects = {}};
 
-	product.append(L"[Networks]\n");
 	const auto operation = m_reduce ? Wireless::reduce : Wireless::expand;
 	for (const auto& network : Wireless::enumerate_networks())
 	{
-		const std::vector<Wireless::ReducedNetwork> expanded = operation(network);
-		networks.insert(networks.end(), expanded.begin(), expanded.end());
+		std::vector<std::unique_ptr<Wireless::ReducedNetwork>> expanded = operation(network);
+		networks.insert(
+			networks.end(),
+			std::make_move_iterator(expanded.begin()),
+			std::make_move_iterator(expanded.end())
+		);
 	}
 
-	for (const Wireless::ReducedNetwork& network : networks)
+	for (std::unique_ptr<Wireless::ReducedNetwork>& network : networks)
 	{
-		product.append(format_network(network) + SUFFIX);
+		networks_section.objects.push_back(std::move(network));
 	}
 
-	append(std::make_unique<TextTypedProduct>(product));
+	append(std::make_unique<TextTypedProduct>(networks_section.serialize()));
 	finished();
 }

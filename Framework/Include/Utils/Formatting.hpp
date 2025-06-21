@@ -22,8 +22,4 @@ std::wstring format_hex(Integer value)
 	oss << std::hex << std::setw(sizeof(Integer) * 2ul) << std::setfill(L'0') << value;
 	return oss.str();
 }
-
-using Fields = std::vector<std::pair<std::wstring, std::optional<std::wstring>>>;
-
-std::wstring format_fields(const std::vector<std::pair<std::wstring, std::optional<std::wstring>>>& fields);
 }

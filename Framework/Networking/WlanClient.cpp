@@ -78,9 +78,14 @@ Wireless::Band Wireless::frequency_to_band(const uint32_t frequency_mhz)
 	return frequency_mhz < MAX_2_4_FREQUENCY_MHZ ? Band::GHZ_2_4 : Band::GHZ_5;
 }
 
-std::wstring Wireless::ReducedNetwork::serialize() const
+std::wstring Wireless::ReducedNetwork::type() const
 {
-	const Formatting::Fields fields = {
+	return L"Network";
+}
+
+ISerializableStruct::Fields Wireless::ReducedNetwork::fields() const
+{
+	return {
 		{L"ssid", details.ssid},
 		{L"authentication", to_wstring(details.authentication)},
 		{L"encryption", to_wstring(details.encryption)},
@@ -90,11 +95,15 @@ std::wstring Wireless::ReducedNetwork::serialize() const
 		{L"frequency_mhz", Strings::to_wstring(station.frequency_mhz)},
 		{L"band", to_wstring(station.band)},
 	};
-
-	return Formatting::format_fields(fields);
 }
 
-std::vector<Wireless::ReducedNetwork> Wireless::reduce(const Network& network)
+Wireless::ReducedNetwork::ReducedNetwork(NetworkDetails network_details, PhysicalStation physical_station):
+	details(std::move(network_details)),
+	station(std::move(physical_station))
+{
+}
+
+std::vector<std::unique_ptr<Wireless::ReducedNetwork>> Wireless::reduce(const Network& network)
 {
 	PhysicalStation closest_station = *std::ranges::max_element(
 		network.stations,
@@ -103,20 +112,24 @@ std::vector<Wireless::ReducedNetwork> Wireless::reduce(const Network& network)
 			return station1.signal_strength_dbm < station2.signal_strength_dbm;
 		}
 	);
-	return {ReducedNetwork{.details = network.details, .station = std::move(closest_station)}};
+
+	std::vector<std::unique_ptr<ReducedNetwork>> result;
+	result.push_back(std::make_unique<ReducedNetwork>(network.details, std::move(closest_station)));
+	return result;
 }
 
-std::vector<Wireless::ReducedNetwork> Wireless::expand(const Network& network)
+std::vector<std::unique_ptr<Wireless::ReducedNetwork>> Wireless::expand(const Network& network)
 {
-	std::vector<ReducedNetwork> networks;
+	std::vector<std::unique_ptr<ReducedNetwork>> networks;
 	std::ranges::transform(
 		network.stations,
 		std::back_inserter(networks),
 		[network](const PhysicalStation& station)
 		{
-			return ReducedNetwork{.details = network.details, .station = station};
+			return std::make_unique<ReducedNetwork>(network.details, station);
 		}
 	);
+
 	return networks;
 }
 
