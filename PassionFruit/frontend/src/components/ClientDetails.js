@@ -129,7 +129,11 @@ export default function ClientDetails({ client, onSendCommand }) {
 
   const handleTemplateSelect = (templateContent) => {
     setCommandData(templateContent);
-    setActiveTab(0); // Switch back to command tab
+    if (variables) {
+      setActiveTab(2); // Switch to variables tab if command data has variables
+    } else {
+      setActiveTab(0); // Switch to command tab
+    }
   };
 
   const formatDate = (dateStr) => {

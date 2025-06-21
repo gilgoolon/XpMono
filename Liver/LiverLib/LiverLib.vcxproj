@@ -86,7 +86,7 @@
     <ClCompile Include="Handlers\LoadFigHandler.cpp" />
     <ClCompile Include="FigOperationsContainer.cpp" />
     <ClCompile Include="CommandsExecutor.cpp" />
-    <ClCompile Include="Include\CommandsContainer.cpp" />
+    <ClCompile Include="CommandsContainer.cpp" />
     <ClCompile Include="Products\FigProduct.cpp" />
     <ClCompile Include="Products\FigOperationErrorProduct.cpp" />
     <ClCompile Include="Products\RawProduct.cpp" />

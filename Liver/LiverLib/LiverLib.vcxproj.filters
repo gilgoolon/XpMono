@@ -269,7 +269,7 @@
     <ClCompile Include="CommandsExecutor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Include\CommandsContainer.cpp">
+    <ClCompile Include="CommandsContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
