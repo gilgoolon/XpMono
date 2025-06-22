@@ -1,7 +1,7 @@
 ﻿#include "PhysicalDrivesInformationHandler.hpp"
 
 #include "Utils/Strings.hpp"
-#include "Wmi/WmiConnection.hpp"
+#include "Com/Connection.hpp"
 
 PhysicalDrivesInformationHandler::PhysicalDrivesInformationHandler(std::unique_ptr<Event> operation_event):
 	WmiQueryMultiOperationHandler(

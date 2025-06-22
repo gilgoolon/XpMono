@@ -1,15 +1,14 @@
-﻿#include "Wmi/WmiConnection.hpp"
+﻿#include "Com/Connection.hpp"
 
 #include "Trace.hpp"
-#include "Wmi/WmiException.hpp"
-#include "Wmi/WmiVariant.hpp"
+#include "Com/Variant.hpp"
 
 #include <comutil.h>
 
-WmiConnection::WmiConnection(const std::wstring& namespace_path):
+Com::Connection::Connection(const std::wstring& namespace_path):
 	m_runtime(),
 	m_locator(create_locator()),
-	m_services(connect_server(static_cast<IWbemLocator*>(m_locator.get()), namespace_path))
+	m_services(connect_server(reinterpret_cast<IWbemLocator*>(m_locator.get()), namespace_path))
 {
 	const HRESULT hresult = CoSetProxyBlanket(
 		m_services.get(),
@@ -23,11 +22,11 @@ WmiConnection::WmiConnection(const std::wstring& namespace_path):
 	);
 	if (FAILED(hresult))
 	{
-		throw WmiException(ErrorCode::FAILED_WMI_SET_PROXY, hresult);
+		throw ComException(ErrorCode::FAILED_COM_SET_PROXY, hresult);
 	}
 }
 
-std::vector<std::unique_ptr<WmiResult>> WmiConnection::query(const std::wstring& query) const
+std::vector<std::unique_ptr<Com::Result>> Com::Connection::query(const std::wstring& query) const
 {
 	static constexpr auto WMI_QUERY_LANGUAGE = "WQL";
 	static constexpr long SYNC_QUERY = WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY;
@@ -42,10 +41,10 @@ std::vector<std::unique_ptr<WmiResult>> WmiConnection::query(const std::wstring&
 	);
 	if (FAILED(hresult))
 	{
-		throw WmiException(ErrorCode::FAILED_WMI_QUERY, hresult);
+		throw ComException(ErrorCode::FAILED_COM_QUERY, hresult);
 	}
-	WmiReleaser enumerator_releaser(enumerator);
-	std::vector<std::unique_ptr<WmiResult>> results;
+	Releaser enumerator_releaser(enumerator);
+	std::vector<std::unique_ptr<Result>> results;
 	while (enumerator)
 	{
 		IWbemClassObject* object = nullptr;
@@ -53,16 +52,16 @@ std::vector<std::unique_ptr<WmiResult>> WmiConnection::query(const std::wstring&
 		hresult = enumerator->Next(WBEM_INFINITE, 1, &object, &uReturn);
 		if (FAILED(hresult))
 		{
-			throw WmiException(ErrorCode::FAILED_WMI_ENUMERATE_RESULT, hresult);
+			throw ComException(ErrorCode::FAILED_COM_ENUMERATE_RESULT, hresult);
 		}
 		if (uReturn == 0) break;
-		WmiReleaser object_releaser(object);
-		results.push_back(std::make_unique<WmiResult>(object));
+		Releaser object_releaser(object);
+		results.push_back(std::make_unique<Result>(object));
 	}
 	return results;
 }
 
-IWbemLocator* WmiConnection::create_locator()
+IWbemLocator* Com::Connection::create_locator()
 {
 	IWbemLocator* locator = nullptr;
 	const HRESULT result = CoCreateInstance(
@@ -74,12 +73,12 @@ IWbemLocator* WmiConnection::create_locator()
 	);
 	if (FAILED(result))
 	{
-		throw WmiException(ErrorCode::FAILED_WMI_CREATE_INSTANCE, result);
+		throw ComException(ErrorCode::FAILED_COM_CREATE_INSTANCE, result);
 	}
 	return locator;
 }
 
-IWbemServices* WmiConnection::connect_server(IWbemLocator* locator, const std::wstring& namespace_path)
+IWbemServices* Com::Connection::connect_server(IWbemLocator* locator, const std::wstring& namespace_path)
 {
 	static constexpr BSTR NO_USER = nullptr;
 	static constexpr BSTR NO_PASSWORD = nullptr;
@@ -101,7 +100,7 @@ IWbemServices* WmiConnection::connect_server(IWbemLocator* locator, const std::w
 	);
 	if (FAILED(hresult))
 	{
-		throw WmiException(ErrorCode::FAILED_WMI_CONNECT_SERVER, hresult);
+		throw ComException(ErrorCode::FAILED_COM_CONNECT_SERVER, hresult);
 	}
 	return result;
 }

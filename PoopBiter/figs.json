@@ -37,6 +37,19 @@
             }
         },
         {
+            "name": "GoonGaloreFig",
+            "dll_path": "CornCake\\releases\\GoonGaloreFig.dll",
+            "fig_id": 6,
+            "version_major": 1,
+            "version_minor": 0,
+            "operations": {
+                "0": "RESERVED",
+                "1": "ENUMERATE_VIDEO_DEVICES",
+                "2": "ENUMERATE_AUDIO_DEVICES",
+                "3": "TAKE_PICTURE"
+            }
+        },
+        {
             "name": "GeoDudeFig",
             "dll_path": "CornCake\\releases\\GeoDudeFig.dll",
             "fig_id": 5,

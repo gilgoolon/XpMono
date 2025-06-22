@@ -201,15 +201,13 @@ class TypedProductType(enum.IntEnum):
     RESERVED = 0,
     TEXT = 1
     RAW = 2
-    IMAGE_BMP = 3
-    IMAGE_PNG = 4
+    IMAGE = 3
 
 TYPED_PRODUCT_TYPE_TO_STRING = {
     TypedProductType.RESERVED: "Reserved",
     TypedProductType.TEXT: "Text",
     TypedProductType.RAW: "Raw",
-    TypedProductType.IMAGE_BMP: "BMP Image",
-    TypedProductType.IMAGE_PNG: "PNG Image",
+    TypedProductType.IMAGE: "Image",
 }
 
 
@@ -233,8 +231,7 @@ class TypedProduct(abc.ABC):
         products: Dict[TypedProductType, type] = {
             TypedProductType.RAW: RawTypedProduct,
             TypedProductType.TEXT: TextTypedProduct,
-            TypedProductType.IMAGE_BMP: ImageTypedProduct,
-            TypedProductType.IMAGE_PNG: ImageTypedProduct,
+            TypedProductType.IMAGE: ImageTypedProduct,
         }
         
         if product_type not in products:
@@ -296,23 +293,21 @@ class TextTypedProduct(TypedProduct):
 
 
 class ImageTypedProduct(TypedProduct):
-    def __init__(self, image: ImageFile, product_type: TypedProductType) -> None:
-        super().__init__(product_type)
-        self._image = image
+    _DISPLAYED_IMAGE_FORMAT = "png"
 
-    @classmethod
-    @abc.abstractmethod
-    def _image_format(cls) -> str:
-        pass
+    def __init__(self, image: ImageFile) -> None:
+        super().__init__(TypedProductType.IMAGE)
+        self._image = image
 
     @property
     def _displayable_properties(self):
         raw_image = io.BytesIO()
-        self._image.save(raw_image, format=self._image_format().upper())
+        self._image.save(
+            raw_image, format=self._DISPLAYED_IMAGE_FORMAT.upper())
         encoded_image = base64.b64encode(raw_image.getvalue()).decode("utf-8")
 
         return {
-            "data": f"data:{self._display_type};base64,{encoded_image}",
+            "data": f"data:image/{self._DISPLAYED_IMAGE_FORMAT};base64,{encoded_image}",
             "width": self._image.width,
             "height": self._image.height,
             "mode": self._image.mode
@@ -320,42 +315,16 @@ class ImageTypedProduct(TypedProduct):
     
     @classmethod
     def from_raw_bytes(cls, data: bytes) -> "TypedProduct":
-        image_formats = {
-            BmpImageTypedProduct._image_format().upper(): BmpImageTypedProduct,
-            PngImageTypedProduct._image_format().upper(): PngImageTypedProduct,
-        }
-
         try:
             image = Image.open(io.BytesIO(data))
         except Exception as e:
             raise ValueError(f"Failed to parse image: {e}")
 
-        if image.format not in image_formats:
-            raise ValueError(
-                f"Unsupported image format: {BmpImageTypedProduct._image_format()}")
-
-        return image_formats[image.format](image)
+        return cls(image)
 
     @property
     def _display_type(self) -> str:
-        return f"image/{self._image_format()}"
-
-
-class BmpImageTypedProduct(ImageTypedProduct):
-    def __init__(self, image: ImageFile):
-        super().__init__(image, TypedProductType.IMAGE_BMP)
-        
-    @classmethod
-    def _image_format(cls) -> str:
-        return "bmp"
-
-class PngImageTypedProduct(ImageTypedProduct):
-    def __init__(self, image: ImageFile):
-        super().__init__(image, TypedProductType.IMAGE_PNG)
-        
-    @classmethod
-    def _image_format(cls) -> str:
-        return "png"
+        return f"image/{self._DISPLAYED_IMAGE_FORMAT}"
 
 
 class FigProduct(Product):
