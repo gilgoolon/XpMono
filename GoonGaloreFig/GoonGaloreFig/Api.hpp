@@ -3,7 +3,7 @@
 
 namespace Api
 {
-static constexpr Fig::FigId FIG_ID = 4;
+static constexpr Fig::FigId FIG_ID = 6;
 static constexpr Fig::VersionMajor VERSION_MAJOR = 1;
 static constexpr Fig::VersionMinor VERSION_MINOR = 0;
 

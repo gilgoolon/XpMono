@@ -39,7 +39,7 @@
         {
             "name": "GoonGaloreFig",
             "dll_path": "CornCake\\releases\\GoonGaloreFig.dll",
-            "fig_id": 4,
+            "fig_id": 6,
             "version_major": 1,
             "version_minor": 0,
             "operations": {
