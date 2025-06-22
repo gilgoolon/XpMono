@@ -294,8 +294,9 @@ class TextTypedProduct(TypedProduct):
 
 class ImageTypedProduct(TypedProduct):
     _DISPLAYED_IMAGE_FORMAT = "png"
-    def __init__(self, image: ImageFile, product_type: TypedProductType) -> None:
-        super().__init__(product_type)
+
+    def __init__(self, image: ImageFile) -> None:
+        super().__init__(TypedProductType.IMAGE)
         self._image = image
 
     @property
@@ -306,7 +307,7 @@ class ImageTypedProduct(TypedProduct):
         encoded_image = base64.b64encode(raw_image.getvalue()).decode("utf-8")
 
         return {
-            "data": f"data:{self._DISPLAYED_IMAGE_FORMAT};base64,{encoded_image}",
+            "data": f"data:image/{self._DISPLAYED_IMAGE_FORMAT};base64,{encoded_image}",
             "width": self._image.width,
             "height": self._image.height,
             "mode": self._image.mode
