@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "SourceReader.hpp"
-#include "Wmi/WmiReleaser.hpp"
+#include "Com/ComReleaser.hpp"
 
 #include <mfidl.h>
 
@@ -22,7 +22,7 @@ public:
 	[[nodiscard]] SourceReader create_reader();
 
 private:
-	WmiReleaser m_source;
+	ComReleaser m_source;
 
 	[[nodiscard]] IMFMediaSource* get() const;
 };

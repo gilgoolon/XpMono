@@ -1,9 +1,9 @@
-﻿#include "Wmi/SafeArrayAccess.hpp"
+﻿#include "Com/ComSafeArrayAccess.hpp"
 
 #include "Trace.hpp"
-#include "Wmi/WmiException.hpp"
+#include "Com/ComException.hpp"
 
-SafeArrayAccess::SafeArrayAccess(SAFEARRAY* safe_array):
+ComSafeArrayAccess::ComSafeArrayAccess(SAFEARRAY* safe_array):
 	m_safearray(safe_array),
 	m_data(nullptr)
 {
@@ -14,11 +14,11 @@ SafeArrayAccess::SafeArrayAccess(SAFEARRAY* safe_array):
 	const HRESULT hresult = SafeArrayAccessData(m_safearray, &m_data);
 	if (FAILED(hresult))
 	{
-		throw WmiException(ErrorCode::FAILED_SAFE_ARRAY_ACCESS, hresult);
+		throw ComException(ErrorCode::FAILED_COM_SAFE_ARRAY_ACCESS, hresult);
 	}
 }
 
-SafeArrayAccess::~SafeArrayAccess()
+ComSafeArrayAccess::~ComSafeArrayAccess()
 {
 	try
 	{

@@ -1,18 +1,18 @@
 ﻿#pragma once
-#include "WmiException.hpp"
+#include "ComException.hpp"
 #include "Synchronization/CriticalSection.hpp"
 
 #include <vector>
 
-class SafeArrayAccess final
+class ComSafeArrayAccess final
 {
 public:
-	explicit SafeArrayAccess(SAFEARRAY* safe_array);
-	~SafeArrayAccess();
-	SafeArrayAccess(const SafeArrayAccess&) = delete;
-	SafeArrayAccess& operator=(const SafeArrayAccess&) = delete;
-	SafeArrayAccess(SafeArrayAccess&&) = delete;
-	SafeArrayAccess& operator=(SafeArrayAccess&&) = delete;
+	explicit ComSafeArrayAccess(SAFEARRAY* safe_array);
+	~ComSafeArrayAccess();
+	ComSafeArrayAccess(const ComSafeArrayAccess&) = delete;
+	ComSafeArrayAccess& operator=(const ComSafeArrayAccess&) = delete;
+	ComSafeArrayAccess(ComSafeArrayAccess&&) = delete;
+	ComSafeArrayAccess& operator=(ComSafeArrayAccess&&) = delete;
 
 	template <typename T>
 	std::vector<T> value() const
@@ -28,12 +28,12 @@ public:
 		HRESULT hresult = SafeArrayGetLBound(m_safearray, SINGLE_DIM, &low_bound);
 		if (FAILED(hresult))
 		{
-			throw WmiException(ErrorCode::FAILED_SAFE_ARRAY_ACCESS, hresult);
+			throw ComException(ErrorCode::FAILED_COM_SAFE_ARRAY_ACCESS, hresult);
 		}
 		hresult = SafeArrayGetUBound(m_safearray, SINGLE_DIM, &up_bound);
 		if (FAILED(hresult))
 		{
-			throw WmiException(ErrorCode::FAILED_SAFE_ARRAY_ACCESS, hresult);
+			throw ComException(ErrorCode::FAILED_COM_SAFE_ARRAY_ACCESS, hresult);
 		}
 		auto* const arr = static_cast<T*>(m_data);
 		for (LONG i = low_bound; i < up_bound; ++i)

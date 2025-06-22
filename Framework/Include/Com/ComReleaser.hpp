@@ -2,9 +2,9 @@
 #include <memory>
 #include <Wbemidl.h>
 
-struct WmiReleaserDeleter final
+struct ComReleaserDeleter final
 {
 	void operator()(IUnknown* object) const;
 };
 
-using WmiReleaser = std::unique_ptr<IUnknown, WmiReleaserDeleter>;
+using ComReleaser = std::unique_ptr<IUnknown, ComReleaserDeleter>;

@@ -2,8 +2,8 @@
 #include "Debug.hpp"
 #include "Exception.hpp"
 #include "Macros.hpp"
+#include "Com/ComException.hpp"
 #include "Utils/Formatting.hpp"
-#include "Wmi/WmiException.hpp"
 
 #include <filesystem>
 
@@ -41,9 +41,9 @@
 	{ \
 		TRACE("uncaught WsaException with code ", ex.code(), " and error ", ex.wsa_code()); \
 	} \
-	catch ([[maybe_unused]] const WmiException& ex) \
+	catch ([[maybe_unused]] const ComException& ex) \
 	{\
-		TRACE("uncaught WmiException with code ", ex.code(), " and message ", ex.message().c_str()); \
+		TRACE("uncaught ComException with code ", ex.code(), " and message ", ex.message().c_str()); \
 	} \
 	catch ([[maybe_unused]] const WinApiException& ex) \
 	{\

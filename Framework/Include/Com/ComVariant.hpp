@@ -1,19 +1,19 @@
 ﻿#pragma once
-#include "SafeArrayAccess.hpp"
+#include "ComSafeArrayAccess.hpp"
 #include "Utils/Time.hpp"
 
 #include <string>
 #include <WMIUtils.h>
 
-class WmiVariant final
+class ComVariant final
 {
 public:
-	explicit WmiVariant();
-	~WmiVariant();
-	WmiVariant(const WmiVariant&) = delete;
-	WmiVariant& operator=(const WmiVariant&) = delete;
-	WmiVariant(WmiVariant&&) = delete;
-	WmiVariant& operator=(WmiVariant&&) = delete;
+	explicit ComVariant();
+	~ComVariant();
+	ComVariant(const ComVariant&) = delete;
+	ComVariant& operator=(const ComVariant&) = delete;
+	ComVariant(ComVariant&&) = delete;
+	ComVariant& operator=(ComVariant&&) = delete;
 
 	[[nodiscard]] VARIANT* get();
 	[[nodiscard]] VARTYPE type() const;
@@ -34,7 +34,7 @@ public:
 	template <typename T>
 	[[nodiscard]] std::vector<T> array() const
 	{
-		const SafeArrayAccess access(m_variant.parray);
+		const ComSafeArrayAccess access(m_variant.parray);
 		return access.value<T>();
 	}
 

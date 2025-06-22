@@ -1,7 +1,7 @@
 ﻿#include "Media/MediaFoundation/Instance.hpp"
 
 #include "Trace.hpp"
-#include "Wmi/WmiException.hpp"
+#include "Com/ComException.hpp"
 
 #include <mfapi.h>
 
@@ -11,7 +11,7 @@ MediaFoundation::Instance::Instance()
 
 	if (FAILED(result))
 	{
-		throw WmiException(ErrorCode::FAILED_MEDIA_FOUNDATION_STARTUP, result);
+		throw ComException(ErrorCode::FAILED_MEDIA_FOUNDATION_STARTUP, result);
 	}
 }
 

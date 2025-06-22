@@ -1,4 +1,4 @@
-﻿#include "Wmi/ComTaskMemoryReleaser.hpp"
+﻿#include "Com/ComTaskMemoryReleaser.hpp"
 
 #include "Trace.hpp"
 

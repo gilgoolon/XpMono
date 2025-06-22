@@ -1,7 +1,7 @@
 ﻿#include "Media/MediaFoundation/MediaBuffer.hpp"
 
 #include "Trace.hpp"
-#include "Wmi/WmiException.hpp"
+#include "Com/ComException.hpp"
 
 MediaFoundation::MediaBuffer::MediaBuffer(IMFMediaBuffer* const media_buffer):
 	m_media_buffer(media_buffer)
@@ -45,7 +45,7 @@ MediaFoundation::MediaBuffer::UnlockedBuffer MediaFoundation::MediaBuffer::lock(
 	const HRESULT result = get()->Lock(&data, &buffer_size, &data_size);
 	if (FAILED(result))
 	{
-		throw WmiException(ErrorCode::FAILED_MEDIA_FOUNDATION_BUFFER_LOCK, result);
+		throw ComException(ErrorCode::FAILED_MEDIA_FOUNDATION_BUFFER_LOCK, result);
 	}
 
 	LockGuard lock_guard(get());

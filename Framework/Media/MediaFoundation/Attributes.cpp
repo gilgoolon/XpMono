@@ -1,7 +1,7 @@
 ﻿#include "Media/MediaFoundation/Attributes.hpp"
 
-#include "Wmi/ComTaskMemoryReleaser.hpp"
-#include "Wmi/WmiException.hpp"
+#include "Com/ComException.hpp"
+#include "Com/ComTaskMemoryReleaser.hpp"
 
 #include <mfapi.h>
 
@@ -36,7 +36,7 @@ void MediaFoundation::Attributes::set_source_type(const MediaType::Type source_t
 	const HRESULT result = get()->SetGUID(source_type_guid, selected_guid);
 	if (FAILED(result))
 	{
-		throw WmiException(ErrorCode::FAILED_MEDIA_FOUNDATION_SET_SOURCE_TYPE, result);
+		throw ComException(ErrorCode::FAILED_MEDIA_FOUNDATION_SET_SOURCE_TYPE, result);
 	}
 
 	m_source_type = source_type;
@@ -55,7 +55,7 @@ IMFAttributes* MediaFoundation::Attributes::create_attributes()
 	const HRESULT result = MFCreateAttributes(&attributes, SINGLE_OBJECT);
 	if (FAILED(result))
 	{
-		throw WmiException(ErrorCode::FAILED_MEDIA_FOUNDATION_CREATE_ATTRIBUTES, result);
+		throw ComException(ErrorCode::FAILED_MEDIA_FOUNDATION_CREATE_ATTRIBUTES, result);
 	}
 
 	return attributes;
@@ -69,7 +69,7 @@ std::vector<std::unique_ptr<MediaFoundation::Device>> MediaFoundation::Attribute
 	const HRESULT result = MFEnumDeviceSources(get(), &devices, &devices_count);
 	if (FAILED(result))
 	{
-		throw WmiException(ErrorCode::FAILED_MEDIA_FOUNDATION_ENUMERATE_DEVICES, result);
+		throw ComException(ErrorCode::FAILED_MEDIA_FOUNDATION_ENUMERATE_DEVICES, result);
 	}
 
 	const ComTaskMemoryReleaser devices_memory_guard(devices);

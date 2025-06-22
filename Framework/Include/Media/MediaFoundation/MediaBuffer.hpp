@@ -1,6 +1,6 @@
 ﻿#pragma once
+#include "Com/ComReleaser.hpp"
 #include "Utils/Buffer.hpp"
-#include "Wmi/WmiReleaser.hpp"
 
 #include <mfobjects.h>
 
@@ -19,7 +19,7 @@ public:
 	[[nodiscard]] Buffer to_buffer() const;
 
 private:
-	WmiReleaser m_media_buffer;
+	ComReleaser m_media_buffer;
 
 	[[nodiscard]] IMFMediaBuffer* get() const;
 

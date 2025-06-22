@@ -1,8 +1,8 @@
-﻿#include "Wmi/WmiReleaser.hpp"
+﻿#include "Com/ComReleaser.hpp"
 
 #include "Trace.hpp"
 
-void WmiReleaserDeleter::operator()(IUnknown* const object) const
+void ComReleaserDeleter::operator()(IUnknown* const object) const
 {
 	try
 	{

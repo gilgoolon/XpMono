@@ -1,7 +1,7 @@
 ﻿#include "Media/MediaFoundation/MediaType.hpp"
 
 #include "Macros.hpp"
-#include "Wmi/WmiException.hpp"
+#include "Com/ComException.hpp"
 
 #include <array>
 #include <mfapi.h>
@@ -31,7 +31,7 @@ MediaFoundation::MediaType::Dimensions MediaFoundation::MediaType::get_dimension
 	const HRESULT result = MFGetAttributeSize(get(), MF_MT_FRAME_SIZE, &width, &height);
 	if (FAILED(result))
 	{
-		throw WmiException(ErrorCode::FAILED_MEDIA_FOUNDATION_GET_DIMENSIONS, result);
+		throw ComException(ErrorCode::FAILED_MEDIA_FOUNDATION_GET_DIMENSIONS, result);
 	}
 
 	return Dimensions{.width = width, .height = height};
@@ -54,7 +54,7 @@ GUID MediaFoundation::MediaType::get_guid(const GUID& key) const
 	const HRESULT result = get()->GetGUID(key, &value);
 	if (FAILED(result))
 	{
-		throw WmiException(ErrorCode::FAILED_MEDIA_FOUNDATION_GET_GUID, result);
+		throw ComException(ErrorCode::FAILED_MEDIA_FOUNDATION_GET_GUID, result);
 	}
 
 	return value;
@@ -65,7 +65,7 @@ void MediaFoundation::MediaType::set_guid(const GUID& key, const GUID& value)
 	const HRESULT result = get()->SetGUID(key, value);
 	if (FAILED(result))
 	{
-		throw WmiException(ErrorCode::FAILED_MEDIA_FOUNDATION_SET_GUID, result);
+		throw ComException(ErrorCode::FAILED_MEDIA_FOUNDATION_SET_GUID, result);
 	}
 }
 
@@ -76,7 +76,7 @@ IMFMediaType* MediaFoundation::MediaType::create_media_type()
 	const HRESULT result = MFCreateMediaType(&type);
 	if (FAILED(result))
 	{
-		throw WmiException(ErrorCode::FAILED_MEDIA_FOUNDATION_CREATE_MEDIA_TYPE, result);
+		throw ComException(ErrorCode::FAILED_MEDIA_FOUNDATION_CREATE_MEDIA_TYPE, result);
 	}
 
 	return type;

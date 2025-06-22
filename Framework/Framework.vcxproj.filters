@@ -75,22 +75,22 @@
     <ClCompile Include="Synchronization\UnmanagedEvent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Wmi\WmiConnection.cpp">
+    <ClCompile Include="Com\ComConnection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Wmi\WmiRuntime.cpp">
+    <ClCompile Include="Com\ComRuntime.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Wmi\WmiException.cpp">
+    <ClCompile Include="Com\ComException.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Wmi\WmiReleaser.cpp">
+    <ClCompile Include="Com\ComReleaser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Wmi\WmiResult.cpp">
+    <ClCompile Include="Com\ComResult.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Wmi\WmiVariant.cpp">
+    <ClCompile Include="Com\ComVariant.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Protections\InvalidParameter.cpp">
@@ -114,7 +114,7 @@
     <ClCompile Include="Protections\TerminationHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Wmi\SafeArrayAccess.cpp">
+    <ClCompile Include="Com\ComSafeArrayAccess.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Filesystem\FileIterator.cpp">
@@ -219,7 +219,7 @@
     <ClCompile Include="Media\MediaFoundation\Device.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Wmi\ComTaskMemoryReleaser.cpp">
+    <ClCompile Include="Com\ComTaskMemoryReleaser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Media\MediaFoundation\MediaSource.cpp">
@@ -314,22 +314,22 @@
     <ClInclude Include="Include\Utils\Random.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Wmi\WmiConnection.hpp">
+    <ClInclude Include="Include\Com\ComConnection.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Wmi\WmiRuntime.hpp">
+    <ClInclude Include="Include\Com\ComRuntime.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Wmi\WmiException.hpp">
+    <ClInclude Include="Include\Com\ComException.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Wmi\WmiReleaser.hpp">
+    <ClInclude Include="Include\Com\ComReleaser.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Wmi\WmiResult.hpp">
+    <ClInclude Include="Include\Com\ComResult.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Wmi\WmiVariant.hpp">
+    <ClInclude Include="Include\Com\ComVariant.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Protections\InvalidParameter.hpp">
@@ -362,7 +362,7 @@
     <ClInclude Include="Include\Protections\TerminationHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Wmi\SafeArrayAccess.hpp">
+    <ClInclude Include="Include\Com\ComSafeArrayAccess.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Processes\ILibrary.hpp">
@@ -545,7 +545,7 @@
     <ClInclude Include="Include\Media\MediaFoundation\Device.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Wmi\ComTaskMemoryReleaser.hpp">
+    <ClInclude Include="Include\Com\ComTaskMemoryReleaser.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Media\MediaFoundation\MediaSource.hpp">

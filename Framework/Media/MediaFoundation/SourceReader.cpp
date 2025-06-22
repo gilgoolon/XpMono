@@ -1,7 +1,7 @@
 ﻿#include "Media/MediaFoundation/SourceReader.hpp"
 
 #include "Trace.hpp"
-#include "Wmi/WmiException.hpp"
+#include "Com/ComException.hpp"
 
 #include <Mferror.h>
 
@@ -52,7 +52,7 @@ std::optional<MediaFoundation::MediaType> MediaFoundation::SourceReader::get_med
 			return std::nullopt;
 		}
 
-		throw WmiException(ErrorCode::FAILED_MEDIA_FOUNDATION_GET_MEDIA_TYPE, result);
+		throw ComException(ErrorCode::FAILED_MEDIA_FOUNDATION_GET_MEDIA_TYPE, result);
 	}
 
 	return {MediaType(media_type)};
@@ -70,7 +70,7 @@ void MediaFoundation::SourceReader::set_media_type(const MediaType& media_type)
 	);
 	if (FAILED(result))
 	{
-		throw WmiException(ErrorCode::FAILED_MEDIA_FOUNDATION_SET_MEDIA_TYPE, result);
+		throw ComException(ErrorCode::FAILED_MEDIA_FOUNDATION_SET_MEDIA_TYPE, result);
 	}
 }
 
@@ -92,7 +92,7 @@ std::optional<MediaFoundation::Sample> MediaFoundation::SourceReader::read_sampl
 	);
 	if (FAILED(result))
 	{
-		throw WmiException(ErrorCode::FAILED_MEDIA_FOUNDATION_READ_SAMPLE, result);
+		throw ComException(ErrorCode::FAILED_MEDIA_FOUNDATION_READ_SAMPLE, result);
 	}
 
 	static constexpr IMFSample* WAITING_FOR_SAMPLE = nullptr;

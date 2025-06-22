@@ -1,8 +1,8 @@
 ﻿#include "Media/MediaFoundation/Device.hpp"
 
+#include "Com/ComException.hpp"
+#include "Com/ComTaskMemoryReleaser.hpp"
 #include "Utils/Strings.hpp"
-#include "Wmi/ComTaskMemoryReleaser.hpp"
-#include "Wmi/WmiException.hpp"
 
 MediaFoundation::Device::Device(const uint32_t index, IMFActivate* const device, const MediaType::Type source_type):
 	m_index(index),
@@ -18,7 +18,7 @@ MediaFoundation::MediaSource MediaFoundation::Device::activate()
 	const HRESULT result = get()->ActivateObject(IID_PPV_ARGS(&media_source));
 	if (FAILED(result))
 	{
-		throw WmiException(ErrorCode::FAILED_MEDIA_FOUNDATION_ACTIVATE_DEVICE, result);
+		throw ComException(ErrorCode::FAILED_MEDIA_FOUNDATION_ACTIVATE_DEVICE, result);
 	}
 
 	return MediaSource(media_source);
@@ -56,7 +56,7 @@ std::wstring MediaFoundation::Device::get_allocated_string(const GUID& property_
 	const HRESULT result = get()->GetAllocatedString(property_guid, &string, &string_length);
 	if (FAILED(result))
 	{
-		throw WmiException(ErrorCode::FAILED_MEDIA_FOUNDATION_GET_ALLOCATED_STRING, result);
+		throw ComException(ErrorCode::FAILED_MEDIA_FOUNDATION_GET_ALLOCATED_STRING, result);
 	}
 
 	ComTaskMemoryReleaser string_guard(string);

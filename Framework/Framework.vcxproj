@@ -34,7 +34,7 @@
     <ClCompile Include="Media\MediaFoundation\MediaType.cpp" />
     <ClCompile Include="Media\MediaFoundation\SourceReader.cpp" />
     <ClCompile Include="Media\MediaFoundation\MediaSource.cpp" />
-    <ClCompile Include="Wmi\ComTaskMemoryReleaser.cpp" />
+    <ClCompile Include="Com\ComTaskMemoryReleaser.cpp" />
     <ClCompile Include="Media\MediaFoundation\Device.cpp" />
     <ClCompile Include="Media\MediaFoundation\Attributes.cpp" />
     <ClCompile Include="Media\MediaFoundation\Instance.cpp" />
@@ -58,7 +58,7 @@
     <ClCompile Include="Media\ScreenBitmap.cpp" />
     <ClCompile Include="Media\DeviceContext.cpp" />
     <ClCompile Include="Utils\Sizes.cpp" />
-    <ClCompile Include="Wmi\SafeArrayAccess.cpp" />
+    <ClCompile Include="Com\ComSafeArrayAccess.cpp" />
     <ClCompile Include="Protections\TerminationHandler.cpp" />
     <ClCompile Include="Protections\AbortBehavior.cpp" />
     <ClCompile Include="Protections\ErrorMode.cpp" />
@@ -66,11 +66,11 @@
     <ClCompile Include="Protections\PureCall.cpp" />
     <ClCompile Include="Protections\InvalidParameter.cpp" />
     <ClCompile Include="Protections\UnhandledExceptionFilter.cpp" />
-    <ClCompile Include="Wmi\WmiVariant.cpp" />
-    <ClCompile Include="Wmi\WmiResult.cpp" />
-    <ClCompile Include="Wmi\WmiException.cpp" />
-    <ClCompile Include="Wmi\WmiReleaser.cpp" />
-    <ClCompile Include="Wmi\WmiRuntime.cpp" />
+    <ClCompile Include="Com\ComVariant.cpp" />
+    <ClCompile Include="Com\ComResult.cpp" />
+    <ClCompile Include="Com\ComException.cpp" />
+    <ClCompile Include="Com\ComReleaser.cpp" />
+    <ClCompile Include="Com\ComRuntime.cpp" />
     <ClCompile Include="Synchronization\UnmanagedEvent.cpp" />
     <ClCompile Include="Processes\DynamicLibrary.cpp" />
     <ClCompile Include="Processes\Process.cpp" />
@@ -85,7 +85,7 @@
     <ClCompile Include="Synchronization\IWaitable.cpp" />
     <ClCompile Include="Utils\Strings.cpp" />
     <ClCompile Include="Utils\Time.cpp" />
-    <ClCompile Include="Wmi\WmiConnection.cpp" />
+    <ClCompile Include="Com\ComConnection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Crypto\Protection.hpp" />
@@ -179,14 +179,14 @@
     <ClInclude Include="Include\Utils\Strings.hpp" />
     <ClInclude Include="Include\Utils\Time.hpp" />
     <ClInclude Include="Include\Synchronization\IWaitable.hpp" />
-    <ClInclude Include="Include\Wmi\ComTaskMemoryReleaser.hpp" />
-    <ClInclude Include="Include\Wmi\SafeArrayAccess.hpp" />
-    <ClInclude Include="Include\Wmi\WmiConnection.hpp" />
-    <ClInclude Include="Include\Wmi\WmiException.hpp" />
-    <ClInclude Include="Include\Wmi\WmiResult.hpp" />
-    <ClInclude Include="Include\Wmi\WmiRuntime.hpp" />
-    <ClInclude Include="Include\Wmi\WmiReleaser.hpp" />
-    <ClInclude Include="Include\Wmi\WmiVariant.hpp" />
+    <ClInclude Include="Include\Com\ComTaskMemoryReleaser.hpp" />
+    <ClInclude Include="Include\Com\ComSafeArrayAccess.hpp" />
+    <ClInclude Include="Include\Com\ComConnection.hpp" />
+    <ClInclude Include="Include\Com\ComException.hpp" />
+    <ClInclude Include="Include\Com\ComResult.hpp" />
+    <ClInclude Include="Include\Com\ComRuntime.hpp" />
+    <ClInclude Include="Include\Com\ComReleaser.hpp" />
+    <ClInclude Include="Include\Com\ComVariant.hpp" />
     <ClInclude Include="Include\Protections\AbortBehavior.hpp" />
     <ClInclude Include="Include\Protections\ErrorMode.hpp" />
     <ClInclude Include="Include\Protections\UnhandledExceptionFilter.hpp" />
