@@ -4,6 +4,7 @@ from PoopBiter.fig import get_fig, list_figs
 from PoopBiter.products import PRODUCT_TYPE_TO_STRING, Product, ProductInfo
 from flask import Flask, send_from_directory, request, jsonify
 from flask_cors import CORS
+from flask import request
 import requests
 import os
 import base64
@@ -47,11 +48,13 @@ def get_client(client_id):
         if 'location' not in client_data or client_data['location'] is None:
             client_data['location'] = "Unknown"
 
+        client_data['nickname'] = client_data.get('nickname', None)
+
         # Parse each product's content
         if 'products' in client_data:
             parsed_products = {}
             product_paths = {}  # Map product IDs to their paths
-            
+
             # Handle products as a list
             for product_path in client_data['products']:
                 path = Path(product_path)
@@ -75,14 +78,30 @@ def get_client(client_id):
                         f"formatted_type": f"{PRODUCT_TYPE_TO_STRING[info.product_type]} (Invalid)",
                         f"error": error_message
                     }
-            
+
             # Replace products list with IDs and add the mappings
             client_data['products'] = [product[0] for product in sorted(
                 parsed_products.items(), key=lambda product: product[1]["creation_time"], reverse=True)]
             client_data['product_paths'] = product_paths
             client_data['parsed_products'] = parsed_products
-        
+
         return jsonify(client_data), response.status_code
+    except Exception as ex:
+        error_message = f"endpoint /api/get_client failed for client id {client_id}: {format_exception(ex)}"
+        logger.error(error_message)
+        return jsonify({"error": error_message}), 500
+
+
+@app.route('/api/set-nickname/<client_id>', methods=['POST'])
+def set_nickname(client_id, nickname):
+    try:
+        nickname = request.args.get('nickname', None)
+        if nickname is None:
+            raise ValueError(
+                "pass the client nickname through 'nickname' query parameter")
+        response = requests.post(
+            f'{CHERRY_URL}/set-nickname/{client_id}?nickname={nickname}')
+        return {}, response.status_code
     except Exception as ex:
         error_message = f"endpoint /api/get_client failed for client id {client_id}: {format_exception(ex)}"
         logger.error(error_message)

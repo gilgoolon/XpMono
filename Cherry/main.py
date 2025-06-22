@@ -83,7 +83,8 @@ async def get_clients(db: AsyncSession = Depends(Database.get_db)):
         ClientInfo(
             client_id=f"{client.client_id:x}",
             last_connection=client.last_connection,
-            current_ip=client.ip_addresses[-1].ip_address if client.ip_addresses else None
+            current_ip=client.ip_addresses[-1].ip_address if client.ip_addresses else None,
+            nickname=client.nickname
         ) for client in clients
     ]
 
@@ -123,6 +124,22 @@ async def get_client_details(client_id: str, db: AsyncSession = Depends(Database
         location=location,
         commands_dir=get_client_commands_dir(ROOT, client_id).absolute().as_posix()
     )
+
+
+@app.post("/set-nickname/{client_id}")
+async def set_nickname(client_id: str, nickname: str, db: AsyncSession = Depends(Database.get_db)):
+    stmt = select(Client).where(Client.client_id == unhex(client_id)).options(
+        joinedload(Client.ip_addresses)
+    )
+    result = await db.execute(stmt)
+    client = result.unique().scalar_one_or_none()
+
+    if not client:
+        raise HTTPException(status_code=404, detail="Client not found")
+
+    client.nickname = nickname
+
+    return {"status": "success"}
 
 @app.post("/send-command")
 async def send_command(command: ClientCommand):
