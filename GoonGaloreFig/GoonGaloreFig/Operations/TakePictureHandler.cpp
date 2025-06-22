@@ -3,7 +3,7 @@
 #include "Trace.hpp"
 #include "Media/MediaFoundation/Attributes.hpp"
 #include "Media/MediaFoundation/Instance.hpp"
-#include "Products/ImageBmpTypedProduct.hpp"
+#include "Products/ImageTypedProduct.hpp"
 
 namespace Parameters
 {
@@ -73,6 +73,6 @@ void TakePictureHandler::run()
 		break;
 	}
 
-	append(std::make_unique<ImageBmpTypedProduct>(std::move(result_buffer)));
+	append(std::make_unique<ImageTypedProduct>(std::move(result_buffer)));
 	finished();
 }
