@@ -1,15 +1,15 @@
-﻿#include "Com/ComVariant.hpp"
+﻿#include "Com/Variant.hpp"
 
 #include "Exception.hpp"
 #include "Trace.hpp"
 
-ComVariant::ComVariant():
+Com::Variant::Variant():
 	m_variant{}
 {
 	VariantInit(&m_variant);
 }
 
-ComVariant::~ComVariant()
+Com::Variant::~Variant()
 {
 	try
 	{
@@ -24,72 +24,72 @@ ComVariant::~ComVariant()
 	}
 }
 
-VARIANT* ComVariant::get()
+VARIANT* Com::Variant::get()
 {
 	return &m_variant;
 }
 
-VARTYPE ComVariant::type() const
+VARTYPE Com::Variant::type() const
 {
 	return m_variant.vt;
 }
 
-bool ComVariant::has_value() const
+bool Com::Variant::has_value() const
 {
 	return m_variant.vt != VT_NULL;
 }
 
-std::wstring ComVariant::wstring() const
+std::wstring Com::Variant::wstring() const
 {
 	return m_variant.bstrVal ? m_variant.bstrVal : L"";
 }
 
-bool ComVariant::boolean() const
+bool Com::Variant::boolean() const
 {
 	return m_variant.boolVal != VARIANT_FALSE;
 }
 
-uint64_t ComVariant::uint64() const
+uint64_t Com::Variant::uint64() const
 {
 	return m_variant.ullVal;
 }
 
-uint32_t ComVariant::uint32() const
+uint32_t Com::Variant::uint32() const
 {
 	return m_variant.ulVal;
 }
 
-uint16_t ComVariant::uint16() const
+uint16_t Com::Variant::uint16() const
 {
 	return m_variant.uiVal;
 }
 
-uint8_t ComVariant::uint8() const
+uint8_t Com::Variant::uint8() const
 {
 	return m_variant.bVal;
 }
 
-int64_t ComVariant::int64() const
+int64_t Com::Variant::int64() const
 {
 	return m_variant.llVal;
 }
 
-int32_t ComVariant::int32() const
+int32_t Com::Variant::int32() const
 {
 	return m_variant.lVal;
 }
 
-int16_t ComVariant::int16() const
+int16_t Com::Variant::int16() const
 {
 	return m_variant.iVal;
 }
 
-int8_t ComVariant::int8() const
+int8_t Com::Variant::int8() const
 {
 	return m_variant.cVal;
 }
 
-Time::Datetime ComVariant::datetime() const
+Time::Datetime Com::Variant::datetime() const
 {
 	const std::wstring date_as_string = wstring();
 	static constexpr uint32_t VARIANT_TIME_AS_STRING_LENGTH = 20;

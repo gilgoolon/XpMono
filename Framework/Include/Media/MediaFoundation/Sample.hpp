@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "MediaBuffer.hpp"
-#include "Com/ComReleaser.hpp"
+#include "Com/Releaser.hpp"
 
 #include <mfobjects.h>
 
@@ -22,7 +22,7 @@ public:
 	[[nodiscard]] MediaBuffer to_contiguous_buffer() const;
 
 private:
-	ComReleaser m_sample;
+	Com::Releaser m_sample;
 
 	[[nodiscard]] IMFSample* get() const;
 };

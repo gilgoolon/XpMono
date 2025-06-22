@@ -1,18 +1,20 @@
 ﻿#pragma once
-#include "ComException.hpp"
+#include "Exception.hpp"
 #include "Synchronization/CriticalSection.hpp"
 
 #include <vector>
 
-class ComSafeArrayAccess final
+namespace Com
+{
+class SafeArrayAccess final
 {
 public:
-	explicit ComSafeArrayAccess(SAFEARRAY* safe_array);
-	~ComSafeArrayAccess();
-	ComSafeArrayAccess(const ComSafeArrayAccess&) = delete;
-	ComSafeArrayAccess& operator=(const ComSafeArrayAccess&) = delete;
-	ComSafeArrayAccess(ComSafeArrayAccess&&) = delete;
-	ComSafeArrayAccess& operator=(ComSafeArrayAccess&&) = delete;
+	explicit SafeArrayAccess(SAFEARRAY* safe_array);
+	~SafeArrayAccess();
+	SafeArrayAccess(const SafeArrayAccess&) = delete;
+	SafeArrayAccess& operator=(const SafeArrayAccess&) = delete;
+	SafeArrayAccess(SafeArrayAccess&&) = delete;
+	SafeArrayAccess& operator=(SafeArrayAccess&&) = delete;
 
 	template <typename T>
 	std::vector<T> value() const
@@ -47,3 +49,4 @@ private:
 	SAFEARRAY* m_safearray;
 	void* m_data;
 };
+}

@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "MediaType.hpp"
 #include "Sample.hpp"
-#include "Com/ComReleaser.hpp"
+#include "Com/Releaser.hpp"
 
 #include <mfapi.h>
 #include <mfidl.h>
@@ -29,7 +29,7 @@ public:
 	[[nodiscard]] std::optional<Sample> read_sample() const;
 
 private:
-	ComReleaser m_reader;
+	Com::Releaser m_reader;
 
 	[[nodiscard]] IMFSourceReader* get() const;
 

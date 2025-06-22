@@ -1,8 +1,8 @@
 ﻿#include "Media/MediaFoundation/Sample.hpp"
 
-#include "Com/ComException.hpp"
+#include "Exception.hpp"
 
-MediaFoundation::Sample::Sample(IMFSample* sample):
+MediaFoundation::Sample::Sample(IMFSample* sample) :
 	m_sample(sample)
 {
 }

@@ -1,9 +1,8 @@
-﻿#include "Com/ComSafeArrayAccess.hpp"
+﻿#include "Com/SafeArrayAccess.hpp"
 
 #include "Trace.hpp"
-#include "Com/ComException.hpp"
 
-ComSafeArrayAccess::ComSafeArrayAccess(SAFEARRAY* safe_array):
+Com::SafeArrayAccess::SafeArrayAccess(SAFEARRAY* safe_array):
 	m_safearray(safe_array),
 	m_data(nullptr)
 {
@@ -18,7 +17,7 @@ ComSafeArrayAccess::ComSafeArrayAccess(SAFEARRAY* safe_array):
 	}
 }
 
-ComSafeArrayAccess::~ComSafeArrayAccess()
+Com::SafeArrayAccess::~SafeArrayAccess()
 {
 	try
 	{
@@ -28,11 +27,11 @@ ComSafeArrayAccess::~ComSafeArrayAccess()
 		}
 		if (FAILED(SafeArrayUnaccessData(m_safearray)))
 		{
-			TRACE(L"failed to unaccess safe array");
+			TRACE(L"failed to unaccess com safe array");
 		}
 	}
 	catch (...)
 	{
-		TRACE(L"failed to unaccess safe array");
+		TRACE(L"failed to unaccess com safe array");
 	}
 }

@@ -1,8 +1,8 @@
-﻿#include "Com/ComTaskMemoryReleaser.hpp"
+﻿#include "Com/TaskMemoryReleaser.hpp"
 
 #include "Trace.hpp"
 
-void ComTaskMemoryFreer::operator()(const PVOID memory) const
+void Com::TaskMemoryFreer::operator()(const PVOID memory) const
 {
 	try
 	{

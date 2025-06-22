@@ -1,24 +1,23 @@
-﻿#include "Com/ComResult.hpp"
+﻿#include "Com/Result.hpp"
 
 #include "Exception.hpp"
 #include "Trace.hpp"
-#include "Com/ComException.hpp"
-#include "Com/ComVariant.hpp"
+#include "Com/Variant.hpp"
 #include "Utils/Strings.hpp"
 
-ComResult::ComResult(IWbemClassObject* const object):
+Com::Result::Result(IWbemClassObject* const object):
 	m_object(object)
 {
 	m_object->AddRef();
 }
 
-std::optional<std::wstring> ComResult::get_formatted_property(const std::wstring& property_name)
+std::optional<std::wstring> Com::Result::get_formatted_property(const std::wstring& property_name)
 {
 	static constexpr long RESERVED = 0;
-	ComVariant variant;
+	Variant variant;
 	CIMTYPE value_type;
 	static constexpr long* DONT_OUT_FLAVOR_ORIGIN = nullptr;
-	const HRESULT hresult = static_cast<IWbemClassObject*>(m_object.get())->Get(
+	const HRESULT hresult = reinterpret_cast<IWbemClassObject*>(m_object.get())->Get(
 		property_name.c_str(),
 		RESERVED,
 		variant.get(),

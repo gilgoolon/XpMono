@@ -1,12 +1,10 @@
 ﻿#include "Media/MediaFoundation/SourceReader.hpp"
 
 #include "Trace.hpp"
-#include "Com/ComException.hpp"
 
 #include <Mferror.h>
 
-MediaFoundation::SourceReader::SourceReader(IMFSourceReader* const reader):
-	m_reader(reader)
+MediaFoundation::SourceReader::SourceReader(IMFSourceReader *const reader) : m_reader(reader)
 {
 }
 

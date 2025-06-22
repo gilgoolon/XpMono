@@ -1,10 +1,8 @@
 ﻿#include "Media/MediaFoundation/MediaBuffer.hpp"
 
 #include "Trace.hpp"
-#include "Com/ComException.hpp"
 
-MediaFoundation::MediaBuffer::MediaBuffer(IMFMediaBuffer* const media_buffer):
-	m_media_buffer(media_buffer)
+MediaFoundation::MediaBuffer::MediaBuffer(IMFMediaBuffer *const media_buffer) : m_media_buffer(media_buffer)
 {
 }
 

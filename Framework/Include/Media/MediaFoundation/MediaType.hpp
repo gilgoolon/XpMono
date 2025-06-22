@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "Com/ComReleaser.hpp"
+#include "Com/Releaser.hpp"
 #include "Utils/BiMap.hpp"
 
 #include <cstdint>
@@ -111,7 +111,7 @@ public:
 	friend class SourceReader;
 
 private:
-	ComReleaser m_type;
+	Com::Releaser m_type;
 
 	[[nodiscard]] IMFMediaType* get() const;
 	[[nodiscard]] GUID get_guid(const GUID& key) const;

@@ -1,6 +1,6 @@
 ﻿#include "Handlers/WmiQuerySingleOperationHandler.hpp"
 
-#include "Com/ComConnection.hpp"
+#include "Com/Connection.hpp"
 #include "Products/TextTypedProduct.hpp"
 #include "Utils/Strings.hpp"
 
@@ -15,10 +15,10 @@ WmiQuerySingleOperationHandler::WmiQuerySingleOperationHandler(std::unique_ptr<E
 
 void WmiQuerySingleOperationHandler::run()
 {
-	const ComConnection connection;
+	const Com::Connection connection;
 	const std::wstring query = L"SELECT * FROM " + m_class_name;
-	const std::vector<std::unique_ptr<ComResult>> results = connection.query(query);
-	ComResult& os = *results.front();
+	const std::vector<std::unique_ptr<Com::Result>> results = connection.query(query);
+	Com::Result& os = *results.front();
 	static constexpr auto PAIR_SUFFIX = L"\n";
 	static constexpr auto FIELD_VALUE_SEPARATOR = L": ";
 	static constexpr auto UNKNOWN_VALUE = L"?";

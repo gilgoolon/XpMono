@@ -1,11 +1,10 @@
 ﻿#include "Media/MediaFoundation/Attributes.hpp"
 
-#include "Com/ComException.hpp"
-#include "Com/ComTaskMemoryReleaser.hpp"
+#include "Com/TaskMemoryReleaser.hpp"
 
 #include <mfapi.h>
 
-MediaFoundation::Attributes::Attributes():
+MediaFoundation::Attributes::Attributes() :
 	m_attributes(create_attributes()),
 	m_source_type()
 {
@@ -72,7 +71,7 @@ std::vector<std::unique_ptr<MediaFoundation::Device>> MediaFoundation::Attribute
 		throw ComException(ErrorCode::FAILED_MEDIA_FOUNDATION_ENUMERATE_DEVICES, result);
 	}
 
-	const ComTaskMemoryReleaser devices_memory_guard(devices);
+	const Com::TaskMemoryReleaser devices_memory_guard(devices);
 
 	std::vector<std::unique_ptr<Device>> result_devices;
 

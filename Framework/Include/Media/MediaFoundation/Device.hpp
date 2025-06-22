@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "MediaSource.hpp"
-#include "Com/ComReleaser.hpp"
+#include "Com/Releaser.hpp"
 #include "Interfaces/ISerializableStruct.hpp"
 
 #include <mfobjects.h>
@@ -29,7 +29,7 @@ public:
 
 private:
 	uint32_t m_index;
-	ComReleaser m_device;
+	Com::Releaser m_device;
 	MediaType::Type m_source_type;
 
 	[[nodiscard]] IMFActivate* get() const;

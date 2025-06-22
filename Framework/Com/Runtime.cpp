@@ -1,10 +1,9 @@
-﻿#include "Com/ComRuntime.hpp"
+﻿#include "Com/Runtime.hpp"
 
 #include "Trace.hpp"
-#include "Com/ComException.hpp"
 #include "Synchronization/CriticalSection.hpp"
 
-ComRuntime::ComRuntime()
+Com::Runtime::Runtime()
 {
 	static constexpr LPVOID RESERVED = nullptr;
 	HRESULT hresult = CoInitializeEx(RESERVED, COINIT_MULTITHREADED);
@@ -31,7 +30,7 @@ ComRuntime::ComRuntime()
 	}
 }
 
-ComRuntime::~ComRuntime()
+Com::Runtime::~Runtime()
 {
 	try
 	{

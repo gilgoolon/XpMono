@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Device.hpp"
-#include "Com/ComReleaser.hpp"
+#include "Com/Releaser.hpp"
 
 #include <mfobjects.h>
 #include <vector>
@@ -21,7 +21,7 @@ public:
 	[[nodiscard]] std::vector<std::unique_ptr<Device>> enumerate_devices();
 
 private:
-	ComReleaser m_attributes;
+	Com::Releaser m_attributes;
 	MediaType::Type m_source_type;
 
 	[[nodiscard]] IMFAttributes* get() const;

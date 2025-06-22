@@ -1,9 +1,6 @@
 ﻿#include "Media/MediaFoundation/MediaSource.hpp"
 
-#include "Com/ComException.hpp"
-
-MediaFoundation::MediaSource::MediaSource(IMFMediaSource* source):
-	m_source(source)
+MediaFoundation::MediaSource::MediaSource(IMFMediaSource *source) : m_source(source)
 {
 }
 

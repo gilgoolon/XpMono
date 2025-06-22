@@ -1,7 +1,6 @@
 ﻿#include "Media/MediaFoundation/Instance.hpp"
 
 #include "Trace.hpp"
-#include "Com/ComException.hpp"
 
 #include <mfapi.h>
 

@@ -1,10 +1,9 @@
 ﻿#include "Media/MediaFoundation/Device.hpp"
 
-#include "Com/ComException.hpp"
-#include "Com/ComTaskMemoryReleaser.hpp"
+#include "Com/TaskMemoryReleaser.hpp"
 #include "Utils/Strings.hpp"
 
-MediaFoundation::Device::Device(const uint32_t index, IMFActivate* const device, const MediaType::Type source_type):
+MediaFoundation::Device::Device(const uint32_t index, IMFActivate* const device, const MediaType::Type source_type) :
 	m_index(index),
 	m_device(device),
 	m_source_type(source_type)
@@ -59,7 +58,7 @@ std::wstring MediaFoundation::Device::get_allocated_string(const GUID& property_
 		throw ComException(ErrorCode::FAILED_MEDIA_FOUNDATION_GET_ALLOCATED_STRING, result);
 	}
 
-	ComTaskMemoryReleaser string_guard(string);
+	Com::TaskMemoryReleaser string_guard(string);
 
 	return std::wstring{string, string + static_cast<SSIZE_T>(string_length)};
 }

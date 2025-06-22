@@ -1,12 +1,11 @@
-﻿#include "Com/ComConnection.hpp"
+﻿#include "Com/Connection.hpp"
 
 #include "Trace.hpp"
-#include "Com/ComException.hpp"
-#include "Com/ComVariant.hpp"
+#include "Com/Variant.hpp"
 
 #include <comutil.h>
 
-ComConnection::ComConnection(const std::wstring& namespace_path):
+Com::Connection::Connection(const std::wstring& namespace_path):
 	m_runtime(),
 	m_locator(create_locator()),
 	m_services(connect_server(reinterpret_cast<IWbemLocator*>(m_locator.get()), namespace_path))
@@ -27,7 +26,7 @@ ComConnection::ComConnection(const std::wstring& namespace_path):
 	}
 }
 
-std::vector<std::unique_ptr<ComResult>> ComConnection::query(const std::wstring& query) const
+std::vector<std::unique_ptr<Com::Result>> Com::Connection::query(const std::wstring& query) const
 {
 	static constexpr auto WMI_QUERY_LANGUAGE = "WQL";
 	static constexpr long SYNC_QUERY = WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY;
@@ -44,8 +43,8 @@ std::vector<std::unique_ptr<ComResult>> ComConnection::query(const std::wstring&
 	{
 		throw ComException(ErrorCode::FAILED_COM_QUERY, hresult);
 	}
-	ComReleaser enumerator_releaser(enumerator);
-	std::vector<std::unique_ptr<ComResult>> results;
+	Releaser enumerator_releaser(enumerator);
+	std::vector<std::unique_ptr<Result>> results;
 	while (enumerator)
 	{
 		IWbemClassObject* object = nullptr;
@@ -56,13 +55,13 @@ std::vector<std::unique_ptr<ComResult>> ComConnection::query(const std::wstring&
 			throw ComException(ErrorCode::FAILED_COM_ENUMERATE_RESULT, hresult);
 		}
 		if (uReturn == 0) break;
-		ComReleaser object_releaser(object);
-		results.push_back(std::make_unique<ComResult>(object));
+		Releaser object_releaser(object);
+		results.push_back(std::make_unique<Result>(object));
 	}
 	return results;
 }
 
-IWbemLocator* ComConnection::create_locator()
+IWbemLocator* Com::Connection::create_locator()
 {
 	IWbemLocator* locator = nullptr;
 	const HRESULT result = CoCreateInstance(
@@ -79,7 +78,7 @@ IWbemLocator* ComConnection::create_locator()
 	return locator;
 }
 
-IWbemServices* ComConnection::connect_server(IWbemLocator* locator, const std::wstring& namespace_path)
+IWbemServices* Com::Connection::connect_server(IWbemLocator* locator, const std::wstring& namespace_path)
 {
 	static constexpr BSTR NO_USER = nullptr;
 	static constexpr BSTR NO_PASSWORD = nullptr;

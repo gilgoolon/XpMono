@@ -1,19 +1,21 @@
 ﻿#pragma once
-#include "ComSafeArrayAccess.hpp"
+#include "SafeArrayAccess.hpp"
 #include "Utils/Time.hpp"
 
 #include <string>
 #include <WMIUtils.h>
 
-class ComVariant final
+namespace Com
+{
+class Variant final
 {
 public:
-	explicit ComVariant();
-	~ComVariant();
-	ComVariant(const ComVariant&) = delete;
-	ComVariant& operator=(const ComVariant&) = delete;
-	ComVariant(ComVariant&&) = delete;
-	ComVariant& operator=(ComVariant&&) = delete;
+	explicit Variant();
+	~Variant();
+	Variant(const Variant&) = delete;
+	Variant& operator=(const Variant&) = delete;
+	Variant(Variant&&) = delete;
+	Variant& operator=(Variant&&) = delete;
 
 	[[nodiscard]] VARIANT* get();
 	[[nodiscard]] VARTYPE type() const;
@@ -34,10 +36,11 @@ public:
 	template <typename T>
 	[[nodiscard]] std::vector<T> array() const
 	{
-		const ComSafeArrayAccess access(m_variant.parray);
+		const SafeArrayAccess access(m_variant.parray);
 		return access.value<T>();
 	}
 
 private:
 	VARIANT m_variant;
 };
+}

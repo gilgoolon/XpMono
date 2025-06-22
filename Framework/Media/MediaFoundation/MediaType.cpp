@@ -1,13 +1,11 @@
 ﻿#include "Media/MediaFoundation/MediaType.hpp"
 
 #include "Macros.hpp"
-#include "Com/ComException.hpp"
 
 #include <array>
 #include <mfapi.h>
 
-MediaFoundation::MediaType::MediaType(IMFMediaType* media_type):
-	m_type(media_type)
+MediaFoundation::MediaType::MediaType(IMFMediaType *media_type) : m_type(media_type)
 {
 }
 
