@@ -8,6 +8,8 @@ namespace MediaFoundation
 {
 class MediaType final
 {
+	explicit MediaType(IMFMediaType* media_type);
+
 public:
 	enum class Type : uint32_t
 	{
@@ -24,8 +26,8 @@ public:
 	~MediaType() = default;
 	MediaType(const MediaType&) = delete;
 	MediaType& operator=(const MediaType&) = delete;
-	MediaType(MediaType&&) = delete;
-	MediaType& operator=(MediaType&&) = delete;
+	MediaType(MediaType&&) = default;
+	MediaType& operator=(MediaType&&) = default;
 
 	struct Dimensions
 	{

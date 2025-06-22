@@ -4,8 +4,13 @@
 
 #include <mfapi.h>
 
+MediaFoundation::MediaType::MediaType(IMFMediaType* media_type):
+	m_type(media_type)
+{
+}
+
 MediaFoundation::MediaType::MediaType(const Type type, const SubType sub_type):
-	m_type(create_media_type())
+	MediaType(create_media_type())
 {
 	set_guid(MF_MT_MAJOR_TYPE, get_type_guid(type));
 	set_guid(MF_MT_SUBTYPE, get_sub_type_guid(sub_type));

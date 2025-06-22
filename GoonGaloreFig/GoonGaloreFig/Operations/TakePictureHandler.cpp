@@ -45,17 +45,10 @@ void TakePictureHandler::run()
 		throw Exception(ErrorCode::INVALID_ARGUMENT);
 	}
 
-	std::unique_ptr<MediaFoundation::Device>& device = devices[m_device_index];
-
-	MediaFoundation::MediaSource source = device->activate();
+	MediaFoundation::MediaSource source = devices[m_device_index]->activate();
 
 	MediaFoundation::SourceReader reader = source.create_reader();
-	/*reader.set_media_type(
-		MediaFoundation::MediaType(
-			MediaFoundation::MediaType::Type::VIDEO,
-			MediaFoundation::MediaType::SubType::VIDEO_FORMAT_RGB32
-		)
-	);*/
+	std::vector<MediaFoundation::MediaType> supported_media_types = reader.get_supported_media_types();
 
 	Buffer result_buffer;
 

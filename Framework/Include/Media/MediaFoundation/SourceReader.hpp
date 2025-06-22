@@ -24,6 +24,7 @@ public:
 
 	friend class MediaSource;
 
+	[[nodiscard]] std::vector<MediaType> get_supported_media_types() const;
 	void set_media_type(const MediaType& media_type);
 	[[nodiscard]] std::optional<Sample> read_sample() const;
 
@@ -33,5 +34,7 @@ private:
 	[[nodiscard]] IMFSourceReader* get() const;
 
 	[[nodiscard]] static DWORD stream();
+
+	[[nodiscard]] std::optional<MediaType> get_media_type(uint32_t index) const;
 };
 }
