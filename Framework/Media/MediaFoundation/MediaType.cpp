@@ -196,6 +196,7 @@ MediaFoundation::MediaType MediaFoundation::MediaType::get_best_media_type(std::
 		SubType::VIDEO_FORMAT_RGB32,
 		SubType::VIDEO_FORMAT_ARGB32,
 		SubType::VIDEO_FORMAT_MJPG,
+		SubType::VIDEO_FORMAT_YUY2,
 		SubType::VIDEO_FORMAT_M4S2,
 		SubType::VIDEO_FORMAT_MPG1,
 		SubType::VIDEO_FORMAT_MP43,
