@@ -5,6 +5,7 @@ IOperationHandler::IOperationHandler(std::unique_ptr<Event> operation_event):
 	m_event(std::move(operation_event)),
 	m_products(),
 	m_status(Fig::ExecutionStatus::EXECUTING),
+	m_fig_code(Fig::FigCode::SUCCESS),
 	m_specific_code(Fig::FIG_SPECIFIC_CODE_RESERVED)
 {
 }

@@ -1,24 +1,23 @@
-﻿#include "Wmi/WmiResult.hpp"
+﻿#include "Com/Result.hpp"
 
 #include "Exception.hpp"
 #include "Trace.hpp"
+#include "Com/Variant.hpp"
 #include "Utils/Strings.hpp"
-#include "Wmi/WmiException.hpp"
-#include "Wmi/WmiVariant.hpp"
 
-WmiResult::WmiResult(IWbemClassObject* const object):
+Com::Result::Result(IWbemClassObject* const object):
 	m_object(object)
 {
 	m_object->AddRef();
 }
 
-std::optional<std::wstring> WmiResult::get_formatted_property(const std::wstring& property_name)
+std::optional<std::wstring> Com::Result::get_formatted_property(const std::wstring& property_name)
 {
 	static constexpr long RESERVED = 0;
-	WmiVariant variant;
+	Variant variant;
 	CIMTYPE value_type;
 	static constexpr long* DONT_OUT_FLAVOR_ORIGIN = nullptr;
-	const HRESULT hresult = static_cast<IWbemClassObject*>(m_object.get())->Get(
+	const HRESULT hresult = reinterpret_cast<IWbemClassObject*>(m_object.get())->Get(
 		property_name.c_str(),
 		RESERVED,
 		variant.get(),
@@ -32,7 +31,7 @@ std::optional<std::wstring> WmiResult::get_formatted_property(const std::wstring
 			TRACE(L"property not found: ", property_name);
 			return {};
 		}
-		throw WmiException(ErrorCode::FAILED_WMI_GET_PROPERTY, hresult);
+		throw ComException(ErrorCode::FAILED_COM_GET_PROPERTY, hresult);
 	}
 	if (!variant.has_value())
 	{

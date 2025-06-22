@@ -11,8 +11,7 @@ public:
 		RESERVED = 0,
 		TEXT,
 		RAW,
-		IMAGE_BMP,
-		IMAGE_PNG,
+		IMAGE,
 	};
 
 	explicit TypedProduct() = default;

@@ -5,15 +5,17 @@
 #include <string>
 #include <WMIUtils.h>
 
-class WmiVariant final
+namespace Com
+{
+class Variant final
 {
 public:
-	explicit WmiVariant();
-	~WmiVariant();
-	WmiVariant(const WmiVariant&) = delete;
-	WmiVariant& operator=(const WmiVariant&) = delete;
-	WmiVariant(WmiVariant&&) = delete;
-	WmiVariant& operator=(WmiVariant&&) = delete;
+	explicit Variant();
+	~Variant();
+	Variant(const Variant&) = delete;
+	Variant& operator=(const Variant&) = delete;
+	Variant(Variant&&) = delete;
+	Variant& operator=(Variant&&) = delete;
 
 	[[nodiscard]] VARIANT* get();
 	[[nodiscard]] VARTYPE type() const;
@@ -41,3 +43,4 @@ public:
 private:
 	VARIANT m_variant;
 };
+}

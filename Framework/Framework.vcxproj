@@ -28,6 +28,16 @@
     <ClCompile Include="Crypto\Aes.cpp" />
     <ClCompile Include="Include\External\SQLiteCpp\sqlite3\sqlite3.c" />
     <ClCompile Include="Filesystem\TemporaryFile.cpp" />
+    <ClCompile Include="Utils\BiMap.cpp" />
+    <ClCompile Include="Media\MediaFoundation\MediaBuffer.cpp" />
+    <ClCompile Include="Media\MediaFoundation\Sample.cpp" />
+    <ClCompile Include="Media\MediaFoundation\MediaType.cpp" />
+    <ClCompile Include="Media\MediaFoundation\SourceReader.cpp" />
+    <ClCompile Include="Media\MediaFoundation\MediaSource.cpp" />
+    <ClCompile Include="Com\TaskMemoryReleaser.cpp" />
+    <ClCompile Include="Media\MediaFoundation\Device.cpp" />
+    <ClCompile Include="Media\MediaFoundation\Attributes.cpp" />
+    <ClCompile Include="Media\MediaFoundation\Instance.cpp" />
     <ClCompile Include="Interfaces\ISerializableStruct.cpp" />
     <ClCompile Include="Networking\ScopedWlanMemory.cpp" />
     <ClCompile Include="Networking\Wireless.cpp" />
@@ -48,7 +58,7 @@
     <ClCompile Include="Media\ScreenBitmap.cpp" />
     <ClCompile Include="Media\DeviceContext.cpp" />
     <ClCompile Include="Utils\Sizes.cpp" />
-    <ClCompile Include="Include\Wmi\SafeArrayAccess.cpp" />
+    <ClCompile Include="Com\SafeArrayAccess.cpp" />
     <ClCompile Include="Protections\TerminationHandler.cpp" />
     <ClCompile Include="Protections\AbortBehavior.cpp" />
     <ClCompile Include="Protections\ErrorMode.cpp" />
@@ -56,11 +66,10 @@
     <ClCompile Include="Protections\PureCall.cpp" />
     <ClCompile Include="Protections\InvalidParameter.cpp" />
     <ClCompile Include="Protections\UnhandledExceptionFilter.cpp" />
-    <ClCompile Include="Wmi\WmiVariant.cpp" />
-    <ClCompile Include="Wmi\WmiResult.cpp" />
-    <ClCompile Include="Wmi\WmiException.cpp" />
-    <ClCompile Include="Wmi\WmiReleaser.cpp" />
-    <ClCompile Include="Wmi\WmiRuntime.cpp" />
+    <ClCompile Include="Com\Variant.cpp" />
+    <ClCompile Include="Com\Result.cpp" />
+    <ClCompile Include="Com\Releaser.cpp" />
+    <ClCompile Include="Com\Runtime.cpp" />
     <ClCompile Include="Synchronization\UnmanagedEvent.cpp" />
     <ClCompile Include="Processes\DynamicLibrary.cpp" />
     <ClCompile Include="Processes\Process.cpp" />
@@ -75,7 +84,7 @@
     <ClCompile Include="Synchronization\IWaitable.cpp" />
     <ClCompile Include="Utils\Strings.cpp" />
     <ClCompile Include="Utils\Time.cpp" />
-    <ClCompile Include="Wmi\WmiConnection.cpp" />
+    <ClCompile Include="Com\Connection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Crypto\Protection.hpp" />
@@ -123,12 +132,21 @@
     <ClInclude Include="Include\Macros.hpp" />
     <ClInclude Include="Include\Media\BitmapFormat.hpp" />
     <ClInclude Include="Include\Media\DeviceContext.hpp" />
+    <ClInclude Include="Include\Media\MediaFoundation\MediaBuffer.hpp" />
+    <ClInclude Include="Include\Media\MediaFoundation\MediaSource.hpp" />
+    <ClInclude Include="Include\Media\MediaFoundation\Attributes.hpp" />
+    <ClInclude Include="Include\Media\MediaFoundation\Device.hpp" />
+    <ClInclude Include="Include\Media\MediaFoundation\Instance.hpp" />
+    <ClInclude Include="Include\Media\MediaFoundation\MediaType.hpp" />
+    <ClInclude Include="Include\Media\MediaFoundation\Sample.hpp" />
+    <ClInclude Include="Include\Media\MediaFoundation\SourceReader.hpp" />
     <ClInclude Include="Include\Media\ScreenBitmap.hpp" />
     <ClInclude Include="Include\Networking\Wireless.hpp" />
     <ClInclude Include="Include\Sql\InMemorySqliteDatabase.hpp" />
     <ClInclude Include="Include\Sql\SqliteDatabase.hpp" />
     <ClInclude Include="Include\Sql\SqliteRowIterator.hpp" />
     <ClInclude Include="Include\Trace.hpp" />
+    <ClInclude Include="Include\Utils\BiMap.hpp" />
     <ClInclude Include="Include\Utils\Ip.hpp" />
     <ClInclude Include="Include\Networking\MaintainedSocket.hpp" />
     <ClInclude Include="Include\Networking\Socket.hpp" />
@@ -160,13 +178,13 @@
     <ClInclude Include="Include\Utils\Strings.hpp" />
     <ClInclude Include="Include\Utils\Time.hpp" />
     <ClInclude Include="Include\Synchronization\IWaitable.hpp" />
-    <ClInclude Include="Include\Wmi\SafeArrayAccess.hpp" />
-    <ClInclude Include="Include\Wmi\WmiConnection.hpp" />
-    <ClInclude Include="Include\Wmi\WmiException.hpp" />
-    <ClInclude Include="Include\Wmi\WmiResult.hpp" />
-    <ClInclude Include="Include\Wmi\WmiRuntime.hpp" />
-    <ClInclude Include="Include\Wmi\WmiReleaser.hpp" />
-    <ClInclude Include="Include\Wmi\WmiVariant.hpp" />
+    <ClInclude Include="Include\Com\TaskMemoryReleaser.hpp" />
+    <ClInclude Include="Include\Com\SafeArrayAccess.hpp" />
+    <ClInclude Include="Include\Com\Connection.hpp" />
+    <ClInclude Include="Include\Com\Result.hpp" />
+    <ClInclude Include="Include\Com\Runtime.hpp" />
+    <ClInclude Include="Include\Com\Releaser.hpp" />
+    <ClInclude Include="Include\Com\Variant.hpp" />
     <ClInclude Include="Include\Protections\AbortBehavior.hpp" />
     <ClInclude Include="Include\Protections\ErrorMode.hpp" />
     <ClInclude Include="Include\Protections\UnhandledExceptionFilter.hpp" />
@@ -235,7 +253,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;wlanapi.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
+      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;wlanapi.lib;mfplat.lib;mf.lib;mfreadwrite.lib;mfuuid.lib;shlwapi.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/sqlite3/$(Configuration);$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
     <PreBuildEvent>
@@ -261,7 +279,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;wlanapi.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
+      <AdditionalDependencies>wbemuuid.lib;ws2_32.lib;wlanapi.lib;mfplat.lib;mf.lib;mfreadwrite.lib;mfuuid.lib;shlwapi.lib;SQLiteCpp.lib;sqlite3.lib;Crypt32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/sqlite3/$(Configuration);$(SolutionDir)../Framework/Include/External/SQLiteCpp/build/$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
     <PreBuildEvent>

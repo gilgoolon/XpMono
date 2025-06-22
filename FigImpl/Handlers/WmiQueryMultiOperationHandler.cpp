@@ -1,8 +1,8 @@
 ﻿#include "Handlers/WmiQueryMultiOperationHandler.hpp"
 
+#include "Com/Connection.hpp"
 #include "Products/TextTypedProduct.hpp"
 #include "Utils/Strings.hpp"
-#include "Wmi/WmiConnection.hpp"
 
 WmiQueryMultiOperationHandler::WmiQueryMultiOperationHandler(std::unique_ptr<Event> operation_event,
                                                              std::wstring class_name,
@@ -15,7 +15,7 @@ WmiQueryMultiOperationHandler::WmiQueryMultiOperationHandler(std::unique_ptr<Eve
 
 void WmiQueryMultiOperationHandler::run()
 {
-	const WmiConnection connection;
+	const Com::Connection connection;
 	const std::wstring query = L"SELECT * FROM " + m_class_name;
 	static constexpr auto PAIR_SUFFIX = L"\n";
 	static constexpr auto FIELD_VALUE_SEPARATOR = L": ";
@@ -24,7 +24,7 @@ void WmiQueryMultiOperationHandler::run()
 	uint32_t i = 1;
 
 	std::wstring product;
-	for (const std::unique_ptr<WmiResult>& entry : connection.query(query))
+	for (const std::unique_ptr<Com::Result>& entry : connection.query(query))
 	{
 		product.append(m_class_name + std::to_wstring(i++) + PAIR_SUFFIX);
 		for (const std::wstring& field : m_fields)
