@@ -1,5 +1,6 @@
 ﻿#include "TakePictureHandler.hpp"
 
+#include "Trace.hpp"
 #include "Media/MediaFoundation/Attributes.hpp"
 #include "Media/MediaFoundation/Instance.hpp"
 #include "Products/ImageBmpTypedProduct.hpp"
@@ -48,7 +49,10 @@ void TakePictureHandler::run()
 	MediaFoundation::MediaSource source = devices[m_device_index]->activate();
 
 	MediaFoundation::SourceReader reader = source.create_reader();
-	std::vector<MediaFoundation::MediaType> supported_media_types = reader.get_supported_media_types();
+	const MediaFoundation::MediaType selected_media_type = MediaFoundation::MediaType::get_best_media_type(
+		reader.get_supported_media_types()
+	);
+	reader.set_media_type(selected_media_type);
 
 	Buffer result_buffer;
 

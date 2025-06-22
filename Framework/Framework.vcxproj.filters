@@ -237,6 +237,9 @@
     <ClCompile Include="Media\MediaFoundation\MediaBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\BiMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\CommandLineArguments.hpp">
@@ -558,6 +561,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Media\MediaFoundation\MediaBuffer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Utils\BiMap.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

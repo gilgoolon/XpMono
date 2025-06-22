@@ -28,6 +28,7 @@
     <ClCompile Include="Crypto\Aes.cpp" />
     <ClCompile Include="Include\External\SQLiteCpp\sqlite3\sqlite3.c" />
     <ClCompile Include="Filesystem\TemporaryFile.cpp" />
+    <ClCompile Include="Utils\BiMap.cpp" />
     <ClCompile Include="Media\MediaFoundation\MediaBuffer.cpp" />
     <ClCompile Include="Media\MediaFoundation\Sample.cpp" />
     <ClCompile Include="Media\MediaFoundation\MediaType.cpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="Include\Sql\SqliteDatabase.hpp" />
     <ClInclude Include="Include\Sql\SqliteRowIterator.hpp" />
     <ClInclude Include="Include\Trace.hpp" />
+    <ClInclude Include="Include\Utils\BiMap.hpp" />
     <ClInclude Include="Include\Utils\Ip.hpp" />
     <ClInclude Include="Include\Networking\MaintainedSocket.hpp" />
     <ClInclude Include="Include\Networking\Socket.hpp" />
