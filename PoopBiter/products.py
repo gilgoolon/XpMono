@@ -232,7 +232,6 @@ class TypedProduct(abc.ABC):
             TypedProductType.RAW: RawTypedProduct,
             TypedProductType.TEXT: TextTypedProduct,
             TypedProductType.IMAGE: ImageTypedProduct,
-            TypedProductType.IMAGE_PNG: ImageTypedProduct,
         }
         
         if product_type not in products:
