@@ -33,7 +33,7 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 			std::move(operation_event),
 			MediaFoundation::MediaType::Type::AUDIO
 		);
-	case static_cast<Fig::OperationType>(Api::OperationType::TAKE_WEBCAM_PICTURE):
+	case static_cast<Fig::OperationType>(Api::OperationType::TAKE_PICTURE):
 		return std::make_shared<TakePictureHandler>(std::move(operation_event), operation_parameters);
 	default:
 		throw FigImplException(Fig::FigCode::FAILED_UNSUPPORTED_OPERATION);

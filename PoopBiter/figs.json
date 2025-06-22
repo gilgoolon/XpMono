@@ -46,7 +46,7 @@
                 "0": "RESERVED",
                 "1": "ENUMERATE_VIDEO_DEVICES",
                 "2": "ENUMERATE_AUDIO_DEVICES",
-                "3": "TAKE_WEBCAM_PICTURE"
+                "3": "TAKE_PICTURE"
             }
         },
         {

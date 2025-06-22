@@ -12,6 +12,6 @@ enum class OperationType : Fig::OperationType
 	RESERVED = 0,
 	ENUMERATE_VIDEO_DEVICES,
 	ENUMERATE_AUDIO_DEVICES,
-	TAKE_WEBCAM_PICTURE,
+	TAKE_PICTURE,
 };
 }
