@@ -1,10 +1,15 @@
-from PassionFruit.backend import transformer
-from PoopBiter import logger
-from PoopBiter.fig import get_fig, list_figs
-from PoopBiter.products import PRODUCT_TYPE_TO_STRING, Product, ProductInfo
-from flask import Flask, send_from_directory, request, jsonify
-from flask_cors import CORS
+# fmt: off
+import eventlet
+eventlet.monkey_patch()
+
+from collections import OrderedDict
+from typing import Dict, Set
+
 from flask import request
+from flask_socketio import SocketIO, disconnect
+from flask_cors import CORS
+from flask import Flask, send_from_directory, request, jsonify
+
 import requests
 import os
 import base64
@@ -13,22 +18,93 @@ import json
 
 from PoopBiter.releases import list_releases
 from PoopBiter.templates import list_templates
-from PoopBiter.utils import format_exception, is_int
+from PoopBiter.utils import format_exception
+from PoopBiter import logger
+from PoopBiter.fig import list_figs
+from PoopBiter.products import PRODUCT_TYPE_TO_STRING, Product, ProductInfo
+
+from PassionFruit.backend import transformer
+
+# fmt: on
 
 
 CNC_ROOT = "CornCake"
 
 app = Flask(__name__, static_folder='frontend/build')
-# Configure CORS to allow all methods and headers
 CORS(app, resources={
     r"/*": {
         "origins": "*",
-        "methods": ["GET", "POST", "OPTIONS"],
+        "methods": ["GET", "POST", "OPTIONS", "DELETE"],
         "allow_headers": ["Content-Type", "Authorization"]
     }
 })
+socketio = SocketIO(app, cors_allowed_origins="*")
+
+client_id_to_sids: Dict[str, Set[str]] = {}
+sid_to_client_id: Dict[str, str] = {}
+
 
 CHERRY_URL = 'http://localhost:8000'
+
+
+@socketio.on('register')
+def handle_register(data):
+    client_id = data.get('client_id')
+    sid = request.sid
+
+    if not client_id:
+        return
+
+    if client_id in client_id_to_sids:
+        client_id_to_sids[client_id].add(sid)
+    client_id_to_sids[client_id] = {sid}
+    sid_to_client_id[sid] = client_id
+    print(f"Registered client {client_id} with sid {sid}")
+
+
+@socketio.on('unregister')
+def handle_unregister(data):
+    client_id = data.get('client_id')
+    sid = request.sid
+
+    if not client_id:
+        return
+
+    if client_id in client_id_to_sids and sid in client_id_to_sids:
+        client_id_to_sids[client_id].remove(sid)
+    sid_to_client_id.pop(sid, None)
+    print(f"Registered client {client_id} with sid {sid}")
+
+
+@socketio.on('connect')
+def on_connect():
+    print('Client connected')
+
+
+@socketio.on('disconnect')
+def on_disconnect():
+    sid = request.sid
+    client_id = sid_to_client_id.pop(sid, None)
+    if client_id in client_id_to_sids:
+        if sid in client_id_to_sids[client_id]:
+            client_id_to_sids[client_id].remove(sid)
+        print(f"Client {client_id} disconnected")
+
+
+@app.route('/api/new-product/<client_id>', methods=['POST'])
+def notify_client_product(client_id):
+    LOCAL_SERVICES = "127.0.0.1"
+    if request.remote_addr != LOCAL_SERVICES:
+        logger.warning(
+            f"someone tried to notify clients from {request.remote_addr}")
+        return
+
+    product_id = request.args.get("product_id", None)
+
+    for sid in client_id_to_sids.get(client_id, []):
+        logger.info(f"notifying sid {sid}")
+        socketio.emit('new_product', {"product_id": product_id}, to=sid)
+    return {'status': 'success'}
 
 
 @app.route('/api/clients', methods=['GET'])
@@ -45,52 +121,59 @@ def get_client(client_id):
         response = requests.get(f'{CHERRY_URL}/get-client/{client_id}')
         client_data = response.json()
         
-        if 'location' not in client_data or client_data['location'] is None:
-            client_data['location'] = "Unknown"
-
+        client_data['location'] = client_data.get('location', None)
         client_data['nickname'] = client_data.get('nickname', None)
-
-        # Parse each product's content
-        if 'products' in client_data:
-            parsed_products = {}
-            product_paths = {}  # Map product IDs to their paths
-
-            # Handle products as a list
-            for product_path in client_data['products']:
-                path = Path(product_path)
-                try:
-                    info = ProductInfo.from_path(path)
-                    product_paths[info.product_id] = product_path
-                except Exception as ex:
-                    logger.error(
-                        f"failed to parse product info '{product_path}': {format_exception(ex)}")
-                    continue
-
-                try:
-                    product = Product.from_path(path)
-                    parsed_products[product.info.product_id] = product.displayable(
-                    )
-                except Exception as ex:
-                    error_message = f"failed to parse product {info} at '{product_path}': {format_exception(ex)}"
-                    logger.error(error_message)
-                    parsed_products[info.product_id] = {
-                        **info.displayable(),
-                        f"formatted_type": f"{PRODUCT_TYPE_TO_STRING[info.product_type]} (Invalid)",
-                        f"error": error_message
-                    }
-
-            # Replace products list with IDs and add the mappings
-            client_data['products'] = [product[0] for product in sorted(
-                parsed_products.items(), key=lambda product: product[1]["creation_time"], reverse=True)]
-            client_data['product_paths'] = product_paths
-            client_data['parsed_products'] = parsed_products
 
         return jsonify(client_data), response.status_code
     except Exception as ex:
-        error_message = f"endpoint /api/get_client failed for client id {client_id}: {format_exception(ex)}"
+        error_message = f"endpoint /api/clients failed for client id {client_id}: {format_exception(ex)}"
         logger.error(error_message)
         return jsonify({"error": error_message}), 500
 
+
+@app.route('/api/products/<client_id>', methods=['GET'])
+def get_products(client_id):
+    try:
+        response = requests.get(f'{CHERRY_URL}/get-client/{client_id}')
+        client_data = response.json()
+
+        product_paths = client_data.get("products", [])
+        parsed_products = {}
+
+        for product_path in product_paths:
+            path = Path(product_path)
+            try:
+                info = ProductInfo.from_path(path)
+                formatted_product_id = f"{info.product_id:x}"
+                parsed_products[formatted_product_id] = info.displayable()
+            except Exception as ex:
+                logger.error(
+                    f"failed to parse product info '{product_path}': {format_exception(ex)}")
+                continue
+
+            try:
+                product = Product.from_path(path)
+                parsed_products[formatted_product_id].update(
+                    product.displayable())
+            except Exception as ex:
+                error_message = f"failed to parse product {info} at '{product_path}': {format_exception(ex)}"
+                logger.error(error_message)
+                parsed_products[formatted_product_id] = {
+                    **info.displayable(),
+                    f"formatted_type": f"{PRODUCT_TYPE_TO_STRING[info.product_type]} (Invalid)",
+                    f"error": error_message
+                }
+
+        parsed_products = OrderedDict([product for product in sorted(
+            parsed_products.items(), key=lambda product: product[1]["creation_time"], reverse=True)])
+
+        client_data["products"] = parsed_products
+
+        return jsonify(client_data), response.status_code
+    except Exception as ex:
+        error_message = f"endpoint /api/products failed for client id {client_id}: {format_exception(ex)}"
+        logger.error(error_message)
+        return jsonify({"error": error_message}), 500
 
 @app.route('/api/set-nickname/<client_id>', methods=['POST'])
 def set_nickname(client_id):
@@ -103,9 +186,28 @@ def set_nickname(client_id):
             f'{CHERRY_URL}/set-nickname/{client_id}?nickname={nickname}')
         return {}, response.status_code
     except Exception as ex:
-        error_message = f"endpoint /api/get_client failed for client id {client_id}: {format_exception(ex)}"
+        error_message = f"endpoint /api/set-nickname failed for client id {client_id}: {format_exception(ex)}"
         logger.error(error_message)
         return jsonify({"error": error_message}), 500
+
+
+@app.route('/api/delete-product/<client_id>', methods=['DELETE'])
+def delete_product(client_id):
+    try:
+        product_name = request.args.get('product_name', None)
+        command_id = request.args.get('command_id', None)
+        if product_name is None or command_id is None:
+            raise ValueError(
+                "pass product details through query parameters 'product_name' and 'command_id'")
+
+        response = requests.post(
+            f'{CHERRY_URL}/delete-product/{client_id}?command_id={command_id}&product_name={product_name}')
+        return jsonify({}), response.status_code
+    except Exception as ex:
+        error_message = f"endpoint /api/delete-product failed for client id {client_id}: {format_exception(ex)}"
+        logger.error(error_message)
+        return jsonify({"error": error_message}), 500
+
 
 @app.route('/api/commands', methods=['POST', 'OPTIONS'])
 def send_command():

@@ -126,12 +126,6 @@ export default function ProductViewer({ product, productPath }) {
                 {Object.entries(product).map(([key, value]) => 
                   renderField(key, value)
                 )}
-                
-                {/* Always show path last */}
-                <TableRow>
-                  <TableCell component="th" scope="row">Path</TableCell>
-                  <TableCell sx={{ wordBreak: 'break-all' }}>{productPath}</TableCell>
-                </TableRow>
               </TableBody>
             </Table>
           </TableContainer>

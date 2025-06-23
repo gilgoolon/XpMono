@@ -8,11 +8,14 @@
     "@mui/icons-material": "^5.16.14",
     "@mui/lab": "^5.0.0-alpha.140",
     "@mui/material": "^5.14.5",
+    "animate.css": "^4.1.1",
     "axios": "^1.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-notifications-component": "^4.0.1",
     "react-router-dom": "^7.3.0",
-    "react-scripts": "5.0.1"
+    "react-scripts": "5.0.1",
+    "socket.io-client": "^4.8.1"
   },
   "scripts": {
     "start": "react-scripts start",

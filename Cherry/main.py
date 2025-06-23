@@ -17,6 +17,7 @@ from Cherry.commands import get_client_commands_dir
 from Cherry.protocol import ClientCommand, ClientConnection, DetailedClientInfo, ClientInfo
 from Cherry.database import Database
 from Cherry.models import Client, ClientIP, Location
+from PoopBiter import logger, products
 from PoopBiter.utils import unhex
 
 
@@ -141,6 +142,20 @@ async def set_nickname(client_id: str, nickname: str, db: AsyncSession = Depends
     client.nickname = nickname
 
     return {"status": "success"}
+
+
+@app.post("/delete-product/{client_id}")
+async def delete_product(client_id: str, command_id: str, product_name: str):
+    # Path traversal vulnerability :)
+    path = products.get_product_path(
+        client_id, command_id, *products.split_product_name(product_name))
+    if not path.exists():
+        raise ValueError("product not found")
+
+    path.unlink()
+    logger.info(f"deleted product {path}")
+    return {"status": "success"}
+
 
 @app.post("/send-command")
 async def send_command(command: ClientCommand):

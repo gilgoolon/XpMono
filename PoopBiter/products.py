@@ -1,10 +1,11 @@
 from datetime import datetime
+from functools import cache
 import io
 import abc
 import enum
 import base64
 import struct
-from typing import Any, Dict
+from typing import Any, Dict, Tuple, Union
 from pathlib import Path
 from dataclasses import dataclass
 
@@ -16,6 +17,8 @@ from PoopBiter.fig_code import FigCode
 from PoopBiter.utils import format_winapi_error, unhex
 from PoopBiter.fig import format_fig_name, format_operation_name
 
+
+PRODUCTS_PATH = Path("CornCake") / "products"
 
 class ProductType(enum.IntEnum):
     ERROR = 0
@@ -30,6 +33,23 @@ PRODUCT_TYPE_TO_STRING = {
     ProductType.FIG_OPERATION_ERROR: "Fig Operation Error",
     ProductType.FIG_PRODUCT: "Fig Product",
 }
+
+
+def split_product_name(product_name: str) -> Tuple[str, str]:
+    return product_name.split('-')
+
+
+@cache
+def get_product_path(client_id: Union[int, str], command_id: Union[int, str], product_id: Union[int, str], product_type: Union[ProductType, int]):
+    if isinstance(client_id, int):
+        client_id = f"{client_id:x}"
+    if isinstance(command_id, int):
+        command_id = f"{command_id:x}"
+    if isinstance(product_id, int):
+        product_id = f"{product_id:x}"
+    if isinstance(product_type, ProductType):
+        product_type = product_type.value
+    return PRODUCTS_PATH / client_id / command_id / f"{product_id}-{product_type}"
 
 
 @dataclass
@@ -50,9 +70,17 @@ class ProductInfo:
         creation_time = datetime.fromtimestamp(path.stat().st_ctime)
         return ProductInfo(client_id, command_id, unhex(raw_product_id), ProductType(int(raw_product_type)), creation_time)
 
+    @property
+    def path(self) -> Path:
+        return get_product_path(self.client_id, self.command_id, self.product_id, self.product_type)
+
     def displayable(self) -> Dict[str, Any]:
         return {
-            "id": f"{self.product_id:x}",
+            "product_id": f"{self.product_id:x}",
+            "product_name": f"{self.path.name}",
+            "command_id": f"{self.command_id:x}",
+            "creation_time": self.creation_time,
+            "path": str(self.path),
         }
 
 
@@ -91,8 +119,6 @@ class Product(abc.ABC):
 
     def displayable(self) -> dict[str, Any]:
         base_properties = {
-            "id": f"{self._info.product_id:x}",
-            "creation_time": self._info.creation_time,
             "formatted_type": self._formatted_type,
             "type": self._display_type
         }
