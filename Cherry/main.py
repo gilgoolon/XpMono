@@ -16,8 +16,9 @@ from Cherry import analyzer
 from Cherry.commands import get_client_commands_dir
 from Cherry.protocol import ClientCommand, ClientConnection, DetailedClientInfo, ClientInfo
 from Cherry.database import Database
-from Cherry.models import Client, ClientIP, Location
+from Cherry.models import Client, ClientIP
 from PoopBiter import logger, products
+from PoopBiter.location import format_coordinates
 from PoopBiter.utils import unhex
 
 
@@ -72,10 +73,22 @@ async def client_connected(connection: ClientConnection, db: AsyncSession = Depe
     await db.commit()
     return {"status": "success"}
 
+
+def _format_location(location) -> str:
+    if len(location) == 0:
+        return "Unknown"
+
+    location = location[0]
+    if not location.label:
+        return format_coordinates(location.latitude, location.longitude)
+
+    return location.label
+
 @app.get("/get-clients", response_model=List[ClientInfo])
 async def get_clients(db: AsyncSession = Depends(Database.get_db)):
     stmt = select(Client).options(
         joinedload(Client.ip_addresses),
+        joinedload(Client.location),
     )
     result = await db.execute(stmt)
     clients = result.unique().scalars().all()
@@ -85,33 +98,23 @@ async def get_clients(db: AsyncSession = Depends(Database.get_db)):
             client_id=f"{client.client_id:x}",
             last_connection=client.last_connection,
             current_ip=client.ip_addresses[-1].ip_address if client.ip_addresses else None,
-            nickname=client.nickname
+            nickname=client.nickname,
+            location=_format_location(client.location),
         ) for client in clients
     ]
-
-
-async def _get_formatted_location(latitude: float, longitude: float, db: AsyncSession) -> str:
-    stmt = select(Location).where(Location.longitude ==
-                                  longitude and Location.latitude == latitude)
-    result = await db.execute(stmt)
-    formatted = result.unique().scalar_one_or_none()
-
-    return formatted.label if formatted is not None else f"({latitude}, {longitude})"
 
 
 @app.get("/get-client/{client_id}", response_model=DetailedClientInfo)
 async def get_client_details(client_id: str, db: AsyncSession = Depends(Database.get_db)):
     stmt = select(Client).where(Client.client_id == unhex(client_id)).options(
-        joinedload(Client.ip_addresses)
+        joinedload(Client.ip_addresses),
+        joinedload(Client.location),
     )
     result = await db.execute(stmt)
     client = result.unique().scalar_one_or_none()
     
     if not client:
         raise HTTPException(status_code=404, detail="Client not found")
-    
-    location = await _get_formatted_location(
-        client.location_lat, client.location_long, db) if client.location_accuracy_meters is not None else None
 
     return DetailedClientInfo(
         client_id=f"{client.client_id:x}",
@@ -123,7 +126,7 @@ async def get_client_details(client_id: str, db: AsyncSession = Depends(Database
         } for ip in sorted(client.ip_addresses, key=lambda x: x.last_seen, reverse=True)],
         products=analyzer.get_client_products(ROOT, client_id),
         nickname=client.nickname,
-        location=location,
+        location=_format_location(client.location),
         commands_dir=get_client_commands_dir(ROOT, client_id).absolute().as_posix()
     )
 
