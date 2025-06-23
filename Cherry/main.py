@@ -121,6 +121,7 @@ async def get_client_details(client_id: str, db: AsyncSession = Depends(Database
             "last_seen": ip.last_seen
         } for ip in sorted(client.ip_addresses, key=lambda x: x.last_seen, reverse=True)],
         products=analyzer.get_client_products(ROOT, client_id),
+        nickname=client.nickname,
         location=location,
         commands_dir=get_client_commands_dir(ROOT, client_id).absolute().as_posix()
     )
