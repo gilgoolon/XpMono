@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Box, Typography, Paper, Grid, Card, CardContent,
   IconButton, Collapse, List, ListItem, ListItemText,
-  TextField, Button, Alert, Snackbar, Dialog, DialogContent,
+  TextField, Dialog, DialogContent,
   Tabs, Tab, MenuItem
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -13,10 +13,12 @@ import { Store } from 'react-notifications-component';
 import ProductViewer from './ProductViewer';
 import CommandTemplates from './CommandTemplates';
 import axios from 'axios';
+import EditableField from '../components/EditableField';
 
 import { DeleteButton } from './DeleteButton';
 import { API_BASE_URL } from '../Config.js'; 
 import { socket } from '../socket.js'
+import EditableLabel from './EditableLable.jsx';
 
 export default function ClientDetails({ client, onSendCommand }) {
   const [commandData, setCommandData] = useState('');
@@ -327,6 +329,21 @@ export default function ClientDetails({ client, onSendCommand }) {
     );
   }
 
+  const clientNickname = (client) => {
+    const saveNickname = async (newName) => {
+      try {
+        await axios.post(`${API_BASE_URL}/api/set-nickname/${client.client_id}?nickname=${encodeURIComponent(newName)}`);
+      } catch (error) {
+        console.error('Failed to save:', error);
+        alert('Error saving changes');
+      }
+    }
+
+    return (
+      <EditableLabel initialValue={client.nickname} name="Nickname" onSave={(value) => saveNickname(value)} />
+    );
+  }
+
   return (
     <Box sx={{ p: 3 }}>
       {/* Top Section - Client Overview */}
@@ -347,9 +364,7 @@ export default function ClientDetails({ client, onSendCommand }) {
             <Typography variant="subtitle2" color="text.secondary">
               Nickname
             </Typography>
-            <Typography variant="body1" gutterBottom>
-              {client.nickname ?? "None"}
-            </Typography>
+            {clientNickname(client)}
           </Grid>
           <Grid item xs={12} md={4}>
             <Typography variant="subtitle2" color="text.secondary">
