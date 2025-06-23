@@ -9,15 +9,14 @@ import { LoadingButton } from '@mui/lab';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import SendIcon from '@mui/icons-material/Send';
+import { Store } from 'react-notifications-component';
 import ProductViewer from './ProductViewer';
 import CommandTemplates from './CommandTemplates';
 import axios from 'axios';
-import { io } from 'socket.io-client';
 
 import { DeleteButton } from './DeleteButton';
 import { API_BASE_URL } from '../Config.js'; 
-
-const socket = io(API_BASE_URL);
+import { socket } from '../socket.js'
 
 export default function ClientDetails({ client, onSendCommand }) {
   const [commandData, setCommandData] = useState('');
@@ -43,26 +42,32 @@ export default function ClientDetails({ client, onSendCommand }) {
   };
 
   useEffect(() => {
-    fetchProducts()
+    const handleNewProducts = () => {
+      Store.addNotification({
+        title: "Notification",
+        message: "New products incoming...",
+        type: "success",
+        insert: "top",
+        container: "top-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 5000,
+          onScreen: true
+        }
+      });
+      fetchProducts();
+    };
+
+    socket.on('new_products', handleNewProducts);
+
+    return () => {
+      socket.off('new_products', handleNewProducts);
+    };
   }, []);
 
   useEffect(() => {
-    socket.on('connect', () => {
-      console.log('Connected to server');
-      socket.emit('register', { client_id: client.client_id })
-    });
-
-    socket.on('new_products', () => {
-      fetchProducts()
-    });
-
-    socket.on('disconnect', () => {
-      console.log('Disconnected from server');
-    });
-
-    return () => {
-      socket.disconnect();
-    };
+    fetchProducts()
   }, []);
 
   useEffect(() => {
@@ -184,7 +189,7 @@ export default function ClientDetails({ client, onSendCommand }) {
 
   const deleteProduct = async (client, product) => {
     try {
-      await axios.post(`${API_BASE_URL}/api/delete-product/${client.client_id}?command_id=${encodeURIComponent(product.command_id)}&product_name=${encodeURIComponent(product.product_name)}`);
+      await axios.delete(`${API_BASE_URL}/api/delete-product/${client.client_id}?command_id=${encodeURIComponent(product.command_id)}&product_name=${encodeURIComponent(product.product_name)}`);
       setProducts(prev => {
         const newProducts = { ...prev };
         delete newProducts[product.product_id];

@@ -4,6 +4,7 @@ import { Box, Button } from '@mui/material';
 import ClientDetails from '../components/ClientDetails';
 import axios from 'axios';
 import { API_BASE_URL } from "../Config.js";
+import { socket } from '../socket.js'
 
 export default function ClientDetailsPage() {
   const { liverId } = useParams();
@@ -13,6 +14,16 @@ export default function ClientDetailsPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const handleConnect = () => {
+      console.log('Connected to server');
+      socket.emit('register', { client_id: liverId });
+    };
+
+    const handleDisconnect = () => {
+      socket.emit('unregister', { client_id: liverId });
+      console.log('Disconnected from server');
+    };
+
     const fetchClientDetails = async () => {
       setIsLoading(true);
       try {
@@ -26,7 +37,17 @@ export default function ClientDetailsPage() {
         setIsLoading(false);
       }
     };
+
+    socket.on('connect', handleConnect);
+    socket.on('disconnect', handleDisconnect);
+
     fetchClientDetails();
+    socket.connect()
+
+    return () => {
+      socket.off('connect', handleConnect);
+      socket.off('disconnect', handleDisconnect);
+    };
   }, [liverId]);
 
   const handleSendCommand = async (commandData) => {

@@ -1,14 +1,15 @@
+# fmt: off
+import eventlet
+eventlet.monkey_patch()
+
 from collections import OrderedDict
-from typing import Dict, List, Set
-from PassionFruit.backend import transformer
-from PoopBiter import logger
-from PoopBiter.fig import list_figs
-from PoopBiter.products import PRODUCT_TYPE_TO_STRING, Product, ProductInfo
-from flask import Flask, send_from_directory, request, jsonify
-from flask_cors import CORS
+from typing import Dict, Set
+
 from flask import request
 from flask_socketio import SocketIO, disconnect
-import eventlet
+from flask_cors import CORS
+from flask import Flask, send_from_directory, request, jsonify
+
 import requests
 import os
 import base64
@@ -18,21 +19,26 @@ import json
 from PoopBiter.releases import list_releases
 from PoopBiter.templates import list_templates
 from PoopBiter.utils import format_exception
+from PoopBiter import logger
+from PoopBiter.fig import list_figs
+from PoopBiter.products import PRODUCT_TYPE_TO_STRING, Product, ProductInfo
+
+from PassionFruit.backend import transformer
+
+# fmt: on
 
 
 CNC_ROOT = "CornCake"
 
-eventlet.monkey_patch()
 app = Flask(__name__, static_folder='frontend/build')
-# Configure CORS to allow all methods and headers
 CORS(app, resources={
     r"/*": {
         "origins": "*",
-        "methods": ["GET", "POST", "OPTIONS"],
+        "methods": ["GET", "POST", "OPTIONS", "DELETE"],
         "allow_headers": ["Content-Type", "Authorization"]
     }
 })
-socketio = SocketIO(app, cors_allowed_origins="*")  # allow all origins for dev
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 client_id_to_sids: Dict[str, Set[str]] = {}
 sid_to_client_id: Dict[str, str] = {}
@@ -46,13 +52,33 @@ def handle_register(data):
     client_id = data.get('client_id')
     sid = request.sid
 
-    if client_id:
-        if client_id in client_id_to_sids:
-            client_id_to_sids[client_id].add(sid)
-        client_id_to_sids[client_id] = {sid}
-        print(f"Registered client {client_id} with sid {sid}")
-    else:
-        disconnect()  # reject if no ID sent
+    if not client_id:
+        return
+
+    if client_id in client_id_to_sids:
+        client_id_to_sids[client_id].add(sid)
+    client_id_to_sids[client_id] = {sid}
+    sid_to_client_id[sid] = client_id
+    print(f"Registered client {client_id} with sid {sid}")
+
+
+@socketio.on('unregister')
+def handle_unregister(data):
+    client_id = data.get('client_id')
+    sid = request.sid
+
+    if not client_id:
+        return
+
+    if client_id in client_id_to_sids:
+        client_id_to_sids[client_id].remove(sid)
+    sid_to_client_id.pop(sid, None)
+    print(f"Registered client {client_id} with sid {sid}")
+
+
+@socketio.on('connect')
+def on_connect():
+    print('Client connected')
 
 
 @socketio.on('disconnect')
@@ -73,6 +99,7 @@ def notify_client_products(client_id):
             f"someone tried to notify clients from {request.remote_addr}")
         return
 
+    print(client_id_to_sids)
     for sid in client_id_to_sids.get(client_id, []):
         socketio.emit('new_products', {}, to=sid)
     return {'status': 'success'}
@@ -162,7 +189,7 @@ def set_nickname(client_id):
         return jsonify({"error": error_message}), 500
 
 
-@app.route('/api/delete-product/<client_id>', methods=['POST'])
+@app.route('/api/delete-product/<client_id>', methods=['DELETE'])
 def delete_product(client_id):
     try:
         product_name = request.args.get('product_name', None)
