@@ -9,7 +9,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import axios from 'axios';
-import { API_BASE_URL } from "./Config.js";
+import { API_BASE_ENDPOINT } from "./Config.js";
 import ClientList from './pages/ClientList';
 import ClientDetailsPage from './pages/ClientDetailsPage';
 
@@ -50,7 +50,7 @@ function App() {
   const fetchClients = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/clients`);
+      const response = await axios.get(`${API_BASE_ENDPOINT}/livers`);
       setClients(response.data);
     } catch (error) {
       console.error('Error fetching clients:', error);

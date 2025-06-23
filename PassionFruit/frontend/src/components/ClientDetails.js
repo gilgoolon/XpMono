@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Box, Typography, Paper, Grid, Card, CardContent,
   IconButton, Collapse, List, ListItem, ListItemText,
-  TextField, Button, Alert, Snackbar, Dialog, DialogContent,
+  TextField, Dialog, DialogContent,
   Tabs, Tab, MenuItem
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -15,8 +15,9 @@ import CommandTemplates from './CommandTemplates';
 import axios from 'axios';
 
 import { DeleteButton } from './DeleteButton';
-import { API_BASE_URL } from '../Config.js'; 
+import { API_BASE_ENDPOINT, liverUrl } from '../Config.js';
 import { socket } from '../socket.js'
+import EditableLabel from './EditableLable.jsx';
 
 export default function ClientDetails({ client, onSendCommand }) {
   const [commandData, setCommandData] = useState('');
@@ -34,7 +35,7 @@ export default function ClientDetails({ client, onSendCommand }) {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/products/${client.client_id}`);
+      const response = await axios.get(`${liverUrl(client.client_id)}/products`);
       setProducts(response.data.products);
     } catch (error) {
       console.error('Failed to fetch products:', error);
@@ -73,7 +74,7 @@ export default function ClientDetails({ client, onSendCommand }) {
   useEffect(() => {
     const fetchReleases = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/releases`);
+        const response = await axios.get(`${API_BASE_ENDPOINT}/releases`);
         setReleases(response.data);
       } catch (error) {
         console.error('Failed to fetch releases:', error);
@@ -85,7 +86,7 @@ export default function ClientDetails({ client, onSendCommand }) {
   useEffect(() => {
     const fetchFigIds = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/fig-ids`);
+        const response = await axios.get(`${API_BASE_ENDPOINT}/fig-ids`);
         setFigIds(response.data);
       } catch (error) {
         console.error('Failed to fetch fig ids:', error);
@@ -97,7 +98,7 @@ export default function ClientDetails({ client, onSendCommand }) {
   useEffect(() => {
     const fetchOperationTypes = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/operation-types`);
+        const response = await axios.get(`${API_BASE_ENDPOINT}/operation-types`);
         setOperationTypes(response.data);
       } catch (error) {
         console.error('Failed to fetch operation types:', error);
@@ -189,7 +190,7 @@ export default function ClientDetails({ client, onSendCommand }) {
 
   const deleteProduct = async (client, product) => {
     try {
-      await axios.delete(`${API_BASE_URL}/api/delete-product/${client.client_id}?command_id=${encodeURIComponent(product.command_id)}&product_name=${encodeURIComponent(product.product_name)}`);
+      await axios.delete(`${liverUrl(client.client_id)}/delete-product?command_id=${encodeURIComponent(product.command_id)}&product_name=${encodeURIComponent(product.product_name)}`);
       setProducts(prev => {
         const newProducts = { ...prev };
         delete newProducts[product.product_id];
@@ -327,6 +328,21 @@ export default function ClientDetails({ client, onSendCommand }) {
     );
   }
 
+  const clientNickname = (client) => {
+    const saveNickname = async (newName) => {
+      try {
+        await axios.post(`${liverUrl(client.client_id)}/set-nickname?nickname=${encodeURIComponent(newName)}`);
+      } catch (error) {
+        console.error('Failed to save:', error);
+        alert('Error saving changes');
+      }
+    }
+
+    return (
+      <EditableLabel initialValue={client.nickname} name="Nickname" onSave={(value) => saveNickname(value)} />
+    );
+  }
+
   return (
     <Box sx={{ p: 3 }}>
       {/* Top Section - Client Overview */}
@@ -347,9 +363,7 @@ export default function ClientDetails({ client, onSendCommand }) {
             <Typography variant="subtitle2" color="text.secondary">
               Nickname
             </Typography>
-            <Typography variant="body1" gutterBottom>
-              {client.nickname ?? "None"}
-            </Typography>
+            {clientNickname(client)}
           </Grid>
           <Grid item xs={12} md={4}>
             <Typography variant="subtitle2" color="text.secondary">
@@ -499,9 +513,12 @@ export default function ClientDetails({ client, onSendCommand }) {
             <Typography variant="h6" gutterBottom>
               Products
             </Typography>
-            <Grid container spacing={2}>
-              {Object.entries(products).map(productCard)}
-            </Grid>
+
+            <Box sx={{ maxHeight: 400, overflowY: 'auto' }}>
+              <Grid container spacing={2}>
+                {Object.entries(products).map(productCard)}
+              </Grid>
+            </Box>
           </Paper>
         </Grid>
       </Grid>
