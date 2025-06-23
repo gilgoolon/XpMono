@@ -86,9 +86,10 @@ def api(url: str, request_data: Optional[dict], response: requests.Response) -> 
 
     info(f"api call to '{endpoint}' returned {response.status_code}")
 
-    dump_path = _API_LOGS_FOLDER / endpoint / \
-        now_filename(prefix="", extension="log")
+    dump_path = _API_LOGS_FOLDER / endpoint / now_filename()
     dump_path.parent.mkdir(parents=True, exist_ok=True)
+
+    content_type = response.headers["content-type"]
 
     dump = {
         "endpoint": endpoint,
@@ -97,7 +98,9 @@ def api(url: str, request_data: Optional[dict], response: requests.Response) -> 
         "request_data": request_data,
         "response": {
             "code": response.status_code,
-            "content": response.json() if "json" in response.encoding else response.text
+            "encoding": response.encoding,
+            "content_type": content_type,
+            "content": response.json() if "json" in content_type else repr(response.text)
         }
     }
 
