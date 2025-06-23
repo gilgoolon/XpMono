@@ -16,7 +16,7 @@ function ClientNickname({ client }) {
 
   const saveNickname = async (newName) => {
     try {
-      axios.post(`${API_BASE_URL}/api/set-nickname/${client.client_id}?nickname=${encodeURIComponent(nickname)}`);
+      await axios.post(`${API_BASE_URL}/api/set-nickname/${client.client_id}?nickname=${encodeURIComponent(newName)}`);
       setNickname(newName)
     } catch (error) {
       console.error('Failed to save:', error);

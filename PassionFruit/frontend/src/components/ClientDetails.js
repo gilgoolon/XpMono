@@ -247,10 +247,10 @@ export default function ClientDetails({ client, onSendCommand }) {
           </Grid>
           <Grid item xs={12} md={4}>
             <Typography variant="subtitle2" color="text.secondary">
-              Last Connection
+              Nickname
             </Typography>
             <Typography variant="body1" gutterBottom>
-              {formatDate(client.last_connection)}
+              {client.nickname ?? "None"}
             </Typography>
           </Grid>
           <Grid item xs={12} md={4}>
@@ -259,6 +259,14 @@ export default function ClientDetails({ client, onSendCommand }) {
             </Typography>
             <Typography variant="body1" gutterBottom>
               {client.location}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Typography variant="subtitle2" color="text.secondary">
+              Last Connection
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              {formatDate(client.last_connection)}
             </Typography>
           </Grid>
           <Grid item xs={12} md={4}>
