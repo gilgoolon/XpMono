@@ -118,13 +118,9 @@ def delete_product(client_id):
             raise ValueError(
                 "pass product details through query parameters 'product_name' and 'command_id'")
 
-        path = products.ids_to_path(client_id, command_id, product_name)
-        if not path.exists():
-            return jsonify({"error": "product not found"}), 404
-
-        path.unlink()
-        logger.info(f"deleted product {path}")
-        return jsonify({"status": "success"})
+        response = requests.post(
+            f'{CHERRY_URL}/delete-product/{client_id}?command_id={command_id}&product_name={product_name}')
+        return {}, response.status_code
     except Exception as ex:
         error_message = f"endpoint /api/delete-product failed for client id {client_id}: {format_exception(ex)}"
         logger.error(error_message)
