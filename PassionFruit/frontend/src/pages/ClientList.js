@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box, Typography, Paper, Table, TableBody,
@@ -7,9 +7,32 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import EditableField from '../components/EditableField';
+import axios from 'axios'
+import { API_BASE_URL } from "../Config.js";
+
+function ClientNickname({ client }) {
+  const [nickname, setNickname] = useState(client.nickname)
+
+  const saveNickname = async (newName) => {
+    try {
+      axios.post(`${API_BASE_URL}/api/set-nickname/${client.client_id}?nickname=${encodeURIComponent(nickname)}`);
+      setNickname(newName)
+    } catch (error) {
+      console.error('Failed to save:', error);
+      alert('Error saving changes');
+    }
+  }
+
+  return (
+    <EditableField label="Nickname" value={nickname} onSave={(value) => saveNickname(value)} />
+  );
+}
 
 export default function ClientList({ clients, isLoading, formatDate }) {
   const navigate = useNavigate();
+
+
 
   const LoadingTable = () => (
     <Box sx={{ width: '100%' }}>
@@ -38,6 +61,7 @@ export default function ClientList({ clients, isLoading, formatDate }) {
         <TableHead>
           <TableRow>
             <TableCell>Liver ID</TableCell>
+            <TableCell>Nickname</TableCell>
             <TableCell>Last Connection</TableCell>
             <TableCell>Current IP</TableCell>
             <TableCell>Actions</TableCell>
@@ -56,6 +80,7 @@ export default function ClientList({ clients, isLoading, formatDate }) {
             clients.map((client) => (
               <TableRow key={client.client_id}>
                 <TableCell>{client.client_id}</TableCell>
+                <TableCell><ClientNickname client={client} /></TableCell>
                 <TableCell>{formatDate(client.last_connection)}</TableCell>
                 <TableCell>{client.current_ip}</TableCell>
                 <TableCell>

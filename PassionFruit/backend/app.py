@@ -93,7 +93,7 @@ def get_client(client_id):
 
 
 @app.route('/api/set-nickname/<client_id>', methods=['POST'])
-def set_nickname(client_id, nickname):
+def set_nickname(client_id):
     try:
         nickname = request.args.get('nickname', None)
         if nickname is None:
