@@ -1,5 +1,6 @@
 from PassionFruit.backend import transformer
 from PoopBiter import logger
+from PoopBiter import products
 from PoopBiter.fig import get_fig, list_figs
 from PoopBiter.products import PRODUCT_TYPE_TO_STRING, Product, ProductInfo
 from flask import Flask, send_from_directory, request, jsonify
@@ -87,7 +88,7 @@ def get_client(client_id):
 
         return jsonify(client_data), response.status_code
     except Exception as ex:
-        error_message = f"endpoint /api/get_client failed for client id {client_id}: {format_exception(ex)}"
+        error_message = f"endpoint /api/clients failed for client id {client_id}: {format_exception(ex)}"
         logger.error(error_message)
         return jsonify({"error": error_message}), 500
 
@@ -103,9 +104,32 @@ def set_nickname(client_id):
             f'{CHERRY_URL}/set-nickname/{client_id}?nickname={nickname}')
         return {}, response.status_code
     except Exception as ex:
-        error_message = f"endpoint /api/get_client failed for client id {client_id}: {format_exception(ex)}"
+        error_message = f"endpoint /api/set-nickname failed for client id {client_id}: {format_exception(ex)}"
         logger.error(error_message)
         return jsonify({"error": error_message}), 500
+
+
+@app.route('/api/delete-product/<client_id>', methods=['POST'])
+def delete_product(client_id):
+    try:
+        product_name = request.args.get('product_name', None)
+        command_id = request.args.get('command_id', None)
+        if product_name is None or command_id is None:
+            raise ValueError(
+                "pass product details through query parameters 'product_name' and 'command_id'")
+
+        path = products.ids_to_path(client_id, command_id, product_name)
+        if not path.exists():
+            return jsonify({"error": "product not found"}), 404
+
+        path.unlink()
+        logger.info(f"deleted product {path}")
+        return jsonify({"status": "success"})
+    except Exception as ex:
+        error_message = f"endpoint /api/delete-product failed for client id {client_id}: {format_exception(ex)}"
+        logger.error(error_message)
+        return jsonify({"error": error_message}), 500
+
 
 @app.route('/api/commands', methods=['POST', 'OPTIONS'])
 def send_command():

@@ -13,6 +13,7 @@ import ProductViewer from './ProductViewer';
 import CommandTemplates from './CommandTemplates';
 import axios from 'axios';
 
+import { DeleteButton } from './DeleteButton';
 import { API_BASE_URL } from '../Config.js'; 
 
 export default function ClientDetails({ client, onSendCommand }) {
@@ -144,6 +145,22 @@ export default function ClientDetails({ client, onSendCommand }) {
       return dateStr;
     }
   };
+
+  const deleteProduct = async (client, product, productPath) => {
+    function basename(path) {
+      return path.split('/').pop();
+    }
+
+    try {
+      await axios.post(`${API_BASE_URL}/api/delete-product/${client.client_id}?command_id=${encodeURIComponent(product.command_id)}&product_name=${encodeURIComponent(basename(productPath))}`);
+      const index = client.products.indexOf(product.id);
+      if (index > -1) {
+        client.products.splice(index, 1);
+      }
+    } catch (error) {
+      console.error('Failed to fetch releases:', error);
+    }
+  }
 
   const variableField = (varName) => {
     return (
@@ -427,6 +444,7 @@ export default function ClientDetails({ client, onSendCommand }) {
                             {product?.id || 'Unknown ID'}
                           </Typography>
                         </Grid>
+                        <DeleteButton onDelete={() => deleteProduct(client, product, client.product_paths[productId])} />
                       </CardContent>
                     </Card>
                   </Grid>

@@ -17,6 +17,8 @@ from PoopBiter.utils import format_winapi_error, unhex
 from PoopBiter.fig import format_fig_name, format_operation_name
 
 
+PRODUCTS_PATH = Path("CornCake") / "products"
+
 class ProductType(enum.IntEnum):
     ERROR = 0
     WIN_API_ERROR = 1
@@ -30,6 +32,10 @@ PRODUCT_TYPE_TO_STRING = {
     ProductType.FIG_OPERATION_ERROR: "Fig Operation Error",
     ProductType.FIG_PRODUCT: "Fig Product",
 }
+
+
+def ids_to_path(client_id: str, command_id: str, product_id: str) -> Path:
+    return PRODUCTS_PATH / client_id / command_id / product_id
 
 
 @dataclass
@@ -92,6 +98,7 @@ class Product(abc.ABC):
     def displayable(self) -> dict[str, Any]:
         base_properties = {
             "id": f"{self._info.product_id:x}",
+            "command_id": f"{self._info.command_id:x}",
             "creation_time": self._info.creation_time,
             "formatted_type": self._formatted_type,
             "type": self._display_type
