@@ -27,9 +27,9 @@ class SingletonMeta(type):
         return cls._instances[cls]
 
 
-def now_filename(prefix: str = "", extension: Optional[str] = "log") -> str:
+def now_filename(prefix: Optional[str] = None, extension: Optional[str] = "log") -> str:
     now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    name = f"{prefix}_{now}.{extension}"
+    name = "_".join((prefix, now)) if prefix is not None else now
     return name if extension is None else f"{name}.{extension}"
 
 

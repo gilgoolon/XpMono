@@ -15,10 +15,12 @@ class ClientInfo(BaseModel):
     client_id: str
     last_connection: datetime
     current_ip: str
+    nickname: Optional[str]
 
 class DetailedClientInfo(BaseModel):
     client_id: str
     last_connection: datetime
     ip_history: List[dict]
+    nickname: Optional[str]
     location: Optional[str]
     products: List[str]

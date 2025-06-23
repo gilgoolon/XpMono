@@ -8,6 +8,7 @@ class Client(Base):
     __tablename__ = "clients"
     
     client_id = Column(Integer, primary_key=True)
+    nickname = Column(Text, None)
     last_connection = Column(DateTime(timezone=True), server_default=func.now())
     location_lat = Column(Float, None)
     location_long = Column(Float, None)
