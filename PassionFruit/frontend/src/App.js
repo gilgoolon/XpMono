@@ -87,32 +87,32 @@ function App() {
         <CssBaseline />
         <Container maxWidth="lg">
           <Box sx={{ my: 4 }}>
-            <Box sx={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'space-between', 
+            <Box sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
               mb: 3,
               position: 'relative'
             }}>
               <Typography variant="h4" component="h1" sx={{ flex: 1 }}>
                 PassionFruit
               </Typography>
-              <Box sx={{ 
+              <Box sx={{
                 position: 'absolute',
                 left: '50%',
                 transform: 'translateX(-50%)',
                 display: 'flex',
                 alignItems: 'center'
               }}>
-                <img 
-                  src="/assets/banner.webp" 
-                  alt="Banner" 
-                  style={{ 
+                <img
+                  src="/assets/banner.webp"
+                  alt="Banner"
+                  style={{
                     height: '80px',
                     width: 'auto',
                     marginRight: '16px',
                     borderRadius: '12px'
-                  }} 
+                  }}
                 />
               </Box>
               <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flex: 1, justifyContent: 'flex-end' }}>
@@ -123,19 +123,19 @@ function App() {
             </Box>
 
             <Routes>
-              <Route 
-                path="/" 
+              <Route
+                path="/"
                 element={
-                  <ClientList 
+                  <ClientList
                     clients={clients}
                     isLoading={isLoading}
                     formatDate={formatDate}
                   />
-                } 
+                }
               />
-              <Route 
-                path="/liver/:liverId" 
-                element={<ClientDetailsPage />} 
+              <Route
+                path="/liver/:liverId"
+                element={<ClientDetailsPage />}
               />
             </Routes>
           </Box>

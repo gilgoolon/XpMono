@@ -9,16 +9,20 @@ import { LoadingButton } from '@mui/lab';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import SendIcon from '@mui/icons-material/Send';
+import { Store } from 'react-notifications-component';
 import ProductViewer from './ProductViewer';
 import CommandTemplates from './CommandTemplates';
 import axios from 'axios';
 
+import { DeleteButton } from './DeleteButton';
 import { API_BASE_URL } from '../Config.js'; 
+import { socket } from '../socket.js'
 
 export default function ClientDetails({ client, onSendCommand }) {
   const [commandData, setCommandData] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [products, setProducts] = useState({});
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [ipHistoryExpanded, setIpHistoryExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
@@ -27,6 +31,44 @@ export default function ClientDetails({ client, onSendCommand }) {
   const [releases, setReleases] = useState([]);
   const [fig_ids, setFigIds] = useState([]);
   const [operation_types, setOperationTypes] = useState([]);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/products/${client.client_id}`);
+      setProducts(response.data.products);
+    } catch (error) {
+      console.error('Failed to fetch products:', error);
+    }
+  };
+
+  useEffect(() => {
+    const handleNewProduct = (data) => {
+      Store.addNotification({
+        title: "Notification",
+        message: `New product ${data.product_id}...`,
+        type: "success",
+        insert: "top",
+        container: "top-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate__animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 5000,
+          onScreen: true
+        }
+      });
+      fetchProducts();
+    };
+
+    socket.on('new_product', handleNewProduct);
+
+    return () => {
+      socket.off('new_product', handleNewProduct);
+    };
+  }, []);
+
+  useEffect(() => {
+    fetchProducts()
+  }, []);
 
   useEffect(() => {
     const fetchReleases = async () => {
@@ -145,6 +187,19 @@ export default function ClientDetails({ client, onSendCommand }) {
     }
   };
 
+  const deleteProduct = async (client, product) => {
+    try {
+      await axios.delete(`${API_BASE_URL}/api/delete-product/${client.client_id}?command_id=${encodeURIComponent(product.command_id)}&product_name=${encodeURIComponent(product.product_name)}`);
+      setProducts(prev => {
+        const newProducts = { ...prev };
+        delete newProducts[product.product_id];
+        return newProducts;
+      });
+    } catch (error) {
+      console.error('Failed to delete product:', error);
+    }
+  }
+
   const variableField = (varName) => {
     return (
       <>
@@ -228,6 +283,49 @@ export default function ClientDetails({ client, onSendCommand }) {
       </>
     );
   };
+
+  const productCard = ([productId, product]) => {
+    return (
+      <Grid item xs={12} key={productId}>
+        <Card
+          sx={{
+            cursor: 'pointer',
+            '&:hover': {
+              backgroundColor: 'action.hover'
+            }
+          }}
+          onClick={() => setSelectedProduct(productId)}
+        >
+          <CardContent sx={{ position: 'relative', minHeight: 120 }}>
+            <Box>
+              <Typography variant="subtitle2" noWrap>
+                {product?.formatted_type || 'Unknown Type'}
+              </Typography>
+              <Grid>
+                <Typography variant="body2" color="text.secondary" noWrap>
+                  {product?.creation_time || 'Unknown Creation Time'}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" noWrap>
+                  {product?.product_id || 'Unknown ID'}
+                </Typography>
+              </Grid>
+            </Box>
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: 8,
+                right: 8,
+              }}
+            >
+              <DeleteButton
+                onDelete={() => deleteProduct(client, product)}
+              />
+            </Box>
+          </CardContent>
+        </Card>
+      </Grid>
+    );
+  }
 
   return (
     <Box sx={{ p: 3 }}>
@@ -402,36 +500,7 @@ export default function ClientDetails({ client, onSendCommand }) {
               Products
             </Typography>
             <Grid container spacing={2}>
-              {client.products?.map((productId, index) => {
-                const product = client.parsed_products[productId];
-                return (
-                  <Grid item xs={12} key={index}>
-                    <Card 
-                      sx={{ 
-                        cursor: 'pointer',
-                        '&:hover': {
-                          backgroundColor: 'action.hover'
-                        }
-                      }}
-                      onClick={() => setSelectedProduct(productId)}
-                    >
-                      <CardContent>
-                        <Typography variant="subtitle2" noWrap>
-                          {product?.formatted_type || 'Unknown Type'}
-                        </Typography>
-                        <Grid>
-                          <Typography variant="body2" color="text.secondary" noWrap>
-                            {product?.creation_time || 'Unknown Creation Time'}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary" noWrap>
-                            {product?.id || 'Unknown ID'}
-                          </Typography>
-                        </Grid>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                );
-              })}
+              {Object.entries(products).map(productCard)}
             </Grid>
           </Paper>
         </Grid>
@@ -447,8 +516,7 @@ export default function ClientDetails({ client, onSendCommand }) {
         <DialogContent>
           {selectedProduct && (
             <ProductViewer 
-              product={client.parsed_products[selectedProduct]}
-              productPath={client.product_paths[selectedProduct]}
+              product={products[selectedProduct]}
             />
           )}
         </DialogContent>
