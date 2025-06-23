@@ -1,12 +1,14 @@
 from collections import OrderedDict
+from typing import Dict, List, Set
 from PassionFruit.backend import transformer
 from PoopBiter import logger
-from PoopBiter import products
-from PoopBiter.fig import get_fig, list_figs
+from PoopBiter.fig import list_figs
 from PoopBiter.products import PRODUCT_TYPE_TO_STRING, Product, ProductInfo
 from flask import Flask, send_from_directory, request, jsonify
 from flask_cors import CORS
 from flask import request
+from flask_socketio import SocketIO, disconnect
+import eventlet
 import requests
 import os
 import base64
@@ -15,11 +17,12 @@ import json
 
 from PoopBiter.releases import list_releases
 from PoopBiter.templates import list_templates
-from PoopBiter.utils import format_exception, is_int
+from PoopBiter.utils import format_exception
 
 
 CNC_ROOT = "CornCake"
 
+eventlet.monkey_patch()
 app = Flask(__name__, static_folder='frontend/build')
 # Configure CORS to allow all methods and headers
 CORS(app, resources={
@@ -29,8 +32,50 @@ CORS(app, resources={
         "allow_headers": ["Content-Type", "Authorization"]
     }
 })
+socketio = SocketIO(app, cors_allowed_origins="*")  # allow all origins for dev
+
+client_id_to_sids: Dict[str, Set[str]] = {}
+sid_to_client_id: Dict[str, str] = {}
+
 
 CHERRY_URL = 'http://localhost:8000'
+
+
+@socketio.on('register')
+def handle_register(data):
+    client_id = data.get('client_id')
+    sid = request.sid
+
+    if client_id:
+        if client_id in client_id_to_sids:
+            client_id_to_sids[client_id].add(sid)
+        client_id_to_sids[client_id] = {sid}
+        print(f"Registered client {client_id} with sid {sid}")
+    else:
+        disconnect()  # reject if no ID sent
+
+
+@socketio.on('disconnect')
+def on_disconnect():
+    sid = request.sid
+    client_id = sid_to_client_id.pop(sid, None)
+    if client_id in client_id_to_sids:
+        if sid in client_id_to_sids[client_id]:
+            client_id_to_sids[client_id].remove(sid)
+        print(f"Client {client_id} disconnected")
+
+
+@app.route('/api/new-products/<client_id>', methods=['POST'])
+def notify_client_products(client_id):
+    CHERRY_IP = "127.0.0.1"
+    if request.remote_addr != CHERRY_IP:
+        logger.warning(
+            f"someone tried to notify clients from {request.remote_addr}")
+        return
+
+    for sid in client_id_to_sids.get(client_id, []):
+        socketio.emit('new_products', {}, to=sid)
+    return {'status': 'success'}
 
 
 @app.route('/api/clients', methods=['GET'])

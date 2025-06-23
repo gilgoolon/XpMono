@@ -12,9 +12,12 @@ import SendIcon from '@mui/icons-material/Send';
 import ProductViewer from './ProductViewer';
 import CommandTemplates from './CommandTemplates';
 import axios from 'axios';
+import { io } from 'socket.io-client';
 
 import { DeleteButton } from './DeleteButton';
 import { API_BASE_URL } from '../Config.js'; 
+
+const socket = io(API_BASE_URL);
 
 export default function ClientDetails({ client, onSendCommand }) {
   const [commandData, setCommandData] = useState('');
@@ -29,6 +32,38 @@ export default function ClientDetails({ client, onSendCommand }) {
   const [releases, setReleases] = useState([]);
   const [fig_ids, setFigIds] = useState([]);
   const [operation_types, setOperationTypes] = useState([]);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/products/${client.client_id}`);
+      setProducts(response.data.products);
+    } catch (error) {
+      console.error('Failed to fetch products:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts()
+  }, []);
+
+  useEffect(() => {
+    socket.on('connect', () => {
+      console.log('Connected to server');
+      socket.emit('register', { client_id: client.client_id })
+    });
+
+    socket.on('new_products', () => {
+      fetchProducts()
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from server');
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const fetchReleases = async () => {
@@ -64,18 +99,6 @@ export default function ClientDetails({ client, onSendCommand }) {
       }
     };
     fetchOperationTypes();
-  }, []);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/api/products/${client.client_id}`);
-        setProducts(response.data.products);
-      } catch (error) {
-        console.error('Failed to fetch products:', error);
-      }
-    };
-    fetchProducts();
   }, []);
 
   useEffect(() => {
