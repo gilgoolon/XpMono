@@ -8,6 +8,7 @@ from pathlib import Path
 
 from CornCake.protocol import Command, ExecuteCommandsResponse, KeepAliveResponse, ProtocolError, Request, RequestType, Response, write_response, generate_id
 from PoopBiter import logger
+from PoopBiter.products import get_product_path
 from PoopBiter.utils import format_exception
 
 
@@ -45,10 +46,9 @@ class CNCServer:
         return commands
 
     def handle_return_products(self, request: Request) -> None:
-        client_products_path = self._products_dir / f"{request.header.client_id:x}"
-
         for product in request.data.products:
-            product_path = client_products_path / f"{product.command_id:x}" / f"{product.product_id:x}-{product.product_type}"
+            product_path = get_product_path(
+                request.header.client_id, product.command_id, product.product_id, product.product_type)
             os.makedirs(product_path.parent.as_posix(), exist_ok=True)
             product_path.write_bytes(product.data)
             logger.info(

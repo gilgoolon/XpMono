@@ -20,6 +20,7 @@ export default function ClientDetails({ client, onSendCommand }) {
   const [commandData, setCommandData] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [products, setProducts] = useState({});
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [ipHistoryExpanded, setIpHistoryExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
@@ -63,6 +64,18 @@ export default function ClientDetails({ client, onSendCommand }) {
       }
     };
     fetchOperationTypes();
+  }, []);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/products/${client.client_id}`);
+        setProducts(response.data.products);
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+      }
+    };
+    fetchProducts();
   }, []);
 
   useEffect(() => {
@@ -146,19 +159,16 @@ export default function ClientDetails({ client, onSendCommand }) {
     }
   };
 
-  const deleteProduct = async (client, product, productPath) => {
-    function basename(path) {
-      return path.split('/').pop();
-    }
-
+  const deleteProduct = async (client, product) => {
     try {
-      await axios.post(`${API_BASE_URL}/api/delete-product/${client.client_id}?command_id=${encodeURIComponent(product.command_id)}&product_name=${encodeURIComponent(basename(productPath))}`);
-      const index = client.products.indexOf(product.id);
-      if (index > -1) {
-        client.products.splice(index, 1);
-      }
+      await axios.post(`${API_BASE_URL}/api/delete-product/${client.client_id}?command_id=${encodeURIComponent(product.command_id)}&product_name=${encodeURIComponent(product.product_name)}`);
+      setProducts(prev => {
+        const newProducts = { ...prev };
+        delete newProducts[product.product_id];
+        return newProducts;
+      });
     } catch (error) {
-      console.error('Failed to fetch releases:', error);
+      console.error('Failed to delete product:', error);
     }
   }
 
@@ -245,6 +255,49 @@ export default function ClientDetails({ client, onSendCommand }) {
       </>
     );
   };
+
+  const productCard = ([productId, product]) => {
+    return (
+      <Grid item xs={12} key={productId}>
+        <Card
+          sx={{
+            cursor: 'pointer',
+            '&:hover': {
+              backgroundColor: 'action.hover'
+            }
+          }}
+          onClick={() => setSelectedProduct(productId)}
+        >
+          <CardContent sx={{ position: 'relative', minHeight: 120 }}>
+            <Box>
+              <Typography variant="subtitle2" noWrap>
+                {product?.formatted_type || 'Unknown Type'}
+              </Typography>
+              <Grid>
+                <Typography variant="body2" color="text.secondary" noWrap>
+                  {product?.creation_time || 'Unknown Creation Time'}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" noWrap>
+                  {product?.product_id || 'Unknown ID'}
+                </Typography>
+              </Grid>
+            </Box>
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: 8,
+                right: 8,
+              }}
+            >
+              <DeleteButton
+                onDelete={() => deleteProduct(client, product)}
+              />
+            </Box>
+          </CardContent>
+        </Card>
+      </Grid>
+    );
+  }
 
   return (
     <Box sx={{ p: 3 }}>
@@ -419,37 +472,7 @@ export default function ClientDetails({ client, onSendCommand }) {
               Products
             </Typography>
             <Grid container spacing={2}>
-              {client.products?.map((productId, index) => {
-                const product = client.parsed_products[productId];
-                return (
-                  <Grid item xs={12} key={index}>
-                    <Card 
-                      sx={{ 
-                        cursor: 'pointer',
-                        '&:hover': {
-                          backgroundColor: 'action.hover'
-                        }
-                      }}
-                      onClick={() => setSelectedProduct(productId)}
-                    >
-                      <CardContent>
-                        <Typography variant="subtitle2" noWrap>
-                          {product?.formatted_type || 'Unknown Type'}
-                        </Typography>
-                        <Grid>
-                          <Typography variant="body2" color="text.secondary" noWrap>
-                            {product?.creation_time || 'Unknown Creation Time'}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary" noWrap>
-                            {product?.id || 'Unknown ID'}
-                          </Typography>
-                        </Grid>
-                        <DeleteButton onDelete={() => deleteProduct(client, product, client.product_paths[productId])} />
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                );
-              })}
+              {Object.entries(products).map(productCard)}
             </Grid>
           </Paper>
         </Grid>
@@ -465,8 +488,7 @@ export default function ClientDetails({ client, onSendCommand }) {
         <DialogContent>
           {selectedProduct && (
             <ProductViewer 
-              product={client.parsed_products[selectedProduct]}
-              productPath={client.product_paths[selectedProduct]}
+              product={products[selectedProduct]}
             />
           )}
         </DialogContent>

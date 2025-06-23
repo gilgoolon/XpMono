@@ -147,7 +147,8 @@ async def set_nickname(client_id: str, nickname: str, db: AsyncSession = Depends
 @app.post("/delete-product/{client_id}")
 async def delete_product(client_id: str, command_id: str, product_name: str):
     # Path traversal vulnerability :)
-    path = products.ids_to_path(client_id, command_id, product_name)
+    path = products.get_product_path(
+        client_id, command_id, *products.split_product_name(product_name))
     if not path.exists():
         raise ValueError("product not found")
 

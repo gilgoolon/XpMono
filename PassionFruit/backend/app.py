@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from PassionFruit.backend import transformer
 from PoopBiter import logger
 from PoopBiter import products
@@ -46,45 +47,8 @@ def get_client(client_id):
         response = requests.get(f'{CHERRY_URL}/get-client/{client_id}')
         client_data = response.json()
         
-        if 'location' not in client_data or client_data['location'] is None:
-            client_data['location'] = "Unknown"
-
+        client_data['location'] = client_data.get('location', None)
         client_data['nickname'] = client_data.get('nickname', None)
-
-        # Parse each product's content
-        if 'products' in client_data:
-            parsed_products = {}
-            product_paths = {}  # Map product IDs to their paths
-
-            # Handle products as a list
-            for product_path in client_data['products']:
-                path = Path(product_path)
-                try:
-                    info = ProductInfo.from_path(path)
-                    product_paths[info.product_id] = product_path
-                except Exception as ex:
-                    logger.error(
-                        f"failed to parse product info '{product_path}': {format_exception(ex)}")
-                    continue
-
-                try:
-                    product = Product.from_path(path)
-                    parsed_products[product.info.product_id] = product.displayable(
-                    )
-                except Exception as ex:
-                    error_message = f"failed to parse product {info} at '{product_path}': {format_exception(ex)}"
-                    logger.error(error_message)
-                    parsed_products[info.product_id] = {
-                        **info.displayable(),
-                        f"formatted_type": f"{PRODUCT_TYPE_TO_STRING[info.product_type]} (Invalid)",
-                        f"error": error_message
-                    }
-
-            # Replace products list with IDs and add the mappings
-            client_data['products'] = [product[0] for product in sorted(
-                parsed_products.items(), key=lambda product: product[1]["creation_time"], reverse=True)]
-            client_data['product_paths'] = product_paths
-            client_data['parsed_products'] = parsed_products
 
         return jsonify(client_data), response.status_code
     except Exception as ex:
@@ -92,6 +56,50 @@ def get_client(client_id):
         logger.error(error_message)
         return jsonify({"error": error_message}), 500
 
+
+@app.route('/api/products/<client_id>', methods=['GET'])
+def get_products(client_id):
+    try:
+        response = requests.get(f'{CHERRY_URL}/get-client/{client_id}')
+        client_data = response.json()
+
+        product_paths = client_data.get("products", [])
+        parsed_products = {}
+
+        for product_path in product_paths:
+            path = Path(product_path)
+            try:
+                info = ProductInfo.from_path(path)
+                formatted_product_id = f"{info.product_id:x}"
+                parsed_products[formatted_product_id] = info.displayable()
+            except Exception as ex:
+                logger.error(
+                    f"failed to parse product info '{product_path}': {format_exception(ex)}")
+                continue
+
+            try:
+                product = Product.from_path(path)
+                parsed_products[formatted_product_id].update(
+                    product.displayable())
+            except Exception as ex:
+                error_message = f"failed to parse product {info} at '{product_path}': {format_exception(ex)}"
+                logger.error(error_message)
+                parsed_products[formatted_product_id] = {
+                    **info.displayable(),
+                    f"formatted_type": f"{PRODUCT_TYPE_TO_STRING[info.product_type]} (Invalid)",
+                    f"error": error_message
+                }
+
+        parsed_products = OrderedDict([product for product in sorted(
+            parsed_products.items(), key=lambda product: product[1]["creation_time"], reverse=True)])
+
+        client_data["products"] = parsed_products
+
+        return jsonify(client_data), response.status_code
+    except Exception as ex:
+        error_message = f"endpoint /api/products failed for client id {client_id}: {format_exception(ex)}"
+        logger.error(error_message)
+        return jsonify({"error": error_message}), 500
 
 @app.route('/api/set-nickname/<client_id>', methods=['POST'])
 def set_nickname(client_id):
@@ -120,7 +128,7 @@ def delete_product(client_id):
 
         response = requests.post(
             f'{CHERRY_URL}/delete-product/{client_id}?command_id={command_id}&product_name={product_name}')
-        return {}, response.status_code
+        return jsonify({}), response.status_code
     except Exception as ex:
         error_message = f"endpoint /api/delete-product failed for client id {client_id}: {format_exception(ex)}"
         logger.error(error_message)

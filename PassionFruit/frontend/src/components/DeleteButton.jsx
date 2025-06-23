@@ -6,7 +6,10 @@ export function DeleteButton({ onDelete }) {
     return (
         <IconButton
             color="error"
-            onClick={onDelete}
+            onClick={(e) => {
+                e.stopPropagation();
+                onDelete();
+            }}
             aria-label="delete"
         >
             <DeleteIcon />
