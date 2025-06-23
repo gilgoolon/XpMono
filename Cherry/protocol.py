@@ -16,6 +16,7 @@ class ClientInfo(BaseModel):
     last_connection: datetime
     current_ip: str
     nickname: Optional[str]
+    location: Optional[str]
 
 class DetailedClientInfo(BaseModel):
     client_id: str

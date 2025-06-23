@@ -1,12 +1,14 @@
-from typing import Tuple
+import uuid
 from sqlalchemy import select
+from sqlalchemy.orm import joinedload
 from Cherry.analyzers.analyzer import ProductAnalyzer
 from Cherry.database import Database
-from Cherry.models import Client
+from Cherry.models import Client, Location
 from PoopBiter import logger
 from PoopBiter.figs import GEO_DUDE_FIG_ID
 from PoopBiter.products import FigProduct, Product, ProductInfo, ProductType, TypedProductType, TextTypedProduct
 from PoopBiter.parsing import parse_structured_product
+from PoopBiter.location import format_coordinates
 
 
 class GeoLocationImporterAnalyzer(ProductAnalyzer):
@@ -42,19 +44,21 @@ class GeoLocationImporterAnalyzer(ProductAnalyzer):
             raise ValueError(f"No locations found in Geolocation section")
 
         location_fields = next(locations)
-        location = ((location_fields["latitude"],
-                    location_fields["longitude"]), location_fields["accuracy"])
 
-        await self._commit_location(product_info.client_id, location)
-        logger.info(
-            f"committed location {location} for client {product_info.client_id:x}")
-
-    async def _commit_location(self, client_id: int, location: Tuple[Tuple[float, float], int]) -> None:
-        (location_lat, location_long), accuracy_meters = location
         async for session in Database.get_db():
-            result = await session.execute(select(Client).where(Client.client_id == client_id))
-            obj = result.scalar_one()
+            stmt = select(Client).where(Client.client_id == product_info.client_id).options(
+                joinedload(Client.location)
+            )
+            result = await session.execute(stmt)
+            client = result.unique().scalar_one_or_none()
 
-            obj.location_lat = location_lat
-            obj.location_long = location_long
-            obj.location_accuracy_meters = accuracy_meters
+            if not client:
+                raise LookupError(
+                    f"Client {hex(product_info.client_id)} not found in database")
+
+            location = Location(id=uuid.uuid4(),
+                                latitude=location_fields["latitude"], longitude=location_fields["longitude"], accuracy_meters=location_fields["accuracy"])
+            session.add(location)
+            client.location_id = location.id
+            logger.info(
+                f"committed location {format_coordinates(location)} for client {product_info.client_id:x}")
