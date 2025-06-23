@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Box, Button } from '@mui/material';
 import ClientDetails from '../components/ClientDetails';
 import axios from 'axios';
-import { API_BASE_URL } from "../Config.js";
 import { socket } from '../socket.js'
 
 export default function ClientDetailsPage() {
@@ -27,7 +26,7 @@ export default function ClientDetailsPage() {
     const fetchClientDetails = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/clients/${liverId}`);
+        const response = await axios.get(`${liverUrl(liverId)}`);
         setClient(response.data);
         setError(null);
       } catch (error) {
@@ -51,12 +50,11 @@ export default function ClientDetailsPage() {
   }, [liverId]);
 
   const handleSendCommand = async (commandData) => {
-    const payload = {
-      client_id: liverId,
-      data: commandData
+    const command = {
+      command_data: commandData
     };
     
-    return axios.post(`${API_BASE_URL}/api/commands`, payload);
+    return await axios.post(`${liverUrl(liverId)}/send-command`, command);
   };
 
   if (isLoading) {
@@ -83,7 +81,7 @@ export default function ClientDetailsPage() {
       >
         Back to List
       </Button>
-      <ClientDetails client={client} onSendCommand={handleSendCommand} />
+      <ClientDetails client={client} onSendCommand={(data) => handleSendCommand(data)} />
     </Box>
   );
 }

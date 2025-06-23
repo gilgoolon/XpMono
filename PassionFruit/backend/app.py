@@ -6,7 +6,7 @@ from collections import OrderedDict
 from typing import Dict, Set
 
 from flask import request
-from flask_socketio import SocketIO, disconnect
+from flask_socketio import SocketIO
 from flask_cors import CORS
 from flask import Flask, send_from_directory, request, jsonify
 
@@ -91,7 +91,7 @@ def on_disconnect():
         print(f"Client {client_id} disconnected")
 
 
-@app.route('/api/new-product/<client_id>', methods=['POST'])
+@app.route('/api/liver/<client_id>/new-product', methods=['POST'])
 def notify_client_product(client_id):
     LOCAL_SERVICES = "127.0.0.1"
     if request.remote_addr != LOCAL_SERVICES:
@@ -107,15 +107,7 @@ def notify_client_product(client_id):
     return {'status': 'success'}
 
 
-@app.route('/api/clients', methods=['GET'])
-def get_clients():
-    try:
-        response = requests.get(f'{CHERRY_URL}/get-clients')
-        return jsonify(response.json()), response.status_code
-    except requests.exceptions.RequestException as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/api/clients/<client_id>', methods=['GET'])
+@app.route('/api/liver/<client_id>', methods=['GET'])
 def get_client(client_id):
     try:
         response = requests.get(f'{CHERRY_URL}/get-client/{client_id}')
@@ -126,12 +118,12 @@ def get_client(client_id):
 
         return jsonify(client_data), response.status_code
     except Exception as ex:
-        error_message = f"endpoint /api/clients failed for client id {client_id}: {format_exception(ex)}"
+        error_message = f"endpoint /api/liver/<client_id> failed for client id {client_id}: {format_exception(ex)}"
         logger.error(error_message)
         return jsonify({"error": error_message}), 500
 
 
-@app.route('/api/products/<client_id>', methods=['GET'])
+@app.route('/api/liver/<client_id>/products', methods=['GET'])
 def get_products(client_id):
     try:
         response = requests.get(f'{CHERRY_URL}/get-client/{client_id}')
@@ -171,11 +163,12 @@ def get_products(client_id):
 
         return jsonify(client_data), response.status_code
     except Exception as ex:
-        error_message = f"endpoint /api/products failed for client id {client_id}: {format_exception(ex)}"
+        error_message = f"endpoint /api/liver/<client_id>/products failed for client id {client_id}: {format_exception(ex)}"
         logger.error(error_message)
         return jsonify({"error": error_message}), 500
 
-@app.route('/api/set-nickname/<client_id>', methods=['POST'])
+
+@app.route('/api/liver/<client_id>/set-nickname', methods=['POST'])
 def set_nickname(client_id):
     try:
         nickname = request.args.get('nickname', None)
@@ -186,12 +179,12 @@ def set_nickname(client_id):
             f'{CHERRY_URL}/set-nickname/{client_id}?nickname={nickname}')
         return {}, response.status_code
     except Exception as ex:
-        error_message = f"endpoint /api/set-nickname failed for client id {client_id}: {format_exception(ex)}"
+        error_message = f"endpoint /api/liver/<client_id>/set-nickname failed for client id {client_id}: {format_exception(ex)}"
         logger.error(error_message)
         return jsonify({"error": error_message}), 500
 
 
-@app.route('/api/delete-product/<client_id>', methods=['DELETE'])
+@app.route('/api/liver/<client_id>/delete-product', methods=['DELETE'])
 def delete_product(client_id):
     try:
         product_name = request.args.get('product_name', None)
@@ -204,25 +197,20 @@ def delete_product(client_id):
             f'{CHERRY_URL}/delete-product/{client_id}?command_id={command_id}&product_name={product_name}')
         return jsonify({}), response.status_code
     except Exception as ex:
-        error_message = f"endpoint /api/delete-product failed for client id {client_id}: {format_exception(ex)}"
+        error_message = f"endpoint /api/liver/<client_id>/delete-product failed for client id {client_id}: {format_exception(ex)}"
         logger.error(error_message)
         return jsonify({"error": error_message}), 500
 
 
-@app.route('/api/commands', methods=['POST', 'OPTIONS'])
-def send_command():
-    if request.method == 'OPTIONS':
-        return '', 204
-    
+@app.route('/api/liver/<client_id>/send-command', methods=['POST', 'OPTIONS'])
+def send_command(client_id):
     try:
-        command_data = request.json.get('data', '')
+        command_data = request.json.get('command_data', '')
 
         parsed_command_data = json.loads(command_data)
         transformer.transform_command(parsed_command_data)
 
         command_data = json.dumps(parsed_command_data)
-
-        client_id = request.json.get('client_id', '')
 
         encoded_data = base64.b64encode(command_data.encode()).decode()
 
@@ -237,6 +225,16 @@ def send_command():
         error_message = f"endpoint /api/commands failed: {format_exception(ex)}"
         logger.error(error_message)
         return jsonify({"error": error_message}), 500
+
+
+@app.route('/api/livers', methods=['GET'])
+def get_clients():
+    try:
+        response = requests.get(f'{CHERRY_URL}/get-clients')
+        return jsonify(response.json()), response.status_code
+    except requests.exceptions.RequestException as e:
+        return jsonify({'error': str(e)}), 500
+
 
 @app.route('/api/command-templates', methods=['GET'])
 def get_command_templates():
