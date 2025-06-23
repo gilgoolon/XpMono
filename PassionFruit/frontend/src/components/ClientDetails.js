@@ -13,10 +13,9 @@ import { Store } from 'react-notifications-component';
 import ProductViewer from './ProductViewer';
 import CommandTemplates from './CommandTemplates';
 import axios from 'axios';
-import EditableField from '../components/EditableField';
 
 import { DeleteButton } from './DeleteButton';
-import { API_BASE_URL } from '../Config.js'; 
+import { API_BASE_ENDPOINT, liverUrl } from '../Config.js';
 import { socket } from '../socket.js'
 import EditableLabel from './EditableLable.jsx';
 
@@ -36,7 +35,7 @@ export default function ClientDetails({ client, onSendCommand }) {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/products/${client.client_id}`);
+      const response = await axios.get(`${liverUrl(client.client_id)}/products`);
       setProducts(response.data.products);
     } catch (error) {
       console.error('Failed to fetch products:', error);
@@ -75,7 +74,7 @@ export default function ClientDetails({ client, onSendCommand }) {
   useEffect(() => {
     const fetchReleases = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/releases`);
+        const response = await axios.get(`${API_BASE_ENDPOINT}/releases`);
         setReleases(response.data);
       } catch (error) {
         console.error('Failed to fetch releases:', error);
@@ -87,7 +86,7 @@ export default function ClientDetails({ client, onSendCommand }) {
   useEffect(() => {
     const fetchFigIds = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/fig-ids`);
+        const response = await axios.get(`${API_BASE_ENDPOINT}/fig-ids`);
         setFigIds(response.data);
       } catch (error) {
         console.error('Failed to fetch fig ids:', error);
@@ -99,7 +98,7 @@ export default function ClientDetails({ client, onSendCommand }) {
   useEffect(() => {
     const fetchOperationTypes = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/operation-types`);
+        const response = await axios.get(`${API_BASE_ENDPOINT}/operation-types`);
         setOperationTypes(response.data);
       } catch (error) {
         console.error('Failed to fetch operation types:', error);
@@ -191,7 +190,7 @@ export default function ClientDetails({ client, onSendCommand }) {
 
   const deleteProduct = async (client, product) => {
     try {
-      await axios.delete(`${API_BASE_URL}/api/delete-product/${client.client_id}?command_id=${encodeURIComponent(product.command_id)}&product_name=${encodeURIComponent(product.product_name)}`);
+      await axios.delete(`${liverUrl(client.client_id)}/delete-product?command_id=${encodeURIComponent(product.command_id)}&product_name=${encodeURIComponent(product.product_name)}`);
       setProducts(prev => {
         const newProducts = { ...prev };
         delete newProducts[product.product_id];
@@ -332,7 +331,7 @@ export default function ClientDetails({ client, onSendCommand }) {
   const clientNickname = (client) => {
     const saveNickname = async (newName) => {
       try {
-        await axios.post(`${API_BASE_URL}/api/set-nickname/${client.client_id}?nickname=${encodeURIComponent(newName)}`);
+        await axios.post(`${liverUrl(client.client_id)}/set-nickname?nickname=${encodeURIComponent(newName)}`);
       } catch (error) {
         console.error('Failed to save:', error);
         alert('Error saving changes');
