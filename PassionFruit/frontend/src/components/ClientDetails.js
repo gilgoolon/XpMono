@@ -42,10 +42,10 @@ export default function ClientDetails({ client, onSendCommand }) {
   };
 
   useEffect(() => {
-    const handleNewProducts = () => {
+    const handleNewProduct = (data) => {
       Store.addNotification({
         title: "Notification",
-        message: "New products incoming...",
+        message: `New product ${data.product_id}...`,
         type: "success",
         insert: "top",
         container: "top-right",
@@ -59,10 +59,10 @@ export default function ClientDetails({ client, onSendCommand }) {
       fetchProducts();
     };
 
-    socket.on('new_products', handleNewProducts);
+    socket.on('new_product', handleNewProduct);
 
     return () => {
-      socket.off('new_products', handleNewProducts);
+      socket.off('new_product', handleNewProduct);
     };
   }, []);
 

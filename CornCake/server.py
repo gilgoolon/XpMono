@@ -7,7 +7,7 @@ from glob import glob
 from pathlib import Path
 
 from CornCake.protocol import Command, ExecuteCommandsResponse, KeepAliveResponse, ProtocolError, Request, RequestType, Response, write_response, generate_id
-from PoopBiter import logger
+from PoopBiter import backend, logger
 from PoopBiter.products import get_product_path
 from PoopBiter.utils import format_exception
 
@@ -45,6 +45,14 @@ class CNCServer:
         
         return commands
 
+    def _notify_new_client_products(self, client_id: int, product_id: int) -> None:
+        try:
+            logger.info(f"notifying client on incoming product {product_id}")
+            backend.notify_new_client_product(client_id, product_id)
+        except Exception as ex:
+            logger.error(
+                f"failed to notify new client products: {format_exception(ex)}")
+
     def handle_return_products(self, request: Request) -> None:
         for product in request.data.products:
             product_path = get_product_path(
@@ -53,6 +61,8 @@ class CNCServer:
             product_path.write_bytes(product.data)
             logger.info(
                 f"client {request.header.client_id:x} received product {product.product_id:x} for command {product.command_id:x}")
+            self._notify_new_client_products(
+                request.header.client_id, product.product_id)
 
     def make_client_response(self, request: Request) -> Response:
         commands = self.get_client_commands(request.header.client_id)

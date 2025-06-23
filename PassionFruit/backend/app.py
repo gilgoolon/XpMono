@@ -70,7 +70,7 @@ def handle_unregister(data):
     if not client_id:
         return
 
-    if client_id in client_id_to_sids:
+    if client_id in client_id_to_sids and sid in client_id_to_sids:
         client_id_to_sids[client_id].remove(sid)
     sid_to_client_id.pop(sid, None)
     print(f"Registered client {client_id} with sid {sid}")
@@ -91,17 +91,19 @@ def on_disconnect():
         print(f"Client {client_id} disconnected")
 
 
-@app.route('/api/new-products/<client_id>', methods=['POST'])
-def notify_client_products(client_id):
-    CHERRY_IP = "127.0.0.1"
-    if request.remote_addr != CHERRY_IP:
+@app.route('/api/new-product/<client_id>', methods=['POST'])
+def notify_client_product(client_id):
+    LOCAL_SERVICES = "127.0.0.1"
+    if request.remote_addr != LOCAL_SERVICES:
         logger.warning(
             f"someone tried to notify clients from {request.remote_addr}")
         return
 
-    print(client_id_to_sids)
+    product_id = request.args.get("product_id", None)
+
     for sid in client_id_to_sids.get(client_id, []):
-        socketio.emit('new_products', {}, to=sid)
+        logger.info(f"notifying sid {sid}")
+        socketio.emit('new_product', {"product_id": product_id}, to=sid)
     return {'status': 'success'}
 
 
