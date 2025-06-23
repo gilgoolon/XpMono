@@ -514,9 +514,12 @@ export default function ClientDetails({ client, onSendCommand }) {
             <Typography variant="h6" gutterBottom>
               Products
             </Typography>
-            <Grid container spacing={2}>
-              {Object.entries(products).map(productCard)}
-            </Grid>
+
+            <Box sx={{ maxHeight: 400, overflowY: 'auto' }}>
+              <Grid container spacing={2}>
+                {Object.entries(products).map(productCard)}
+              </Grid>
+            </Box>
           </Paper>
         </Grid>
       </Grid>
