@@ -4,6 +4,7 @@ import { Box, Button } from '@mui/material';
 import ClientDetails from '../components/ClientDetails';
 import axios from 'axios';
 import { socket } from '../socket.js'
+import { liverUrl } from '../Config.js'
 
 export default function ClientDetailsPage() {
   const { liverId } = useParams();
