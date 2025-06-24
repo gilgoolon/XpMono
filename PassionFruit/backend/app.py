@@ -204,6 +204,9 @@ def delete_product(client_id):
 
 @app.route('/api/liver/<client_id>/send-command', methods=['POST', 'OPTIONS'])
 def send_command(client_id):
+    if request.method == "OPTIONS":
+        return '', 204  # Explicitly respond to OPTIONS
+
     try:
         command_data = request.json.get('command_data', '')
 
