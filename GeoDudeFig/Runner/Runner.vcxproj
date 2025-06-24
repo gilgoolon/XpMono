@@ -87,6 +87,9 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Apricot\ApricotLib\ApricotLib.vcxproj">
+      <Project>{19aff26b-7e9b-452b-84c1-82160dd6d399}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Fig\Fig.vcxproj">
       <Project>{31e00270-3ef4-40ae-88f1-3f5bd2db58f5}</Project>
     </ProjectReference>

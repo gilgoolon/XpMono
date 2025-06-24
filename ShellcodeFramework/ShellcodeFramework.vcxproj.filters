@@ -48,6 +48,15 @@
     <ClInclude Include="Include\Pe\RelocationEntriesIterator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\TlsIndex.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\SafeTrace.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Pe\TlsDirectoryParser.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HeapMemory.cpp">
@@ -71,13 +80,22 @@
     <ClCompile Include="Pe\ExportedFunctionsIterator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Strings.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Pe\RelocationBlocksIterator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Pe\RelocationEntriesIterator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SafeTrace.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Strings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TlsIndex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pe\TlsDirectoryParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

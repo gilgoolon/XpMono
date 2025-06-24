@@ -4,6 +4,7 @@
 #include "FigOperation.hpp"
 #include "Json.hpp"
 #include "Trace.hpp"
+#include "../../Apricot/ApricotLib/Include/ApricotLibrary.hpp"
 #include "Filesystem/File.hpp"
 #include "Protections/ProgramProtector.hpp"
 
@@ -47,7 +48,9 @@ static void main_logic()
 		"Release"
 #endif
 		"/GeoDudeFig.dll";
-	const auto fig = std::make_shared<FigModule>(path);
+	const auto fig = std::make_shared<FigModule>(
+		std::make_unique<ApricotLibrary>(File(path, File::Mode::READ, File::Disposition::OPEN).read())
+	);
 	TRACE("fig id: ", fig->id(), " fig version: ", fig->major(), ".", fig->minor());
 	const std::unique_ptr<FigOperation> fig_operation = fig->execute(
 		2,

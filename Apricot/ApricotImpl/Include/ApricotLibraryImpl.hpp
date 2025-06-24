@@ -17,17 +17,19 @@ public:
 
 private:
 	void map_section_entry(const Pe::SectionIterator::Entry& entry);
-	bool map_sections(const void* module);
+	[[nodiscard]] bool map_sections(const void* module);
 	[[nodiscard]] bool finalize_section_entry(const Pe::SectionIterator::Entry& entry, uint32_t section_alignment);
-	bool finalize_sections();
+	[[nodiscard]] bool finalize_sections();
 
-	bool perform_relocations();
+	[[nodiscard]] bool perform_relocations();
+
+	[[nodiscard]] bool initialize_tls();
 
 	using DllEntryPoint = BOOL(WINAPI*)(HMODULE, DWORD, DWORD);
-	bool call_entry_point(DWORD reason, BOOL& return_value);
+	[[nodiscard]] bool call_entry_point(DWORD reason, BOOL& return_value);
 
-	bool load_module(const IMAGE_IMPORT_DESCRIPTOR* module);
-	bool load_dependencies();
+	[[nodiscard]] bool load_module(const IMAGE_IMPORT_DESCRIPTOR* module);
+	[[nodiscard]] bool load_dependencies();
 
 	void unload_dependency(const IMAGE_IMPORT_DESCRIPTOR* module);
 	void unload_dependencies(uint32_t loaded_modules);

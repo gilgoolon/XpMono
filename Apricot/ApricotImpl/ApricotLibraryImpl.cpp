@@ -58,6 +58,11 @@ ApricotLibraryImpl::ApricotLibraryImpl(const uint8_t* unloaded_module,
 		return;
 	}
 
+	if (!initialize_tls())
+	{
+		result = ApricotCode::FAILED_PE_INITIALIZE_TLS;
+	}
+
 	if (!finalize_sections())
 	{
 		result = ApricotCode::FAILED_PE_FINALIZE_SECTIONS;
@@ -179,6 +184,10 @@ bool ApricotLibraryImpl::perform_relocations()
 		}
 	}
 	return true;
+}
+
+bool ApricotLibraryImpl::initialize_tls()
+{
 }
 
 bool ApricotLibraryImpl::call_entry_point(const DWORD reason, BOOL& return_value)
