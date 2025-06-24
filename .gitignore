@@ -356,6 +356,8 @@ log.txt
 *.db
 .qodo
 products/
+!Liver/LiverLib/Products/
+!Liver/LiverLib/Include/Products/
 commands/
 logs/
 *.log
