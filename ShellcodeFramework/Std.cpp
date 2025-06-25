@@ -2,7 +2,7 @@
 
 #include "Trace.hpp"
 
-void* operator new(const uint32_t size)
+void* operator new(const size_t size)
 {
 	void* ptr = VirtualAlloc(nullptr, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 	if (!ptr)
@@ -11,6 +11,11 @@ void* operator new(const uint32_t size)
 		return nullptr;
 	}
 	return ptr;
+}
+
+void* operator new([[maybe_unused]] size_t size, void* address)
+{
+	return address;
 }
 
 void operator delete(void* ptr) noexcept

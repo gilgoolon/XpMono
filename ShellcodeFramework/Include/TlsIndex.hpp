@@ -11,11 +11,11 @@ public:
 	TlsIndex(TlsIndex&&) = delete;
 	TlsIndex& operator=(TlsIndex&&) = delete;
 
-	bool set_value(uint8_t* value);
+	bool set_value(void* value);
 
 private:
 	uint32_t m_index;
-	bool m_initialized;
+	bool m_is_initialized;
 
 	[[nodiscard]] static bool allocate_index(uint32_t& index);
 };

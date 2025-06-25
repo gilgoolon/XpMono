@@ -1,6 +1,6 @@
 ﻿#include "Pe/TlsDirectoryParser.hpp"
 
-#include "SafeTrace.hpp"
+#include "Trace.hpp"
 #include "Pe/Pe.hpp"
 
 bool Pe::parse_tls_directory(const void* module, TlsDirectory& tls_directory)
@@ -23,7 +23,7 @@ bool Pe::parse_tls_directory(const void* module, TlsDirectory& tls_directory)
 		.size = raw_tls_directory->EndAddressOfRawData - raw_tls_directory->StartAddressOfRawData + 1
 	};
 	parsed_tls_directory.index_address = reinterpret_cast<uint32_t*>(raw_tls_directory->AddressOfIndex);
-	parsed_tls_directory.callbacks = reinterpret_cast<Callback*>(raw_tls_directory->AddressOfCallBacks);
+	parsed_tls_directory.callbacks = reinterpret_cast<TlsCallback*>(raw_tls_directory->AddressOfCallBacks);
 	parsed_tls_directory.zeros_padding = raw_tls_directory->SizeOfZeroFill;
 
 	tls_directory = parsed_tls_directory;

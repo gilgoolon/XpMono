@@ -1,6 +1,9 @@
 ﻿#include "HeapMemory.hpp"
 
+#include "Std.hpp"
 #include "Trace.hpp"
+
+#include <utility>
 
 static constexpr void* NO_PREFERRED_ADDRESS = nullptr;
 
@@ -30,6 +33,22 @@ Shellcode::HeapMemory::~HeapMemory()
 	{
 		TRACE(L"failed to free heap memory");
 	}
+}
+
+Shellcode::HeapMemory::HeapMemory(HeapMemory&& other) noexcept:
+	m_address(std::exchange(other.m_address, nullptr)),
+	m_is_initialized(std::exchange(other.m_is_initialized, false))
+{
+}
+
+Shellcode::HeapMemory& Shellcode::HeapMemory::operator=(HeapMemory&& other) noexcept
+{
+	if (this != &other)
+	{
+		HeapMemory temp(std::move(other));
+		swap(temp);
+	}
+	return *this;
 }
 
 bool Shellcode::HeapMemory::allocate_memory(void* const preferred_address,
@@ -76,4 +95,15 @@ bool Shellcode::HeapMemory::set_permissions(void* address, const uint32_t size, 
 {
 	DWORD old_perms = 0;
 	return VirtualProtect(address, size, perms, &old_perms) != FALSE;
+}
+
+void Shellcode::HeapMemory::swap(HeapMemory& other)
+	noexcept
+{
+	void* const temp_address = m_address;
+	const bool temp_is_initialized = m_is_initialized;
+	m_address = other.m_address;
+	m_is_initialized = other.m_is_initialized;
+	other.m_address = temp_address;
+	other.m_is_initialized = temp_is_initialized;
 }

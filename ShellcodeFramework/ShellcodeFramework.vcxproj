@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Optional.hpp" />
     <ClInclude Include="Include\Pe\ExportedFunctionsIterator.hpp" />
     <ClInclude Include="Include\Pe\ImportedFunctionsIterator.hpp" />
     <ClInclude Include="Include\Pe\Pe.hpp" />
@@ -18,23 +19,24 @@
     <ClInclude Include="Include\Pe\RelocationEntriesIterator.hpp" />
     <ClInclude Include="Include\Pe\SectionIterator.hpp" />
     <ClInclude Include="Include\Pe\TlsDirectoryParser.hpp" />
-    <ClInclude Include="Include\SafeTrace.hpp" />
     <ClInclude Include="Include\Std.hpp" />
     <ClInclude Include="Include\Strings.hpp" />
     <ClInclude Include="Include\TlsIndex.hpp" />
     <ClInclude Include="Include\Trace.hpp" />
     <ClInclude Include="Include\HeapMemory.hpp" />
     <ClInclude Include="Include\Pe\ImportedModulesIterator.hpp" />
+    <ClInclude Include="Include\Vector.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HeapMemory.cpp" />
+    <ClCompile Include="Include\Optional.cpp" />
+    <ClCompile Include="Vector.cpp" />
     <ClCompile Include="Pe\TlsDirectoryParser.cpp" />
     <ClCompile Include="Pe\RelocationEntriesIterator.cpp" />
     <ClCompile Include="Pe\RelocationBlocksIterator.cpp" />
     <ClCompile Include="Pe\ExportedFunctionsIterator.cpp" />
     <ClCompile Include="Pe\ImportedFunctionsIterator.cpp" />
     <ClCompile Include="Pe\ImportedModulesIterator.cpp" />
-    <ClCompile Include="SafeTrace.cpp" />
     <ClCompile Include="Std.cpp" />
     <ClCompile Include="Pe\SectionIterator.cpp" />
     <ClCompile Include="Pe\Pe.cpp" />

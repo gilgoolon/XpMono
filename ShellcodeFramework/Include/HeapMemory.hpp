@@ -19,8 +19,8 @@ public:
 	~HeapMemory();
 	HeapMemory(const HeapMemory&) = delete;
 	HeapMemory& operator=(const HeapMemory&) = delete;
-	HeapMemory(HeapMemory&&) = delete;
-	HeapMemory& operator=(HeapMemory&&) = delete;
+	HeapMemory(HeapMemory&& other) noexcept;
+	HeapMemory& operator=(HeapMemory&& other) noexcept;
 
 private:
 	[[nodiscard]] static bool allocate_memory(void* preferred_address,
@@ -39,5 +39,7 @@ public:
 private:
 	void* m_address;
 	bool m_is_initialized;
+
+	void swap(HeapMemory& other) noexcept;
 };
 }

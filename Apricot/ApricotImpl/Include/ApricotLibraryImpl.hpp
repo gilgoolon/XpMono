@@ -1,7 +1,11 @@
 ﻿#pragma once
 #include "ApricotCode.hpp"
 #include "HeapMemory.hpp"
+#include "Optional.hpp"
+#include "TlsIndex.hpp"
+#include "Vector.hpp"
 #include "Pe/SectionIterator.hpp"
+#include "Pe/TlsDirectoryParser.hpp"
 
 #include <cstdint>
 
@@ -24,6 +28,8 @@ private:
 	[[nodiscard]] bool perform_relocations();
 
 	[[nodiscard]] bool initialize_tls();
+	[[nodiscard]] bool initialize_current_thread_tls(DWORD reason);
+	[[nodiscard]] bool initialize_current_thread_tls();
 
 	using DllEntryPoint = BOOL(WINAPI*)(HMODULE, DWORD, DWORD);
 	[[nodiscard]] bool call_entry_point(DWORD reason, BOOL& return_value);
@@ -42,4 +48,7 @@ public:
 private:
 	bool m_is_initialized;
 	Shellcode::HeapMemory m_memory;
+	Pe::TlsDirectory m_tls_directory;
+	Optional<TlsIndex> m_module_tls_index;
+	Vector<Shellcode::HeapMemory> m_tls_threads_data;
 };

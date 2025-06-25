@@ -5,13 +5,13 @@
 
 namespace Pe
 {
-using Callback = BOOL(*APIENTRY)(HINSTANCE, DWORD, LPVOID);
+using TlsCallback = BOOL (APIENTRY*)(HINSTANCE, DWORD, LPVOID);
 
 struct TlsDirectory final
 {
 	View data;
 	uint32_t* index_address;
-	Callback* callbacks;
+	TlsCallback* callbacks;
 	uint32_t zeros_padding;
 };
 

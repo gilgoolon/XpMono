@@ -1,18 +1,19 @@
 ﻿#include "TlsIndex.hpp"
 
-#include "SafeTrace.hpp"
+#include "Trace.hpp"
 
 #include <Windows.h>
 
 TlsIndex::TlsIndex(bool& result):
 	m_index(),
-	m_initialized(allocate_index(m_index))
+	m_is_initialized(allocate_index(m_index))
 {
+	result = m_is_initialized;
 }
 
 TlsIndex::~TlsIndex()
 {
-	if (!m_initialized)
+	if (!m_is_initialized)
 	{
 		return;
 	}
@@ -23,7 +24,7 @@ TlsIndex::~TlsIndex()
 	}
 }
 
-bool TlsIndex::set_value(uint8_t* value)
+bool TlsIndex::set_value(void* value)
 {
 	const BOOL result = TlsSetValue(m_index, value);
 

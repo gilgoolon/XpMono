@@ -1,7 +1,9 @@
 ﻿#pragma once
 #include <cstdint>
+#include <type_traits>
 
-void* operator new(uint32_t size);
+void* operator new(size_t size);
+void* operator new(size_t size, void* address);
 
 void operator delete(void* ptr) noexcept;
 

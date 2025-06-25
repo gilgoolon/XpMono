@@ -10,6 +10,7 @@
 #include "Pe/RelocationBlocksIterator.hpp"
 #include "Pe/RelocationEntriesIterator.hpp"
 #include "Pe/SectionIterator.hpp"
+#include "Pe/TlsDirectoryParser.hpp"
 
 #include <Windows.h>
 
@@ -61,6 +62,7 @@ ApricotLibraryImpl::ApricotLibraryImpl(const uint8_t* unloaded_module,
 	if (!initialize_tls())
 	{
 		result = ApricotCode::FAILED_PE_INITIALIZE_TLS;
+		return;
 	}
 
 	if (!finalize_sections())
@@ -188,6 +190,69 @@ bool ApricotLibraryImpl::perform_relocations()
 
 bool ApricotLibraryImpl::initialize_tls()
 {
+	if (!parse_tls_directory(m_memory.get(), m_tls_directory))
+	{
+		return false;
+	}
+
+	bool result = false;
+	m_module_tls_index.emplace(result);
+	if (!result)
+	{
+		TRACE(L"failed to create module tls index");
+		m_module_tls_index.reset();
+		return false;
+	}
+
+	if (!initialize_current_thread_tls(DLL_PROCESS_ATTACH))
+	{
+		TRACE(L"failed to initialize current thread tls data");
+		return false;
+	}
+	return true;
+}
+
+bool ApricotLibraryImpl::initialize_current_thread_tls(const DWORD reason)
+{
+	bool result = false;
+	if (!m_tls_threads_data.emplace_back(
+		m_tls_directory.data.size,
+		Shellcode::HeapMemory::Permissions::READ_WRITE,
+		result
+	) || !result)
+	{
+		TRACE(L"failed to allocate current thread tls data");
+		return false;
+	}
+
+	Shellcode::HeapMemory::memcpy(
+		m_tls_threads_data[m_tls_threads_data.size() - 1].get(),
+		m_tls_directory.data.address,
+		m_tls_directory.data.size
+	);
+
+	if (!m_module_tls_index->set_value(m_tls_threads_data[m_tls_threads_data.size() - 1].get()))
+	{
+		TRACE(L"failed to set current thread tls index value");
+		return false;
+	}
+
+	static constexpr LPVOID RESERVED = nullptr;
+	for (const Pe::TlsCallback* callback = m_tls_directory.callbacks; *callback != nullptr; ++callback)
+	{
+		const BOOL callback_result = (*callback)(static_cast<HMODULE>(m_memory.get()), reason, RESERVED);
+		if (callback_result == FALSE)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool ApricotLibraryImpl::initialize_current_thread_tls()
+{
+	return initialize_current_thread_tls(DLL_THREAD_ATTACH);
 }
 
 bool ApricotLibraryImpl::call_entry_point(const DWORD reason, BOOL& return_value)
