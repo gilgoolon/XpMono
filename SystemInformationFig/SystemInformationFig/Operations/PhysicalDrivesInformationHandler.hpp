@@ -1,11 +1,12 @@
 ﻿#pragma once
 #include "Handlers/IOperationHandler.hpp"
 #include "Handlers/WmiQueryMultiOperationHandler.hpp"
+#include "../Api.hpp"
 
 class PhysicalDrivesInformationHandler final : public WmiQueryMultiOperationHandler
 {
 public:
-	static constexpr Fig::OperationType TYPE = 2;
+	static constexpr Fig::OperationType TYPE = static_cast<Fig::OperationType>(Api::OperationType::PHYSICAL_DRIVES_INFO);
 
 	explicit PhysicalDrivesInformationHandler(std::unique_ptr<Event> operation_event);
 	~PhysicalDrivesInformationHandler() override = default;
