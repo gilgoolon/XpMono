@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="Include\Optional.hpp" />
     <ClInclude Include="Include\Pe\ExportedFunctionsIterator.hpp" />
+    <ClInclude Include="Include\Pe\IatHook.hpp" />
     <ClInclude Include="Include\Pe\ImportedFunctionsIterator.hpp" />
     <ClInclude Include="Include\Pe\Pe.hpp" />
     <ClInclude Include="Include\Pe\RelocationBlocksIterator.hpp" />
@@ -30,6 +31,7 @@
   <ItemGroup>
     <ClCompile Include="HeapMemory.cpp" />
     <ClCompile Include="Include\Optional.cpp" />
+    <ClCompile Include="Include\Pe\IatHook.cpp" />
     <ClCompile Include="Vector.cpp" />
     <ClCompile Include="Pe\TlsDirectoryParser.cpp" />
     <ClCompile Include="Pe\RelocationEntriesIterator.cpp" />

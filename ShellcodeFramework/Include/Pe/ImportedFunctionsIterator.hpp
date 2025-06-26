@@ -15,11 +15,17 @@ public:
 	ImportedFunctionsIterator(ImportedFunctionsIterator&&) = delete;
 	ImportedFunctionsIterator& operator=(ImportedFunctionsIterator&&) = delete;
 
+	struct ImportedFunction final
+	{
+		const IMAGE_THUNK_DATA32* unbound;
+		const IMAGE_THUNK_DATA32* bound;
+	};
+
 	[[nodiscard]] bool has_next() const;
-	[[nodiscard]] const IMAGE_THUNK_DATA32* next();
+	[[nodiscard]] ImportedFunction next();
 
 private:
-	const IMAGE_THUNK_DATA32* m_next_thunk;
-	const void* m_module;
+	const IMAGE_THUNK_DATA32* m_next_unbound_thunk;
+	const IMAGE_THUNK_DATA32* m_next_bound_thunk;
 };
 }

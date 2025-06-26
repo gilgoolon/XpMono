@@ -5,22 +5,25 @@
 Pe::ImportedFunctionsIterator::ImportedFunctionsIterator(const void* module,
                                                          const IMAGE_IMPORT_DESCRIPTOR* imported_module,
                                                          bool& result):
-	m_next_thunk(nullptr),
-	m_module(module)
+	m_next_unbound_thunk(
+		reinterpret_cast<const IMAGE_THUNK_DATA32*>(static_cast<const uint8_t*>(module) +
+			imported_module->OriginalFirstThunk)
+	),
+	m_next_bound_thunk(
+		reinterpret_cast<const IMAGE_THUNK_DATA32*>(static_cast<const uint8_t*>(module) +
+			imported_module->FirstThunk)
+	)
 {
-	result = false;
-	m_next_thunk = reinterpret_cast<const IMAGE_THUNK_DATA32*>(static_cast<const uint8_t*>(module) +
-		imported_module->FirstThunk);
 	result = true;
 }
 
 bool Pe::ImportedFunctionsIterator::has_next() const
 {
 	static constexpr DWORD TERMINATOR = 0;
-	return m_next_thunk->u1.Function != TERMINATOR;
+	return m_next_unbound_thunk->u1.Function != TERMINATOR;
 }
 
-const IMAGE_THUNK_DATA32* Pe::ImportedFunctionsIterator::next()
+Pe::ImportedFunctionsIterator::ImportedFunction Pe::ImportedFunctionsIterator::next()
 {
-	return m_next_thunk++;
+	return ImportedFunction{.unbound = m_next_unbound_thunk++, .bound = m_next_bound_thunk++};
 }
