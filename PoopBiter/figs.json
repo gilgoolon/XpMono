@@ -10,11 +10,7 @@
                 "0": "RESERVED",
                 "1": "CHECK_CLIPBOARD_STATUS",
                 "2": "ENABLE_CLIPBOARD",
-                "3": "DISABLE_CLIPBOARD",
-                "4": "START_SNIFF",
-                "5": "STOP_SNIFF",
-                "6": "SNIFF_TIME",
-                "7": "GET_HISTORY"
+                "3": "DISABLE_CLIPBOARD"
             }
         },
         {
