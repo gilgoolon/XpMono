@@ -1,20 +1,47 @@
-#include "Media/BitmapFormat.hpp"
-#include "Utils/Buffer.hpp"
+﻿#include "BitmapFormat.hpp"
+#include "Buffer.hpp"
 #include <chrono>
 #include <fstream>
-#include <iostream>
-#include <windows.h>
-
+#include <functional>
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include <string_view>
+#include <windows.h>
 
-HWND hwnd;
+constexpr auto CLASS_NAME = L"ClipboardListenerClass";
+constexpr auto WINDOW_NAME = L"Clipboard Listener";
+constexpr size_t MAX_HASH_HISTORY = 5;
+size_t g_image_hash_history[MAX_HASH_HISTORY] = {};
+size_t g_hash_index = 0;
+
+size_t HashMemory(const void* data, const size_t size)
+{
+	return std::hash<std::string_view>{}(
+		std::string_view(static_cast<const char*>(data), size)
+	);
+}
+
+bool IsDuplicateHash(const size_t current_hash)
+{
+	for (size_t i = 0; i < MAX_HASH_HISTORY; ++i)
+	{
+		if (g_image_hash_history[i] == current_hash)
+			return true;
+	}
+	return false;
+}
+
+void SaveHash(const size_t current_hash)
+{
+	g_image_hash_history[g_hash_index] = current_hash;
+	g_hash_index = (g_hash_index + 1) % MAX_HASH_HISTORY;
+}
 
 std::wstring GetTimestampedFilePath(const std::wstring& folder)
 {
-	auto now = std::chrono::system_clock::now();
-	std::time_t raw_time = std::chrono::system_clock::to_time_t(now);
+	const auto now = std::chrono::system_clock::now();
+	const std::time_t raw_time = std::chrono::system_clock::to_time_t(now);
 
 	struct tm time_info;
 	if (localtime_s(&time_info, &raw_time) != 0)
@@ -33,8 +60,8 @@ std::wstring GetTimestampedFilePath(const std::wstring& folder)
 
 void SaveDIBToFile(void* dib, const std::wstring& path)
 {
-	auto* header = reinterpret_cast<BITMAPINFOHEADER*>(dib);
-	BYTE* pixel_data = reinterpret_cast<BYTE*>(dib) + header->biSize;
+	const auto* header = static_cast<BITMAPINFOHEADER*>(dib);
+	BYTE* pixel_data = static_cast<BYTE*>(dib) + header->biSize;
 
 	BITMAP bitmap = {};
 	bitmap.bmWidth = header->biWidth;
@@ -43,67 +70,76 @@ void SaveDIBToFile(void* dib, const std::wstring& path)
 	bitmap.bmBitsPixel = header->biBitCount;
 	bitmap.bmBits = pixel_data;
 
-	// Calculate image size (if not set)
-	DWORD imageSize = header->biSizeImage;
-	if (imageSize == 0)
+	DWORD image_size = header->biSizeImage;
+	if (image_size == 0)
 	{
-		int bytesPerLine = ((bitmap.bmWidth * bitmap.bmBitsPixel + 31) / 32) * 4;
-		imageSize = bytesPerLine * bitmap.bmHeight;
+		const int bytes_per_line = ((bitmap.bmWidth * bitmap.bmBitsPixel + 31) / 32) * 4;
+		image_size = bytes_per_line * bitmap.bmHeight;
 	}
 
-	Buffer pixelBuffer(pixel_data, pixel_data + imageSize);
+	const Buffer pixel_buffer(pixel_data, pixel_data + image_size);
 
-	Buffer bmpFile = Formats::Bitmap::create(bitmap, pixelBuffer);
+	Buffer bmp_file = Formats::Bitmap::create(bitmap, pixel_buffer);
 
-	// Save to file
 	std::ofstream file(path, std::ios::binary);
 	if (file.is_open())
 	{
-		file.write(reinterpret_cast<char*>(bmpFile.data()), bmpFile.size());
+		file.write(reinterpret_cast<char*>(bmp_file.data()), bmp_file.size());
 	}
 }
 
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WindowProc(const HWND hwnd, const UINT u_msg, const WPARAM w_param, LPARAM l_param)
 {
-	switch (uMsg)
+	switch (u_msg)
 	{
 	case WM_CLIPBOARDUPDATE:
 		if (OpenClipboard(nullptr))
 		{
-			HANDLE hData = GetClipboardData(CF_TEXT);
-			if (hData != nullptr && hData != INVALID_HANDLE_VALUE)
+			HANDLE h_data = GetClipboardData(CF_TEXT);
+			if (h_data != nullptr && h_data != INVALID_HANDLE_VALUE)
 			{
-				auto pszText = static_cast<char*>(GlobalLock(hData));
-				if (pszText != nullptr)
+				auto clipboard_text = static_cast<char*>(GlobalLock(h_data));
+				if (clipboard_text != nullptr)
 				{
-					// Convert to wide string
-					int len = MultiByteToWideChar(CP_ACP, 0, pszText, -1, nullptr, 0);
-					std::wstring wstrpszText;
+					const int len = MultiByteToWideChar(CP_ACP, 0, clipboard_text, -1, nullptr, 0);
+					std::wstring wstr_clipboard_text;
 
 					if (len > 0)
 					{
-						wstrpszText.resize(len);
-						MultiByteToWideChar(CP_ACP, 0, pszText, -1, &wstrpszText[0], len);
+						wstr_clipboard_text.resize(len);
+						MultiByteToWideChar(CP_ACP, 0, clipboard_text, -1, &wstr_clipboard_text[0], len);
 					}
 
-					std::wstring wstrText = L"\n[Clipboard Changed] " + wstrpszText;
-					OutputDebugStringW(wstrText.c_str());
-					GlobalUnlock(hData);
+					const std::wstring output = L"[Clipboard Changed] " + wstr_clipboard_text + L"\n";
+					OutputDebugStringW(output.c_str());
+					GlobalUnlock(clipboard_text);
 				}
 			}
 
-			hData = GetClipboardData(CF_DIB);
-			if (hData != nullptr && hData != INVALID_HANDLE_VALUE)
+			h_data = GetClipboardData(CF_DIB);
+			if (h_data != nullptr && h_data != INVALID_HANDLE_VALUE)
 			{
-				void* dibData = GlobalLock(hData);
+				void* dib_data = GlobalLock(h_data);
 
-				if (dibData)
+				if (dib_data)
 				{
-					const std::wstring screenshot_path = GetTimestampedFilePath(L"C:/Users/97254/Desktop/tmp/");
-					SaveDIBToFile(dibData, screenshot_path);
-					GlobalUnlock(hData);
-					const std::wstring wstrText = L"\n[Clipboard Changed] Screenshot saved to path: " + screenshot_path;
-					OutputDebugStringW(wstrText.c_str());
+					// Check that the screenshot is not duplicate
+					const auto* header = static_cast<BITMAPINFOHEADER*>(dib_data);
+					const size_t current_header_hash = HashMemory(header, sizeof(BITMAPINFOHEADER));
+
+					if (!IsDuplicateHash(current_header_hash))
+					{
+						SaveHash(current_header_hash);
+
+						const std::wstring screenshot_path = GetTimestampedFilePath(L"C:/Users/97254/Desktop/tmp/");
+						SaveDIBToFile(dib_data, screenshot_path);
+
+						const std::wstring output = L"[Clipboard Changed] Screenshot saved to path: " + screenshot_path
+							+ L"\n";
+						OutputDebugStringW(output.c_str());
+					}
+
+					GlobalUnlock(h_data);
 				}
 			}
 			CloseClipboard();
@@ -116,23 +152,21 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return 0;
 
 	default:
-		return DefWindowProc(hwnd, uMsg, wParam, lParam);
+		return DefWindowProc(hwnd, u_msg, w_param, l_param);
 	}
 	return 0;
 }
 
 int WINAPI wWinMain(
-	[[maybe_unused]] HINSTANCE hInstance,
-	[[maybe_unused]] HINSTANCE hPrevInstance,
-	[[maybe_unused]] PWSTR pCmdLine,
-	[[maybe_unused]] int nCmdShow)
+	[[maybe_unused]] const HINSTANCE h_instance,
+	[[maybe_unused]] const HINSTANCE h_prev_instance,
+	[[maybe_unused]] const PWSTR p_cmd_ine,
+	[[maybe_unused]] const int n_cmd_show)
 {
-	const auto CLASS_NAME = L"ClipboardListenerClass";
-	const auto WINDOW_NAME = L"Clipboard Listener";
-
+	HWND hwnd;
 	WNDCLASSW wc = {};
 	wc.lpfnWndProc = WindowProc;
-	wc.hInstance = hInstance;
+	wc.hInstance = h_instance;
 	wc.lpszClassName = CLASS_NAME;
 
 	RegisterClassW(&wc);
@@ -148,26 +182,24 @@ int WINAPI wWinMain(
 		0,
 		HWND_MESSAGE,
 		nullptr,
-		hInstance,
+		h_instance,
 		nullptr
 	);
 
 	if (!hwnd)
 	{
-		OutputDebugStringW(L"Failed to create window.");
+		OutputDebugStringW(L"Failed to create window.\n");
 		return EXIT_FAILURE;
 	}
 
-	// Register clipboard listener
 	if (!AddClipboardFormatListener(hwnd))
 	{
-		OutputDebugStringW(L"Failed to add clipboard format listener.");
+		OutputDebugStringW(L"Failed to add clipboard format listener.\n");
 		return 1;
 	}
 
-	OutputDebugStringW(L"Listening for clipboard updates...");
+	OutputDebugStringW(L"Listening for clipboard updates...\n\n");
 
-	// Message loop
 	MSG msg = {};
 	while (GetMessage(&msg, nullptr, 0, 0))
 	{
