@@ -30,6 +30,10 @@
     <ClCompile Include="Filesystem\TemporaryFile.cpp" />
     <ClCompile Include="Registry\RegistryKey.cpp" />
     <ClCompile Include="Registry\RegistryManager.cpp" />
+    <ClCompile Include="Services\ScopedServiceHandler.cpp" />
+    <ClCompile Include="Services\Service.cpp" />
+    <ClCompile Include="Services\ServiceIterator.cpp" />
+    <ClCompile Include="Services\UnopenedService.cpp" />
     <ClCompile Include="Utils\BiMap.cpp" />
     <ClCompile Include="Media\MediaFoundation\MediaBuffer.cpp" />
     <ClCompile Include="Media\MediaFoundation\Sample.cpp" />
@@ -147,6 +151,10 @@
     <ClInclude Include="Include\Registry\RegistryKey.hpp" />
     <ClInclude Include="Include\Registry\RegistryPaths.hpp" />
     <ClInclude Include="Include\Registry\RegistryValueType.hpp" />
+    <ClInclude Include="Include\Services\ScopedServiceHandler.hpp" />
+    <ClInclude Include="Include\Services\Service.hpp" />
+    <ClInclude Include="Include\Services\ServiceIterator.hpp" />
+    <ClInclude Include="Include\Services\UnopenedService.hpp" />
     <ClInclude Include="Include\Sql\InMemorySqliteDatabase.hpp" />
     <ClInclude Include="Include\Sql\SqliteDatabase.hpp" />
     <ClInclude Include="Include\Sql\SqliteRowIterator.hpp" />
