@@ -28,6 +28,8 @@
     <ClCompile Include="Crypto\Aes.cpp" />
     <ClCompile Include="Include\External\SQLiteCpp\sqlite3\sqlite3.c" />
     <ClCompile Include="Filesystem\TemporaryFile.cpp" />
+    <ClCompile Include="Registry\RegistryKey.cpp" />
+    <ClCompile Include="Registry\RegistryManager.cpp" />
     <ClCompile Include="Utils\BiMap.cpp" />
     <ClCompile Include="Media\MediaFoundation\MediaBuffer.cpp" />
     <ClCompile Include="Media\MediaFoundation\Sample.cpp" />
@@ -142,6 +144,9 @@
     <ClInclude Include="Include\Media\MediaFoundation\SourceReader.hpp" />
     <ClInclude Include="Include\Media\ScreenBitmap.hpp" />
     <ClInclude Include="Include\Networking\Wireless.hpp" />
+    <ClInclude Include="Include\Registry\RegistryKey.hpp" />
+    <ClInclude Include="Include\Registry\RegistryPaths.hpp" />
+    <ClInclude Include="Include\Registry\RegistryValueType.hpp" />
     <ClInclude Include="Include\Sql\InMemorySqliteDatabase.hpp" />
     <ClInclude Include="Include\Sql\SqliteDatabase.hpp" />
     <ClInclude Include="Include\Sql\SqliteRowIterator.hpp" />
@@ -194,6 +199,7 @@
     <ClInclude Include="Include\Utils\Environment.hpp" />
     <ClInclude Include="Include\Networking\WlanClient.hpp" />
     <ClInclude Include="Include\Networking\ScopedWlanMemory.hpp" />
+    <ClInclude Include="Include\Registry\RegistryManager.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Include\External\cryptopp\cryptlib.vcxproj">

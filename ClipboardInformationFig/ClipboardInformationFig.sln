@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33502.453
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClipboardInformationFig", "ClipboardInformationFig\ClipboardInformationFig.vcxproj", "{64635B55-8E03-4AE5-80A6-96C52779D812}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FigImpl", "..\FigImpl\FigImpl.vcxproj", "{B152B3CB-D8D0-41E8-8BD7-F4ED852578BB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Fig", "..\Fig\Fig.vcxproj", "{31E00270-3EF4-40AE-88F1-3F5BD2DB58F5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Runner", "Runner\Runner.vcxproj", "{B2DF5C7D-0D5A-4AD5-9686-64BCA3A8CF75}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Framework", "..\Framework\Framework.vcxproj", "{5B5C1F35-E8A8-44E2-9133-38047262F449}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cryptlib", "..\Framework\Include\External\cryptopp\cryptlib.vcxproj", "{C39F4B46-6E89-4074-902E-CA57073044D2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{64635B55-8E03-4AE5-80A6-96C52779D812}.Debug|x86.ActiveCfg = Debug|Win32
+		{64635B55-8E03-4AE5-80A6-96C52779D812}.Debug|x86.Build.0 = Debug|Win32
+		{64635B55-8E03-4AE5-80A6-96C52779D812}.Release|x86.ActiveCfg = Release|Win32
+		{64635B55-8E03-4AE5-80A6-96C52779D812}.Release|x86.Build.0 = Release|Win32
+		{B152B3CB-D8D0-41E8-8BD7-F4ED852578BB}.Debug|x86.ActiveCfg = Debug|Win32
+		{B152B3CB-D8D0-41E8-8BD7-F4ED852578BB}.Debug|x86.Build.0 = Debug|Win32
+		{B152B3CB-D8D0-41E8-8BD7-F4ED852578BB}.Release|x86.ActiveCfg = Release|Win32
+		{B152B3CB-D8D0-41E8-8BD7-F4ED852578BB}.Release|x86.Build.0 = Release|Win32
+		{31E00270-3EF4-40AE-88F1-3F5BD2DB58F5}.Debug|x86.ActiveCfg = Debug|Win32
+		{31E00270-3EF4-40AE-88F1-3F5BD2DB58F5}.Debug|x86.Build.0 = Debug|Win32
+		{31E00270-3EF4-40AE-88F1-3F5BD2DB58F5}.Release|x86.ActiveCfg = Release|Win32
+		{31E00270-3EF4-40AE-88F1-3F5BD2DB58F5}.Release|x86.Build.0 = Release|Win32
+		{B2DF5C7D-0D5A-4AD5-9686-64BCA3A8CF75}.Debug|x86.ActiveCfg = Debug|Win32
+		{B2DF5C7D-0D5A-4AD5-9686-64BCA3A8CF75}.Debug|x86.Build.0 = Debug|Win32
+		{B2DF5C7D-0D5A-4AD5-9686-64BCA3A8CF75}.Release|x86.ActiveCfg = Release|Win32
+		{B2DF5C7D-0D5A-4AD5-9686-64BCA3A8CF75}.Release|x86.Build.0 = Release|Win32
+		{5B5C1F35-E8A8-44E2-9133-38047262F449}.Debug|x86.ActiveCfg = Debug|Win32
+		{5B5C1F35-E8A8-44E2-9133-38047262F449}.Debug|x86.Build.0 = Debug|Win32
+		{5B5C1F35-E8A8-44E2-9133-38047262F449}.Release|x86.ActiveCfg = Release|Win32
+		{5B5C1F35-E8A8-44E2-9133-38047262F449}.Release|x86.Build.0 = Release|Win32
+		{C39F4B46-6E89-4074-902E-CA57073044D2}.Debug|x86.ActiveCfg = Debug|Win32
+		{C39F4B46-6E89-4074-902E-CA57073044D2}.Debug|x86.Build.0 = Debug|Win32
+		{C39F4B46-6E89-4074-902E-CA57073044D2}.Release|x86.ActiveCfg = Release|Win32
+		{C39F4B46-6E89-4074-902E-CA57073044D2}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4B739ADD-F704-458F-A0C9-450673F2879B}
+	EndGlobalSection
+EndGlobal
