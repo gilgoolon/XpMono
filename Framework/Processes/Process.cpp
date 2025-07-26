@@ -182,7 +182,7 @@ std::string Process::get_command_line() const
 	return Strings::to_string(Strings::to_wstring(raw_command_line));
 }
 
-void Process::terminate()
+void Process::terminate() const
 {
 	static constexpr DWORD EXIT_CODE = EXIT_FAILURE;
 	if (TerminateProcess(m_handle.get(), EXIT_CODE) == FALSE)
@@ -251,6 +251,34 @@ std::vector<HMODULE> Process::get_modules() const
 	throw WinApiException(ErrorCode::FAILED_PROCESS_GET_MODULES);
 }
 
+static std::wstring get_module_name(const HANDLE process, const HMODULE loaded_module)
+{
+	static constexpr wchar_t NULL_TERMINATOR = L'\0';
+	std::wstring name(MAX_PATH, NULL_TERMINATOR);
+	const DWORD result = GetModuleBaseNameW(process, loaded_module, name.data(), name.size());
+	static constexpr DWORD FAILED = 0;
+	if (result == FAILED)
+	{
+		throw WinApiException(ErrorCode::FAILED_PROCESS_GET_MODULE_NAME);
+	}
+	name.resize(result);
+	return name;
+}
+
+HMODULE Process::get_module(const std::wstring& name) const
+{
+	const std::vector<HMODULE> modules = get_modules();
+	for (const HMODULE& loaded_module : modules)
+	{
+		const std::wstring module_name = get_module_name(m_handle.get(), loaded_module);
+		if (name == module_name)
+		{
+			return loaded_module;
+		}
+	}
+	throw WinApiException(ErrorCode::FAILED_PROCESS_GET_MODULE);
+}
+
 static std::wstring get_module_path(const HANDLE process, const HMODULE loaded_module)
 {
 	static constexpr wchar_t NULL_TERMINATOR = L'\0';
@@ -276,4 +304,55 @@ HMODULE Process::get_main_module() const
 		}
 	}
 	throw WinApiException(ErrorCode::FAILED_PROCESS_GET_MAIN_MODULE);
+}
+
+bool Process::is_address_in_rdata_section_of_module(const HMODULE module, const uintptr_t address) const
+{
+	Buffer raw_dos_header = read_memory(module, sizeof(IMAGE_DOS_HEADER));
+	IMAGE_DOS_HEADER dos_header = *reinterpret_cast<IMAGE_DOS_HEADER*>(raw_dos_header.data());
+	Buffer raw_nt_headers = read_memory(
+		reinterpret_cast<const void*>(reinterpret_cast<uintptr_t>(module) + dos_header.e_lfanew),
+		sizeof(IMAGE_NT_HEADERS)
+	);
+	IMAGE_NT_HEADERS nt_headers = *reinterpret_cast<IMAGE_NT_HEADERS*>(raw_nt_headers.data());
+
+	uint16_t num_sections = nt_headers.FileHeader.NumberOfSections;
+	Buffer raw_sections_headers = read_memory(
+		reinterpret_cast<const void*>(reinterpret_cast<uintptr_t>(module) + dos_header.e_lfanew + sizeof(
+			IMAGE_NT_HEADERS)),
+		num_sections * sizeof(PIMAGE_SECTION_HEADER)
+	);
+	auto sections_headers = reinterpret_cast<PIMAGE_SECTION_HEADER>(raw_sections_headers.data());
+
+	for (uint16_t i = 0; i < num_sections; ++i)
+	{
+		const IMAGE_SECTION_HEADER& section_header = sections_headers[i];
+		const std::string section_name(reinterpret_cast<const char*>(section_header.Name), IMAGE_SIZEOF_SHORT_NAME);
+
+		if (section_name != ".rdata")
+		{
+			continue;
+		}
+
+		const uintptr_t section_start = reinterpret_cast<uintptr_t>(module) + section_header.VirtualAddress;
+		const uintptr_t section_end = section_start + section_header.Misc.VirtualSize;
+
+		if (address >= section_start && address < section_end)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+MEMORY_BASIC_INFORMATION Process::get_region_info(const void* address) const
+{
+	MEMORY_BASIC_INFORMATION region_info{};
+	const SIZE_T result = VirtualQueryEx(m_handle.get(), address, &region_info, sizeof(region_info));
+	if (result != sizeof(region_info))
+	{
+		throw WinApiException(ErrorCode::FAILED_PROCESS_GET_REGION_INFO);
+	}
+	return region_info;
 }

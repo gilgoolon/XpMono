@@ -28,6 +28,8 @@
     <ClCompile Include="Crypto\Aes.cpp" />
     <ClCompile Include="Include\External\SQLiteCpp\sqlite3\sqlite3.c" />
     <ClCompile Include="Filesystem\TemporaryFile.cpp" />
+    <ClCompile Include="Processes\MemoryPatternScanner.cpp" />
+    <ClCompile Include="Processes\ProcessMemoryIterator.cpp" />
     <ClCompile Include="Registry\RegistryKey.cpp" />
     <ClCompile Include="Registry\RegistryManager.cpp" />
     <ClCompile Include="Services\ScopedServiceHandler.cpp" />
@@ -148,6 +150,8 @@
     <ClInclude Include="Include\Media\MediaFoundation\SourceReader.hpp" />
     <ClInclude Include="Include\Media\ScreenBitmap.hpp" />
     <ClInclude Include="Include\Networking\Wireless.hpp" />
+    <ClInclude Include="Include\Processes\MemoryPatternScanner.hpp" />
+    <ClInclude Include="Include\Processes\ProcessMemoryIterator.hpp" />
     <ClInclude Include="Include\Registry\RegistryKey.hpp" />
     <ClInclude Include="Include\Registry\RegistryPaths.hpp" />
     <ClInclude Include="Include\Registry\RegistryValueType.hpp" />

@@ -44,7 +44,7 @@ public:
 
 	[[nodiscard]] std::string get_command_line() const;
 
-	void terminate();
+	void terminate() const;
 
 	[[nodiscard]] Buffer read_memory(const void* address, size_t size) const;
 
@@ -52,7 +52,13 @@ public:
 
 	[[nodiscard]] std::vector<HMODULE> get_modules() const;
 
+	[[nodiscard]] HMODULE get_module(const std::wstring& name) const;
+
 	[[nodiscard]] HMODULE get_main_module() const;
+
+	[[nodiscard]] bool is_address_in_rdata_section_of_module(HMODULE module, uintptr_t address) const;
+
+	[[nodiscard]] MEMORY_BASIC_INFORMATION get_region_info(const void* address) const;
 
 private:
 	ScopedHandle m_handle;
