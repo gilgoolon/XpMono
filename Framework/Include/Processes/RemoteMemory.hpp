@@ -17,13 +17,13 @@ public:
 	RemoteMemory(RemoteMemory&&) = delete;
 	RemoteMemory& operator=(RemoteMemory&&) = delete;
 
-	void write(const std::vector<uint8_t>& data);
+	void write(const std::vector<uint8_t>& data) const;
 
 private:
 	std::weak_ptr<Process> m_process;
 	void* m_base_address;
 
-	[[nodiscard]] static void* allocate_remote_memory(Process& process, uint32_t size);
+	[[nodiscard]] static void* allocate_remote_memory(const Process& process, uint32_t size);
 
 	[[nodiscard]] void* get() const;
 

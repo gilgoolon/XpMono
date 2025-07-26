@@ -20,7 +20,7 @@ private:
 	void retrieve_next() const;
 
 public:
-	[[nodiscard]] UnopenedProcess::Ptr next();
+	[[nodiscard]] UnopenedProcess::Ptr next() const;
 	[[nodiscard]] bool has_next() const;
 
 private:
