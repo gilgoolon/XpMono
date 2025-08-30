@@ -1,5 +1,6 @@
 #include "Services/ServiceIterator.hpp"
 #include "Exception.hpp"
+#include "Trace.hpp"
 
 ServiceIterator::ServiceIterator() :
 	m_next_result(nullptr),
@@ -88,20 +89,20 @@ void ServiceIterator::load_services() const
 		&services_returned,
 		&resume_handle,
 		nullptr
-	))
+	) && GetLastError() != ERROR_MORE_DATA)
 	{
 		CloseServiceHandle(service_manager);
 		throw WinApiException(ErrorCode::FAILED_SERVICE_ITERATOR_NEXT);
 	}
 
-	m_services.resize(services_returned);
+	m_services.resize(bytes_needed / sizeof(ENUM_SERVICE_STATUS_PROCESS));
 	if (!EnumServicesStatusExW(
 		service_manager,
 		SERVICE_STATUS_INFO,
 		ENUM_WIN32_SERVICES,
 		ENUM_ACTIVE_AND_INACTIVE_SERVICES,
 		reinterpret_cast<LPBYTE>(m_services.data()),
-		m_services.size() * sizeof(ENUM_SERVICE_STATUS_PROCESS),
+		static_cast<uint32_t>(m_services.size() * sizeof(ENUM_SERVICE_STATUS_PROCESS)),
 		&bytes_needed,
 		&services_returned,
 		&resume_handle,
