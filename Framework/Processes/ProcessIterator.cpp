@@ -64,7 +64,7 @@ void ProcessIterator::retrieve_next() const
 	}
 }
 
-UnopenedProcess::Ptr ProcessIterator::next()
+UnopenedProcess::Ptr ProcessIterator::next() const
 {
 	if (!has_next())
 	{

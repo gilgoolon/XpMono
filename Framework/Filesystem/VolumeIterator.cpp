@@ -114,7 +114,7 @@ std::filesystem::path VolumeIterator::get_system_volume()
 	static constexpr wchar_t NULL_TERM = L'\0';
 	std::wstring result(MAX_GUID_LENGTH, NULL_TERM);
 
-	const UINT chars_written = GetSystemDirectoryW(result.data(), result.size());
+	const UINT chars_written = GetSystemDirectoryW(result.data(), static_cast<uint32_t>(result.size()));
 	if (chars_written == 0)
 	{
 		throw WinApiException(ErrorCode::FAILED_VOLUME_GET_SYSTEM);

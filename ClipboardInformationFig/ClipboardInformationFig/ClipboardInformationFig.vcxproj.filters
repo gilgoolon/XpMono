@@ -30,6 +30,9 @@
     <ClCompile Include="Operations\ClipboardListenerPoc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Operations\GetHistoryHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source.def">
@@ -47,6 +50,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Operations\EnableHandler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Operations\GetHistoryHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

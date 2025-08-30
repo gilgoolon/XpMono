@@ -16,7 +16,8 @@ class Process final : public std::enable_shared_from_this<Process>, public IWait
 public:
 	using Ptr = std::unique_ptr<Process>;
 
-	explicit Process(uint32_t pid);
+	explicit Process(uint32_t pid,
+	                 DWORD access = PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_VM_WRITE | SYNCHRONIZE);
 	explicit Process(const std::wstring& command_line);
 	~Process() override = default;
 	Process(const Process&) = delete;
@@ -25,15 +26,15 @@ public:
 	Process& operator=(Process&&) = delete;
 
 private:
-	[[nodiscard]] HANDLE handle() const override;
-
-	[[nodiscard]] static HANDLE open_process(uint32_t pid);
+	[[nodiscard]] static HANDLE open_process(uint32_t pid, DWORD access);
 
 	[[nodiscard]] static HANDLE create_process(const std::wstring& command_line);
 
 	[[nodiscard]] PROCESS_BASIC_INFORMATION query_basic_information() const;
 
 public:
+	[[nodiscard]] HANDLE handle() const override;
+
 	[[nodiscard]] uint32_t get_pid() const;
 
 	[[nodiscard]] std::wstring get_path() const;
@@ -44,15 +45,25 @@ public:
 
 	[[nodiscard]] std::string get_command_line() const;
 
-	void terminate();
+	void terminate() const;
 
-	[[nodiscard]] Buffer read_memory(const void* address, size_t size) const;
+	[[nodiscard]] std::optional<Buffer> read_memory(const void* address, size_t size) const;
 
 	[[nodiscard]] RemoteMemory::Ptr allocate_memory(uint32_t size);
 
 	[[nodiscard]] std::vector<HMODULE> get_modules() const;
 
+	[[nodiscard]] HMODULE get_module(const std::wstring& name) const;
+
+	[[nodiscard]] std::wstring get_module_name(HMODULE loaded_module) const;
+
+	[[nodiscard]] std::wstring get_module_path(HMODULE loaded_module) const;
+
 	[[nodiscard]] HMODULE get_main_module() const;
+
+	[[nodiscard]] bool is_address_in_rdata_section_of_module(HMODULE module, uintptr_t address) const;
+
+	[[nodiscard]] MEMORY_BASIC_INFORMATION get_region_info(const void* address) const;
 
 private:
 	ScopedHandle m_handle;

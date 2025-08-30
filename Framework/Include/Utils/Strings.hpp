@@ -29,7 +29,7 @@ template <typename String>
 template <typename Buffer, typename... Buffers>
 Buffer concat(const Buffer& first, const Buffers&... rest)
 {
-	uint32_t total_size = first.size() + (rest.size() + ...);
+	size_t total_size = first.size() + (rest.size() + ...);
 
 	Buffer result = first;
 	result.reserve(total_size);

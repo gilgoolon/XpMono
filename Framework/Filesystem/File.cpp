@@ -66,7 +66,13 @@ void File::write(const Buffer& data) const
 {
 	static constexpr LPOVERLAPPED UNUSED_OVERLAPPED = nullptr;
 	DWORD bytes_written = 0;
-	const BOOL result = WriteFile(m_handle.get(), data.data(), data.size(), &bytes_written, UNUSED_OVERLAPPED);
+	const BOOL result = WriteFile(
+		m_handle.get(),
+		data.data(),
+		static_cast<uint32_t>(data.size()),
+		&bytes_written,
+		UNUSED_OVERLAPPED
+	);
 	if (result == FALSE)
 	{
 		throw WinApiException(ErrorCode::FAILED_FILE_WRITE);
@@ -114,7 +120,12 @@ std::filesystem::path File::path() const
 {
 	static constexpr wchar_t NULL_TERMINATOR = L'\0';
 	std::wstring path(MAX_PATH, NULL_TERMINATOR);
-	const DWORD result = GetFinalPathNameByHandleW(m_handle.get(), path.data(), path.size(), FILE_NAME_NORMALIZED);
+	const DWORD result = GetFinalPathNameByHandleW(
+		m_handle.get(),
+		path.data(),
+		static_cast<uint32_t>(path.size()),
+		FILE_NAME_NORMALIZED
+	);
 
 	if (result == FALSE)
 	{

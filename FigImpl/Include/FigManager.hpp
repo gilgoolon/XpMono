@@ -42,7 +42,7 @@ extern "C"
 extern "C"
 [[nodiscard]] Fig::FigCode __cdecl take(__in Fig::OperationId id,
                                         __in uint8_t** buffer,
-                                        __in uint32_t* buffer_size);
+                                        __in size_t* buffer_size);
 
 extern "C"
 [[nodiscard]] Fig::FigCode __cdecl free_buffer(__in uint8_t* buffer,__in uint32_t buffer_size);

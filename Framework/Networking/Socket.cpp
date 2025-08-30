@@ -76,7 +76,12 @@ Buffer Socket::read(const uint32_t size) const
 void Socket::write(const Buffer& data) const
 {
 	static constexpr int REGULAR_SEND = 0;
-	const int bytes_written = send(m_socket, reinterpret_cast<const char*>(data.data()), data.size(), REGULAR_SEND);
+	const int bytes_written = send(
+		m_socket,
+		reinterpret_cast<const char*>(data.data()),
+		static_cast<uint32_t>(data.size()),
+		REGULAR_SEND
+	);
 	if (static_cast<uint32_t>(bytes_written) != data.size())
 	{
 		throw WsaException(ErrorCode::FAILED_SOCKET_SEND);
