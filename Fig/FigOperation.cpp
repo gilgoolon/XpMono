@@ -31,7 +31,7 @@ FigModule::StatusResult FigOperation::status() const
 
 FigModule::StatusResult FigOperation::wait() const
 {
-	static constexpr Time::Duration OPERATION_ITERATION_TIMEOUT = Time::Minutes(1);
+	static constexpr Time::Duration OPERATION_ITERATION_TIMEOUT = Time::Minutes(2);
 	switch (m_event->wait(OPERATION_ITERATION_TIMEOUT))
 	{
 	case WaitStatus::TIMEOUT:
