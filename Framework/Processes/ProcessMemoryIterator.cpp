@@ -1,6 +1,6 @@
 #include "Processes/ProcessMemoryIterator.hpp"
-
 #include "Exception.hpp"
+#include "Trace.hpp"
 
 ProcessMemoryIterator::ProcessMemoryIterator(const Process& process, const RegionFilter& filter) :
 	m_process(process),
@@ -13,7 +13,7 @@ void* ProcessMemoryIterator::next() const
 {
 	if (!has_next())
 	{
-		throw Exception(ErrorCode::OUT_OF_BOUNDS);
+		return nullptr;
 	}
 	void* result = m_next_address;
 	m_next_address = nullptr;
@@ -47,14 +47,21 @@ void ProcessMemoryIterator::retrieve_first() const
 	}
 
 	m_next_address = m_current_region_info.BaseAddress;
+	m_current_region_offset = 0;
 }
 
 void ProcessMemoryIterator::retrieve_next() const
 {
-	if (m_next_address < reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(m_current_region_info.BaseAddress) +
-		m_current_region_info.RegionSize))
+	if (reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(m_current_region_info.BaseAddress) +
+			m_current_region_offset) <
+		reinterpret_cast<
+			void*>(
+			reinterpret_cast<uintptr_t>(m_current_region_info.BaseAddress) +
+			m_current_region_info.RegionSize))
 	{
-		m_next_address = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(m_next_address) + 1);
+		m_current_region_offset++;
+		m_next_address = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(m_current_region_info.BaseAddress) +
+			m_current_region_offset);
 		return;
 	}
 
@@ -62,19 +69,19 @@ void ProcessMemoryIterator::retrieve_next() const
 	if (m_current_region_info.RegionSize == 0)
 	{
 		m_next_address = nullptr;
+		return;
 	}
+
+	m_next_address = m_current_region_info.BaseAddress;
+	m_current_region_offset = 0;
 }
 
 void ProcessMemoryIterator::next_region() const
 {
-	auto next_region_address = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(m_current_region_info.BaseAddress) +
-		m_current_region_info.RegionSize);
-	m_current_region_info = m_process.get_region_info(next_region_address);
-
 	do
 	{
-		next_region_address = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(m_current_region_info.BaseAddress) +
-			m_current_region_info.RegionSize);
+		const auto next_region_address = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(m_current_region_info.
+			BaseAddress) + m_current_region_info.RegionSize);
 
 		try
 		{
@@ -82,7 +89,7 @@ void ProcessMemoryIterator::next_region() const
 		}
 		catch (const Exception& e)
 		{
-			if (e.code() == ErrorCode::OUT_OF_BOUNDS)
+			if (e.code() == ErrorCode::FAILED_PROCESS_GET_REGION_INFO)
 			{
 				m_current_region_info.RegionSize = 0;
 				return;
@@ -91,8 +98,7 @@ void ProcessMemoryIterator::next_region() const
 		}
 	}
 	while (
-		m_current_region_info.State != m_filter.state ||
-		m_current_region_info.Type != m_filter.type ||
+		m_current_region_info.State != m_filter.state || m_current_region_info.Type != m_filter.type ||
 		m_current_region_info.Protect != m_filter.protect
 	);
 }

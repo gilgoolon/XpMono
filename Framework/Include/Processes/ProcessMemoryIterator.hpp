@@ -29,6 +29,7 @@ private:
 
 	const Process& m_process;
 	const RegionFilter m_filter;
+	mutable size_t m_current_region_offset;
 	mutable void* m_next_address;
 	mutable MEMORY_BASIC_INFORMATION m_current_region_info;
 };
