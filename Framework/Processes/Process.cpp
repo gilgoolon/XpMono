@@ -10,8 +10,8 @@
 
 #pragma comment(lib, "ntdll.lib")
 
-Process::Process(const uint32_t pid):
-	m_handle(open_process(pid))
+Process::Process(const uint32_t pid, const DWORD access):
+	m_handle(open_process(pid, access))
 {
 }
 
@@ -25,11 +25,11 @@ HANDLE Process::handle() const
 	return m_handle.get();
 }
 
-HANDLE Process::open_process(const uint32_t pid)
+HANDLE Process::open_process(const uint32_t pid, const DWORD access)
 {
-	static constexpr DWORD READ_ACCESS = PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_VM_WRITE | SYNCHRONIZE;
 	static constexpr BOOL DONT_INHERIT_HANDLE = FALSE;
-	const HANDLE result = OpenProcess(READ_ACCESS, DONT_INHERIT_HANDLE, pid);
+
+	const HANDLE result = OpenProcess(access, DONT_INHERIT_HANDLE, pid);
 	if (result == nullptr)
 	{
 		throw WinApiException(ErrorCode::FAILED_PROCESS_OPEN);
@@ -110,12 +110,13 @@ std::wstring Process::get_path() const
 {
 	static constexpr HMODULE MAIN_MODULE_EXE = nullptr;
 	static constexpr char NULL_TERMINATOR = '\0';
+
 	std::wstring path(MAX_PATH, NULL_TERMINATOR);
 	const DWORD result = GetModuleFileNameExW(
 		m_handle.get(),
 		MAIN_MODULE_EXE,
 		path.data(),
-		path.size()
+		static_cast<uint32_t>(path.size())
 	);
 	if (result == 0)
 	{
@@ -168,37 +169,49 @@ std::string Process::get_command_line() const
 {
 	const PROCESS_BASIC_INFORMATION basic_information = query_basic_information();
 
-	const Buffer raw_peb = read_memory(basic_information.PebBaseAddress, sizeof(PEB));
-	const auto* const peb = reinterpret_cast<const PEB*>(raw_peb.data());
+	const auto raw_peb = read_memory(basic_information.PebBaseAddress, sizeof(PEB));
+	if (!raw_peb)
+	{
+		throw WinApiException(ErrorCode::FAILED_PROCESS_READ_MEMORY);
+	}
+	const auto* const peb = reinterpret_cast<const PEB*>(raw_peb.value().data());
 
-	const Buffer raw_process_parameters = read_memory(peb->ProcessParameters, sizeof(RTL_USER_PROCESS_PARAMETERS));
-	const auto* const process_parameters = reinterpret_cast<const RTL_USER_PROCESS_PARAMETERS*>(raw_process_parameters.
-		data());
+	const auto raw_process_parameters = read_memory(peb->ProcessParameters, sizeof(RTL_USER_PROCESS_PARAMETERS));
+	if (!raw_process_parameters)
+	{
+		throw WinApiException(ErrorCode::FAILED_PROCESS_READ_MEMORY);
+	}
+	const auto* const process_parameters = reinterpret_cast<const RTL_USER_PROCESS_PARAMETERS*>(
+		raw_process_parameters.value().data());
 
-	const Buffer raw_command_line = read_memory(
+	const auto raw_command_line = read_memory(
 		process_parameters->CommandLine.Buffer,
 		process_parameters->CommandLine.Length
 	);
-	return Strings::to_string(Strings::to_wstring(raw_command_line));
+	if (!raw_command_line)
+	{
+		throw WinApiException(ErrorCode::FAILED_PROCESS_READ_MEMORY);
+	}
+	return Strings::to_string(Strings::to_wstring(raw_command_line.value()));
 }
 
 void Process::terminate() const
 {
 	static constexpr DWORD EXIT_CODE = EXIT_FAILURE;
+
 	if (TerminateProcess(m_handle.get(), EXIT_CODE) == FALSE)
 	{
 		throw WinApiException(ErrorCode::FAILED_PROCESS_TERMINATE);
 	}
 }
 
-Buffer Process::read_memory(const void* const address, const size_t size) const
+std::optional<Buffer> Process::read_memory(const void* const address, const size_t size) const
 {
 	Buffer buffer(size);
-	SIZE_T bytes_read = 0;
-	const BOOL result = ReadProcessMemory(m_handle.get(), address, buffer.data(), size, &bytes_read);
+	const BOOL result = ReadProcessMemory(m_handle.get(), address, buffer.data(), size, nullptr);
 	if (result == FALSE)
 	{
-		throw WinApiException(ErrorCode::FAILED_PROCESS_READ_MEMORY);
+		return std::nullopt;
 	}
 	return buffer;
 }
@@ -217,45 +230,62 @@ RemoteMemory::Ptr Process::allocate_memory(uint32_t size)
 
 std::vector<HMODULE> Process::get_modules() const
 {
-	static constexpr HMODULE* NO_BUFFER_FETCH_COUNT = nullptr;
-	static constexpr DWORD FETCH_COUNT = 0;
-	static constexpr DWORD ONLY_32BIT_MODULES = LIST_MODULES_32BIT;
+	static constexpr HMODULE* NO_BUFFER = nullptr;
+	static constexpr DWORD EMPTY_BUFFER_SIZE = 0;
+
 	DWORD needed_buffer_size = 0;
-	BOOL result = EnumProcessModulesEx(
+	BOOL result = EnumProcessModules(
 		m_handle.get(),
-		NO_BUFFER_FETCH_COUNT,
-		FETCH_COUNT,
-		&needed_buffer_size,
-		ONLY_32BIT_MODULES
+		NO_BUFFER,
+		EMPTY_BUFFER_SIZE,
+		&needed_buffer_size
 	);
-	if (result == TRUE)
+	if (result == FALSE)
 	{
 		throw WinApiException(ErrorCode::FAILED_PROCESS_GET_MODULES);
 	}
-	while (GetLastError() == FALSE)
+
+	std::vector<HMODULE> buffer(needed_buffer_size);
+	needed_buffer_size = 0;
+	result = EnumProcessModules(
+		m_handle.get(),
+		buffer.data(),
+		static_cast<uint32_t>(buffer.size() * sizeof(HMODULE)),
+		&needed_buffer_size
+	);
+
+	if (result != FALSE)
 	{
-		std::vector<HMODULE> buffer(needed_buffer_size);
-		needed_buffer_size = 0;
-		result = EnumProcessModulesEx(
-			m_handle.get(),
-			buffer.data(),
-			buffer.size() * sizeof(HMODULE),
-			&needed_buffer_size,
-			ONLY_32BIT_MODULES
-		);
-		if (result != FALSE && needed_buffer_size == buffer.size() * sizeof(HMODULE))
-		{
-			return buffer;
-		}
+		return buffer;
 	}
 	throw WinApiException(ErrorCode::FAILED_PROCESS_GET_MODULES);
 }
 
-static std::wstring get_module_name(const HANDLE process, const HMODULE loaded_module)
+HMODULE Process::get_module(const std::wstring& name) const
+{
+	const std::vector<HMODULE> modules = get_modules();
+	for (const HMODULE& loaded_module : modules)
+	{
+		const std::wstring module_name = get_module_name(loaded_module);
+		if (name == module_name)
+		{
+			return loaded_module;
+		}
+	}
+	throw WinApiException(ErrorCode::FAILED_PROCESS_GET_MODULE);
+}
+
+std::wstring Process::get_module_name(const HMODULE loaded_module) const
 {
 	static constexpr wchar_t NULL_TERMINATOR = L'\0';
+
 	std::wstring name(MAX_PATH, NULL_TERMINATOR);
-	const DWORD result = GetModuleBaseNameW(process, loaded_module, name.data(), name.size());
+	const DWORD result = GetModuleBaseNameW(
+		m_handle.get(),
+		loaded_module,
+		name.data(),
+		static_cast<uint32_t>(name.size())
+	);
 	static constexpr DWORD FAILED = 0;
 	if (result == FAILED)
 	{
@@ -265,25 +295,17 @@ static std::wstring get_module_name(const HANDLE process, const HMODULE loaded_m
 	return name;
 }
 
-HMODULE Process::get_module(const std::wstring& name) const
-{
-	const std::vector<HMODULE> modules = get_modules();
-	for (const HMODULE& loaded_module : modules)
-	{
-		const std::wstring module_name = get_module_name(m_handle.get(), loaded_module);
-		if (name == module_name)
-		{
-			return loaded_module;
-		}
-	}
-	throw WinApiException(ErrorCode::FAILED_PROCESS_GET_MODULE);
-}
-
-static std::wstring get_module_path(const HANDLE process, const HMODULE loaded_module)
+std::wstring Process::get_module_path(const HMODULE loaded_module) const
 {
 	static constexpr wchar_t NULL_TERMINATOR = L'\0';
+
 	std::wstring path(MAX_PATH, NULL_TERMINATOR);
-	const DWORD result = GetModuleFileNameExW(process, loaded_module, path.data(), path.size());
+	const DWORD result = GetModuleFileNameExW(
+		m_handle.get(),
+		loaded_module,
+		path.data(),
+		static_cast<uint32_t>(path.size())
+	);
 	static constexpr DWORD FAILED = 0;
 	if (result == FAILED)
 	{
@@ -298,7 +320,7 @@ HMODULE Process::get_main_module() const
 	const std::wstring process_filename = get_path();
 	for (const HMODULE& loaded_module : get_modules())
 	{
-		if (get_module_path(m_handle.get(), loaded_module) == process_filename)
+		if (get_module_path(loaded_module) == process_filename)
 		{
 			return loaded_module;
 		}
@@ -308,26 +330,41 @@ HMODULE Process::get_main_module() const
 
 bool Process::is_address_in_rdata_section_of_module(const HMODULE module, const uintptr_t address) const
 {
-	Buffer raw_dos_header = read_memory(module, sizeof(IMAGE_DOS_HEADER));
-	IMAGE_DOS_HEADER dos_header = *reinterpret_cast<IMAGE_DOS_HEADER*>(raw_dos_header.data());
-	Buffer raw_nt_headers = read_memory(
+	auto raw_dos_header = read_memory(module, sizeof(IMAGE_DOS_HEADER));
+	if (!raw_dos_header)
+	{
+		return false;
+	}
+	auto dos_header = *reinterpret_cast<IMAGE_DOS_HEADER*>(raw_dos_header.value().data());
+
+	auto raw_nt_headers = read_memory(
 		reinterpret_cast<const void*>(reinterpret_cast<uintptr_t>(module) + dos_header.e_lfanew),
 		sizeof(IMAGE_NT_HEADERS)
 	);
-	IMAGE_NT_HEADERS nt_headers = *reinterpret_cast<IMAGE_NT_HEADERS*>(raw_nt_headers.data());
+	if (!raw_nt_headers)
+	{
+		return false;
+	}
+	IMAGE_NT_HEADERS nt_headers = *reinterpret_cast<IMAGE_NT_HEADERS*>(raw_nt_headers.value().data());
 
 	uint16_t num_sections = nt_headers.FileHeader.NumberOfSections;
-	Buffer raw_sections_headers = read_memory(
+	auto raw_sections_headers = read_memory(
 		reinterpret_cast<const void*>(reinterpret_cast<uintptr_t>(module) + dos_header.e_lfanew + sizeof(
 			IMAGE_NT_HEADERS)),
-		num_sections * sizeof(PIMAGE_SECTION_HEADER)
+		num_sections * sizeof(IMAGE_SECTION_HEADER)
 	);
-	auto sections_headers = reinterpret_cast<PIMAGE_SECTION_HEADER>(raw_sections_headers.data());
+	if (!raw_sections_headers)
+	{
+		return false;
+	}
+	auto sections_headers = reinterpret_cast<PIMAGE_SECTION_HEADER>(raw_sections_headers.value().
+		data());
 
-	for (uint16_t i = 0; i < num_sections; ++i)
+	for (uint16_t i = 0; i < num_sections; i++)
 	{
 		const IMAGE_SECTION_HEADER& section_header = sections_headers[i];
-		const std::string section_name(reinterpret_cast<const char*>(section_header.Name), IMAGE_SIZEOF_SHORT_NAME);
+		auto raw_name = reinterpret_cast<const char*>(section_header.Name);
+		const std::string section_name(raw_name, strnlen(raw_name, IMAGE_SIZEOF_SHORT_NAME));
 
 		if (section_name != ".rdata")
 		{
@@ -341,6 +378,7 @@ bool Process::is_address_in_rdata_section_of_module(const HMODULE module, const 
 		{
 			return true;
 		}
+		break;
 	}
 
 	return false;
