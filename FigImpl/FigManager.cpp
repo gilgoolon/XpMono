@@ -105,7 +105,7 @@ Fig::FigCode FigManager::status(const Fig::OperationId id,
 	return Fig::FigCode::FAILED_UNKNOWN;
 }
 
-Fig::FigCode FigManager::take(const Fig::OperationId id, uint8_t** const buffer, uint32_t* const buffer_size)
+Fig::FigCode FigManager::take(const Fig::OperationId id, uint8_t** const buffer, size_t* const buffer_size)
 {
 	try
 	{

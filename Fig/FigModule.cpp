@@ -49,7 +49,7 @@ std::unique_ptr<FigOperation> FigModule::execute(const Fig::OperationType type, 
 	const Fig::FigCode code = m_interfaces.execute(
 		type,
 		parameters.data(),
-		parameters.size(),
+		static_cast<uint32_t>(parameters.size()),
 		&operation_id,
 		&operation_event
 	);
@@ -85,13 +85,13 @@ FigModule::StatusResult FigModule::status(const Fig::OperationId id) const
 std::vector<uint8_t> FigModule::take(const Fig::OperationId id)
 {
 	uint8_t* buffer = nullptr;
-	uint32_t size = 0;
+	size_t size = 0;
 	const Fig::FigCode code = m_interfaces.take(id, &buffer, &size);
 	if (code != Fig::FigCode::SUCCESS)
 	{
 		throw FigException(ErrorCode::FAILED_FIG_TAKE, code);
 	}
 	Buffer result = {buffer, buffer + size};
-	m_interfaces.free_buffer(buffer, size);
+	m_interfaces.free_buffer(buffer, static_cast<uint32_t>(size));
 	return result;
 }

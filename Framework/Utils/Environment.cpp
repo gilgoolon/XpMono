@@ -9,7 +9,11 @@ std::wstring Environment::expand_variables(const std::wstring& string)
 	static constexpr wchar_t NULL_TERMINATOR = L'\0';
 	std::wstring expanded_path(MAX_PATH, NULL_TERMINATOR);
 
-	const DWORD result = ExpandEnvironmentStringsW(string.c_str(), expanded_path.data(), expanded_path.size());
+	const DWORD result = ExpandEnvironmentStringsW(
+		string.c_str(),
+		expanded_path.data(),
+		static_cast<uint32_t>(expanded_path.size())
+	);
 	if (result == FALSE)
 	{
 		throw WinApiException(ErrorCode::FAILED_ENVIRONMENT_EXPAND);
@@ -22,7 +26,7 @@ std::filesystem::path Environment::get_temp_folder()
 {
 	static constexpr wchar_t NULL_TERMINATOR = L'\0';
 	std::wstring buffer(MAX_PATH, NULL_TERMINATOR);
-	const DWORD result = GetTempPath2W(buffer.size(), buffer.data());
+	const DWORD result = GetTempPath2W(static_cast<uint32_t>(buffer.size()), buffer.data());
 
 	if (result == FALSE)
 	{

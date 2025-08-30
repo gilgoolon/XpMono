@@ -112,7 +112,7 @@ std::wstring Strings::join(const std::vector<std::wstring>& strings, const wchar
 		return L"";
 	}
 
-	uint32_t total_size = 0;
+	size_t total_size = 0;
 	for (const auto& s : strings)
 	{
 		total_size += s.size();

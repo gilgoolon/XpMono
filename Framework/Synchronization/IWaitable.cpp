@@ -70,7 +70,7 @@ WaitResult IWaitable::wait_for_multiple(const std::vector<std::shared_ptr<IWaita
 	const BOOL wait_all_win = wait_all ? TRUE : FALSE;
 
 	const DWORD result = WaitForMultipleObjects(
-		handles.size(),
+		static_cast<uint32_t>(handles.size()),
 		handles.data(),
 		wait_all_win,
 		Time::duration_cast<Time::Millis>(timeout).count()
