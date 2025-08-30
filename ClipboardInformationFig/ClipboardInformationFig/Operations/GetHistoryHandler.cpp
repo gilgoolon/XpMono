@@ -1,5 +1,5 @@
 #include "GetHistoryHandler.hpp"
-#include "FigException.hpp"
+#include "Exception.hpp"
 #include "Trace.hpp"
 #include "Media/BitmapFormat.hpp"
 #include "Processes/MemoryPatternScanner.hpp"
@@ -20,7 +20,7 @@ GetHistoryHandler::GetHistoryHandler(std::unique_ptr<Event> operation_event, con
 {
 	if (m_history_type != HistoryType::TEXT && m_history_type != HistoryType::SCREENSHOT)
 	{
-		throw FigException(ErrorCode::INVALID_ARGUMENT, Fig::FigCode::FAILED_RUN);
+		throw Exception(ErrorCode::INVALID_ARGUMENT);
 	}
 }
 
@@ -34,14 +34,14 @@ void GetHistoryHandler::run()
 	const uint32_t pid = get_clipboard_service_process_pid();
 	if (pid == 0)
 	{
-		throw FigException(ErrorCode::PROCESS_NOT_FOUND, Fig::FigCode::FAILED_RUN);
+		throw Exception(ErrorCode::PROCESS_NOT_FOUND);
 	}
 
 	const Process process(pid);
 
 	if (!process.is_running())
 	{
-		throw FigException(ErrorCode::PROCESS_NOT_RUNNING, Fig::FigCode::FAILED_RUN);
+		throw Exception(ErrorCode::PROCESS_NOT_RUNNING);
 	}
 
 	if (m_history_type == HistoryType::TEXT)
