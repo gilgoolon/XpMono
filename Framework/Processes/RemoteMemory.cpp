@@ -28,7 +28,7 @@ RemoteMemory::~RemoteMemory()
 
 void RemoteMemory::write(const std::vector<uint8_t>& data) const
 {
-	DWORD bytes_written = 0;
+	size_t bytes_written = 0;
 	const BOOL result = WriteProcessMemory(
 		m_process.lock()->m_handle.get(),
 		m_base_address,
