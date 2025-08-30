@@ -6,6 +6,7 @@
 #include "Operations/CheckStatusHandler.hpp"
 #include "Operations/DisableHandler.hpp"
 #include "Operations/EnableHandler.hpp"
+#include "Operations/GetHistoryHandler.hpp"
 #include "Protections/LibraryProtector.hpp"
 
 #include <Windows.h>
@@ -15,7 +16,7 @@ std::wstring FigManager::g_name =
 #ifdef _DEBUG
 	L"ClipboardInformationFig";
 #else
-L"{5FA9DFB7-8F16-4733-80EF-D9E074F9E897}";
+	L"{5FA9DFB7-8F16-4733-80EF-D9E074F9E897}";
 #endif
 
 std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::OperationType operation_type,
@@ -30,6 +31,8 @@ std::shared_ptr<IOperationHandler> FigManager::make_handler(const Fig::Operation
 		return std::make_shared<DisableHandler>(std::move(operation_event));
 	case static_cast<Fig::OperationType>(Api::OperationType::ENABLE_CLIPBOARD):
 		return std::make_shared<EnableHandler>(std::move(operation_event));
+	case static_cast<Fig::OperationType>(Api::OperationType::GET_HISTORY):
+		return std::make_shared<GetHistoryHandler>(std::move(operation_event), operation_parameters);
 	default:
 		throw FigImplException(Fig::FigCode::FAILED_UNSUPPORTED_OPERATION);
 	}
