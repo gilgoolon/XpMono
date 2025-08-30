@@ -27,7 +27,7 @@ void* MemoryPatternScanner::next() const
 	}
 	void* result = m_next_result;
 	m_next_result = nullptr;
-	return std::move(result);
+	return result;
 }
 
 bool MemoryPatternScanner::has_next() const
