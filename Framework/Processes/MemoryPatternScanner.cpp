@@ -56,13 +56,20 @@ void MemoryPatternScanner::retrieve_next() const
 	{
 		bool is_matching = true;
 
-		for (const auto& filter : m_filters)
+		try
 		{
-			if (!filter(m_process, memory_address))
+			for (const auto& filter : m_filters)
 			{
-				is_matching = false;
-				break;
+				if (!filter(m_process, reinterpret_cast<uintptr_t>(memory_address)))
+				{
+					is_matching = false;
+					break;
+				}
 			}
+		}
+		catch (...)
+		{
+			continue;
 		}
 
 		if (is_matching)

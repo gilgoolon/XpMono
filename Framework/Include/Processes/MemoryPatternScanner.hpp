@@ -7,7 +7,7 @@
 class MemoryPatternScanner
 {
 public:
-	using MemoryFilter = std::function<bool(const Process& process, const void* address)>;
+	using MemoryFilter = std::function<bool(const Process& process, uintptr_t address)>;
 
 	explicit MemoryPatternScanner(const Process& process, const std::vector<MemoryFilter>& filters);
 	~MemoryPatternScanner() = default;
