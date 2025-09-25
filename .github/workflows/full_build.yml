@@ -22,7 +22,7 @@ jobs:
         run: echo "sln_files=$(find . -name '*.sln' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
 
   build:
-    runs-on: windows-latest
+    runs-on: windows-2022
     needs: solutions
     strategy:
       matrix:
