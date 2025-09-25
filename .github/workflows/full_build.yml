@@ -37,6 +37,14 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
+      - name: Install vcpkg
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git
+          ./vcpkg/bootstrap-vcpkg.bat
+
+      - name: Install vcpkg dependencies
+        run: ./vcpkg/vcpkg install
+
       - name: Build Solution
         shell: pwsh
         run: |
